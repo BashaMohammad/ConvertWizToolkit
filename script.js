@@ -3,8 +3,9 @@
 class JPGtoPNGConverter {
     constructor() {
         this.dailyLimit = 3;
-        this.currentFile = null;
-        this.convertedBlob = null;
+        this.currentFiles = [];
+        this.processedCount = 0;
+        this.skippedCount = 0;
         
         this.initElements();
         this.initEventListeners();
@@ -21,19 +22,15 @@ class JPGtoPNGConverter {
         
         // Section Elements
         this.progressSection = document.getElementById('progress-section');
-        this.resultSection = document.getElementById('result-section');
+        this.resultsContainer = document.getElementById('results-container');
+        this.resultsList = document.getElementById('results-list');
         this.limitSection = document.getElementById('limit-reached');
         
         // Progress Elements
         this.progressBar = document.getElementById('progress-bar');
         this.progressText = document.getElementById('progress-text');
         
-        // Result Elements
-        this.originalPreview = document.getElementById('original-preview');
-        this.convertedPreview = document.getElementById('converted-preview');
-        this.originalSize = document.getElementById('original-size');
-        this.convertedSize = document.getElementById('converted-size');
-        this.downloadBtn = document.getElementById('download-png');
+        // Button Elements
         this.convertAnotherBtn = document.getElementById('convert-another');
         
         // Counter Elements
@@ -47,7 +44,6 @@ class JPGtoPNGConverter {
         this.browseBtn.addEventListener('click', () => this.fileInput.click());
         
         // Button events
-        this.downloadBtn.addEventListener('click', () => this.downloadPNG());
         this.convertAnotherBtn.addEventListener('click', () => this.resetConverter());
         
         // Watermark toggle
@@ -89,69 +85,109 @@ class JPGtoPNGConverter {
     
     handleDrop(e) {
         const dt = e.dataTransfer;
-        const files = dt.files;
+        const files = Array.from(dt.files);
         
         if (files.length > 0) {
-            this.handleFile(files[0]);
+            this.handleFiles(files);
         }
     }
     
     handleFileSelect(e) {
-        const file = e.target.files[0];
-        if (file) {
-            this.handleFile(file);
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            this.handleFiles(files);
         }
     }
     
-    handleFile(file) {
-        // Check daily limit
-        if (!this.checkDailyLimit()) {
+    handleFiles(files) {
+        // Filter valid files
+        const validFiles = files.filter(file => this.validateFile(file, false));
+        
+        if (validFiles.length === 0) {
+            this.showNotification('No valid JPG files found. Please select JPG or JPEG files.', 'error');
+            return;
+        }
+        
+        // Check how many we can process based on daily limit
+        const remainingLimit = this.getRemainingLimit();
+        
+        if (remainingLimit === 0) {
             this.showLimitReached();
             return;
         }
         
-        // Validate file
-        if (!this.validateFile(file)) {
-            return;
-        }
+        // Limit files to remaining quota
+        this.currentFiles = validFiles.slice(0, remainingLimit);
+        this.skippedCount = validFiles.length - this.currentFiles.length;
         
-        this.currentFile = file;
-        this.startConversion();
+        // Start bulk conversion
+        this.startBulkConversion();
     }
     
-    validateFile(file) {
+    validateFile(file, showError = true) {
         // Check file type
         if (!file.type.match('image/jpeg') && !file.type.match('image/jpg')) {
-            this.showNotification('Please select a JPG or JPEG file.', 'error');
+            if (showError) {
+                this.showNotification('Please select a JPG or JPEG file.', 'error');
+            }
             return false;
         }
         
         // Check file size (10MB limit)
         const maxSize = 10 * 1024 * 1024; // 10MB in bytes
         if (file.size > maxSize) {
-            this.showNotification('File size must be less than 10MB.', 'error');
+            if (showError) {
+                this.showNotification('File size must be less than 10MB.', 'error');
+            }
             return false;
         }
         
         return true;
     }
     
-    async startConversion() {
+    getRemainingLimit() {
+        const today = new Date().toDateString();
+        const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
+        
+        if (usage.date !== today) {
+            return this.dailyLimit; // New day, full limit available
+        }
+        
+        return Math.max(0, this.dailyLimit - usage.count);
+    }
+    
+    async startBulkConversion() {
         // Hide upload area and show progress
         this.uploadArea.parentElement.style.display = 'none';
         this.progressSection.classList.remove('hidden');
         
-        // Animate progress bar
-        await this.animateProgress();
+        // Clear previous results
+        this.resultsList.innerHTML = '';
+        this.processedCount = 0;
         
-        // Convert the image
-        await this.convertImage();
+        // Process each file
+        for (let i = 0; i < this.currentFiles.length; i++) {
+            const file = this.currentFiles[i];
+            
+            // Update progress for current file
+            this.updateBulkProgress(i + 1, this.currentFiles.length, file.name);
+            
+            // Convert the file
+            await this.convertSingleFile(file, i);
+            
+            // Update daily usage
+            this.updateDailyUsage();
+            this.processedCount++;
+        }
         
-        // Show results
-        this.showResults();
-        
-        // Update daily counter
-        this.updateDailyUsage();
+        // Show completion message and results
+        this.showBulkResults();
+    }
+    
+    updateBulkProgress(current, total, fileName) {
+        const percentage = (current / total) * 100;
+        this.progressBar.style.width = `${percentage}%`;
+        this.progressText.textContent = `Converting ${current} of ${total}: ${fileName}`;
     }
     
     async animateProgress() {
@@ -174,7 +210,7 @@ class JPGtoPNGConverter {
         }
     }
     
-    async convertImage() {
+    async convertSingleFile(file, index) {
         return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -202,23 +238,69 @@ class JPGtoPNGConverter {
                     
                     // Convert to PNG
                     canvas.toBlob((blob) => {
-                        this.convertedBlob = blob;
-                        
-                        // Set preview images
-                        this.originalPreview.src = e.target.result;
-                        this.convertedPreview.src = URL.createObjectURL(blob);
-                        
-                        // Set file sizes
-                        this.originalSize.textContent = this.formatFileSize(this.currentFile.size);
-                        this.convertedSize.textContent = this.formatFileSize(blob.size);
-                        
+                        // Create result card for this conversion
+                        this.createResultCard(file, e.target.result, blob, index);
                         resolve();
                     }, 'image/png', 1.0);
                 };
                 img.src = e.target.result;
             };
-            reader.readAsDataURL(this.currentFile);
+            reader.readAsDataURL(file);
         });
+    }
+    
+    createResultCard(originalFile, originalDataUrl, convertedBlob, index) {
+        const resultCard = document.createElement('div');
+        resultCard.className = 'converter-card bg-white rounded-2xl shadow-2xl p-6 fade-in';
+        
+        const convertedUrl = URL.createObjectURL(convertedBlob);
+        const fileName = originalFile.name.replace(/\.(jpg|jpeg)$/i, '.png');
+        
+        resultCard.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Original -->
+                <div class="text-center">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">Original JPG</h4>
+                    <div class="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <img src="${originalDataUrl}" class="max-w-full h-48 object-contain mx-auto rounded-lg">
+                        <div class="mt-3 text-sm text-gray-600">
+                            <p>Format: <span class="font-medium">JPG</span></p>
+                            <p>Size: <span class="font-medium">${this.formatFileSize(originalFile.size)}</span></p>
+                            <p>Name: <span class="font-medium">${originalFile.name}</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Converted -->
+                <div class="text-center">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">Converted PNG</h4>
+                    <div class="border-2 border-green-200 rounded-lg p-4 bg-green-50">
+                        <img src="${convertedUrl}" class="max-w-full h-48 object-contain mx-auto rounded-lg">
+                        <div class="mt-3 text-sm text-gray-600">
+                            <p>Format: <span class="font-medium text-green-600">PNG</span></p>
+                            <p>Size: <span class="font-medium">${this.formatFileSize(convertedBlob.size)}</span></p>
+                            <p>Name: <span class="font-medium">${fileName}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Download Button -->
+            <div class="text-center mt-6">
+                <button class="download-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105" data-blob-url="${convertedUrl}" data-filename="${fileName}">
+                    <i class="fas fa-download mr-2"></i>Download PNG
+                </button>
+            </div>
+        `;
+        
+        // Add download event listener
+        const downloadBtn = resultCard.querySelector('.download-btn');
+        downloadBtn.addEventListener('click', () => {
+            this.downloadFile(convertedUrl, fileName);
+        });
+        
+        // Append to results list
+        this.resultsList.appendChild(resultCard);
     }
     
     addWatermark(ctx, width, height) {
