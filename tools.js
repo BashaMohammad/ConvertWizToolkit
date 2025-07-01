@@ -672,61 +672,203 @@ class CurrencyConverter {
     }
 }
 
-// Land Unit Converter
+// Global Land Unit Converter
 class LandUnitConverter {
     constructor() {
-        this.unitSelect = document.getElementById('land-unit');
-        this.valueInput = document.getElementById('land-value');
-        this.results = {
+        this.setupGlobalUnits();
+        this.initEventListeners();
+        this.populateUnitDropdown();
+    }
+    
+    setupGlobalUnits() {
+        // Global land units with conversion rates to square feet
+        this.globalLandUnits = [
+            { code: 'sqft', name: 'Square Feet', rate: 1, region: 'Global' },
+            { code: 'sqm', name: 'Square Meters', rate: 10.7639, region: 'Global' },
+            { code: 'sqyd', name: 'Square Yards', rate: 9, region: 'Global' },
+            { code: 'acres', name: 'Acres', rate: 43560, region: 'Global' },
+            { code: 'hectares', name: 'Hectares', rate: 107639, region: 'Global' },
+            { code: 'bigha', name: 'Bigha (India)', rate: 27225, region: 'India' },
+            { code: 'gunta', name: 'Gunta (India)', rate: 1089, region: 'India' },
+            { code: 'katha', name: 'Katha (Nepal)', rate: 3645, region: 'Nepal' },
+            { code: 'ping', name: 'Ping (Taiwan)', rate: 35.583, region: 'Taiwan' },
+            { code: 'tsubo', name: 'Tsubo (Japan)', rate: 35.583, region: 'Japan' },
+            { code: 'mu', name: 'Mu (China)', rate: 666.667, region: 'China' },
+            { code: 'dunam', name: 'Dunam (Middle East)', rate: 10763.9, region: 'Middle East' },
+            { code: 'cuerda', name: 'Cuerda (Latin America)', rate: 39304, region: 'Latin America' }
+        ];
+    }
+    
+    populateUnitDropdown() {
+        const fromUnit = document.getElementById('landInput') ? document.getElementById('fromUnit') : document.getElementById('land-unit');
+        if (!fromUnit) return;
+        
+        // Clear existing options
+        fromUnit.innerHTML = '';
+        
+        // Group units by region
+        const regions = {};
+        this.globalLandUnits.forEach(unit => {
+            if (!regions[unit.region]) regions[unit.region] = [];
+            regions[unit.region].push(unit);
+        });
+        
+        // Add options grouped by region
+        Object.keys(regions).forEach(region => {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = region;
+            
+            regions[region].forEach(unit => {
+                const option = document.createElement('option');
+                option.value = unit.code;
+                option.textContent = unit.name;
+                optgroup.appendChild(option);
+            });
+            
+            fromUnit.appendChild(optgroup);
+        });
+        
+        // Set default to acres
+        fromUnit.value = 'acres';
+    }
+    
+    initEventListeners() {
+        // Support both new and legacy element IDs
+        const inputField = document.getElementById('landInput') || document.getElementById('land-value');
+        const fromUnit = document.getElementById('fromUnit') || document.getElementById('land-unit');
+        
+        if (inputField && fromUnit) {
+            inputField.addEventListener('input', () => this.convertUnits());
+            fromUnit.addEventListener('change', () => this.convertUnits());
+        }
+    }
+    
+    convertUnits() {
+        // Support both new and legacy element IDs
+        const inputField = document.getElementById('landInput') || document.getElementById('land-value');
+        const fromUnit = document.getElementById('fromUnit') || document.getElementById('land-unit');
+        const resultsContainer = document.getElementById('landResults');
+        
+        if (!inputField || !fromUnit) return;
+        
+        const value = parseFloat(inputField.value);
+        const fromUnitCode = fromUnit.value;
+        
+        if (!value || value <= 0) {
+            if (resultsContainer) {
+                resultsContainer.innerHTML = '';
+            } else {
+                // Legacy support - reset individual result elements
+                const legacyResults = {
+                    acres: document.getElementById('result-acres'),
+                    gunta: document.getElementById('result-gunta'),
+                    sqft: document.getElementById('result-sqft'),
+                    bigha: document.getElementById('result-bigha')
+                };
+                Object.values(legacyResults).forEach(element => {
+                    if (element) element.textContent = '0';
+                });
+            }
+            return;
+        }
+        
+        // Find the selected unit
+        const selectedUnit = this.globalLandUnits.find(unit => unit.code === fromUnitCode);
+        if (!selectedUnit) return;
+        
+        // Convert to base unit (square feet)
+        const baseSqFt = value * selectedUnit.rate;
+        
+        if (resultsContainer) {
+            // New display format with grouped results
+            const results = this.globalLandUnits.map(unit => ({
+                name: unit.name,
+                region: unit.region,
+                value: baseSqFt / unit.rate
+            }));
+            this.displayResults(results, selectedUnit.name, value);
+        } else {
+            // Legacy support for old HTML structure
+            this.displayLegacyResults(baseSqFt);
+        }
+    }
+    
+    displayResults(results, fromUnitName, inputValue) {
+        const resultsContainer = document.getElementById('landResults');
+        if (!resultsContainer) return;
+        
+        // Group results by region
+        const regions = {};
+        results.forEach(result => {
+            if (!regions[result.region]) regions[result.region] = [];
+            regions[result.region].push(result);
+        });
+        
+        let html = `
+            <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="text-center">
+                    <div class="text-lg font-semibold text-blue-800">Converting ${inputValue} ${fromUnitName}</div>
+                    <div class="text-sm text-blue-600 mt-1">Results across global land measurement units</div>
+                </div>
+            </div>
+        `;
+        
+        // Display results grouped by region
+        Object.keys(regions).forEach(region => {
+            html += `
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-block w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-2"></span>
+                        ${region}
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            `;
+            
+            regions[region].forEach(result => {
+                const isLarge = result.value >= 1000000;
+                const displayValue = isLarge ? 
+                    (result.value / 1000000).toFixed(2) + 'M' : 
+                    result.value.toFixed(4);
+                
+                html += `
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                        <div class="text-sm text-gray-600 mb-1">${result.name}</div>
+                        <div class="text-xl font-bold text-purple-600">${displayValue}</div>
+                        ${isLarge ? '<div class="text-xs text-gray-500">Million units</div>' : ''}
+                    </div>
+                `;
+            });
+            
+            html += '</div></div>';
+        });
+        
+        resultsContainer.innerHTML = html;
+    }
+    
+    displayLegacyResults(baseSqFt) {
+        // Legacy support for old HTML structure
+        const legacyResults = {
             acres: document.getElementById('result-acres'),
             gunta: document.getElementById('result-gunta'),
             sqft: document.getElementById('result-sqft'),
             bigha: document.getElementById('result-bigha')
         };
         
-        // Conversion rates to square feet
-        this.conversionRates = {
-            acres: 43560,      // 1 acre = 43,560 sq ft
-            gunta: 1089,       // 1 gunta = 1,089 sq ft
-            sqft: 1,           // 1 sq ft = 1 sq ft
-            bigha: 26910       // 1 bigha = 26,910 sq ft (varies by region, using standard)
+        const legacyRates = {
+            acres: 43560,
+            gunta: 1089,
+            sqft: 1,
+            bigha: 27225
         };
         
-        if (this.unitSelect) {
-            this.initEventListeners();
-        }
-    }
-    
-    initEventListeners() {
-        this.valueInput.addEventListener('input', () => this.convertUnits());
-        this.unitSelect.addEventListener('change', () => this.convertUnits());
-    }
-    
-    convertUnits() {
-        const value = parseFloat(this.valueInput.value);
-        const unit = this.unitSelect.value;
-        
-        if (!value || value <= 0) {
-            // Reset all results to 0
-            Object.values(this.results).forEach(element => {
-                if (element) element.textContent = '0';
-            });
-            return;
-        }
-        
-        // Convert input value to square feet first
-        const sqftValue = value * this.conversionRates[unit];
-        
-        // Convert square feet to all other units
-        if (this.results.acres) this.results.acres.textContent = (sqftValue / this.conversionRates.acres).toFixed(4);
-        if (this.results.gunta) this.results.gunta.textContent = (sqftValue / this.conversionRates.gunta).toFixed(4);
-        if (this.results.sqft) this.results.sqft.textContent = sqftValue.toFixed(2);
-        if (this.results.bigha) this.results.bigha.textContent = (sqftValue / this.conversionRates.bigha).toFixed(4);
+        if (legacyResults.acres) legacyResults.acres.textContent = (baseSqFt / legacyRates.acres).toFixed(4);
+        if (legacyResults.gunta) legacyResults.gunta.textContent = (baseSqFt / legacyRates.gunta).toFixed(4);
+        if (legacyResults.sqft) legacyResults.sqft.textContent = baseSqFt.toFixed(2);
+        if (legacyResults.bigha) legacyResults.bigha.textContent = (baseSqFt / legacyRates.bigha).toFixed(4);
     }
     
     destroy() {
         // Clean up
-        this.results = {};
     }
 }
 

@@ -53,10 +53,12 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Live rate display and conversion history
 - Fallback currency list for offline functionality
 
-#### Land Unit Converter  
-- Indian land measurement units (Acres, Gunta, Square Feet, Bigha)
+#### Global Land Unit Converter  
+- International land measurement units from 7+ regions (Global, India, China, Japan, Taiwan, Nepal, Middle East, Latin America)
+- 13+ land units including Acres, Square Meters, Hectares, Bigha, Gunta, Mu, Tsubo, Ping, Katha, Dunam, Cuerda
+- Regional grouping with intelligent display for large values
 - Real-time conversion with precise calculation formulas
-- Simultaneous display of all unit conversions
+- Backward compatibility with legacy HTML structure
 
 #### Instagram DP Resizer
 - 320x320px Instagram profile picture optimization

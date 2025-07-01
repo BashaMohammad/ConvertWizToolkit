@@ -166,14 +166,14 @@
                             </div>
                         </div>
 
-                        <!-- Land Unit Converter -->
+                        <!-- Global Land Unit Converter -->
                         <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                             <div class="text-center">
                                 <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-map text-white text-2xl"></i>
+                                    <i class="fas fa-globe text-white text-2xl"></i>
                                 </div>
-                                <h4 class="text-lg font-bold text-gray-800 mb-2">Land Units</h4>
-                                <p class="text-gray-600 text-sm mb-4">Acres, Gunta, Square Feet, Bigha conversions</p>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Global Land Units</h4>
+                                <p class="text-gray-600 text-sm mb-4">13+ international land measurement systems from India, China, Japan & more</p>
                                 <a href="/land" data-route="/land" class="inline-block w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
                                     Try Now
                                 </a>
@@ -489,41 +489,44 @@
         <main class="container mx-auto px-4 py-8">
             <section class="text-center mb-12">
                 <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                    Land Unit Converter
+                    🌍 Global Land Unit Converter
                 </h2>
                 <p class="text-xl text-white/90 mb-8">
-                    Convert between Indian land measurement units with precision
+                    Convert between land measurement units from around the world with precision
                 </p>
             </section>
 
-            <div class="max-w-3xl mx-auto">
+            <div class="max-w-4xl mx-auto">
                 <section class="converter-card bg-white rounded-2xl shadow-2xl p-8">
                     <div class="text-center mb-6">
                         <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-map text-white text-2xl"></i>
+                            <i class="fas fa-globe text-white text-2xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Indian Land Measurements</h3>
-                        <p class="text-gray-600">Convert between Acres, Gunta, Square Feet, and Bigha</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">International Land Measurements</h3>
+                        <p class="text-gray-600">Convert between global land units including Indian, Chinese, Japanese, and more regional systems</p>
                     </div>
                     
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">From Unit</label>
                                 <select id="land-unit" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                                    <option value="acres">Acres</option>
-                                    <option value="gunta">Gunta</option>
-                                    <option value="sqft">Square Feet</option>
-                                    <option value="bigha">Bigha</option>
+                                    <!-- Options will be populated by JavaScript -->
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Value</label>
-                                <input type="number" id="land-value" placeholder="Enter value" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" min="0" step="0.01">
+                                <input type="number" id="land-value" placeholder="Enter value to convert" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" min="0" step="0.01">
                             </div>
                         </div>
                         
-                        <div id="land-results" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                        <!-- Results Container with Regional Grouping -->
+                        <div id="landResults" class="mt-8">
+                            <!-- Dynamic results will be displayed here, grouped by region -->
+                        </div>
+                        
+                        <!-- Legacy support - Hidden by default, shown only if new system fails -->
+                        <div id="land-results" class="hidden grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                             <div class="p-4 bg-yellow-50 rounded-lg text-center">
                                 <p class="text-sm text-gray-600">Acres</p>
                                 <p id="result-acres" class="text-xl font-semibold text-gray-800">0</p>
