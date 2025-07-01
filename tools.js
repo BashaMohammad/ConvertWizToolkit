@@ -678,6 +678,9 @@ class LandUnitConverter {
         this.setupGlobalUnits();
         this.initEventListeners();
         this.populateUnitDropdown();
+        
+        // Make instance globally accessible for toggle functionality
+        window.landConverter = this;
     }
     
     setupGlobalUnits() {
@@ -804,6 +807,9 @@ class LandUnitConverter {
             regions[result.region].push(result);
         });
         
+        // Load expanded state from localStorage
+        const expandedState = JSON.parse(localStorage.getItem('landConverter_expandedRegions') || '{"Global": true}');
+        
         let html = `
             <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div class="text-center">
@@ -813,15 +819,26 @@ class LandUnitConverter {
             </div>
         `;
         
-        // Display results grouped by region
-        Object.keys(regions).forEach(region => {
+        // Display results grouped by region with collapsible sections
+        Object.keys(regions).forEach((region, index) => {
+            const isExpanded = expandedState[region] || false;
+            const chevronIcon = isExpanded ? '▾' : '▸';
+            const contentClass = isExpanded ? 'expanded' : 'collapsed';
+            
             html += `
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                        <span class="inline-block w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-2"></span>
-                        ${region}
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="mb-4 region-section" data-region="${region}">
+                    <button class="region-toggle w-full text-left p-4 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 rounded-lg border border-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500" onclick="landConverter.toggleRegion('${region}')">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <span class="inline-block w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-3"></span>
+                                ${region}
+                                <span class="ml-2 text-sm text-gray-500">(${regions[region].length} units)</span>
+                            </h3>
+                            <span class="chevron text-xl text-gray-600 transition-transform duration-200 ${isExpanded ? 'rotate-0' : 'rotate-90'}">${chevronIcon}</span>
+                        </div>
+                    </button>
+                    <div class="region-content overflow-hidden transition-all duration-300 ease-in-out ${contentClass}" style="max-height: ${isExpanded ? 'none' : '0'}; opacity: ${isExpanded ? '1' : '0'};">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             `;
             
             regions[region].forEach(result => {
@@ -831,7 +848,7 @@ class LandUnitConverter {
                     result.value.toFixed(4);
                 
                 html += `
-                    <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200 hover:scale-105">
                         <div class="text-sm text-gray-600 mb-1">${result.name}</div>
                         <div class="text-xl font-bold text-purple-600">${displayValue}</div>
                         ${isLarge ? '<div class="text-xs text-gray-500">Million units</div>' : ''}
@@ -839,10 +856,73 @@ class LandUnitConverter {
                 `;
             });
             
-            html += '</div></div>';
+            html += '</div></div></div>';
         });
         
         resultsContainer.innerHTML = html;
+        
+        // Apply smooth animations after rendering
+        setTimeout(() => {
+            this.initializeCollapsibleAnimations();
+        }, 10);
+    }
+    
+    toggleRegion(region) {
+        const regionSection = document.querySelector(`[data-region="${region}"]`);
+        if (!regionSection) return;
+        
+        const content = regionSection.querySelector('.region-content');
+        const chevron = regionSection.querySelector('.chevron');
+        const isExpanded = content.classList.contains('expanded');
+        
+        // Load current state
+        const expandedState = JSON.parse(localStorage.getItem('landConverter_expandedRegions') || '{}');
+        
+        if (isExpanded) {
+            // Collapse
+            content.style.maxHeight = content.scrollHeight + 'px';
+            content.offsetHeight; // Force reflow
+            content.style.maxHeight = '0';
+            content.style.opacity = '0';
+            content.classList.remove('expanded');
+            content.classList.add('collapsed');
+            chevron.style.transform = 'rotate(90deg)';
+            chevron.textContent = '▸';
+            expandedState[region] = false;
+        } else {
+            // Expand
+            content.classList.remove('collapsed');
+            content.classList.add('expanded');
+            content.style.maxHeight = content.scrollHeight + 'px';
+            content.style.opacity = '1';
+            chevron.style.transform = 'rotate(0deg)';
+            chevron.textContent = '▾';
+            expandedState[region] = true;
+            
+            // After animation completes, remove max-height for responsive behavior
+            setTimeout(() => {
+                if (content.classList.contains('expanded')) {
+                    content.style.maxHeight = 'none';
+                }
+            }, 300);
+        }
+        
+        // Save state to localStorage
+        localStorage.setItem('landConverter_expandedRegions', JSON.stringify(expandedState));
+    }
+    
+    initializeCollapsibleAnimations() {
+        // Set initial heights for collapsed sections
+        document.querySelectorAll('.region-content.collapsed').forEach(content => {
+            content.style.maxHeight = '0';
+            content.style.opacity = '0';
+        });
+        
+        // Set expanded sections to proper height
+        document.querySelectorAll('.region-content.expanded').forEach(content => {
+            content.style.maxHeight = 'none';
+            content.style.opacity = '1';
+        });
     }
     
     displayLegacyResults(baseSqFt) {

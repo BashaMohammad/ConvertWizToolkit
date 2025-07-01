@@ -47,6 +47,93 @@
     100% { background-position: 0% 50%; }
 }
 
+/* Global Land Unit Converter - Collapsible Regions */
+.region-section {
+    margin-bottom: 1rem;
+}
+
+.region-toggle {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.region-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.region-toggle:active {
+    transform: translateY(0);
+}
+
+.region-content {
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: max-height, opacity;
+}
+
+.region-content.collapsed {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden;
+}
+
+.region-content.expanded {
+    opacity: 1 !important;
+    overflow: visible;
+}
+
+.chevron {
+    transition: transform 0.2s ease;
+    display: inline-block;
+    line-height: 1;
+}
+
+/* Mobile optimizations for collapsible regions */
+@media (max-width: 768px) {
+    .region-toggle {
+        padding: 1rem;
+    }
+    
+    .region-toggle h3 {
+        font-size: 1rem;
+    }
+    
+    .region-content .grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+    
+    .chevron {
+        font-size: 1.25rem;
+    }
+}
+
+/* Smooth card hover animations for land converter */
+.bg-white.hover\:scale-105:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Focus states for accessibility */
+.region-toggle:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #3b82f6;
+    ring-offset: 2px;
+}
+
+/* Enhanced unit count badge */
+.region-toggle .text-gray-500 {
+    background: rgba(107, 114, 128, 0.1);
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
 /* Toggle switch styling */
 #watermark-toggle:checked + div {
     background-color: #8b5cf6;
