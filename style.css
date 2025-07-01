@@ -88,6 +88,48 @@ html {
     .grid {
         grid-template-columns: 1fr;
     }
+    
+    /* Hide navigation on mobile */
+    .nav-link {
+        display: none;
+    }
+    
+    /* Improve mobile header */
+    h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    /* Improve mobile hero text */
+    .text-4xl {
+        font-size: 2rem !important;
+    }
+    
+    .text-6xl {
+        font-size: 2.5rem !important;
+    }
+    
+    /* Better mobile spacing */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small screens */
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .tool-card {
+        padding: 1.5rem;
+    }
+    
+    /* Stack currency dropdowns vertically on very small screens */
+    #currency .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Button hover effects */

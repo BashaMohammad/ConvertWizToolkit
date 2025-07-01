@@ -94,13 +94,91 @@ class CurrencyConverter {
         this.result = document.getElementById('currency-result');
         this.resultText = document.getElementById('currency-result-text');
         this.rateText = document.getElementById('currency-rate-text');
+        this.currencies = {};
         
         this.initEventListeners();
+        this.loadCurrencies();
+    }
+    
+    async loadCurrencies() {
+        try {
+            const response = await fetch('https://api.exchangerate.host/symbols');
+            const data = await response.json();
+            
+            if (data.success) {
+                this.currencies = data.symbols;
+                this.populateCurrencyDropdowns();
+            } else {
+                // Fallback to manual list if API fails
+                this.loadFallbackCurrencies();
+            }
+        } catch (error) {
+            console.error('Error loading currencies:', error);
+            this.loadFallbackCurrencies();
+        }
+    }
+    
+    loadFallbackCurrencies() {
+        this.currencies = {
+            'USD': { description: 'United States Dollar' },
+            'EUR': { description: 'Euro' },
+            'GBP': { description: 'British Pound Sterling' },
+            'INR': { description: 'Indian Rupee' },
+            'JPY': { description: 'Japanese Yen' },
+            'AUD': { description: 'Australian Dollar' },
+            'CAD': { description: 'Canadian Dollar' },
+            'CHF': { description: 'Swiss Franc' },
+            'CNY': { description: 'Chinese Yuan' },
+            'SEK': { description: 'Swedish Krona' },
+            'NZD': { description: 'New Zealand Dollar' },
+            'MXN': { description: 'Mexican Peso' },
+            'SGD': { description: 'Singapore Dollar' },
+            'HKD': { description: 'Hong Kong Dollar' },
+            'NOK': { description: 'Norwegian Krone' },
+            'KRW': { description: 'South Korean Won' },
+            'TRY': { description: 'Turkish Lira' },
+            'RUB': { description: 'Russian Ruble' },
+            'BRL': { description: 'Brazilian Real' },
+            'ZAR': { description: 'South African Rand' }
+        };
+        this.populateCurrencyDropdowns();
+    }
+    
+    populateCurrencyDropdowns() {
+        // Clear existing options
+        this.fromCurrency.innerHTML = '';
+        this.toCurrency.innerHTML = '';
+        
+        // Sort currencies by code
+        const sortedCurrencies = Object.keys(this.currencies).sort();
+        
+        sortedCurrencies.forEach(code => {
+            const currency = this.currencies[code];
+            const optionFrom = new Option(`${code} - ${currency.description}`, code);
+            const optionTo = new Option(`${code} - ${currency.description}`, code);
+            
+            this.fromCurrency.appendChild(optionFrom);
+            this.toCurrency.appendChild(optionTo);
+        });
+        
+        // Set default values
+        this.fromCurrency.value = 'USD';
+        this.toCurrency.value = 'EUR';
     }
     
     initEventListeners() {
         this.convertBtn.addEventListener('click', () => this.convertCurrency());
         this.amountInput.addEventListener('input', () => {
+            if (this.amountInput.value) {
+                this.convertCurrency();
+            }
+        });
+        this.fromCurrency.addEventListener('change', () => {
+            if (this.amountInput.value) {
+                this.convertCurrency();
+            }
+        });
+        this.toCurrency.addEventListener('change', () => {
             if (this.amountInput.value) {
                 this.convertCurrency();
             }
@@ -113,7 +191,7 @@ class CurrencyConverter {
         const to = this.toCurrency.value;
         
         if (!amount || amount <= 0) {
-            alert('Please enter a valid amount');
+            this.result.classList.add('hidden');
             return;
         }
         
@@ -136,7 +214,7 @@ class CurrencyConverter {
             }
         } catch (error) {
             console.error('Currency conversion error:', error);
-            alert('Error converting currency. Please try again.');
+            showNotification('Error converting currency. Please check your internet connection.', 'error');
         } finally {
             this.convertBtn.textContent = 'Convert Currency';
             this.convertBtn.disabled = false;
@@ -144,8 +222,8 @@ class CurrencyConverter {
     }
     
     showResult(originalAmount, convertedAmount, rate, fromCurrency, toCurrency) {
-        this.resultText.textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
-        this.rateText.textContent = `1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
+        this.resultText.textContent = `${originalAmount} ${fromCurrency} = ${convertedAmount.toFixed(2)} ${toCurrency}`;
+        this.rateText.textContent = `Live Rate • Updated now • 1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
         this.result.classList.remove('hidden');
         this.result.classList.add('fade-in');
     }
