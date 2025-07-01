@@ -57,6 +57,33 @@
     background-color: #ffffff;
 }
 
+/* Enhanced toggle switch hover and active states */
+.group:hover #watermark-toggle + div {
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+#watermark-toggle:checked + div {
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+}
+
+#watermark-toggle:focus + div {
+    outline: 2px solid #8b5cf6;
+    outline-offset: 2px;
+}
+
+/* Mobile responsive adjustments for toggle */
+@media (max-width: 480px) {
+    .group {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+    
+    .group span {
+        margin-left: 0 !important;
+    }
+}
+
 /* Progress bar glow */
 #progress-bar {
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
