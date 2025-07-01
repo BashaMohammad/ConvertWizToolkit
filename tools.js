@@ -462,6 +462,7 @@ class CurrencyConverter {
         this.toCurrency = document.getElementById('to-currency');
         this.amountInput = document.getElementById('currency-amount');
         this.convertBtn = document.getElementById('convert-currency');
+        this.swapBtn = document.getElementById('swap-currencies');
         this.result = document.getElementById('currency-result');
         this.resultText = document.getElementById('currency-result-text');
         this.rateText = document.getElementById('currency-rate-text');
@@ -556,6 +557,31 @@ class CurrencyConverter {
                 this.convertCurrency();
             }
         });
+        
+        // Add swap functionality
+        if (this.swapBtn) {
+            this.swapBtn.addEventListener('click', () => this.swapCurrencies());
+        }
+    }
+    
+    swapCurrencies() {
+        const fromValue = this.fromCurrency.value;
+        const toValue = this.toCurrency.value;
+        
+        // Swap the values
+        this.fromCurrency.value = toValue;
+        this.toCurrency.value = fromValue;
+        
+        // Trigger conversion if amount is entered
+        if (this.amountInput.value) {
+            this.convertCurrency();
+        }
+        
+        // Add visual feedback
+        this.swapBtn.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.swapBtn.style.transform = 'scale(1)';
+        }, 150);
     }
     
     async convertCurrency() {
