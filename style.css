@@ -58,7 +58,7 @@
 }
 
 /* Enhanced toggle switch hover and active states */
-.group:hover #watermark-toggle + div {
+label:hover #watermark-toggle + div {
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
@@ -71,16 +71,10 @@
     outline-offset: 2px;
 }
 
-/* Mobile responsive adjustments for toggle */
-@media (max-width: 480px) {
-    .group {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
-    }
-    
-    .group span {
-        margin-left: 0 !important;
+/* Ensure proper alignment on all screen sizes */
+@media (max-width: 768px) {
+    .inline-flex {
+        flex-wrap: nowrap;
     }
 }
 
