@@ -314,23 +314,26 @@ class JPGtoPNGConverter {
         ctx.fillText('ConvertWiz.com', width / 2, height - 50);
     }
     
-    showResults() {
+    showBulkResults() {
         this.progressSection.classList.add('hidden');
-        this.resultSection.classList.remove('hidden');
-        this.resultSection.classList.add('fade-in');
+        this.resultsContainer.classList.remove('hidden');
+        
+        // Show completion notification
+        let message = `Successfully converted ${this.processedCount} image${this.processedCount !== 1 ? 's' : ''}!`;
+        if (this.skippedCount > 0) {
+            message += ` ${this.skippedCount} file${this.skippedCount !== 1 ? 's' : ''} skipped due to daily limit.`;
+        }
+        
+        this.showNotification(message, 'success');
     }
     
-    downloadPNG() {
-        if (!this.convertedBlob) return;
-        
-        const url = URL.createObjectURL(this.convertedBlob);
+    downloadFile(url, filename) {
         const a = document.createElement('a');
         a.href = url;
-        a.download = this.currentFile.name.replace(/\.(jpg|jpeg)$/i, '.png');
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
         
         this.showNotification('PNG file downloaded successfully!', 'success');
     }
@@ -338,17 +341,21 @@ class JPGtoPNGConverter {
     resetConverter() {
         // Reset all sections
         this.progressSection.classList.add('hidden');
-        this.resultSection.classList.add('hidden');
+        this.resultsContainer.classList.add('hidden');
         this.uploadArea.parentElement.style.display = 'block';
         
         // Reset progress bar
         this.progressBar.style.width = '0%';
         this.progressText.textContent = 'Processing image...';
         
-        // Clear file input
+        // Clear file input and data
         this.fileInput.value = '';
-        this.currentFile = null;
-        this.convertedBlob = null;
+        this.currentFiles = [];
+        this.processedCount = 0;
+        this.skippedCount = 0;
+        
+        // Clear results list
+        this.resultsList.innerHTML = '';
         
         // Remove dragover class
         this.unhighlight();
