@@ -1,8 +1,8 @@
-# ConvertWiz - JPG to PNG Converter
+# ConvertWiz - Multi-Tool Converter Suite
 
 ## Overview
 
-ConvertWiz is a focused, client-side web application that specializes in converting JPG images to PNG format with perfect quality retention. The application features drag & drop functionality, daily usage limits for anonymous users, animated progress tracking, and optional watermarking capabilities.
+ConvertWiz is a comprehensive, client-side SaaS application offering multiple conversion tools through a professional single-page application with routing. The platform provides JPG to PNG conversion, currency conversion, land unit conversion, and Instagram profile picture resizing - all accessible through dedicated pages with smooth navigation.
 
 ## System Architecture
 
@@ -18,36 +18,50 @@ ConvertWiz is a focused, client-side web application that specializes in convert
 - Vanilla JavaScript for functionality
 - Canvas API for image processing
 
-## Key Components
+## System Architecture
 
-### 1. Drag & Drop Upload Interface
-- Intuitive drag and drop file handling
-- Visual feedback with hover animations and border glow effects
-- Click-to-browse fallback functionality
-- File validation (JPG/JPEG only, 10MB max size)
+### 1. Client-Side Routing System
+- Single-page application with JavaScript-based routing
+- Five main routes: `/` (home), `/jpg-to-png`, `/currency`, `/land`, `/dp-resizer`
+- History API integration for proper back/forward navigation
+- Modular page system with dynamic tool initialization
 
-### 2. Daily Usage Limiting System
-- LocalStorage-based tracking of daily conversions
-- 3 free conversions per day for anonymous users
-- Automatic reset at midnight
-- Clear visual counter showing remaining conversions
+### 2. Homepage & Navigation
+- Professional SaaS-style landing page with tool showcase
+- Responsive grid layout displaying 4 conversion tools as interactive cards
+- Sticky navigation header with desktop and mobile menu support
+- Feature highlight section emphasizing speed, privacy, and mobile compatibility
 
-### 3. Animated Progress Tracking
-- Multi-stage progress animation (2-second duration)
-- Visual progress bar with gradient effects and glow
-- Step-by-step status messages during conversion
-- Smooth transitions between conversion stages
+### 3. Individual Tool Pages
+- Dedicated pages for each converter tool with focused UI
+- Isolated tool logic preventing interference between converters
+- Consistent branding and navigation across all pages
+- Tool-specific styling and functionality preservation
 
-### 4. High-Quality Image Processing
-- Canvas API with imageSmoothingEnabled for quality retention
-- Maintains original image dimensions and quality
-- PNG output with maximum quality (1.0 quality factor)
-- Side-by-side preview comparison with file size information
+### 4. Tool Components
 
-### 5. Optional Watermarking Feature
-- Toggle switch for adding watermarks (default OFF)
-- Subtle watermark placement with transparency
-- Dynamic sizing based on image dimensions
+#### JPG to PNG Converter
+- Bulk upload support with drag & drop interface
+- Daily usage limits (3 conversions per day)
+- Individual result cards for each converted image
+- Optional watermarking with quality retention
+- Progress tracking with real-time status updates
+
+#### Currency Converter
+- Real-time exchange rates from exchangerate.host API
+- 150+ currency support with dynamic dropdown population
+- Live rate display and conversion history
+- Fallback currency list for offline functionality
+
+#### Land Unit Converter  
+- Indian land measurement units (Acres, Gunta, Square Feet, Bigha)
+- Real-time conversion with precise calculation formulas
+- Simultaneous display of all unit conversions
+
+#### Instagram DP Resizer
+- 320x320px Instagram profile picture optimization
+- Aspect ratio preservation with center cropping
+- Quality retention during resize process
 
 ## Data Flow
 
