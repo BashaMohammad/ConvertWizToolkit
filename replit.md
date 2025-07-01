@@ -1,8 +1,8 @@
-# ConvertWiz ⚡ - All-in-One Utility Toolkit
+# ConvertWiz - JPG to PNG Converter
 
 ## Overview
 
-ConvertWiz is a client-side web application that provides multiple utility tools for everyday conversions and operations. The application serves as an all-in-one converter toolkit offering image format conversion (JPG to PNG), currency conversion, land unit conversion, and Instagram profile picture resizing capabilities.
+ConvertWiz is a focused, client-side web application that specializes in converting JPG images to PNG format with perfect quality retention. The application features drag & drop functionality, daily usage limits for anonymous users, animated progress tracking, and optional watermarking capabilities.
 
 ## System Architecture
 
@@ -20,29 +20,34 @@ ConvertWiz is a client-side web application that provides multiple utility tools
 
 ## Key Components
 
-### 1. Navigation System
-- Sticky header with smooth scrolling navigation
-- Responsive design with mobile considerations
-- Gradient text branding with visual effects
+### 1. Drag & Drop Upload Interface
+- Intuitive drag and drop file handling
+- Visual feedback with hover animations and border glow effects
+- Click-to-browse fallback functionality
+- File validation (JPG/JPEG only, 10MB max size)
 
-### 2. Image Conversion Module (JPG to PNG)
-- File input handling with validation
-- Canvas-based image processing
-- Real-time preview functionality
-- Download capability for converted files
-- Error handling for unsupported file types
+### 2. Daily Usage Limiting System
+- LocalStorage-based tracking of daily conversions
+- 3 free conversions per day for anonymous users
+- Automatic reset at midnight
+- Clear visual counter showing remaining conversions
 
-### 3. Currency Converter
-- Real-time currency conversion (implementation pending)
-- Multiple currency support planned
+### 3. Animated Progress Tracking
+- Multi-stage progress animation (2-second duration)
+- Visual progress bar with gradient effects and glow
+- Step-by-step status messages during conversion
+- Smooth transitions between conversion stages
 
-### 4. Land Units Converter
-- Various land measurement conversions
-- Support for different unit systems
+### 4. High-Quality Image Processing
+- Canvas API with imageSmoothingEnabled for quality retention
+- Maintains original image dimensions and quality
+- PNG output with maximum quality (1.0 quality factor)
+- Side-by-side preview comparison with file size information
 
-### 5. Instagram DP Resizer
-- Profile picture optimization for Instagram
-- Maintains aspect ratio and quality
+### 5. Optional Watermarking Feature
+- Toggle switch for adding watermarks (default OFF)
+- Subtle watermark placement with transparency
+- Dynamic sizing based on image dimensions
 
 ## Data Flow
 

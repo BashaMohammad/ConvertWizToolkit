@@ -1,390 +1,393 @@
-// ConvertWiz - All-in-One Utility Toolkit JavaScript
+// ConvertWiz - JPG to PNG Converter JavaScript
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
-        if (targetSection) {
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
-});
-
-// JPG to PNG Converter
-class JPGToPNGConverter {
+class JPGtoPNGConverter {
     constructor() {
-        this.jpgInput = document.getElementById('jpg-input');
-        this.jpgPreview = document.getElementById('jpg-preview');
-        this.jpgPreviewImg = document.getElementById('jpg-preview-img');
-        this.convertBtn = document.getElementById('convert-jpg-png');
-        this.pngResult = document.getElementById('png-result');
-        this.pngResultImg = document.getElementById('png-result-img');
-        this.downloadBtn = document.getElementById('download-png');
+        this.dailyLimit = 3;
+        this.currentFile = null;
+        this.convertedBlob = null;
         
+        this.initElements();
         this.initEventListeners();
+        this.updateDailyCounter();
+        this.setupDragAndDrop();
+    }
+    
+    initElements() {
+        // UI Elements
+        this.uploadArea = document.getElementById('upload-area');
+        this.fileInput = document.getElementById('jpg-input');
+        this.browseBtn = document.getElementById('browse-btn');
+        this.watermarkToggle = document.getElementById('watermark-toggle');
+        
+        // Section Elements
+        this.progressSection = document.getElementById('progress-section');
+        this.resultSection = document.getElementById('result-section');
+        this.limitSection = document.getElementById('limit-reached');
+        
+        // Progress Elements
+        this.progressBar = document.getElementById('progress-bar');
+        this.progressText = document.getElementById('progress-text');
+        
+        // Result Elements
+        this.originalPreview = document.getElementById('original-preview');
+        this.convertedPreview = document.getElementById('converted-preview');
+        this.originalSize = document.getElementById('original-size');
+        this.convertedSize = document.getElementById('converted-size');
+        this.downloadBtn = document.getElementById('download-png');
+        this.convertAnotherBtn = document.getElementById('convert-another');
+        
+        // Counter Elements
+        this.conversionsLeft = document.getElementById('conversions-left');
+        this.limitCounter = document.getElementById('limit-counter');
     }
     
     initEventListeners() {
-        this.jpgInput.addEventListener('change', (e) => this.handleFileSelect(e));
-        this.convertBtn.addEventListener('click', () => this.convertToPNG());
+        // File input events
+        this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+        this.browseBtn.addEventListener('click', () => this.fileInput.click());
+        
+        // Button events
         this.downloadBtn.addEventListener('click', () => this.downloadPNG());
+        this.convertAnotherBtn.addEventListener('click', () => this.resetConverter());
+        
+        // Watermark toggle
+        this.watermarkToggle.addEventListener('change', () => this.toggleWatermark());
     }
     
-    handleFileSelect(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+    setupDragAndDrop() {
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, this.preventDefaults, false);
+            document.body.addEventListener(eventName, this.preventDefaults, false);
+        });
         
-        if (!file.type.match('image/jpeg') && !file.type.match('image/jpg')) {
-            alert('Please select a JPG file');
+        // Highlight drop area when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, () => this.highlight(), false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, () => this.unhighlight(), false);
+        });
+        
+        // Handle dropped files
+        this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+    }
+    
+    preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    highlight() {
+        this.uploadArea.classList.add('dragover');
+    }
+    
+    unhighlight() {
+        this.uploadArea.classList.remove('dragover');
+    }
+    
+    handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            this.handleFile(files[0]);
+        }
+    }
+    
+    handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            this.handleFile(file);
+        }
+    }
+    
+    handleFile(file) {
+        // Check daily limit
+        if (!this.checkDailyLimit()) {
+            this.showLimitReached();
             return;
         }
         
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.jpgPreviewImg.src = e.target.result;
-            this.jpgPreview.classList.remove('hidden');
-            this.jpgPreview.classList.add('fade-in');
-            this.pngResult.classList.add('hidden');
-        };
-        reader.readAsDataURL(file);
+        // Validate file
+        if (!this.validateFile(file)) {
+            return;
+        }
+        
+        this.currentFile = file;
+        this.startConversion();
     }
     
-    convertToPNG() {
-        const img = this.jpgPreviewImg;
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+    validateFile(file) {
+        // Check file type
+        if (!file.type.match('image/jpeg') && !file.type.match('image/jpg')) {
+            this.showNotification('Please select a JPG or JPEG file.', 'error');
+            return false;
+        }
         
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
+        // Check file size (10MB limit)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+            this.showNotification('File size must be less than 10MB.', 'error');
+            return false;
+        }
         
-        ctx.drawImage(img, 0, 0);
+        return true;
+    }
+    
+    async startConversion() {
+        // Hide upload area and show progress
+        this.uploadArea.parentElement.style.display = 'none';
+        this.progressSection.classList.remove('hidden');
         
-        canvas.toBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            this.pngResultImg.src = url;
-            this.pngBlob = blob;
-            this.pngResult.classList.remove('hidden');
-            this.pngResult.classList.add('fade-in');
-        }, 'image/png');
+        // Animate progress bar
+        await this.animateProgress();
+        
+        // Convert the image
+        await this.convertImage();
+        
+        // Show results
+        this.showResults();
+        
+        // Update daily counter
+        this.updateDailyUsage();
+    }
+    
+    async animateProgress() {
+        const steps = [
+            { width: '20%', text: 'Reading image file...' },
+            { width: '40%', text: 'Processing image data...' },
+            { width: '60%', text: 'Converting to PNG format...' },
+            { width: '80%', text: 'Optimizing quality...' },
+            { width: '100%', text: 'Conversion complete!' }
+        ];
+        
+        for (let i = 0; i < steps.length; i++) {
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    this.progressBar.style.width = steps[i].width;
+                    this.progressText.textContent = steps[i].text;
+                    resolve();
+                }, 400);
+            });
+        }
+    }
+    
+    async convertImage() {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas dimensions
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    
+                    // Enable high-quality rendering
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    
+                    // Draw image
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Add watermark if enabled
+                    if (this.watermarkToggle.checked) {
+                        this.addWatermark(ctx, canvas.width, canvas.height);
+                    }
+                    
+                    // Convert to PNG
+                    canvas.toBlob((blob) => {
+                        this.convertedBlob = blob;
+                        
+                        // Set preview images
+                        this.originalPreview.src = e.target.result;
+                        this.convertedPreview.src = URL.createObjectURL(blob);
+                        
+                        // Set file sizes
+                        this.originalSize.textContent = this.formatFileSize(this.currentFile.size);
+                        this.convertedSize.textContent = this.formatFileSize(blob.size);
+                        
+                        resolve();
+                    }, 'image/png', 1.0);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(this.currentFile);
+        });
+    }
+    
+    addWatermark(ctx, width, height) {
+        // Set watermark style
+        ctx.font = `${Math.max(width, height) / 20}px Arial`;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Add watermark text
+        ctx.fillText('ConvertWiz.com', width / 2, height - 50);
+    }
+    
+    showResults() {
+        this.progressSection.classList.add('hidden');
+        this.resultSection.classList.remove('hidden');
+        this.resultSection.classList.add('fade-in');
     }
     
     downloadPNG() {
-        if (!this.pngBlob) return;
+        if (!this.convertedBlob) return;
         
-        const url = URL.createObjectURL(this.pngBlob);
+        const url = URL.createObjectURL(this.convertedBlob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'converted-image.png';
+        a.download = this.currentFile.name.replace(/\.(jpg|jpeg)$/i, '.png');
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    }
-}
-
-// Currency Converter
-class CurrencyConverter {
-    constructor() {
-        this.fromCurrency = document.getElementById('from-currency');
-        this.toCurrency = document.getElementById('to-currency');
-        this.amountInput = document.getElementById('currency-amount');
-        this.convertBtn = document.getElementById('convert-currency');
-        this.result = document.getElementById('currency-result');
-        this.resultText = document.getElementById('currency-result-text');
-        this.rateText = document.getElementById('currency-rate-text');
-        this.currencies = {};
         
-        this.initEventListeners();
-        this.loadCurrencies();
+        this.showNotification('PNG file downloaded successfully!', 'success');
     }
     
-    async loadCurrencies() {
-        try {
-            const response = await fetch('https://api.exchangerate.host/symbols');
-            const data = await response.json();
-            
-            if (data.success) {
-                this.currencies = data.symbols;
-                this.populateCurrencyDropdowns();
-            } else {
-                // Fallback to manual list if API fails
-                this.loadFallbackCurrencies();
-            }
-        } catch (error) {
-            console.error('Error loading currencies:', error);
-            this.loadFallbackCurrencies();
+    resetConverter() {
+        // Reset all sections
+        this.progressSection.classList.add('hidden');
+        this.resultSection.classList.add('hidden');
+        this.uploadArea.parentElement.style.display = 'block';
+        
+        // Reset progress bar
+        this.progressBar.style.width = '0%';
+        this.progressText.textContent = 'Processing image...';
+        
+        // Clear file input
+        this.fileInput.value = '';
+        this.currentFile = null;
+        this.convertedBlob = null;
+        
+        // Remove dragover class
+        this.unhighlight();
+    }
+    
+    checkDailyLimit() {
+        const today = new Date().toDateString();
+        const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
+        
+        if (usage.date !== today) {
+            return true; // New day, reset limit
+        }
+        
+        return usage.count < this.dailyLimit;
+    }
+    
+    updateDailyUsage() {
+        const today = new Date().toDateString();
+        let usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
+        
+        if (usage.date !== today) {
+            usage = { date: today, count: 0 };
+        }
+        
+        usage.count += 1;
+        localStorage.setItem('convertWizUsage', JSON.stringify(usage));
+        
+        this.updateDailyCounter();
+    }
+    
+    updateDailyCounter() {
+        const today = new Date().toDateString();
+        const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
+        
+        let remaining = this.dailyLimit;
+        if (usage.date === today) {
+            remaining = Math.max(0, this.dailyLimit - usage.count);
+        }
+        
+        this.conversionsLeft.textContent = remaining;
+        
+        if (remaining === 0) {
+            this.limitCounter.innerHTML = '<i class="fas fa-hourglass-end mr-2"></i>No free conversions left today';
+            this.limitCounter.className = 'inline-block bg-red-500/20 backdrop-blur-md rounded-full px-6 py-2 text-white font-medium';
         }
     }
     
-    loadFallbackCurrencies() {
-        this.currencies = {
-            'USD': { description: 'United States Dollar' },
-            'EUR': { description: 'Euro' },
-            'GBP': { description: 'British Pound Sterling' },
-            'INR': { description: 'Indian Rupee' },
-            'JPY': { description: 'Japanese Yen' },
-            'AUD': { description: 'Australian Dollar' },
-            'CAD': { description: 'Canadian Dollar' },
-            'CHF': { description: 'Swiss Franc' },
-            'CNY': { description: 'Chinese Yuan' },
-            'SEK': { description: 'Swedish Krona' },
-            'NZD': { description: 'New Zealand Dollar' },
-            'MXN': { description: 'Mexican Peso' },
-            'SGD': { description: 'Singapore Dollar' },
-            'HKD': { description: 'Hong Kong Dollar' },
-            'NOK': { description: 'Norwegian Krone' },
-            'KRW': { description: 'South Korean Won' },
-            'TRY': { description: 'Turkish Lira' },
-            'RUB': { description: 'Russian Ruble' },
-            'BRL': { description: 'Brazilian Real' },
-            'ZAR': { description: 'South African Rand' }
-        };
-        this.populateCurrencyDropdowns();
+    showLimitReached() {
+        this.uploadArea.parentElement.style.display = 'none';
+        this.limitSection.classList.remove('hidden');
     }
     
-    populateCurrencyDropdowns() {
-        // Clear existing options
-        this.fromCurrency.innerHTML = '';
-        this.toCurrency.innerHTML = '';
-        
-        // Sort currencies by code
-        const sortedCurrencies = Object.keys(this.currencies).sort();
-        
-        sortedCurrencies.forEach(code => {
-            const currency = this.currencies[code];
-            const optionFrom = new Option(`${code} - ${currency.description}`, code);
-            const optionTo = new Option(`${code} - ${currency.description}`, code);
-            
-            this.fromCurrency.appendChild(optionFrom);
-            this.toCurrency.appendChild(optionTo);
-        });
-        
-        // Set default values
-        this.fromCurrency.value = 'USD';
-        this.toCurrency.value = 'EUR';
-    }
-    
-    initEventListeners() {
-        this.convertBtn.addEventListener('click', () => this.convertCurrency());
-        this.amountInput.addEventListener('input', () => {
-            if (this.amountInput.value) {
-                this.convertCurrency();
-            }
-        });
-        this.fromCurrency.addEventListener('change', () => {
-            if (this.amountInput.value) {
-                this.convertCurrency();
-            }
-        });
-        this.toCurrency.addEventListener('change', () => {
-            if (this.amountInput.value) {
-                this.convertCurrency();
-            }
-        });
-    }
-    
-    async convertCurrency() {
-        const amount = parseFloat(this.amountInput.value);
-        const from = this.fromCurrency.value;
-        const to = this.toCurrency.value;
-        
-        if (!amount || amount <= 0) {
-            this.result.classList.add('hidden');
-            return;
-        }
-        
-        if (from === to) {
-            this.showResult(amount, amount, 1, from, to);
-            return;
-        }
-        
-        try {
-            this.convertBtn.textContent = 'Converting...';
-            this.convertBtn.disabled = true;
-            
-            const response = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                this.showResult(amount, data.result, data.info.rate, from, to);
-            } else {
-                throw new Error('Conversion failed');
-            }
-        } catch (error) {
-            console.error('Currency conversion error:', error);
-            showNotification('Error converting currency. Please check your internet connection.', 'error');
-        } finally {
-            this.convertBtn.textContent = 'Convert Currency';
-            this.convertBtn.disabled = false;
-        }
-    }
-    
-    showResult(originalAmount, convertedAmount, rate, fromCurrency, toCurrency) {
-        this.resultText.textContent = `${originalAmount} ${fromCurrency} = ${convertedAmount.toFixed(2)} ${toCurrency}`;
-        this.rateText.textContent = `Live Rate • Updated now • 1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
-        this.result.classList.remove('hidden');
-        this.result.classList.add('fade-in');
-    }
-}
-
-// Land Unit Converter
-class LandUnitConverter {
-    constructor() {
-        this.unitSelect = document.getElementById('land-unit');
-        this.valueInput = document.getElementById('land-value');
-        this.results = {
-            acres: document.getElementById('result-acres'),
-            gunta: document.getElementById('result-gunta'),
-            sqft: document.getElementById('result-sqft'),
-            bigha: document.getElementById('result-bigha')
-        };
-        
-        // Conversion rates to square feet
-        this.conversionRates = {
-            acres: 43560,      // 1 acre = 43,560 sq ft
-            gunta: 1089,       // 1 gunta = 1,089 sq ft
-            sqft: 1,           // 1 sq ft = 1 sq ft
-            bigha: 26910       // 1 bigha = 26,910 sq ft (varies by region, using standard)
-        };
-        
-        this.initEventListeners();
-    }
-    
-    initEventListeners() {
-        this.valueInput.addEventListener('input', () => this.convertUnits());
-        this.unitSelect.addEventListener('change', () => this.convertUnits());
-    }
-    
-    convertUnits() {
-        const value = parseFloat(this.valueInput.value);
-        const unit = this.unitSelect.value;
-        
-        if (!value || value <= 0) {
-            // Reset all results to 0
-            Object.values(this.results).forEach(element => {
-                element.textContent = '0';
-            });
-            return;
-        }
-        
-        // Convert input value to square feet first
-        const sqftValue = value * this.conversionRates[unit];
-        
-        // Convert square feet to all other units
-        this.results.acres.textContent = (sqftValue / this.conversionRates.acres).toFixed(4);
-        this.results.gunta.textContent = (sqftValue / this.conversionRates.gunta).toFixed(4);
-        this.results.sqft.textContent = sqftValue.toFixed(2);
-        this.results.bigha.textContent = (sqftValue / this.conversionRates.bigha).toFixed(4);
-    }
-}
-
-// Instagram DP Resizer
-class InstagramDPResizer {
-    constructor() {
-        this.dpInput = document.getElementById('dp-input');
-        this.dpPreview = document.getElementById('dp-preview');
-        this.dpOriginal = document.getElementById('dp-original');
-        this.resizeBtn = document.getElementById('resize-dp');
-        this.dpResult = document.getElementById('dp-result');
-        this.dpCanvas = document.getElementById('dp-canvas');
-        this.downloadBtn = document.getElementById('download-dp');
-        
-        this.initEventListeners();
-    }
-    
-    initEventListeners() {
-        this.dpInput.addEventListener('change', (e) => this.handleFileSelect(e));
-        this.resizeBtn.addEventListener('click', () => this.resizeImage());
-        this.downloadBtn.addEventListener('click', () => this.downloadResizedImage());
-    }
-    
-    handleFileSelect(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        if (!file.type.match('image.*')) {
-            alert('Please select an image file');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.dpOriginal.src = e.target.result;
-            this.dpPreview.classList.remove('hidden');
-            this.dpPreview.classList.add('fade-in');
-            this.dpResult.classList.add('hidden');
-        };
-        reader.readAsDataURL(file);
-    }
-    
-    resizeImage() {
-        const img = this.dpOriginal;
-        const canvas = this.dpCanvas;
-        const ctx = canvas.getContext('2d');
-        
-        // Clear canvas
-        ctx.clearRect(0, 0, 320, 320);
-        
-        // Calculate dimensions to maintain aspect ratio
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-        let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
-        
-        if (aspectRatio > 1) {
-            // Landscape - fit height
-            drawHeight = 320;
-            drawWidth = 320 * aspectRatio;
-            offsetX = (320 - drawWidth) / 2;
+    toggleWatermark() {
+        // Visual feedback for toggle
+        const toggleDiv = this.watermarkToggle.nextElementSibling;
+        if (this.watermarkToggle.checked) {
+            toggleDiv.style.backgroundColor = '#8b5cf6';
         } else {
-            // Portrait or square - fit width
-            drawWidth = 320;
-            drawHeight = 320 / aspectRatio;
-            offsetY = (320 - drawHeight) / 2;
+            toggleDiv.style.backgroundColor = '#d1d5db';
         }
-        
-        // Draw image centered and cropped
-        ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-        
-        this.dpResult.classList.remove('hidden');
-        this.dpResult.classList.add('fade-in');
     }
     
-    downloadResizedImage() {
-        this.dpCanvas.toBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'instagram-dp-320x320.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }, 'image/png');
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+            type === 'success' ? 'bg-green-500 text-white' : 
+            type === 'error' ? 'bg-red-500 text-white' : 
+            'bg-blue-500 text-white'
+        }`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} mr-2"></i>
+                ${message}
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
     }
 }
 
-// Initialize all converters when DOM is loaded
+// Initialize converter when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    new JPGToPNGConverter();
-    new CurrencyConverter();
-    new LandUnitConverter();
-    new InstagramDPResizer();
+    new JPGtoPNGConverter();
     
-    // Add loading animation to buttons
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            if (!this.disabled) {
-                this.classList.add('loading');
-                setTimeout(() => {
-                    this.classList.remove('loading');
-                }, 300);
+    // Add smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
     
-    // Add intersection observer for scroll animations
+    // Add intersection observer for animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -399,8 +402,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, observerOptions);
     
-    // Observe all tool cards
-    document.querySelectorAll('.tool-card').forEach(card => {
+    // Observe all converter cards
+    document.querySelectorAll('.converter-card').forEach(card => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(20px)';
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -408,47 +411,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Service worker registration for PWA-like experience (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        // Service worker can be added later for offline functionality
-    });
-}
-
-// Utility functions
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
-        type === 'success' ? 'bg-green-500 text-white' : 
-        type === 'error' ? 'bg-red-500 text-white' : 
-        'bg-blue-500 text-white'
-    }`;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
 // Global error handler
 window.addEventListener('error', function(e) {
     console.error('Global error:', e.error);
-    showNotification('An error occurred. Please try again.', 'error');
 });
 
 // Handle offline/online status
 window.addEventListener('online', () => {
-    showNotification('You are back online!', 'success');
+    console.log('Back online');
 });
 
 window.addEventListener('offline', () => {
-    showNotification('You are currently offline. Some features may not work.', 'error');
+    console.log('Gone offline');
 });

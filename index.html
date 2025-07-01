@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConvertWiz ⚡ - All-in-One Utility Toolkit</title>
+    <title>ConvertWiz - JPG to PNG Converter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -21,20 +21,14 @@
         }
     </script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-500">
+<body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-lg">
         <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
-                <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-orange-600 bg-clip-text text-transparent">
-                    ConvertWiz ⚡
+            <div class="flex justify-center items-center">
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    Convert JPG to PNG with Ali's Magic 💫
                 </h1>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#jpg-png" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">JPG/PNG</a>
-                    <a href="#currency" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Currency</a>
-                    <a href="#land-units" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Land Units</a>
-                    <a href="#instagram-dp" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Instagram DP</a>
-                </nav>
             </div>
         </div>
     </header>
@@ -43,175 +37,121 @@
     <main class="container mx-auto px-4 py-8">
         <!-- Hero Section -->
         <section class="text-center mb-12">
-            <h2 class="text-4xl md:text-6xl font-bold text-white mb-4">
-                All-in-One Converter Toolkit
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                Free JPG to PNG Converter
             </h2>
-            <p class="text-xl text-white/90 mb-8">
-                Convert images, currencies, land units, and resize Instagram DPs - all in one place!
+            <p class="text-xl text-white/90 mb-4">
+                Convert your JPG images to PNG format with perfect quality retention
             </p>
+            <!-- Daily Limit Counter -->
+            <div id="limit-counter" class="inline-block bg-white/20 backdrop-blur-md rounded-full px-6 py-2 text-white font-medium">
+                <i class="fas fa-gift mr-2"></i>
+                <span id="conversions-left">3</span> free conversions left today
+            </div>
         </section>
 
-        <!-- Tools Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            
-            <!-- JPG to PNG Converter -->
-            <section id="jpg-png" class="tool-card bg-white rounded-2xl shadow-2xl p-8 hover:scale-105 transition-transform duration-300">
-                <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-image text-white text-2xl"></i>
+        <!-- Converter Card -->
+        <div class="max-w-4xl mx-auto">
+            <!-- Upload Section -->
+            <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8 hover:shadow-3xl transition-all duration-300">
+                <!-- Drag & Drop Area -->
+                <div id="upload-area" class="border-2 border-dashed border-purple-300 rounded-xl p-12 text-center transition-all duration-300 hover:border-purple-500 hover:bg-purple-50">
+                    <input type="file" id="jpg-input" accept=".jpg,.jpeg,image/jpeg" class="hidden" multiple="false">
+                    <div id="upload-content">
+                        <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-cloud-upload-alt text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Drag & Drop JPG Files Here</h3>
+                        <p class="text-gray-600 mb-4">or click to browse and select files</p>
+                        <button id="browse-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-shadow">
+                            <i class="fas fa-folder-open mr-2"></i>Choose Files
+                        </button>
+                        <p class="text-sm text-gray-500 mt-4">Supports JPG and JPEG formats • Max file size: 10MB</p>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">JPG to PNG Converter</h3>
-                    <p class="text-gray-600">Convert your JPG images to PNG format instantly</p>
                 </div>
-                
-                <div class="space-y-4">
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
-                        <input type="file" id="jpg-input" accept=".jpg,.jpeg" class="hidden">
-                        <label for="jpg-input" class="cursor-pointer">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-gray-600">Click to upload JPG file</p>
-                        </label>
-                    </div>
-                    
-                    <div id="jpg-preview" class="hidden">
-                        <img id="jpg-preview-img" class="max-w-full h-48 object-contain mx-auto rounded-lg shadow-md">
-                        <button id="convert-jpg-png" class="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg hover:shadow-lg transition-shadow">
-                            Convert to PNG
-                        </button>
-                    </div>
-                    
-                    <div id="png-result" class="hidden">
-                        <img id="png-result-img" class="max-w-full h-48 object-contain mx-auto rounded-lg shadow-md">
-                        <button id="download-png" class="w-full mt-4 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors">
-                            <i class="fas fa-download mr-2"></i>Download PNG
-                        </button>
-                    </div>
+
+                <!-- Watermark Option -->
+                <div class="mt-6 flex items-center justify-center">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" id="watermark-toggle" class="sr-only">
+                        <div class="relative">
+                            <div class="w-12 h-6 bg-gray-300 rounded-full shadow-inner transition-colors duration-300"></div>
+                            <div class="dot absolute w-5 h-5 bg-white rounded-full shadow -left-1 -top-0.5 transition-transform duration-300"></div>
+                        </div>
+                        <span class="ml-3 text-gray-700 font-medium">Add watermark</span>
+                    </label>
                 </div>
             </section>
 
-            <!-- Currency Converter -->
-            <section id="currency" class="tool-card bg-white rounded-2xl shadow-2xl p-8 hover:scale-105 transition-transform duration-300">
-                <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-exchange-alt text-white text-2xl"></i>
+            <!-- Progress Section -->
+            <section id="progress-section" class="hidden converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                        <i class="fas fa-magic text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Currency Converter</h3>
-                    <p class="text-gray-600">Convert between major world currencies</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Converting Your Image...</h3>
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                        <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500 w-0"></div>
+                    </div>
+                    <p id="progress-text" class="text-gray-600">Processing image...</p>
                 </div>
+            </section>
+
+            <!-- Result Section -->
+            <section id="result-section" class="hidden converter-card bg-white rounded-2xl shadow-2xl p-8">
+                <h3 class="text-2xl font-bold text-gray-800 text-center mb-8">Conversion Complete!</h3>
                 
-                <div class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">From</label>
-                            <select id="from-currency" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Loading currencies...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">To</label>
-                            <select id="to-currency" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Loading currencies...</option>
-                            </select>
+                <!-- Side by Side Preview -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Original -->
+                    <div class="text-center">
+                        <h4 class="text-lg font-semibold text-gray-700 mb-4">Original JPG</h4>
+                        <div class="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
+                            <img id="original-preview" class="max-w-full h-48 object-contain mx-auto rounded-lg">
+                            <div class="mt-3 text-sm text-gray-600">
+                                <p>Format: <span class="font-medium">JPG</span></p>
+                                <p>Size: <span id="original-size" class="font-medium">-</span></p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
-                        <input type="number" id="currency-amount" placeholder="Enter amount" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" min="0" step="0.01">
+                    <!-- Converted -->
+                    <div class="text-center">
+                        <h4 class="text-lg font-semibold text-gray-700 mb-4">Converted PNG</h4>
+                        <div class="border-2 border-green-200 rounded-lg p-4 bg-green-50">
+                            <img id="converted-preview" class="max-w-full h-48 object-contain mx-auto rounded-lg">
+                            <div class="mt-3 text-sm text-gray-600">
+                                <p>Format: <span class="font-medium text-green-600">PNG</span></p>
+                                <p>Size: <span id="converted-size" class="font-medium">-</span></p>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <button id="convert-currency" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-3 rounded-lg hover:shadow-lg transition-shadow">
-                        Convert Currency
+                </div>
+
+                <!-- Download Button -->
+                <div class="text-center mt-8">
+                    <button id="download-png" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-download mr-3"></i>Download PNG
                     </button>
-                    
-                    <div id="currency-result" class="hidden p-4 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg text-center">
-                        <p id="currency-result-text" class="text-xl font-semibold text-gray-800"></p>
-                        <p id="currency-rate-text" class="text-sm text-gray-600 mt-2"></p>
-                    </div>
+                    <button id="convert-another" class="ml-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-plus mr-3"></i>Convert Another
+                    </button>
                 </div>
             </section>
 
-            <!-- Land Unit Converter -->
-            <section id="land-units" class="tool-card bg-white rounded-2xl shadow-2xl p-8 hover:scale-105 transition-transform duration-300">
-                <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-map text-white text-2xl"></i>
+            <!-- Daily Limit Reached -->
+            <section id="limit-reached" class="hidden converter-card bg-white rounded-2xl shadow-2xl p-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-hourglass-end text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Land Unit Converter</h3>
-                    <p class="text-gray-600">Convert between Indian land measurement units</p>
-                </div>
-                
-                <div class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
-                            <select id="land-unit" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                                <option value="acres">Acres</option>
-                                <option value="gunta">Gunta</option>
-                                <option value="sqft">Square Feet</option>
-                                <option value="bigha">Bigha</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Value</label>
-                            <input type="number" id="land-value" placeholder="Enter value" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" min="0" step="0.01">
-                        </div>
-                    </div>
-                    
-                    <div id="land-results" class="grid grid-cols-2 gap-4 mt-6">
-                        <div class="p-4 bg-yellow-50 rounded-lg text-center">
-                            <p class="text-sm text-gray-600">Acres</p>
-                            <p id="result-acres" class="text-xl font-semibold text-gray-800">0</p>
-                        </div>
-                        <div class="p-4 bg-orange-50 rounded-lg text-center">
-                            <p class="text-sm text-gray-600">Gunta</p>
-                            <p id="result-gunta" class="text-xl font-semibold text-gray-800">0</p>
-                        </div>
-                        <div class="p-4 bg-red-50 rounded-lg text-center">
-                            <p class="text-sm text-gray-600">Square Feet</p>
-                            <p id="result-sqft" class="text-xl font-semibold text-gray-800">0</p>
-                        </div>
-                        <div class="p-4 bg-pink-50 rounded-lg text-center">
-                            <p class="text-sm text-gray-600">Bigha</p>
-                            <p id="result-bigha" class="text-xl font-semibold text-gray-800">0</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Instagram DP Resizer -->
-            <section id="instagram-dp" class="tool-card bg-white rounded-2xl shadow-2xl p-8 hover:scale-105 transition-transform duration-300">
-                <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fab fa-instagram text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Instagram DP Resizer</h3>
-                    <p class="text-gray-600">Resize your images to perfect Instagram profile size (320x320)</p>
-                </div>
-                
-                <div class="space-y-4">
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-pink-400 transition-colors">
-                        <input type="file" id="dp-input" accept="image/*" class="hidden">
-                        <label for="dp-input" class="cursor-pointer">
-                            <i class="fas fa-user-circle text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-gray-600">Click to upload image</p>
-                        </label>
-                    </div>
-                    
-                    <div id="dp-preview" class="hidden text-center">
-                        <p class="text-sm text-gray-600 mb-2">Original Image</p>
-                        <img id="dp-original" class="max-w-full h-48 object-contain mx-auto rounded-lg shadow-md mb-4">
-                        <button id="resize-dp" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 rounded-lg hover:shadow-lg transition-shadow">
-                            Resize to 320x320
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Daily Limit Reached</h3>
+                    <p class="text-gray-600 mb-6">You've reached today's free limit. Come back tomorrow or Login for more.</p>
+                    <div class="space-y-3">
+                        <button class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-shadow">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login for Unlimited Access
                         </button>
-                    </div>
-                    
-                    <div id="dp-result" class="hidden text-center">
-                        <p class="text-sm text-gray-600 mb-2">Resized Image (320x320)</p>
-                        <canvas id="dp-canvas" width="320" height="320" class="mx-auto rounded-lg shadow-md border-2 border-gray-200"></canvas>
-                        <button id="download-dp" class="w-full mt-4 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors">
-                            <i class="fas fa-download mr-2"></i>Download Resized Image
-                        </button>
+                        <p class="text-sm text-gray-500">Free users: 3 conversions per day • Premium: Unlimited</p>
                     </div>
                 </div>
             </section>
