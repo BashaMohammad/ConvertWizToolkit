@@ -476,14 +476,39 @@ class CurrencyConverter {
     
     async loadCurrencies() {
         try {
-            const response = await fetch('https://api.exchangerate.host/symbols');
+            // Get exchange rates which includes all available currencies
+            const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
             const data = await response.json();
             
-            if (data.success) {
-                this.currencies = data.symbols;
+            if (data.rates) {
+                // Convert rates object to currencies format
+                this.currencies = {};
+                const currencyNames = {
+                    'USD': 'US Dollar', 'EUR': 'Euro', 'GBP': 'British Pound', 'JPY': 'Japanese Yen',
+                    'AUD': 'Australian Dollar', 'CAD': 'Canadian Dollar', 'CHF': 'Swiss Franc', 'CNY': 'Chinese Yuan',
+                    'SEK': 'Swedish Krona', 'NZD': 'New Zealand Dollar', 'MXN': 'Mexican Peso', 'SGD': 'Singapore Dollar',
+                    'HKD': 'Hong Kong Dollar', 'NOK': 'Norwegian Krone', 'KRW': 'South Korean Won', 'TRY': 'Turkish Lira',
+                    'RUB': 'Russian Ruble', 'INR': 'Indian Rupee', 'BRL': 'Brazilian Real', 'ZAR': 'South African Rand',
+                    'PLN': 'Polish Zloty', 'THB': 'Thai Baht', 'IDR': 'Indonesian Rupiah', 'HUF': 'Hungarian Forint',
+                    'CZK': 'Czech Koruna', 'ILS': 'Israeli Shekel', 'CLP': 'Chilean Peso', 'PHP': 'Philippine Peso',
+                    'AED': 'UAE Dirham', 'COP': 'Colombian Peso', 'SAR': 'Saudi Riyal', 'MYR': 'Malaysian Ringgit',
+                    'RON': 'Romanian Leu', 'BGN': 'Bulgarian Lev', 'HRK': 'Croatian Kuna', 'DKK': 'Danish Krone',
+                    'ISK': 'Icelandic Krona', 'EGP': 'Egyptian Pound', 'QAR': 'Qatari Riyal', 'KWD': 'Kuwaiti Dinar',
+                    'BHD': 'Bahraini Dinar', 'OMR': 'Omani Rial', 'JOD': 'Jordanian Dinar', 'LBP': 'Lebanese Pound',
+                    'PKR': 'Pakistani Rupee', 'LKR': 'Sri Lankan Rupee', 'BDT': 'Bangladeshi Taka', 'VND': 'Vietnamese Dong',
+                    'KZT': 'Kazakhstani Tenge', 'UZS': 'Uzbekistani Som', 'GEL': 'Georgian Lari', 'AMD': 'Armenian Dram',
+                    'AZN': 'Azerbaijani Manat', 'BYN': 'Belarusian Ruble', 'UAH': 'Ukrainian Hryvnia', 'MDL': 'Moldovan Leu'
+                };
+                
+                // Only include currencies we have names for
+                Object.keys(data.rates).forEach(code => {
+                    if (currencyNames[code]) {
+                        this.currencies[code] = { description: currencyNames[code] };
+                    }
+                });
+                
                 this.populateCurrencyDropdowns();
             } else {
-                // Fallback to manual list if API fails
                 this.loadFallbackCurrencies();
             }
         } catch (error) {
@@ -603,13 +628,16 @@ class CurrencyConverter {
             this.convertBtn.textContent = 'Converting...';
             this.convertBtn.disabled = true;
             
-            const response = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}`);
+            // Get latest rates from the base currency
+            const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
             const data = await response.json();
             
-            if (data.success) {
-                this.showResult(amount, data.result, data.info.rate, from, to);
+            if (data.rates && data.rates[to]) {
+                const rate = data.rates[to];
+                const convertedAmount = amount * rate;
+                this.showResult(amount, convertedAmount, rate, from, to);
             } else {
-                throw new Error('Conversion failed');
+                throw new Error('Currency not found');
             }
         } catch (error) {
             console.error('Currency conversion error:', error);
