@@ -104,12 +104,19 @@ class JPGtoPNGConverter {
         }
     }
     
-    handleFiles(files) {
+    async handleFiles(files) {
         // Filter valid files
         const validFiles = files.filter(file => this.validateFile(file, false));
         
         if (validFiles.length === 0) {
             this.showNotification('No valid JPG files found. Please select JPG or JPEG files.', 'error');
+            return;
+        }
+        
+        // Check usage limit before processing
+        const canConvert = await this.checkDailyLimit();
+        if (!canConvert) {
+            this.showLimitReached();
             return;
         }
         
@@ -151,6 +158,13 @@ class JPGtoPNGConverter {
     }
     
     getRemainingLimit() {
+        // Use the Firebase authentication system for usage tracking
+        if (window.convertWizAuth) {
+            const remaining = window.convertWizAuth.getRemainingConversions();
+            return remaining === 'Unlimited' ? 999 : remaining;
+        }
+        
+        // Fallback to local storage if Firebase not available
         const today = new Date().toDateString();
         const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
         
@@ -346,7 +360,13 @@ class JPGtoPNGConverter {
         this.unhighlight();
     }
     
-    checkDailyLimit() {
+    async checkDailyLimit() {
+        // Use the Firebase authentication system for usage tracking
+        if (window.convertWizAuth) {
+            return await window.convertWizAuth.canPerformConversion();
+        }
+        
+        // Fallback to local storage if Firebase not available
         const today = new Date().toDateString();
         const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
         
@@ -358,15 +378,21 @@ class JPGtoPNGConverter {
     }
     
     updateDailyUsage() {
-        const today = new Date().toDateString();
-        let usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
-        
-        if (usage.date !== today) {
-            usage = { date: today, count: 0 };
+        // Use the Firebase authentication system for usage tracking
+        if (window.convertWizAuth) {
+            window.convertWizAuth.incrementUsage();
+        } else {
+            // Fallback to local storage if Firebase not available
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
+            
+            if (usage.date !== today) {
+                usage = { date: today, count: 0 };
+            }
+            
+            usage.count += 1;
+            localStorage.setItem('convertWizUsage', JSON.stringify(usage));
         }
-        
-        usage.count += 1;
-        localStorage.setItem('convertWizUsage', JSON.stringify(usage));
         
         this.updateDailyCounter();
     }
@@ -391,6 +417,13 @@ class JPGtoPNGConverter {
     }
     
     showLimitReached() {
+        // Use Firebase warning system if available
+        if (window.convertWizAuth) {
+            window.convertWizAuth.showUsageLimitWarning();
+        } else {
+            this.showNotification('Daily conversion limit reached! Sign up for unlimited access or try again tomorrow.', 'warning');
+        }
+        
         this.uploadArea.parentElement.style.display = 'none';
         this.limitSection.classList.remove('hidden');
     }

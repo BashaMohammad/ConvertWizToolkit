@@ -188,9 +188,9 @@ ConvertWiz includes comprehensive legal compliance documentation:
 - Mobile-responsive layout with proper spacing and typography
 - Cookie consent banner with localStorage persistence across all pages
 
-## Firebase Authentication
+## Firebase Authentication & Firestore Integration
 
-ConvertWiz now includes comprehensive user authentication powered by Firebase:
+ConvertWiz now includes comprehensive user authentication and usage tracking powered by Firebase:
 
 ### Authentication Features
 - **Email/Password Authentication**: Full sign-up and sign-in functionality with validation
@@ -202,15 +202,49 @@ ConvertWiz now includes comprehensive user authentication powered by Firebase:
 - **Error Handling**: User-friendly error messages with specific guidance
 - **Profile Management**: Updates user display name during account creation
 
+### Firestore Usage Tracking System
+- **Subscription Plan Management**: Free (5/day), Standard (20/day), Premium (unlimited) plans
+- **Daily Usage Limits**: Automatic reset at midnight with Firestore timestamp tracking
+- **Real-time Usage Display**: Shows current plan and remaining conversions in navbar
+- **Cross-Device Synchronization**: Usage tracking synced across all user devices
+- **Automatic Plan Initialization**: New users start with free plan and zero usage
+- **Secure Data Access**: Firestore security rules ensure users only access their own data
+
+### Usage Tracking Features
+- **Pre-Conversion Checks**: Validates usage limits before processing any conversions
+- **Post-Conversion Updates**: Automatic increment of daily usage count in Firestore
+- **Smart Limit Management**: Different limits for logged-in vs guest users
+- **Usage Warning System**: Friendly notifications when approaching or exceeding limits
+- **Plan Upgrade Prompting**: Encourages plan upgrades when limits are reached
+
 ### Technical Implementation
 - **Firebase SDK v10.7.0**: Modern ES6 module imports for optimal performance
+- **Firestore Integration**: Real-time database for user plan and usage data
 - **Secure Configuration**: Environment-based config with production Firebase project
 - **LocalStorage Integration**: Maintains session persistence across browser sessions
-- **Toast Notifications**: Consistent feedback system for auth actions
+- **Toast Notifications**: Consistent feedback system for auth actions and usage warnings
 - **Mobile-Responsive Design**: Touch-friendly interface across all devices
 
+### Firestore Data Structure
+```
+users/{userId} {
+  plan: "free" | "standard" | "premium"
+  dailyUsageCount: number
+  lastConversionDate: timestamp
+  email: string
+  displayName: string
+}
+```
+
+### Security Implementation
+- **Firestore Security Rules**: Users can only read/write their own data
+- **Authentication Required**: Firestore operations require valid Firebase auth
+- **Data Validation**: Client-side and server-side validation for all user data
+- **Privacy-First**: No personal data stored beyond email and chosen display name
+
 ### UI Integration
-- **Navbar Authentication Button**: Dynamic login/logout button with user greeting
+- **Navbar Usage Display**: Shows current plan and remaining conversions
+- **Mobile Usage Info**: Responsive usage display in mobile navigation
 - **Modal-Based Interface**: Professional overlay design with backdrop blur
 - **Tab Switching**: Seamless toggle between sign-in and sign-up forms
 - **Loading States**: Visual feedback during authentication processes
