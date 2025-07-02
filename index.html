@@ -273,50 +273,50 @@
                         <p class="text-white/80 text-lg">Essential utilities for everyday tasks and productivity</p>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Word Counter -->
-                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
-                            <div class="text-center">
-                                <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-edit text-white text-2xl"></i>
+                    <div class="flex justify-center">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
+                            <!-- Word Counter -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-edit text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Word Counter</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Count words, characters, reading time with comprehensive text analysis</p>
+                                    <button data-target="word-counter-section" class="inline-block w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
                                 </div>
-                                <h4 class="text-lg font-bold text-gray-800 mb-2">Word Counter</h4>
-                                <p class="text-gray-600 text-sm mb-4">Count words, characters, reading time with comprehensive text analysis</p>
-                                <button data-target="word-counter-section" class="inline-block w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
-                                    Try Now
-                                </button>
+                            </div>
+
+                            <!-- IP Address Extractor -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-network-wired text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">IP Extractor</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Extract IPv4 and IPv6 addresses from logs and text</p>
+                                    <button data-target="ip-extractor-section" class="inline-block w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- QR Code Generator -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-qrcode text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">QR Generator</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Generate QR codes for URLs, text, and contact info</p>
+                                    <button data-target="qr-generator-section" class="inline-block w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- IP Address Extractor -->
-                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
-                            <div class="text-center">
-                                <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-network-wired text-white text-2xl"></i>
-                                </div>
-                                <h4 class="text-lg font-bold text-gray-800 mb-2">IP Extractor</h4>
-                                <p class="text-gray-600 text-sm mb-4">Extract IPv4 and IPv6 addresses from logs and text</p>
-                                <button data-target="ip-extractor-section" class="inline-block w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
-                                    Try Now
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- QR Code Generator -->
-                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
-                            <div class="text-center">
-                                <div class="w-16 h-16 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-qrcode text-white text-2xl"></i>
-                                </div>
-                                <h4 class="text-lg font-bold text-gray-800 mb-2">QR Generator</h4>
-                                <p class="text-gray-600 text-sm mb-4">Generate QR codes for URLs, text, and contact info</p>
-                                <button data-target="qr-generator-section" class="inline-block w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
-                                    Try Now
-                                </button>
-                            </div>
-                        </div>
-
-
                     </div>
                 </div>
             </section>
