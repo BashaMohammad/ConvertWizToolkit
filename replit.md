@@ -253,7 +253,7 @@ users/{userId} {
 ## Changelog
 
 Changelog:
-- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, tool disclaimers, Google Analytics integration (G-7QJXHFPZVE), footer cleanup (removed "Iqbal" references and hidden social media links), optimized responsive layout alignment for all tool sections, and reduced excessive margins
+- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, tool disclaimers, Google Analytics integration (G-7QJXHFPZVE), footer cleanup (removed "Iqbal" references and hidden social media links), optimized responsive layout alignment for all tool sections, reduced excessive margins, and implemented comprehensive Firestore usage tracking system with subscription plans and daily limits
 - July 01, 2025. Initial setup
 
 ## Development Notes
