@@ -134,9 +134,103 @@
     font-weight: 500;
 }
 
+/* Enhanced Instagram DP Resizer Styling */
+#dp-upload-area {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#dp-upload-area:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+#dp-upload-area.dragover {
+    border-color: #ec4899;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(147, 51, 234, 0.1));
+    transform: scale(1.02);
+    box-shadow: 0 12px 30px rgba(236, 72, 153, 0.2);
+}
+
+/* Canvas responsive styling */
+#dp-canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    #dp-canvas {
+        width: 240px;
+        height: 240px;
+    }
+}
+
 /* Toggle switch styling */
-#watermark-toggle:checked + div {
+#watermark-toggle:checked + div,
+#background-option:checked + div {
     background-color: #8b5cf6;
+}
+
+#watermark-toggle:checked + div .dot,
+#background-option:checked + div .dot {
+    transform: translateX(24px);
+    background-color: white;
+}
+
+/* Notification animations */
+.notification-enter {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.notification-enter-active {
+    transform: translateX(0);
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.notification-exit {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification-exit-active {
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+/* Enhanced upload area animations */
+.upload-content {
+    transition: all 0.3s ease;
+}
+
+#dp-upload-area:hover .upload-content {
+    transform: translateY(-3px);
+}
+
+#dp-upload-area.dragover .upload-content {
+    transform: scale(1.05);
+}
+
+/* Preview grid responsiveness */
+@media (max-width: 768px) {
+    #dp-preview .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    #dp-upload-area {
+        padding: 2rem 1rem;
+    }
+    
+    #dp-upload-area h4 {
+        font-size: 1rem;
+    }
+    
+    #dp-upload-area .text-5xl {
+        font-size: 3rem;
+    }
 }
 
 #watermark-toggle:checked + div .dot {

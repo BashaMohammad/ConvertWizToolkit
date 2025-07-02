@@ -60,10 +60,15 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Real-time conversion with precise calculation formulas
 - Backward compatibility with legacy HTML structure
 
-#### Instagram DP Resizer
-- 320x320px Instagram profile picture optimization
-- Aspect ratio preservation with center cropping
-- Quality retention during resize process
+#### Enhanced Instagram DP Resizer
+- Smart 1:1 aspect ratio conversion to 320x320px Instagram profile pictures
+- Drag & drop + manual upload support for JPG, PNG, WebP formats
+- Auto-processing with aspect-fit sizing and center positioning
+- Optional Instagram-style gradient background fill for non-square images
+- Real-time preview with original vs processed comparison
+- Enhanced file validation with 10MB size limit and format checking
+- Toast notifications for user feedback and error handling
+- Mobile-responsive canvas display and touch-friendly interface
 
 ## Data Flow
 

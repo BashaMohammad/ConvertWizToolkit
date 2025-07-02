@@ -952,93 +952,311 @@ class LandUnitConverter {
     }
 }
 
-// Instagram DP Resizer
+// Enhanced Instagram DP Resizer
 class InstagramDPResizer {
     constructor() {
         this.dpInput = document.getElementById('dp-input');
+        this.uploadArea = document.getElementById('dp-upload-area');
         this.dpPreview = document.getElementById('dp-preview');
         this.dpOriginal = document.getElementById('dp-original');
         this.resizeBtn = document.getElementById('resize-dp');
         this.dpResult = document.getElementById('dp-result');
         this.dpCanvas = document.getElementById('dp-canvas');
         this.downloadBtn = document.getElementById('download-dp');
+        this.backgroundOption = document.getElementById('background-option');
         
-        if (this.dpInput) {
+        this.dpSize = 320;
+        this.currentFile = null;
+        this.processedBlob = null;
+        
+        if (this.dpInput || this.uploadArea) {
             this.initEventListeners();
+            this.setupDragAndDrop();
         }
     }
     
     initEventListeners() {
-        this.dpInput.addEventListener('change', (e) => this.handleFileSelect(e));
-        if (this.resizeBtn) this.resizeBtn.addEventListener('click', () => this.resizeImage());
-        if (this.downloadBtn) this.downloadBtn.addEventListener('click', () => this.downloadResizedImage());
+        if (this.dpInput) {
+            this.dpInput.addEventListener('change', (e) => this.handleFileSelect(e));
+        }
+        
+        if (this.uploadArea) {
+            this.uploadArea.addEventListener('click', () => {
+                if (this.dpInput) this.dpInput.click();
+            });
+        }
+        
+        if (this.resizeBtn) {
+            this.resizeBtn.addEventListener('click', () => this.processImage());
+        }
+        
+        if (this.downloadBtn) {
+            this.downloadBtn.addEventListener('click', () => this.downloadResizedImage());
+        }
+        
+        if (this.backgroundOption) {
+            this.backgroundOption.addEventListener('change', () => {
+                if (this.currentFile) {
+                    this.processImage();
+                }
+            });
+        }
+        
+        // Reset button functionality
+        const resetBtn = document.getElementById('reset-dp');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.reset());
+        }
+    }
+    
+    setupDragAndDrop() {
+        if (!this.uploadArea) return;
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, this.preventDefaults, false);
+        });
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, () => this.highlight(), false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, () => this.unhighlight(), false);
+        });
+        
+        this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+    }
+    
+    preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    highlight() {
+        if (this.uploadArea) {
+            this.uploadArea.classList.add('dragover');
+        }
+    }
+    
+    unhighlight() {
+        if (this.uploadArea) {
+            this.uploadArea.classList.remove('dragover');
+        }
+    }
+    
+    handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            this.handleFile(files[0]);
+        }
     }
     
     handleFileSelect(event) {
         const file = event.target.files[0];
-        if (!file) return;
+        if (file) {
+            this.handleFile(file);
+        }
+    }
+    
+    handleFile(file) {
+        if (!this.validateFile(file)) return;
         
-        if (!file.type.match('image.*')) {
-            alert('Please select an image file');
-            return;
+        this.currentFile = file;
+        this.showPreview(file);
+    }
+    
+    validateFile(file) {
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (!validTypes.includes(file.type)) {
+            this.showNotification('Please select a valid image file (JPG, PNG, or WebP)', 'error');
+            return false;
         }
         
+        if (file.size > maxSize) {
+            this.showNotification('File size must be less than 10MB', 'error');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    showPreview(file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            this.dpOriginal.src = e.target.result;
-            this.dpPreview.classList.remove('hidden');
-            this.dpPreview.classList.add('fade-in');
-            this.dpResult.classList.add('hidden');
+            if (this.dpOriginal) {
+                this.dpOriginal.src = e.target.result;
+                this.dpOriginal.onload = () => {
+                    this.updateImageInfo();
+                    this.processImage(); // Auto-process on upload
+                };
+            }
+            
+            if (this.dpPreview) {
+                this.dpPreview.classList.remove('hidden');
+                this.dpPreview.classList.add('fade-in');
+            }
         };
         reader.readAsDataURL(file);
     }
     
-    resizeImage() {
-        const img = this.dpOriginal;
-        const canvas = this.dpCanvas;
-        const ctx = canvas.getContext('2d');
+    updateImageInfo() {
+        if (!this.dpOriginal) return;
         
-        // Clear canvas
-        ctx.clearRect(0, 0, 320, 320);
-        
-        // Calculate dimensions to maintain aspect ratio
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-        let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
-        
-        if (aspectRatio > 1) {
-            // Landscape - fit height
-            drawHeight = 320;
-            drawWidth = 320 * aspectRatio;
-            offsetX = (320 - drawWidth) / 2;
-        } else {
-            // Portrait or square - fit width
-            drawWidth = 320;
-            drawHeight = 320 / aspectRatio;
-            offsetY = (320 - drawHeight) / 2;
+        const infoElement = document.getElementById('dp-image-info');
+        if (infoElement) {
+            const { naturalWidth, naturalHeight } = this.dpOriginal;
+            infoElement.innerHTML = `
+                <div class="text-sm text-gray-600 mb-2">
+                    Original: ${naturalWidth} × ${naturalHeight}px | 
+                    Target: ${this.dpSize} × ${this.dpSize}px
+                </div>
+            `;
         }
+    }
+    
+    async processImage() {
+        if (!this.currentFile || !this.dpOriginal) return;
         
-        // Draw image centered and cropped
-        ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-        
-        this.dpResult.classList.remove('hidden');
-        this.dpResult.classList.add('fade-in');
+        try {
+            const result = await this.resizeToSquareDP(this.currentFile);
+            this.processedBlob = result.blob;
+            
+            if (this.dpCanvas) {
+                const ctx = this.dpCanvas.getContext('2d');
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, this.dpSize, this.dpSize);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = result.preview;
+            }
+            
+            if (this.dpResult) {
+                this.dpResult.classList.remove('hidden');
+                this.dpResult.classList.add('fade-in');
+            }
+            
+            this.showNotification('Image processed successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Error processing image:', error);
+            this.showNotification('Error processing image. Please try again.', 'error');
+        }
+    }
+    
+    resizeToSquareDP(imageFile) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = this.dpSize;
+                    canvas.height = this.dpSize;
+                    
+                    // Background fill option
+                    const useBackground = this.backgroundOption ? this.backgroundOption.checked : true;
+                    if (useBackground) {
+                        // Instagram-style gradient background
+                        const gradient = ctx.createLinearGradient(0, 0, this.dpSize, this.dpSize);
+                        gradient.addColorStop(0, '#f9f9f9');
+                        gradient.addColorStop(1, '#ffffff');
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(0, 0, this.dpSize, this.dpSize);
+                    }
+                    
+                    // Calculate aspect-fit size (fit image within square)
+                    const ratio = Math.min(this.dpSize / img.width, this.dpSize / img.height);
+                    const newWidth = img.width * ratio;
+                    const newHeight = img.height * ratio;
+                    
+                    const xOffset = (this.dpSize - newWidth) / 2;
+                    const yOffset = (this.dpSize - newHeight) / 2;
+                    
+                    // Draw image centered
+                    ctx.drawImage(img, xOffset, yOffset, newWidth, newHeight);
+                    
+                    canvas.toBlob(blob => {
+                        resolve({
+                            blob,
+                            preview: canvas.toDataURL('image/png')
+                        });
+                    }, 'image/png', 0.9);
+                };
+                img.onerror = reject;
+                img.src = reader.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(imageFile);
+        });
     }
     
     downloadResizedImage() {
-        this.dpCanvas.toBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'instagram-dp-320x320.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }, 'image/png');
+        if (!this.processedBlob) {
+            this.showNotification('No processed image to download', 'error');
+            return;
+        }
+        
+        const url = URL.createObjectURL(this.processedBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Instagram-DP-${this.dpSize}x${this.dpSize}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        this.showNotification('Image downloaded successfully!', 'success');
+    }
+    
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+            type === 'error' ? 'bg-red-500 text-white' :
+            type === 'success' ? 'bg-green-500 text-white' :
+            'bg-blue-500 text-white'
+        }`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        // Auto remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    reset() {
+        this.currentFile = null;
+        this.processedBlob = null;
+        
+        if (this.dpInput) this.dpInput.value = '';
+        if (this.dpPreview) this.dpPreview.classList.add('hidden');
+        if (this.dpResult) this.dpResult.classList.add('hidden');
+        if (this.dpCanvas) {
+            const ctx = this.dpCanvas.getContext('2d');
+            ctx.clearRect(0, 0, this.dpSize, this.dpSize);
+        }
     }
     
     destroy() {
-        // Clean up
-        if (this.dpInput) this.dpInput.value = '';
+        this.reset();
     }
 }
