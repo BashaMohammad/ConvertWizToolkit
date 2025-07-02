@@ -13,20 +13,37 @@
       gtag('config', 'G-7QJXHFPZVE');
     </script>
 
-    <!-- Google AdSense - Lazy loaded for production -->
+    <!-- Google AdSense - Conditionally loaded based on user plan -->
     <script>
-      // Lazy load AdSense script only in production
-      window.addEventListener('load', function() {
+      // AdSense loading function that checks user plan
+      function loadAdSenseIfAllowed() {
+        // Only load AdSense script in production
         if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-          setTimeout(function() {
+          // Check if user is premium
+          const userPlan = document.body.getAttribute('data-user-plan');
+          const isPremium = userPlan && userPlan !== 'free';
+          
+          if (!isPremium && !window.adsbygoogle) {
             var script = document.createElement('script');
             script.async = true;
             script.crossOrigin = 'anonymous';
-            // Replace with your actual AdSense publisher ID
             script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX';
             document.head.appendChild(script);
-          }, 2000); // 2 second delay for performance
+            console.log('AdSense script loaded for free user');
+          } else if (isPremium) {
+            console.log('Premium user detected - AdSense script not loaded');
+          }
         }
+      }
+
+      window.addEventListener('load', function() {
+        // Initial load delay
+        setTimeout(loadAdSenseIfAllowed, 2000);
+        
+        // Re-check when user plan changes
+        setInterval(function() {
+          loadAdSenseIfAllowed();
+        }, 5000); // Check every 5 seconds
       });
     </script>
     
@@ -48,6 +65,21 @@
     </script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
+    <!-- Right Sidebar Ad - Landing Page -->
+    <div class="ads-container sidebar-ad-right" data-ad-type="sidebar-landing">
+        <!-- Production AdSense Ad -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:160px;height:600px"
+             data-ad-client="ca-pub-XXXXXXXXX"
+             data-ad-slot="XXXXXXXXX"></ins>
+        
+        <!-- Development Placeholder -->
+        <div class="ad-placeholder">
+            <p>Right Sidebar Ad<br>160x600</p>
+            <p class="text-xs mt-2">Landing Page</p>
+        </div>
+    </div>
+
     <!-- Navigation Header -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-lg">
         <div class="container mx-auto px-4 py-4">
@@ -381,6 +413,21 @@
 
     <!-- JPG TO PNG CONVERTER SECTION -->
     <div class="tool-section" id="jpg-to-png-section" style="display: none;">
+        <!-- Left Sidebar Ad - Tool Page -->
+        <div class="ads-container sidebar-ad-left" data-ad-type="sidebar-tool">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-XXXXXXXXX"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder">
+                <p>Left Sidebar Ad<br>160x600</p>
+                <p class="text-xs mt-2">Tool Page</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -516,6 +563,21 @@
 
     <!-- CURRENCY CONVERTER SECTION -->
     <div class="tool-section" id="currency-converter-section" style="display: none;">
+        <!-- Left Sidebar Ad - Tool Page -->
+        <div class="ads-container sidebar-ad-left" data-ad-type="sidebar-tool">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-XXXXXXXXX"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder">
+                <p>Left Sidebar Ad<br>160x600</p>
+                <p class="text-xs mt-2">Tool Page</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1466,10 +1528,14 @@ Contact: John Doe, Company Inc."></textarea>
                 document.body.setAttribute('data-env', 'development');
             }
             
-            // Initialize ads in production only
+            // Initialize ads in production only and for non-premium users
             if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 setTimeout(function() {
-                    if (window.adsbygoogle) {
+                    // Check if user is premium before loading ads
+                    const userPlan = document.body.getAttribute('data-user-plan');
+                    const isPremium = userPlan && userPlan !== 'free';
+                    
+                    if (!isPremium && window.adsbygoogle) {
                         const ads = document.querySelectorAll('.adsbygoogle');
                         ads.forEach(function(ad) {
                             if (!ad.getAttribute('data-adsbygoogle-status')) {

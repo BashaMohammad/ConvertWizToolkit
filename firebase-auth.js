@@ -428,6 +428,9 @@ class ConvertWizAuth {
                 mobileUserGreeting.textContent = `Welcome, ${displayName}!`;
                 mobileUserInfo?.classList.remove('hidden');
             }
+
+            // Update ad visibility based on user plan
+            this.updateAdVisibility();
         } else {
             // Update desktop auth button to login
             if (authBtn) {
@@ -450,6 +453,40 @@ class ConvertWizAuth {
             // Hide user info
             userInfo?.classList.add('hidden');
             mobileUserInfo?.classList.add('hidden');
+            
+            // Remove plan data attribute for logged out users (show ads)
+            document.body.removeAttribute('data-user-plan');
+        }
+    }
+
+    // Update ad visibility based on user subscription plan
+    async updateAdVisibility() {
+        if (!this.currentUser) {
+            // User not logged in - show ads (remove any plan attribute)
+            document.body.removeAttribute('data-user-plan');
+            return;
+        }
+
+        try {
+            // Get user plan from Firestore
+            const userDoc = await db.collection('users').doc(this.currentUser.uid).get();
+            const userData = userDoc.exists ? userDoc.data() : null;
+            const userPlan = userData?.plan || 'free';
+            
+            // Set data attribute for CSS targeting
+            if (userPlan !== 'free') {
+                // Premium users - hide all ads
+                document.body.setAttribute('data-user-plan', userPlan);
+                console.log(`Premium user detected (${userPlan}) - ads hidden`);
+            } else {
+                // Free users - show ads
+                document.body.removeAttribute('data-user-plan');
+                console.log('Free user - ads visible');
+            }
+        } catch (error) {
+            console.error('Error checking user plan for ad visibility:', error);
+            // On error, assume free user (show ads)
+            document.body.removeAttribute('data-user-plan');
         }
     }
 
