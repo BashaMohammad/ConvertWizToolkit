@@ -12,6 +12,21 @@
       gtag('js', new Date());
       gtag('config', 'G-7QJXHFPZVE');
     </script>
+
+    <!-- Google AdSense - Only load in production -->
+    <script>
+      // Only load AdSense in production environment
+      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        (function() {
+          var script = document.createElement('script');
+          script.async = true;
+          script.crossOrigin = 'anonymous';
+          // Replace 'ca-pub-XXXXXXXXX' with your actual AdSense publisher ID
+          script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX';
+          document.head.appendChild(script);
+        })();
+      }
+    </script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -1384,6 +1399,41 @@ Contact: John Doe, Company Inc."></textarea>
                     document.getElementById('mobile-menu').classList.add('hidden');
                 }
             });
+        });
+        
+        // AdSense utility functions
+        window.AdSenseHelper = {
+            isProduction: function() {
+                return window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+            },
+            
+            loadAd: function(adContainer) {
+                if (this.isProduction() && window.adsbygoogle && adContainer) {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        console.warn('AdSense loading error:', e);
+                    }
+                }
+            },
+            
+            initializePageAds: function() {
+                if (this.isProduction()) {
+                    const adElements = document.querySelectorAll('.adsbygoogle');
+                    adElements.forEach(ad => {
+                        if (!ad.getAttribute('data-adsbygoogle-status')) {
+                            this.loadAd(ad);
+                        }
+                    });
+                }
+            }
+        };
+        
+        // Initialize ads when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                window.AdSenseHelper.initializePageAds();
+            }, 1000);
         });
     </script>
 </body>
