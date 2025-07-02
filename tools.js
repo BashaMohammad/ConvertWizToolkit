@@ -2170,3 +2170,265 @@ class IPAddressExtractor {
         }
     }
 }
+
+class QRCodeGenerator {
+    constructor() {
+        this.initEventListeners();
+        this.currentQR = null;
+    }
+
+    initEventListeners() {
+        this.qrInput = document.getElementById('qr-input');
+        this.qrCanvas = document.getElementById('qr-canvas');
+        this.qrPlaceholder = document.getElementById('qr-placeholder');
+        this.generateBtn = document.getElementById('qr-generate');
+        this.clearBtn = document.getElementById('qr-clear');
+        this.downloadBtn = document.getElementById('qr-download');
+        this.copyBtn = document.getElementById('qr-copy-image');
+        this.downloadSection = document.getElementById('qr-download-section');
+
+        // Template buttons
+        this.urlTemplateBtn = document.getElementById('qr-template-url');
+        this.phoneTemplateBtn = document.getElementById('qr-template-phone');
+        this.emailTemplateBtn = document.getElementById('qr-template-email');
+        this.wifiTemplateBtn = document.getElementById('qr-template-wifi');
+
+        if (this.qrInput) {
+            this.qrInput.addEventListener('input', () => this.onInputChange());
+        }
+
+        if (this.generateBtn) {
+            this.generateBtn.addEventListener('click', () => this.generateQR());
+        }
+
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => this.clearAll());
+        }
+
+        if (this.copyBtn) {
+            this.copyBtn.addEventListener('click', () => this.copyToClipboard());
+        }
+
+        // Template button events
+        if (this.urlTemplateBtn) {
+            this.urlTemplateBtn.addEventListener('click', () => this.setTemplate('url'));
+        }
+        if (this.phoneTemplateBtn) {
+            this.phoneTemplateBtn.addEventListener('click', () => this.setTemplate('phone'));
+        }
+        if (this.emailTemplateBtn) {
+            this.emailTemplateBtn.addEventListener('click', () => this.setTemplate('email'));
+        }
+        if (this.wifiTemplateBtn) {
+            this.wifiTemplateBtn.addEventListener('click', () => this.setTemplate('wifi'));
+        }
+    }
+
+    onInputChange() {
+        const text = this.qrInput?.value.trim();
+        if (text && text.length > 0) {
+            // Auto-generate on input for instant preview
+            this.generateQR();
+        } else {
+            this.hideQR();
+        }
+    }
+
+    generateQR() {
+        if (!this.qrInput || !this.qrCanvas) return;
+
+        const text = this.qrInput.value.trim();
+        if (!text) {
+            this.showNotification('Please enter some content to generate a QR code', 'warning');
+            return;
+        }
+
+        try {
+            // Check if QRious library is available
+            if (typeof QRious === 'undefined') {
+                this.showNotification('QR library not loaded. Please refresh the page.', 'error');
+                return;
+            }
+
+            this.currentQR = new QRious({
+                element: this.qrCanvas,
+                value: text,
+                size: 250,
+                background: '#ffffff',
+                foreground: '#000000',
+                level: 'M' // Error correction level
+            });
+
+            this.showQR();
+            this.setupDownload();
+            this.showNotification('QR code generated successfully!', 'success');
+
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+            this.showNotification('Failed to generate QR code. Please try again.', 'error');
+        }
+    }
+
+    showQR() {
+        if (this.qrCanvas && this.qrPlaceholder) {
+            this.qrCanvas.style.display = 'block';
+            this.qrPlaceholder.style.display = 'none';
+        }
+        if (this.downloadSection) {
+            this.downloadSection.classList.remove('hidden');
+        }
+    }
+
+    hideQR() {
+        if (this.qrCanvas && this.qrPlaceholder) {
+            this.qrCanvas.style.display = 'none';
+            this.qrPlaceholder.style.display = 'block';
+        }
+        if (this.downloadSection) {
+            this.downloadSection.classList.add('hidden');
+        }
+    }
+
+    setupDownload() {
+        if (!this.downloadBtn || !this.currentQR) return;
+
+        try {
+            const dataURL = this.currentQR.toDataURL('image/png');
+            this.downloadBtn.href = dataURL;
+            this.downloadBtn.download = `qrcode-${Date.now()}.png`;
+        } catch (error) {
+            console.error('Error setting up download:', error);
+        }
+    }
+
+    async copyToClipboard() {
+        if (!this.currentQR) {
+            this.showNotification('Generate a QR code first before copying', 'warning');
+            return;
+        }
+
+        try {
+            // Convert canvas to blob
+            const canvas = this.qrCanvas;
+            const blob = await new Promise(resolve => {
+                canvas.toBlob(resolve, 'image/png');
+            });
+
+            if (blob) {
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]);
+                this.showNotification('QR code copied to clipboard!', 'success');
+            } else {
+                throw new Error('Failed to create image blob');
+            }
+        } catch (error) {
+            console.error('Error copying to clipboard:', error);
+            this.showNotification('Failed to copy QR code to clipboard', 'error');
+        }
+    }
+
+    setTemplate(type) {
+        if (!this.qrInput) return;
+
+        let template = '';
+        switch (type) {
+            case 'url':
+                template = 'https://example.com';
+                break;
+            case 'phone':
+                template = 'tel:+1234567890';
+                break;
+            case 'email':
+                template = 'mailto:hello@example.com';
+                break;
+            case 'wifi':
+                template = 'WIFI:T:WPA;S:NetworkName;P:password;;';
+                break;
+        }
+
+        this.qrInput.value = template;
+        this.qrInput.focus();
+        
+        // Auto-generate after setting template
+        setTimeout(() => this.generateQR(), 100);
+        
+        this.showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} template applied`, 'info');
+    }
+
+    clearAll() {
+        if (this.qrInput) {
+            this.qrInput.value = '';
+        }
+        this.hideQR();
+        this.currentQR = null;
+        this.showNotification('Cleared input and QR code', 'info');
+    }
+
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 transition-all duration-300 transform translate-x-full`;
+        
+        // Set colors based on type
+        switch (type) {
+            case 'success':
+                notification.classList.add('bg-green-500');
+                break;
+            case 'error':
+                notification.classList.add('bg-red-500');
+                break;
+            case 'warning':
+                notification.classList.add('bg-yellow-500');
+                break;
+            default:
+                notification.classList.add('bg-violet-500');
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 10);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners
+        if (this.qrInput) {
+            this.qrInput.removeEventListener('input', this.onInputChange);
+        }
+        if (this.generateBtn) {
+            this.generateBtn.removeEventListener('click', this.generateQR);
+        }
+        if (this.clearBtn) {
+            this.clearBtn.removeEventListener('click', this.clearAll);
+        }
+        if (this.copyBtn) {
+            this.copyBtn.removeEventListener('click', this.copyToClipboard);
+        }
+        if (this.urlTemplateBtn) {
+            this.urlTemplateBtn.removeEventListener('click', () => this.setTemplate('url'));
+        }
+        if (this.phoneTemplateBtn) {
+            this.phoneTemplateBtn.removeEventListener('click', () => this.setTemplate('phone'));
+        }
+        if (this.emailTemplateBtn) {
+            this.emailTemplateBtn.removeEventListener('click', () => this.setTemplate('email'));
+        }
+        if (this.wifiTemplateBtn) {
+            this.wifiTemplateBtn.removeEventListener('click', () => this.setTemplate('wifi'));
+        }
+    }
+}

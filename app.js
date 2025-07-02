@@ -56,6 +56,9 @@ function initializeTool(sectionId) {
             case 'ip-extractor-section':
                 currentTool = new IPAddressExtractor();
                 break;
+            case 'qr-generator-section':
+                currentTool = new QRCodeGenerator();
+                break;
         }
     } catch (error) {
         console.warn('Tool initialization failed:', error);
