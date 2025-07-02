@@ -1966,6 +1966,7 @@ class IPAddressExtractor {
         this.extractBtn = document.getElementById('extract-ip');
         this.clearBtn = document.getElementById('ip-clear');
         this.copyBtn = document.getElementById('copy-ip');
+        this.getMyIpBtn = document.getElementById('get-my-ip');
 
         if (this.extractBtn) {
             this.extractBtn.addEventListener('click', () => this.extractIPs());
@@ -1977,6 +1978,10 @@ class IPAddressExtractor {
 
         if (this.copyBtn) {
             this.copyBtn.addEventListener('click', () => this.copyResults());
+        }
+
+        if (this.getMyIpBtn) {
+            this.getMyIpBtn.addEventListener('click', () => this.getMyIPAddress());
         }
     }
 
@@ -2051,6 +2056,36 @@ class IPAddressExtractor {
         }
 
         this.showNotification(`Found ${ips.length} IP address${ips.length !== 1 ? 'es' : ''}`, ips.length > 0 ? 'success' : 'info');
+    }
+
+    async getMyIPAddress() {
+        if (!this.inputArea) return;
+
+        try {
+            this.showNotification('Fetching your IP address...', 'info');
+            
+            const response = await fetch('https://api.ipify.org?format=json');
+            if (!response.ok) {
+                throw new Error('Failed to fetch IP address');
+            }
+            
+            const data = await response.json();
+            const ipText = `My current IP address is ${data.ip}\nDetected from: ${window.location.hostname}\nTimestamp: ${new Date().toISOString()}`;
+            
+            this.inputArea.value = ipText;
+            this.showNotification('IP address added! Click "Extract IPs" to analyze it.', 'success');
+            
+            // Auto-trigger extraction for better UX
+            setTimeout(() => {
+                if (this.extractBtn) {
+                    this.extractBtn.click();
+                }
+            }, 500);
+            
+        } catch (error) {
+            console.error('Error fetching IP address:', error);
+            this.showNotification('Unable to fetch IP address. Please check your internet connection.', 'error');
+        }
     }
 
     async copyResults() {
@@ -2129,6 +2164,9 @@ class IPAddressExtractor {
         }
         if (this.copyBtn) {
             this.copyBtn.removeEventListener('click', this.copyResults);
+        }
+        if (this.getMyIpBtn) {
+            this.getMyIpBtn.removeEventListener('click', this.getMyIPAddress);
         }
     }
 }

@@ -113,6 +113,8 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Supports both IPv4 (with range validation) and IPv6 (multiple format patterns)
 - Groups results by IP version with counts and formatted display
 - Copy functionality for extracted results with clipboard API integration
+- "Get My IP Address" feature using ipify.org API for quick testing
+- Auto-extraction after IP fetch for seamless user experience
 - Professional emerald/green color scheme with enhanced UI feedback
 - Large textarea input optimized for log file processing
 
