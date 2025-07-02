@@ -3,12 +3,13 @@
 class ConvertWizApp {
     constructor() {
         this.routes = {
-            '/': 'home',
-            '/jpg-to-png': 'jpg-png-converter',
-            '/currency': 'currency-converter', 
-            '/land': 'land-converter',
-            '/dp-resizer': 'dp-resizer',
-            '/word-counter': 'word-counter'
+            '': 'home',
+            'home': 'home',
+            'jpg-to-png': 'jpg-png-converter',
+            'currency': 'currency-converter', 
+            'land': 'land-converter',
+            'dp-resizer': 'dp-resizer',
+            'word-counter': 'word-counter'
         };
         
         this.currentTool = null;
@@ -24,9 +25,11 @@ class ConvertWizApp {
         
         // Handle navigation clicks
         document.addEventListener('click', (e) => {
-            if (e.target.matches('[data-route]')) {
+            // Handle any element with data-route attribute
+            const element = e.target.closest('[data-route]');
+            if (element) {
                 e.preventDefault();
-                const route = e.target.getAttribute('data-route');
+                const route = element.getAttribute('data-route');
                 this.navigateTo(route);
             }
         });
