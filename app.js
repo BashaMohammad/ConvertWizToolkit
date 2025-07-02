@@ -7,7 +7,8 @@ class ConvertWizApp {
             '/jpg-to-png': 'jpg-png-converter',
             '/currency': 'currency-converter', 
             '/land': 'land-converter',
-            '/dp-resizer': 'dp-resizer'
+            '/dp-resizer': 'dp-resizer',
+            '/word-counter': 'word-counter'
         };
         
         this.currentTool = null;
@@ -78,6 +79,9 @@ class ConvertWizApp {
                 break;
             case 'dp-resizer':
                 this.currentTool = new InstagramDPResizer();
+                break;
+            case 'word-counter':
+                this.currentTool = new WordCounter();
                 break;
         }
     }

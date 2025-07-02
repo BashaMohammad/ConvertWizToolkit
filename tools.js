@@ -1260,3 +1260,195 @@ class InstagramDPResizer {
         this.reset();
     }
 }
+
+// Word Counter Tool
+class WordCounter {
+    constructor() {
+        this.wordInput = document.getElementById('word-input');
+        this.wordCount = document.getElementById('word-count');
+        this.charCount = document.getElementById('char-count');
+        this.charCountNoSpaces = document.getElementById('char-count-no-spaces');
+        this.readTime = document.getElementById('read-time');
+        this.sentenceCount = document.getElementById('sentence-count');
+        this.paragraphCount = document.getElementById('paragraph-count');
+        
+        if (this.wordInput) {
+            this.initEventListeners();
+            this.updateStats(); // Initialize with empty stats
+        }
+    }
+    
+    initEventListeners() {
+        this.wordInput.addEventListener('input', () => this.updateStats());
+        this.wordInput.addEventListener('paste', () => {
+            // Update stats after paste completes
+            setTimeout(() => this.updateStats(), 10);
+        });
+        
+        // Clear button
+        const clearBtn = document.getElementById('clear-text');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clearText());
+        }
+        
+        // Copy button
+        const copyBtn = document.getElementById('copy-text');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => this.copyText());
+        }
+        
+        // Sample text button
+        const sampleBtn = document.getElementById('sample-text');
+        if (sampleBtn) {
+            sampleBtn.addEventListener('click', () => this.loadSampleText());
+        }
+    }
+    
+    updateStats() {
+        const text = this.wordInput ? this.wordInput.value : '';
+        
+        // Word count
+        const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+        const wordCount = text.trim() === '' ? 0 : words.length;
+        
+        // Character counts
+        const charCount = text.length;
+        const charCountNoSpaces = text.replace(/\s/g, '').length;
+        
+        // Sentence count
+        const sentences = text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
+        const sentenceCount = sentences.length;
+        
+        // Paragraph count
+        const paragraphs = text.split(/\n\s*\n/).filter(para => para.trim().length > 0);
+        const paragraphCount = paragraphs.length;
+        
+        // Reading time (average 200 WPM)
+        const readingTime = Math.ceil(wordCount / 200);
+        const readTimeText = readingTime === 0 ? '0 min' : 
+                            readingTime === 1 ? '1 min' : 
+                            `${readingTime} min`;
+        
+        // Update display
+        if (this.wordCount) this.wordCount.textContent = wordCount.toLocaleString();
+        if (this.charCount) this.charCount.textContent = charCount.toLocaleString();
+        if (this.charCountNoSpaces) this.charCountNoSpaces.textContent = charCountNoSpaces.toLocaleString();
+        if (this.readTime) this.readTime.textContent = readTimeText;
+        if (this.sentenceCount) this.sentenceCount.textContent = sentenceCount.toLocaleString();
+        if (this.paragraphCount) this.paragraphCount.textContent = paragraphCount.toLocaleString();
+        
+        // Update progress indicators
+        this.updateProgressIndicators(wordCount, charCount);
+    }
+    
+    updateProgressIndicators(wordCount, charCount) {
+        // Word count milestones
+        const wordMilestones = [100, 500, 1000, 2000, 5000];
+        const wordProgress = document.getElementById('word-progress');
+        
+        if (wordProgress) {
+            let currentMilestone = wordMilestones.find(milestone => wordCount < milestone) || 10000;
+            let progress = Math.min((wordCount / currentMilestone) * 100, 100);
+            
+            wordProgress.style.width = `${progress}%`;
+            wordProgress.className = `h-2 rounded-full transition-all duration-300 ${
+                progress < 25 ? 'bg-red-400' :
+                progress < 50 ? 'bg-yellow-400' :
+                progress < 75 ? 'bg-blue-400' : 'bg-green-400'
+            }`;
+        }
+        
+        // Character limit indicators (common limits)
+        const twitterLimit = 280;
+        const linkedinLimit = 3000;
+        const charProgress = document.getElementById('char-progress');
+        
+        if (charProgress) {
+            let limit = charCount <= twitterLimit ? twitterLimit : linkedinLimit;
+            let progress = Math.min((charCount / limit) * 100, 100);
+            
+            charProgress.style.width = `${progress}%`;
+            charProgress.className = `h-2 rounded-full transition-all duration-300 ${
+                progress < 50 ? 'bg-green-400' :
+                progress < 80 ? 'bg-yellow-400' :
+                progress < 100 ? 'bg-orange-400' : 'bg-red-400'
+            }`;
+        }
+    }
+    
+    clearText() {
+        if (this.wordInput) {
+            this.wordInput.value = '';
+            this.updateStats();
+            this.wordInput.focus();
+            this.showNotification('Text cleared', 'info');
+        }
+    }
+    
+    async copyText() {
+        if (!this.wordInput || !this.wordInput.value.trim()) {
+            this.showNotification('No text to copy', 'error');
+            return;
+        }
+        
+        try {
+            await navigator.clipboard.writeText(this.wordInput.value);
+            this.showNotification('Text copied to clipboard', 'success');
+        } catch (err) {
+            // Fallback for older browsers
+            this.wordInput.select();
+            document.execCommand('copy');
+            this.showNotification('Text copied to clipboard', 'success');
+        }
+    }
+    
+    loadSampleText() {
+        const sampleTexts = [
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            
+            "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. It's commonly used to test typewriters, keyboards, and fonts. The phrase has been used since the late 1800s and remains popular today for its brevity and completeness.",
+            
+            "In the digital age, effective communication has become more important than ever. Whether you're writing emails, social media posts, or important documents, knowing your word count, character limits, and reading time helps you craft better content. This tool helps writers, students, and professionals optimize their text for various platforms and purposes."
+        ];
+        
+        const randomText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
+        if (this.wordInput) {
+            this.wordInput.value = randomText;
+            this.updateStats();
+            this.showNotification('Sample text loaded', 'success');
+        }
+    }
+    
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+            type === 'error' ? 'bg-red-500 text-white' :
+            type === 'success' ? 'bg-green-500 text-white' :
+            'bg-blue-500 text-white'
+        }`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 2000);
+    }
+    
+    destroy() {
+        // Clean up
+        if (this.wordInput) {
+            this.wordInput.value = '';
+            this.updateStats();
+        }
+    }
+}
