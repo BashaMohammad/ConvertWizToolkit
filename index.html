@@ -26,11 +26,11 @@
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-lg">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer" data-route="">
+                <h1 onclick="handleNavigation('')" class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer">
                     ConvertWiz ⚡
                 </h1>
                 <nav class="hidden md:flex space-x-6">
-                    <a href="#" data-route="" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Home</a>
+                    <button onclick="handleNavigation('')" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Home</button>
                     <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
                     <a href="#about" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">About</a>
                 </nav>
@@ -44,7 +44,7 @@
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-200">
                 <div class="flex flex-col space-y-3 pt-4">
-                    <a href="#" data-route="" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Home</a>
+                    <button onclick="handleNavigation('')" class="nav-link text-gray-700 hover:text-purple-600 transition-colors text-left">Home</button>
                     <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
                     <a href="#about" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">About</a>
                 </div>
@@ -92,9 +92,9 @@
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">JPG to PNG</h4>
                                 <p class="text-gray-600 text-sm mb-4">Convert JPG images to PNG with bulk upload support</p>
-                                <a href="#jpg-to-png" data-route="jpg-to-png" class="inline-block w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
+                                <button onclick="handleNavigation('jpg-to-png')" class="inline-block w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                     Try Now
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -106,9 +106,9 @@
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Instagram DP</h4>
                                 <p class="text-gray-600 text-sm mb-4">Resize images to perfect 320x320px Instagram size</p>
-                                <a href="#dp-resizer" data-route="dp-resizer" class="inline-block w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
+                                <button onclick="handleNavigation('dp-resizer')" class="inline-block w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                     Try Now
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -160,9 +160,9 @@
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Currency</h4>
                                 <p class="text-gray-600 text-sm mb-4">Live rates for 150+ world currencies</p>
-                                <a href="#currency" data-route="currency" class="inline-block w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
+                                <button onclick="handleNavigation('currency')" class="inline-block w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                     Try Now
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -174,9 +174,9 @@
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Global Land Units</h4>
                                 <p class="text-gray-600 text-sm mb-4">13+ international land measurement systems from India, China, Japan & more</p>
-                                <a href="#land" data-route="land" class="inline-block w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
+                                <button onclick="handleNavigation('land')" class="inline-block w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                     Try Now
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -256,9 +256,9 @@
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Word Counter</h4>
                                 <p class="text-gray-600 text-sm mb-4">Count words, characters, reading time with comprehensive text analysis</p>
-                                <a href="#word-counter" data-route="word-counter" class="inline-block w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
+                                <button onclick="handleNavigation('word-counter')" class="inline-block w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                     Try Now
-                                </a>
+                                </button>
                             </div>
                         </div>
 
