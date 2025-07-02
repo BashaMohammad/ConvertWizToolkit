@@ -70,6 +70,16 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Toast notifications for user feedback and error handling
 - Mobile-responsive canvas display and touch-friendly interface
 
+#### Professional Word Counter
+- Comprehensive text analysis with real-time statistics
+- Word count, character count (with/without spaces), sentence and paragraph counting
+- Reading time estimation based on 200 WPM average
+- Progress indicators for word count milestones and character limits
+- Platform-specific character limit guidelines (Twitter, LinkedIn, Facebook, etc.)
+- Copy text, clear text, and sample text loading functionality
+- Toast notifications for user feedback
+- Mobile-responsive design with colorful statistical cards
+
 ## Data Flow
 
 1. **File Upload Flow:**
