@@ -425,3 +425,44 @@ input[type="file"] + label:hover {
         transform: translateY(0);
     }
 }
+
+/* === AdSense Integration === */
+.ad-container {
+    position: relative;
+    margin: 2rem auto;
+    max-width: 100%;
+}
+
+/* Show ads in production, hide placeholders */
+.ad-container .adsbygoogle {
+    display: block !important;
+}
+
+.ad-container .ad-placeholder {
+    display: none;
+}
+
+/* Development mode - show placeholders, hide ads */
+body[data-env="development"] .ad-container .adsbygoogle {
+    display: none !important;
+}
+
+body[data-env="development"] .ad-container .ad-placeholder {
+    display: block;
+}
+
+/* Responsive ad styling */
+.ad-container .adsbygoogle {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* Lazy loading support */
+.ad-container.lazy-loaded .adsbygoogle {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.ad-container:not(.lazy-loaded) .adsbygoogle {
+    opacity: 0;
+}

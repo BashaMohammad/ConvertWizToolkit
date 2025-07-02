@@ -492,6 +492,24 @@
         </main>
     </div>
 
+    <!-- AdSense Ad Unit - After JPG to PNG Converter -->
+    <div class="ad-container max-w-3xl mx-auto px-4">
+        <!-- Production AdSense Ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXX"
+             data-ad-slot="XXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        
+        <!-- Development Placeholder -->
+        <div class="ad-placeholder bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-500" style="min-height: 200px;">
+            <i class="fas fa-ad text-2xl mb-3"></i>
+            <p class="text-md font-medium">Ad Space</p>
+            <p class="text-xs">Will display in production</p>
+        </div>
+    </div>
+
     <!-- CURRENCY CONVERTER SECTION -->
     <div class="tool-section" id="currency-converter-section" style="display: none;">
         <main class="container mx-auto px-4 py-8">
@@ -569,6 +587,26 @@
                         <i class="fas fa-info-circle mr-2"></i>
                         <strong>Disclaimer:</strong> This tool is for informational purposes only. ConvertWiz does not guarantee accuracy for official/legal use.
                     </p>
+                </div>
+
+                <!-- AdSense Ad Unit - Below Currency Converter -->
+                <div class="mt-8 flex justify-center">
+                    <div class="ad-container max-w-2xl w-full">
+                        <!-- Production AdSense Ad -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXX"
+                             data-ad-slot="XXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        
+                        <!-- Development Placeholder -->
+                        <div class="ad-placeholder bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500" style="min-height: 250px;">
+                            <i class="fas fa-ad text-3xl mb-4"></i>
+                            <p class="text-lg font-medium">Ad Space</p>
+                            <p class="text-sm">Will display in production</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -1219,8 +1257,28 @@ IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334"></textarea>
         </main>
     </div>
 
+    <!-- AdSense Ad Unit - Above Footer -->
+    <div class="mt-16 mb-8 flex justify-center">
+        <div class="ad-container max-w-4xl w-full">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXX"
+                 data-ad-slot="XXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500" style="min-height: 280px;">
+                <i class="fas fa-ad text-4xl mb-4"></i>
+                <p class="text-xl font-medium">Advertisement Space</p>
+                <p class="text-sm">Premium ads will display in production</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
-    <footer class="bg-white/90 backdrop-blur-md mt-16 py-8">
+    <footer class="bg-white/90 backdrop-blur-md py-8">
         <div class="container mx-auto px-4">
             <div class="text-center">
                 <!-- Legal Links -->
@@ -1255,10 +1313,10 @@ IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334"></textarea>
                     </a>
                 </div> -->
                 <p class="text-gray-600">
-                    Made with ❤️ by Ali | © 2025 ConvertWiz. All rights reserved.
+                    © 2025 ConvertWiz. All rights reserved.
                 </p>
                 <p class="text-gray-500 text-sm mt-2">
-                    Powered by external data sources including exchangerate.host and ipify.org
+                    Powered by Ali
                 </p>
             </div>
         </div>
@@ -1431,6 +1489,11 @@ Contact: John Doe, Company Inc."></textarea>
         
         // Initialize ads when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            // Set development mode attribute for CSS targeting
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                document.body.setAttribute('data-env', 'development');
+            }
+            
             setTimeout(() => {
                 window.AdSenseHelper.initializePageAds();
             }, 1000);
