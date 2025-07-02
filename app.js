@@ -31,7 +31,6 @@ class ConvertWizApp {
             // Handle any element with data-route attribute
             const element = e.target.closest('[data-route]');
             if (element) {
-                console.log('Navigation clicked:', element.getAttribute('data-route'));
                 e.preventDefault();
                 e.stopPropagation();
                 const route = element.getAttribute('data-route');
@@ -42,7 +41,6 @@ class ConvertWizApp {
     }
     
     navigateTo(route) {
-        console.log('Navigating to:', route);
         // Use hash-based routing for compatibility with simple servers
         if (route.startsWith('/')) {
             window.location.hash = route.substring(1);
@@ -61,9 +59,7 @@ class ConvertWizApp {
             route = route.substring(1);
         }
         
-        console.log('Handling route:', route);
         const page = this.routes[route] || 'home';
-        console.log('Showing page:', page);
         
         // Clear previous tool instance
         if (this.currentTool && this.currentTool.destroy) {
@@ -113,7 +109,6 @@ class ConvertWizApp {
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing ConvertWiz app');
     window.convertWizApp = new ConvertWizApp();
 });
 
@@ -121,11 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         if (!window.convertWizApp) {
-            console.log('Backup: DOM loaded, initializing ConvertWiz app');
             window.convertWizApp = new ConvertWizApp();
         }
     });
 } else {
-    console.log('DOM already loaded, initializing ConvertWiz app immediately');
     window.convertWizApp = new ConvertWizApp();
 }
