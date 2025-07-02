@@ -80,6 +80,15 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Toast notifications for user feedback
 - Mobile-responsive design with colorful statistical cards
 
+#### Distance Converter
+- Global distance unit conversion between 9 measurement systems
+- Supports meters, kilometers, miles, feet, yards, inches, centimeters, millimeters, nautical miles
+- Real-time conversion with intelligent number formatting
+- Scientific notation for very small values, comma separation for large numbers
+- Responsive grid layout with professional cyan/teal color scheme
+- Clear functionality and toast notifications for user feedback
+- Mobile-optimized input fields and dropdowns
+
 ## Data Flow
 
 1. **File Upload Flow:**

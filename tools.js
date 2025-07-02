@@ -1452,3 +1452,175 @@ class WordCounter {
         }
     }
 }
+
+class DistanceConverter {
+    constructor() {
+        this.distanceFactors = {
+            meters: 1,
+            kilometers: 0.001,
+            miles: 0.000621371,
+            feet: 3.28084,
+            yards: 1.09361,
+            inches: 39.3701,
+            centimeters: 100,
+            millimeters: 1000,
+            nautical_miles: 0.000539957,
+        };
+        
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        this.inputField = document.getElementById('distance-input');
+        this.fromUnit = document.getElementById('from-unit');
+        this.toUnit = document.getElementById('to-unit');
+        this.resultField = document.getElementById('converted-distance');
+        this.clearBtn = document.getElementById('clear-distance');
+
+        if (this.inputField) {
+            this.inputField.addEventListener('input', () => this.updateResult());
+        }
+        
+        if (this.fromUnit) {
+            this.fromUnit.addEventListener('change', () => this.updateResult());
+        }
+        
+        if (this.toUnit) {
+            this.toUnit.addEventListener('change', () => this.updateResult());
+        }
+
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => this.clearDistance());
+        }
+
+        // Initial update
+        this.updateResult();
+    }
+
+    convertDistance(value, fromUnit, toUnit) {
+        const baseValue = parseFloat(value) / this.distanceFactors[fromUnit];
+        const convertedValue = baseValue * this.distanceFactors[toUnit];
+        return convertedValue;
+    }
+
+    updateResult() {
+        if (!this.inputField || !this.fromUnit || !this.toUnit || !this.resultField) return;
+
+        const val = this.inputField.value;
+        if (!val || isNaN(val) || val === '') {
+            this.resultField.textContent = 'Enter a distance to see the conversion';
+            return;
+        }
+
+        const result = this.convertDistance(val, this.fromUnit.value, this.toUnit.value);
+        const formattedResult = this.formatResult(result);
+        
+        const fromUnitName = this.getUnitDisplayName(this.fromUnit.value);
+        const toUnitName = this.getUnitDisplayName(this.toUnit.value);
+        
+        this.resultField.textContent = `${val} ${fromUnitName} = ${formattedResult} ${toUnitName}`;
+    }
+
+    formatResult(value) {
+        if (value === 0) return '0';
+        
+        // For very small numbers, use scientific notation
+        if (Math.abs(value) < 0.0001) {
+            return value.toExponential(3);
+        }
+        
+        // For large numbers, use comma separation
+        if (Math.abs(value) >= 1000000) {
+            return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+        
+        // For normal numbers, show appropriate decimal places
+        if (Math.abs(value) >= 100) {
+            return value.toFixed(2);
+        } else if (Math.abs(value) >= 10) {
+            return value.toFixed(3);
+        } else {
+            return value.toFixed(4);
+        }
+    }
+
+    getUnitDisplayName(unit) {
+        const displayNames = {
+            meters: 'meters',
+            kilometers: 'kilometers',
+            miles: 'miles',
+            feet: 'feet',
+            yards: 'yards',
+            inches: 'inches',
+            centimeters: 'centimeters',
+            millimeters: 'millimeters',
+            nautical_miles: 'nautical miles'
+        };
+        return displayNames[unit] || unit;
+    }
+
+    clearDistance() {
+        if (this.inputField) {
+            this.inputField.value = '';
+        }
+        if (this.resultField) {
+            this.resultField.textContent = 'Enter a distance to see the conversion';
+        }
+        this.showNotification('Distance cleared!', 'success');
+    }
+
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 transition-all duration-300 transform translate-x-full`;
+        
+        // Set colors based on type
+        switch (type) {
+            case 'success':
+                notification.classList.add('bg-green-500');
+                break;
+            case 'error':
+                notification.classList.add('bg-red-500');
+                break;
+            case 'warning':
+                notification.classList.add('bg-yellow-500');
+                break;
+            default:
+                notification.classList.add('bg-cyan-500');
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 10);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners
+        if (this.inputField) {
+            this.inputField.removeEventListener('input', this.updateResult);
+        }
+        if (this.fromUnit) {
+            this.fromUnit.removeEventListener('change', this.updateResult);
+        }
+        if (this.toUnit) {
+            this.toUnit.removeEventListener('change', this.updateResult);
+        }
+        if (this.clearBtn) {
+            this.clearBtn.removeEventListener('click', this.clearDistance);
+        }
+    }
+}

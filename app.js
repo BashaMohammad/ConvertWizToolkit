@@ -44,6 +44,9 @@ function initializeTool(sectionId) {
             case 'word-counter-section':
                 currentTool = new WordCounter();
                 break;
+            case 'distance-converter-section':
+                currentTool = new DistanceConverter();
+                break;
         }
     } catch (error) {
         console.warn('Tool initialization failed:', error);
