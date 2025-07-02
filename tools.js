@@ -1624,3 +1624,171 @@ class DistanceConverter {
         }
     }
 }
+
+class WeightConverter {
+    constructor() {
+        this.weightFactors = {
+            grams: 1,
+            kilograms: 0.001,
+            milligrams: 1000,
+            pounds: 0.00220462,
+            ounces: 0.035274,
+            tons: 0.000001,
+            stones: 0.000157473
+        };
+        
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        this.inputField = document.getElementById('weight-input');
+        this.fromUnit = document.getElementById('weight-from');
+        this.toUnit = document.getElementById('weight-to');
+        this.resultField = document.getElementById('weight-result');
+        this.clearBtn = document.getElementById('weight-clear');
+
+        if (this.inputField) {
+            this.inputField.addEventListener('input', () => this.updateResult());
+        }
+        
+        if (this.fromUnit) {
+            this.fromUnit.addEventListener('change', () => this.updateResult());
+        }
+        
+        if (this.toUnit) {
+            this.toUnit.addEventListener('change', () => this.updateResult());
+        }
+
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => this.clearWeight());
+        }
+
+        // Initial update
+        this.updateResult();
+    }
+
+    convertWeight(value, fromUnit, toUnit) {
+        const baseValue = parseFloat(value) / this.weightFactors[fromUnit];
+        const convertedValue = baseValue * this.weightFactors[toUnit];
+        return convertedValue;
+    }
+
+    updateResult() {
+        if (!this.inputField || !this.fromUnit || !this.toUnit || !this.resultField) return;
+
+        const val = this.inputField.value;
+        if (!val || isNaN(val) || val === '') {
+            this.resultField.textContent = 'Enter a weight to see the conversion';
+            return;
+        }
+
+        const result = this.convertWeight(val, this.fromUnit.value, this.toUnit.value);
+        const formattedResult = this.formatResult(result);
+        
+        const fromUnitName = this.getUnitDisplayName(this.fromUnit.value);
+        const toUnitName = this.getUnitDisplayName(this.toUnit.value);
+        
+        this.resultField.textContent = `${val} ${fromUnitName} = ${formattedResult} ${toUnitName}`;
+    }
+
+    formatResult(value) {
+        if (value === 0) return '0';
+        
+        // For very small numbers, use scientific notation
+        if (Math.abs(value) < 0.0001) {
+            return value.toExponential(3);
+        }
+        
+        // For large numbers, use comma separation
+        if (Math.abs(value) >= 1000000) {
+            return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+        
+        // For normal numbers, show appropriate decimal places
+        if (Math.abs(value) >= 100) {
+            return value.toFixed(2);
+        } else if (Math.abs(value) >= 10) {
+            return value.toFixed(3);
+        } else {
+            return value.toFixed(4);
+        }
+    }
+
+    getUnitDisplayName(unit) {
+        const displayNames = {
+            grams: 'grams',
+            kilograms: 'kilograms',
+            milligrams: 'milligrams',
+            pounds: 'pounds',
+            ounces: 'ounces',
+            tons: 'tons',
+            stones: 'stones'
+        };
+        return displayNames[unit] || unit;
+    }
+
+    clearWeight() {
+        if (this.inputField) {
+            this.inputField.value = '';
+        }
+        if (this.resultField) {
+            this.resultField.textContent = 'Enter a weight to see the conversion';
+        }
+        this.showNotification('Weight cleared!', 'success');
+    }
+
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 transition-all duration-300 transform translate-x-full`;
+        
+        // Set colors based on type
+        switch (type) {
+            case 'success':
+                notification.classList.add('bg-green-500');
+                break;
+            case 'error':
+                notification.classList.add('bg-red-500');
+                break;
+            case 'warning':
+                notification.classList.add('bg-yellow-500');
+                break;
+            default:
+                notification.classList.add('bg-purple-500');
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 10);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners
+        if (this.inputField) {
+            this.inputField.removeEventListener('input', this.updateResult);
+        }
+        if (this.fromUnit) {
+            this.fromUnit.removeEventListener('change', this.updateResult);
+        }
+        if (this.toUnit) {
+            this.toUnit.removeEventListener('change', this.updateResult);
+        }
+        if (this.clearBtn) {
+            this.clearBtn.removeEventListener('click', this.clearWeight);
+        }
+    }
+}

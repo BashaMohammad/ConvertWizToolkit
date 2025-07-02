@@ -47,6 +47,9 @@ function initializeTool(sectionId) {
             case 'distance-converter-section':
                 currentTool = new DistanceConverter();
                 break;
+            case 'weight-converter-section':
+                currentTool = new WeightConverter();
+                break;
         }
     } catch (error) {
         console.warn('Tool initialization failed:', error);

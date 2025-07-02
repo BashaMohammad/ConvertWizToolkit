@@ -66,7 +66,7 @@
                 <div class="flex justify-center">
                     <div class="bg-white/20 backdrop-blur-md rounded-full px-6 py-3 text-white font-medium">
                         <i class="fas fa-star mr-2"></i>
-                        6+ Powerful Tools • Free to Use • No Registration Required
+                        7+ Powerful Tools • Free to Use • No Registration Required
                     </div>
                 </div>
             </section>
@@ -271,6 +271,20 @@
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Distance Converter</h4>
                                 <p class="text-gray-600 text-sm mb-4">Convert between meters, miles, feet and other distance units</p>
                                 <button data-target="distance-converter-section" class="inline-block w-full bg-gradient-to-r from-cyan-500 to-teal-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Weight Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-weight text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Weight Converter</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert between grams, pounds, kilograms and other weight units</p>
+                                <button data-target="weight-converter-section" class="inline-block w-full bg-gradient-to-r from-purple-500 to-violet-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                     Try Now
                                 </button>
                             </div>
@@ -756,6 +770,80 @@
                     <!-- Action Buttons -->
                     <div class="flex gap-4">
                         <button id="clear-distance" class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                            <i class="fas fa-times mr-2"></i>Clear
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- WEIGHT CONVERTER SECTION -->
+    <div class="tool-section" id="weight-converter-section" style="display: none;">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    ⚖️ Weight Converter
+                </h2>
+                <p class="text-xl text-white/90 mb-4">
+                    Convert weight and mass between global measurement units
+                </p>
+            </section>
+
+            <!-- Weight Converter Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="mb-6">
+                        <label for="weight-input" class="block mb-2 text-lg font-semibold text-gray-800">Enter Weight:</label>
+                        <input id="weight-input" type="number" class="w-full border-2 border-gray-300 rounded-xl px-6 py-4 text-lg focus:border-purple-500 focus:outline-none transition-colors" placeholder="e.g. 75" step="any">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="weight-from" class="block mb-2 text-lg font-semibold text-gray-800">From Unit:</label>
+                            <select id="weight-from" class="w-full border-2 border-gray-300 rounded-xl px-6 py-4 text-lg focus:border-purple-500 focus:outline-none transition-colors">
+                                <option value="kilograms">Kilograms</option>
+                                <option value="grams">Grams</option>
+                                <option value="pounds">Pounds</option>
+                                <option value="ounces">Ounces</option>
+                                <option value="milligrams">Milligrams</option>
+                                <option value="tons">Tons</option>
+                                <option value="stones">Stones</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="weight-to" class="block mb-2 text-lg font-semibold text-gray-800">To Unit:</label>
+                            <select id="weight-to" class="w-full border-2 border-gray-300 rounded-xl px-6 py-4 text-lg focus:border-purple-500 focus:outline-none transition-colors">
+                                <option value="pounds">Pounds</option>
+                                <option value="kilograms">Kilograms</option>
+                                <option value="grams">Grams</option>
+                                <option value="ounces">Ounces</option>
+                                <option value="milligrams">Milligrams</option>
+                                <option value="tons">Tons</option>
+                                <option value="stones">Stones</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div class="mb-6 p-6 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl border-2 border-purple-200">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Converted Result:</h3>
+                        <div class="text-2xl font-bold text-purple-600" id="weight-result">Enter a weight to see the conversion</div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-4">
+                        <button id="weight-clear" class="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
                             <i class="fas fa-times mr-2"></i>Clear
                         </button>
                     </div>

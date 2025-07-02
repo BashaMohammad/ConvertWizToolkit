@@ -89,6 +89,15 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Clear functionality and toast notifications for user feedback
 - Mobile-optimized input fields and dropdowns
 
+#### Weight Converter
+- Mass and weight unit conversion between 7 global measurement systems
+- Supports grams, kilograms, pounds, ounces, milligrams, tons, stones
+- Real-time conversion with intelligent number formatting and decimal precision
+- Scientific notation for very small values, comma separation for large numbers
+- Responsive grid layout with professional purple/violet color scheme
+- Clear functionality and toast notifications for user feedback
+- Mobile-optimized input fields and dropdowns with focus states
+
 ## Data Flow
 
 1. **File Upload Flow:**
