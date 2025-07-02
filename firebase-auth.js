@@ -10,6 +10,14 @@ import {
     onAuthStateChanged,
     updateProfile
 } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { 
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -25,28 +33,41 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
+
+// Plan limits configuration
+const PLAN_LIMITS = {
+    free: 5,
+    standard: 20,
+    premium: Infinity
+};
 
 // Authentication Class
 class ConvertWizAuth {
     constructor() {
         this.currentUser = null;
         this.isLoggedIn = false;
+        this.userPlan = null;
+        this.dailyUsage = 0;
         this.init();
     }
 
     init() {
         // Listen for authentication state changes
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 this.currentUser = user;
                 this.isLoggedIn = true;
+                await this.initializeUserPlan(user);
                 this.updateUI(true);
                 this.saveUserSession(user);
                 console.log('User signed in:', user.email);
             } else {
                 this.currentUser = null;
                 this.isLoggedIn = false;
+                this.userPlan = null;
+                this.dailyUsage = 0;
                 this.updateUI(false);
                 this.clearUserSession();
                 console.log('User signed out');
@@ -598,6 +619,150 @@ class ConvertWizAuth {
             user: this.currentUser,
             isLoggedIn: this.isLoggedIn
         };
+    }
+
+    // Initialize or fetch user plan data from Firestore
+    async initializeUserPlan(user) {
+        try {
+            const userDocRef = doc(db, 'users', user.uid);
+            const userDoc = await getDoc(userDocRef);
+            
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                this.userPlan = userData.plan || 'free';
+                
+                // Check if it's a new day and reset usage if needed
+                const today = new Date().toDateString();
+                const lastConversionDate = userData.lastConversionDate?.toDate?.()?.toDateString() || '';
+                
+                if (today !== lastConversionDate) {
+                    // Reset daily usage for new day
+                    this.dailyUsage = 0;
+                    await updateDoc(userDocRef, {
+                        dailyUsageCount: 0,
+                        lastConversionDate: serverTimestamp()
+                    });
+                } else {
+                    this.dailyUsage = userData.dailyUsageCount || 0;
+                }
+            } else {
+                // First time user - create initial record
+                this.userPlan = 'free';
+                this.dailyUsage = 0;
+                await setDoc(userDocRef, {
+                    plan: 'free',
+                    dailyUsageCount: 0,
+                    lastConversionDate: serverTimestamp(),
+                    email: user.email,
+                    displayName: user.displayName || user.email.split('@')[0]
+                });
+            }
+            
+            // Update usage display
+            this.updateUsageDisplay();
+            
+        } catch (error) {
+            console.error('Error initializing user plan:', error);
+            // Fallback to local data
+            this.userPlan = 'free';
+            this.dailyUsage = 0;
+        }
+    }
+
+    // Check if user can perform conversion
+    async canPerformConversion() {
+        if (!this.isLoggedIn) {
+            // For non-logged users, use local storage limit
+            const todayKey = `conversion_${new Date().toDateString()}`;
+            const todayUsage = parseInt(localStorage.getItem(todayKey)) || 0;
+            return todayUsage < 3; // Free tier limit for non-users
+        }
+
+        const limit = PLAN_LIMITS[this.userPlan] || PLAN_LIMITS.free;
+        return this.dailyUsage < limit;
+    }
+
+    // Increment usage count after successful conversion
+    async incrementUsage() {
+        if (!this.isLoggedIn) {
+            // For non-logged users, update local storage
+            const todayKey = `conversion_${new Date().toDateString()}`;
+            const todayUsage = parseInt(localStorage.getItem(todayKey)) || 0;
+            localStorage.setItem(todayKey, (todayUsage + 1).toString());
+            return;
+        }
+
+        try {
+            this.dailyUsage++;
+            const userDocRef = doc(db, 'users', this.currentUser.uid);
+            await updateDoc(userDocRef, {
+                dailyUsageCount: this.dailyUsage,
+                lastConversionDate: serverTimestamp()
+            });
+            this.updateUsageDisplay();
+        } catch (error) {
+            console.error('Error updating usage count:', error);
+        }
+    }
+
+    // Get remaining conversions for current user
+    getRemainingConversions() {
+        if (!this.isLoggedIn) {
+            const todayKey = `conversion_${new Date().toDateString()}`;
+            const todayUsage = parseInt(localStorage.getItem(todayKey)) || 0;
+            return Math.max(0, 3 - todayUsage);
+        }
+
+        const limit = PLAN_LIMITS[this.userPlan] || PLAN_LIMITS.free;
+        if (limit === Infinity) return 'Unlimited';
+        return Math.max(0, limit - this.dailyUsage);
+    }
+
+    // Update usage display in UI
+    updateUsageDisplay() {
+        const usageInfo = document.getElementById('usage-info');
+        const mobileUsageInfo = document.getElementById('mobile-usage-info');
+        
+        if (!this.isLoggedIn) {
+            const todayKey = `conversion_${new Date().toDateString()}`;
+            const todayUsage = parseInt(localStorage.getItem(todayKey)) || 0;
+            const remaining = Math.max(0, 3 - todayUsage);
+            const usageText = `${remaining}/3 conversions left today`;
+            
+            if (usageInfo) usageInfo.textContent = usageText;
+            if (mobileUsageInfo) mobileUsageInfo.textContent = usageText;
+            return;
+        }
+
+        const limit = PLAN_LIMITS[this.userPlan] || PLAN_LIMITS.free;
+        const planText = this.userPlan.charAt(0).toUpperCase() + this.userPlan.slice(1);
+        
+        let usageText;
+        if (limit === Infinity) {
+            usageText = `${planText} Plan - Unlimited conversions`;
+        } else {
+            const remaining = Math.max(0, limit - this.dailyUsage);
+            usageText = `${planText} Plan - ${remaining}/${limit} conversions left today`;
+        }
+        
+        if (usageInfo) usageInfo.textContent = usageText;
+        if (mobileUsageInfo) mobileUsageInfo.textContent = usageText;
+    }
+
+    // Show usage limit reached warning
+    showUsageLimitWarning() {
+        const planText = this.userPlan?.charAt(0).toUpperCase() + this.userPlan?.slice(1) || 'Free';
+        let message;
+        
+        if (!this.isLoggedIn) {
+            message = 'Daily limit reached! Sign up for unlimited access or try again tomorrow.';
+        } else if (this.userPlan === 'free') {
+            message = 'Free plan daily limit reached! Upgrade to Standard (20/day) or Premium (unlimited) for more conversions.';
+        } else {
+            message = `${planText} plan daily limit reached! Try again tomorrow or upgrade to Premium for unlimited conversions.`;
+        }
+        
+        this.showNotification(message, 'warning');
     }
 }
 
