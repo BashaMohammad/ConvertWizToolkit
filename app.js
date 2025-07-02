@@ -1,139 +1,78 @@
-// ConvertWiz - Simple Navigation System
+// ✅ UNIVERSAL SECTION NAVIGATION HANDLER FOR CONVERTWIZ
 
-// Global navigation function
-function navigateToPage(pageId) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.add('hidden');
-    });
+// Hide all tool sections and show the one with the given ID
+function showSection(sectionId) {
+  document.querySelectorAll('.tool-section').forEach(section => {
+    section.style.display = 'none';
+  });
+
+  const target = document.getElementById(sectionId);
+  if (target) {
+    target.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // Show target page
-    const targetPage = document.getElementById(pageId);
-    if (targetPage) {
-        targetPage.classList.remove('hidden');
-        targetPage.classList.add('fade-in');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Initialize tools
-        initializeToolForPage(pageId);
-    }
+    // Initialize tools based on section
+    initializeTool(sectionId);
+  }
 }
 
-// Initialize tool instances
+// Tool initialization
 let currentTool = null;
 
-function initializeToolForPage(pageId) {
+function initializeTool(sectionId) {
     // Clean up previous tool
     if (currentTool && currentTool.destroy) {
         currentTool.destroy();
         currentTool = null;
     }
     
-    // Initialize new tool
+    // Initialize new tool based on section ID
     try {
-        switch(pageId) {
-            case 'jpg-png-converter':
+        switch(sectionId) {
+            case 'jpg-to-png-section':
                 currentTool = new JPGtoPNGConverter();
                 break;
-            case 'currency-converter':
+            case 'currency-converter-section':
                 currentTool = new CurrencyConverter();
                 break;
-            case 'land-converter':
+            case 'land-converter-section':
                 currentTool = new LandUnitConverter();
                 break;
-            case 'dp-resizer':
+            case 'dp-resizer-section':
                 currentTool = new InstagramDPResizer();
                 break;
-            case 'word-counter':
+            case 'word-counter-section':
                 currentTool = new WordCounter();
                 break;
         }
     } catch (error) {
-        console.error('Error initializing tool:', error);
+        console.warn('Tool initialization failed:', error);
     }
 }
 
-// Navigation mapping
-const routeMap = {
-    '': 'home',
-    'home': 'home',
-    'jpg-to-png': 'jpg-png-converter',
-    'currency': 'currency-converter', 
-    'land': 'land-converter',
-    'dp-resizer': 'dp-resizer',
-    'word-counter': 'word-counter'
-};
-
-// Main navigation handler
-function handleNavigation(route) {
-    const pageId = routeMap[route] || 'home';
-    navigateToPage(pageId);
-}
-
-// App class for compatibility
-class ConvertWizApp {
-    constructor() {
-        this.init();
-    }
+// Automatically bind all buttons with data-target attribute
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('ConvertWiz navigation initialized');
     
-    init() {
-        // Show home page by default
-        navigateToPage('home');
-    }
-    
-    navigateTo(route) {
-        handleNavigation(route);
-    }
-    
-    showPage(pageId) {
-        navigateToPage(pageId);
-    }
-    
-    initializeTool(pageId) {
-        initializeToolForPage(pageId);
-    }
-}
-
-// Simple event delegation for navigation
-document.addEventListener('click', function(e) {
-    const routeElement = e.target.closest('[data-route]');
-    if (routeElement) {
-        e.preventDefault();
-        e.stopPropagation();
-        const route = routeElement.getAttribute('data-route');
-        handleNavigation(route);
-        return false;
-    }
-});
-
-// Initialize when DOM is ready
-function initializeApp() {
-    // Create app instance
-    window.convertWizApp = new ConvertWizApp();
-    
-    // Add manual event listeners as backup
-    const routeElements = document.querySelectorAll('[data-route]');
-    routeElements.forEach(element => {
-        element.addEventListener('click', function(e) {
+    // Bind data-target buttons
+    document.querySelectorAll('[data-target]').forEach(button => {
+        button.addEventListener('click', (e) => {
             e.preventDefault();
-            const route = this.getAttribute('data-route');
-            handleNavigation(route);
+            const targetId = button.getAttribute('data-target');
+            showSection(targetId);
         });
     });
     
-    console.log('ConvertWiz navigation initialized');
-}
-
-// Multiple initialization approaches
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    initializeApp();
-}
-
-// Also initialize on window load as final fallback
-window.addEventListener('load', function() {
-    if (!window.convertWizApp) {
-        initializeApp();
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
     }
+    
+    // Show landing section on initial load
+    showSection('landing-section');
 });
