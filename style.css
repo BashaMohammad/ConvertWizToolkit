@@ -427,42 +427,27 @@ input[type="file"] + label:hover {
 }
 
 /* === AdSense Integration === */
-.ad-container {
-    position: relative;
-    margin: 2rem auto;
-    max-width: 100%;
-}
-
 /* Show ads in production, hide placeholders */
-.ad-container .adsbygoogle {
+.adsbygoogle {
     display: block !important;
 }
 
-.ad-container .ad-placeholder {
+.ad-placeholder {
     display: none;
 }
 
 /* Development mode - show placeholders, hide ads */
-body[data-env="development"] .ad-container .adsbygoogle {
+body[data-env="development"] .adsbygoogle {
     display: none !important;
 }
 
-body[data-env="development"] .ad-container .ad-placeholder {
-    display: block;
+body[data-env="development"] .ad-placeholder {
+    display: block !important;
 }
 
-/* Responsive ad styling */
-.ad-container .adsbygoogle {
+/* Clean responsive ad styling */
+.adsbygoogle {
     border-radius: 0.5rem;
     overflow: hidden;
-}
-
-/* Lazy loading support */
-.ad-container.lazy-loaded .adsbygoogle {
-    opacity: 1;
-    transition: opacity 0.3s ease;
-}
-
-.ad-container:not(.lazy-loaded) .adsbygoogle {
-    opacity: 0;
+    margin: 0 auto;
 }

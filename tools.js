@@ -686,6 +686,12 @@ class CurrencyConverter {
         this.rateText.textContent = `Live Rate • Updated now • 1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
         this.result.classList.remove('hidden');
         this.result.classList.add('fade-in');
+        
+        // Show ad section when results are displayed
+        const adSection = document.getElementById('currency-ad-section');
+        if (adSection) {
+            adSection.classList.remove('hidden');
+        }
     }
     
     showNotification(message, type = 'error') {

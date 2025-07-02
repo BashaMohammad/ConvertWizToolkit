@@ -1459,44 +1459,30 @@ Contact: John Doe, Company Inc."></textarea>
             });
         });
         
-        // AdSense utility functions
-        window.AdSenseHelper = {
-            isProduction: function() {
-                return window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-            },
-            
-            loadAd: function(adContainer) {
-                if (this.isProduction() && window.adsbygoogle && adContainer) {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                        console.warn('AdSense loading error:', e);
-                    }
-                }
-            },
-            
-            initializePageAds: function() {
-                if (this.isProduction()) {
-                    const adElements = document.querySelectorAll('.adsbygoogle');
-                    adElements.forEach(ad => {
-                        if (!ad.getAttribute('data-adsbygoogle-status')) {
-                            this.loadAd(ad);
-                        }
-                    });
-                }
-            }
-        };
-        
-        // Initialize ads when page loads
+        // Set development mode for ad display
         document.addEventListener('DOMContentLoaded', function() {
             // Set development mode attribute for CSS targeting
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 document.body.setAttribute('data-env', 'development');
             }
             
-            setTimeout(() => {
-                window.AdSenseHelper.initializePageAds();
-            }, 1000);
+            // Initialize ads in production only
+            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                setTimeout(function() {
+                    if (window.adsbygoogle) {
+                        const ads = document.querySelectorAll('.adsbygoogle');
+                        ads.forEach(function(ad) {
+                            if (!ad.getAttribute('data-adsbygoogle-status')) {
+                                try {
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                } catch (e) {
+                                    console.warn('AdSense initialization:', e.message);
+                                }
+                            }
+                        });
+                    }
+                }, 3000); // 3 second delay
+            }
         });
     </script>
 </body>
