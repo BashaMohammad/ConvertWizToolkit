@@ -119,6 +119,16 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Professional emerald/green color scheme with enhanced UI feedback
 - Large textarea input optimized for log file processing
 
+#### QR Code Generator
+- Professional QR code generation tool using QRious library for high-quality output
+- Supports URLs, text, phone numbers, email addresses, and WiFi network configurations
+- Real-time QR code preview with instant generation as user types
+- Quick template buttons for common QR code types (URL, phone, email, WiFi)
+- Download functionality for PNG format with timestamped filenames
+- Copy to clipboard feature for direct image sharing
+- Professional violet/purple color scheme with gradient styling
+- Responsive two-column layout with dedicated preview section
+
 ## Data Flow
 
 1. **File Upload Flow:**
