@@ -188,10 +188,38 @@ ConvertWiz includes comprehensive legal compliance documentation:
 - Mobile-responsive layout with proper spacing and typography
 - Cookie consent banner with localStorage persistence across all pages
 
+## Firebase Authentication
+
+ConvertWiz now includes comprehensive user authentication powered by Firebase:
+
+### Authentication Features
+- **Email/Password Authentication**: Full sign-up and sign-in functionality with validation
+- **Google OAuth Integration**: One-click sign-in with Google accounts  
+- **User Session Management**: Persistent login state stored in localStorage (30-day expiration)
+- **Responsive Login Modal**: Professional popup with tabbed interface for sign-in/sign-up
+- **User Greeting System**: Displays welcome message with user's name in navbar
+- **Real-time Auth State**: Instant UI updates based on authentication status
+- **Error Handling**: User-friendly error messages with specific guidance
+- **Profile Management**: Updates user display name during account creation
+
+### Technical Implementation
+- **Firebase SDK v10.7.0**: Modern ES6 module imports for optimal performance
+- **Secure Configuration**: Environment-based config with production Firebase project
+- **LocalStorage Integration**: Maintains session persistence across browser sessions
+- **Toast Notifications**: Consistent feedback system for auth actions
+- **Mobile-Responsive Design**: Touch-friendly interface across all devices
+
+### UI Integration
+- **Navbar Authentication Button**: Dynamic login/logout button with user greeting
+- **Modal-Based Interface**: Professional overlay design with backdrop blur
+- **Tab Switching**: Seamless toggle between sign-in and sign-up forms
+- **Loading States**: Visual feedback during authentication processes
+- **Form Validation**: Client-side validation with Firebase error handling
+
 ## Changelog
 
 Changelog:
-- July 02, 2025. Added QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, and tool disclaimers
+- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, and tool disclaimers
 - July 01, 2025. Initial setup
 
 ## Development Notes
