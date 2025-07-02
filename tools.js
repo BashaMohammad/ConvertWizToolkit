@@ -1954,3 +1954,181 @@ class HeightConverter {
         }
     }
 }
+
+class IPAddressExtractor {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        this.inputArea = document.getElementById('ip-input');
+        this.resultArea = document.getElementById('ip-results');
+        this.extractBtn = document.getElementById('extract-ip');
+        this.clearBtn = document.getElementById('ip-clear');
+        this.copyBtn = document.getElementById('copy-ip');
+
+        if (this.extractBtn) {
+            this.extractBtn.addEventListener('click', () => this.extractIPs());
+        }
+
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => this.clearAll());
+        }
+
+        if (this.copyBtn) {
+            this.copyBtn.addEventListener('click', () => this.copyResults());
+        }
+    }
+
+    extractIPAddresses(text) {
+        // Improved IPv4 regex with validation
+        const ipv4Pattern = /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g;
+        
+        // IPv6 regex pattern (simplified but covers most common formats)
+        const ipv6Pattern = /\b(?:[a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}\b|\b(?:[a-fA-F0-9]{1,4}:){1,7}:\b|\b(?:[a-fA-F0-9]{1,4}:){1,6}:[a-fA-F0-9]{1,4}\b|\b(?:[a-fA-F0-9]{1,4}:){1,5}(?::[a-fA-F0-9]{1,4}){1,2}\b|\b(?:[a-fA-F0-9]{1,4}:){1,4}(?::[a-fA-F0-9]{1,4}){1,3}\b|\b(?:[a-fA-F0-9]{1,4}:){1,3}(?::[a-fA-F0-9]{1,4}){1,4}\b|\b(?:[a-fA-F0-9]{1,4}:){1,2}(?::[a-fA-F0-9]{1,4}){1,5}\b|\b[a-fA-F0-9]{1,4}:(?::[a-fA-F0-9]{1,4}){1,6}\b|\b:(?::[a-fA-F0-9]{1,4}){1,7}\b|\b::(?:[a-fA-F0-9]{1,4}:){0,6}[a-fA-F0-9]{1,4}\b|\b(?:[a-fA-F0-9]{1,4}:){1,7}:\b/g;
+
+        const ipv4Matches = text.match(ipv4Pattern) || [];
+        const ipv6Matches = text.match(ipv6Pattern) || [];
+
+        // Filter out invalid IPv4 addresses (e.g., 999.999.999.999)
+        const validIPv4 = ipv4Matches.filter(ip => {
+            const parts = ip.split('.');
+            return parts.every(part => parseInt(part) <= 255);
+        });
+
+        return [...new Set([...validIPv4, ...ipv6Matches])]; // Unique list
+    }
+
+    extractIPs() {
+        if (!this.inputArea || !this.resultArea) return;
+
+        const text = this.inputArea.value.trim();
+        if (!text) {
+            this.resultArea.innerHTML = '<p class="text-amber-600 font-medium">Please enter some text or logs to extract IP addresses from.</p>';
+            return;
+        }
+
+        const ips = this.extractIPAddresses(text);
+
+        if (ips.length === 0) {
+            this.resultArea.innerHTML = '<p class="text-red-500 font-medium">No valid IP addresses found in the provided text.</p>';
+        } else {
+            // Group by type
+            const ipv4s = ips.filter(ip => ip.includes('.'));
+            const ipv6s = ips.filter(ip => ip.includes(':'));
+
+            let html = `<div class="space-y-4">`;
+            
+            if (ipv4s.length > 0) {
+                html += `
+                    <div>
+                        <h4 class="text-lg font-semibold text-emerald-700 mb-2">IPv4 Addresses (${ipv4s.length})</h4>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            ${ipv4s.map(ip => `<li class="font-mono text-sm bg-gray-100 px-2 py-1 rounded inline-block mr-2 mb-1">${ip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            if (ipv6s.length > 0) {
+                html += `
+                    <div>
+                        <h4 class="text-lg font-semibold text-blue-700 mb-2">IPv6 Addresses (${ipv6s.length})</h4>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            ${ipv6s.map(ip => `<li class="font-mono text-sm bg-gray-100 px-2 py-1 rounded inline-block mr-2 mb-1">${ip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="mt-4 p-3 bg-emerald-100 rounded-lg">
+                    <p class="text-emerald-800 font-medium">Total: ${ips.length} unique IP address${ips.length !== 1 ? 'es' : ''} found</p>
+                </div>
+            </div>`;
+
+            this.resultArea.innerHTML = html;
+        }
+
+        this.showNotification(`Found ${ips.length} IP address${ips.length !== 1 ? 'es' : ''}`, ips.length > 0 ? 'success' : 'info');
+    }
+
+    async copyResults() {
+        if (!this.resultArea) return;
+
+        const text = this.resultArea.innerText;
+        if (!text || text.includes('Click "Extract IPs"')) {
+            this.showNotification('No IP addresses to copy. Extract some first!', 'warning');
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(text);
+            this.showNotification('IP addresses copied to clipboard!', 'success');
+        } catch (err) {
+            this.showNotification('Failed to copy to clipboard', 'error');
+        }
+    }
+
+    clearAll() {
+        if (this.inputArea) {
+            this.inputArea.value = '';
+        }
+        if (this.resultArea) {
+            this.resultArea.innerHTML = 'Click "Extract IPs" to find all IPv4 and IPv6 addresses in your text.';
+        }
+        this.showNotification('Cleared input and results', 'info');
+    }
+
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 transition-all duration-300 transform translate-x-full`;
+        
+        // Set colors based on type
+        switch (type) {
+            case 'success':
+                notification.classList.add('bg-green-500');
+                break;
+            case 'error':
+                notification.classList.add('bg-red-500');
+                break;
+            case 'warning':
+                notification.classList.add('bg-yellow-500');
+                break;
+            default:
+                notification.classList.add('bg-emerald-500');
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 10);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners
+        if (this.extractBtn) {
+            this.extractBtn.removeEventListener('click', this.extractIPs);
+        }
+        if (this.clearBtn) {
+            this.clearBtn.removeEventListener('click', this.clearAll);
+        }
+        if (this.copyBtn) {
+            this.copyBtn.removeEventListener('click', this.copyResults);
+        }
+    }
+}

@@ -107,6 +107,15 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Clear functionality and toast notifications for user feedback
 - Mobile-optimized input fields and dropdowns with focus states
 
+#### IP Address Extractor
+- Advanced text processing tool for extracting IPv4 and IPv6 addresses from logs and text
+- Robust regex patterns with validation for accurate IP address detection
+- Supports both IPv4 (with range validation) and IPv6 (multiple format patterns)
+- Groups results by IP version with counts and formatted display
+- Copy functionality for extracted results with clipboard API integration
+- Professional emerald/green color scheme with enhanced UI feedback
+- Large textarea input optimized for log file processing
+
 ## Data Flow
 
 1. **File Upload Flow:**

@@ -53,6 +53,9 @@ function initializeTool(sectionId) {
             case 'height-converter-section':
                 currentTool = new HeightConverter();
                 break;
+            case 'ip-extractor-section':
+                currentTool = new IPAddressExtractor();
+                break;
         }
     } catch (error) {
         console.warn('Tool initialization failed:', error);
