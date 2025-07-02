@@ -31,14 +31,18 @@ class ConvertWizApp {
             // Handle any element with data-route attribute
             const element = e.target.closest('[data-route]');
             if (element) {
+                console.log('Navigation clicked:', element.getAttribute('data-route'));
                 e.preventDefault();
+                e.stopPropagation();
                 const route = element.getAttribute('data-route');
                 this.navigateTo(route);
+                return false;
             }
         });
     }
     
     navigateTo(route) {
+        console.log('Navigating to:', route);
         // Use hash-based routing for compatibility with simple servers
         if (route.startsWith('/')) {
             window.location.hash = route.substring(1);
@@ -57,7 +61,9 @@ class ConvertWizApp {
             route = route.substring(1);
         }
         
+        console.log('Handling route:', route);
         const page = this.routes[route] || 'home';
+        console.log('Showing page:', page);
         
         // Clear previous tool instance
         if (this.currentTool && this.currentTool.destroy) {
