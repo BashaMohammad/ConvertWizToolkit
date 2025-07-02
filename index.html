@@ -13,19 +13,21 @@
       gtag('config', 'G-7QJXHFPZVE');
     </script>
 
-    <!-- Google AdSense - Only load in production -->
+    <!-- Google AdSense - Lazy loaded for production -->
     <script>
-      // Only load AdSense in production environment
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        (function() {
-          var script = document.createElement('script');
-          script.async = true;
-          script.crossOrigin = 'anonymous';
-          // Replace 'ca-pub-XXXXXXXXX' with your actual AdSense publisher ID
-          script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX';
-          document.head.appendChild(script);
-        })();
-      }
+      // Lazy load AdSense script only in production
+      window.addEventListener('load', function() {
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          setTimeout(function() {
+            var script = document.createElement('script');
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            // Replace with your actual AdSense publisher ID
+            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX';
+            document.head.appendChild(script);
+          }, 2000); // 2 second delay for performance
+        }
+      });
     </script>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -351,25 +353,7 @@
                 </div>
             </section>
 
-            <!-- AdSense Ad Unit - After Tools Showcase -->
-            <div class="mt-16 mb-8 flex justify-center">
-                <div class="ad-container max-w-3xl w-full">
-                    <!-- Production AdSense Ad -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-XXXXXXXXX"
-                         data-ad-slot="XXXXXXXXX"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    
-                    <!-- Development Placeholder -->
-                    <div class="ad-placeholder bg-white/10 backdrop-blur-md border-2 border-dashed border-white/30 rounded-lg p-6 text-center text-white/70" style="min-height: 200px;">
-                        <i class="fas fa-ad text-3xl mb-4"></i>
-                        <p class="text-lg font-medium">Advertisement Space</p>
-                        <p class="text-sm">Premium ads display in production</p>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- About Section -->
             <section id="about" class="text-center">
@@ -482,6 +466,22 @@
                             <i class="fas fa-plus mr-3"></i>Convert More Files
                         </button>
                     </div>
+
+                    <!-- AdSense Ad Unit - Below Tool Results -->
+                    <div class="mt-8">
+                        <!-- Production AdSense Ad -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXX"
+                             data-ad-slot="XXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        
+                        <!-- Development Placeholder -->
+                        <div class="ad-placeholder bg-gray-100 border border-gray-300 rounded-lg p-4 text-center text-gray-600" style="min-height: 150px; display: block;">
+                            <p class="text-sm font-medium">Ad will appear here in production</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Daily Limit Reached -->
@@ -512,23 +512,7 @@
         </main>
     </div>
 
-    <!-- AdSense Ad Unit - After JPG to PNG Converter -->
-    <div class="ad-container max-w-3xl mx-auto px-4">
-        <!-- Production AdSense Ad -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-XXXXXXXXX"
-             data-ad-slot="XXXXXXXXX"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        
-        <!-- Development Placeholder -->
-        <div class="ad-placeholder bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-500" style="min-height: 200px;">
-            <i class="fas fa-ad text-2xl mb-3"></i>
-            <p class="text-md font-medium">Ad Space</p>
-            <p class="text-xs">Will display in production</p>
-        </div>
-    </div>
+
 
     <!-- CURRENCY CONVERTER SECTION -->
     <div class="tool-section" id="currency-converter-section" style="display: none;">
@@ -598,6 +582,22 @@
                             <p id="currency-result-text" class="text-xl font-semibold text-gray-800"></p>
                             <p id="currency-rate-text" class="text-sm text-gray-600 mt-2"></p>
                         </div>
+
+                        <!-- AdSense Ad Unit - Below Tool Results -->
+                        <div id="currency-ad-section" class="hidden mt-6">
+                            <!-- Production AdSense Ad -->
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-XXXXXXXXX"
+                                 data-ad-slot="XXXXXXXXX"
+                                 data-ad-format="auto"
+                                 data-full-width-responsive="true"></ins>
+                            
+                            <!-- Development Placeholder -->
+                            <div class="ad-placeholder bg-gray-100 border border-gray-300 rounded-lg p-4 text-center text-gray-600" style="min-height: 150px; display: block;">
+                                <p class="text-sm font-medium">Ad will appear here in production</p>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -609,25 +609,7 @@
                     </p>
                 </div>
 
-                <!-- AdSense Ad Unit - Below Currency Converter -->
-                <div class="mt-8 flex justify-center">
-                    <div class="ad-container max-w-2xl w-full">
-                        <!-- Production AdSense Ad -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-XXXXXXXXX"
-                             data-ad-slot="XXXXXXXXX"
-                             data-ad-format="auto"
-                             data-full-width-responsive="true"></ins>
-                        
-                        <!-- Development Placeholder -->
-                        <div class="ad-placeholder bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500" style="min-height: 250px;">
-                            <i class="fas fa-ad text-3xl mb-4"></i>
-                            <p class="text-lg font-medium">Ad Space</p>
-                            <p class="text-sm">Will display in production</p>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </main>
     </div>
@@ -1278,8 +1260,8 @@ IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334"></textarea>
     </div>
 
     <!-- AdSense Ad Unit - Above Footer -->
-    <div class="mt-16 mb-8 flex justify-center">
-        <div class="ad-container max-w-4xl w-full">
+    <div class="mt-12 mb-8 container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
             <!-- Production AdSense Ad -->
             <ins class="adsbygoogle"
                  style="display:block"
@@ -1289,10 +1271,8 @@ IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334"></textarea>
                  data-full-width-responsive="true"></ins>
             
             <!-- Development Placeholder -->
-            <div class="ad-placeholder bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500" style="min-height: 280px;">
-                <i class="fas fa-ad text-4xl mb-4"></i>
-                <p class="text-xl font-medium">Advertisement Space</p>
-                <p class="text-sm">Premium ads will display in production</p>
+            <div class="ad-placeholder bg-gray-100 border border-gray-300 rounded-lg p-6 text-center text-gray-600" style="min-height: 200px; display: block;">
+                <p class="text-sm font-medium">Ad will appear here in production</p>
             </div>
         </div>
     </div>
