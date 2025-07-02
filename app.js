@@ -20,6 +20,9 @@ class ConvertWizApp {
         // Handle initial route
         this.handleRoute();
         
+        // Listen for hash changes
+        window.addEventListener('hashchange', () => this.handleRoute());
+        
         // Listen for route changes
         window.addEventListener('popstate', () => this.handleRoute());
         
@@ -36,13 +39,25 @@ class ConvertWizApp {
     }
     
     navigateTo(route) {
-        history.pushState(null, null, route);
+        // Use hash-based routing for compatibility with simple servers
+        if (route.startsWith('/')) {
+            window.location.hash = route.substring(1);
+        } else {
+            window.location.hash = route;
+        }
         this.handleRoute();
     }
     
     handleRoute() {
-        const path = window.location.pathname;
-        const page = this.routes[path] || 'home';
+        // Get route from hash or pathname
+        let route = window.location.hash.substring(1) || window.location.pathname.substring(1) || '';
+        
+        // Clean up route
+        if (route.startsWith('/')) {
+            route = route.substring(1);
+        }
+        
+        const page = this.routes[route] || 'home';
         
         // Clear previous tool instance
         if (this.currentTool && this.currentTool.destroy) {
