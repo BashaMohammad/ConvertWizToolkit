@@ -1,5 +1,5 @@
 // Firebase Authentication Module for ConvertWiz
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
 import { 
     getAuth, 
     signInWithEmailAndPassword, 
@@ -9,7 +9,7 @@ import {
     signOut,
     onAuthStateChanged,
     updateProfile
-} from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -60,41 +60,11 @@ class ConvertWizAuth {
 
     // Initialize Authentication UI
     initializeAuthUI() {
-        // Create auth button in navbar
-        this.createAuthButton();
-        
         // Create login modal
         this.createLoginModal();
         
         // Bind event listeners
         this.bindEventListeners();
-    }
-
-    // Create authentication button in navbar
-    createAuthButton() {
-        const navbar = document.querySelector('nav .container > div');
-        if (!navbar) return;
-
-        // Create auth button container
-        const authContainer = document.createElement('div');
-        authContainer.className = 'flex items-center space-x-4';
-        authContainer.innerHTML = `
-            <div id="user-info" class="hidden text-white/90 text-sm">
-                <span id="user-greeting">Welcome!</span>
-            </div>
-            <button id="auth-btn" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login</span>
-            </button>
-        `;
-
-        // Add to navbar (insert before existing elements or append)
-        const existingButtons = navbar.querySelector('.hidden.md\\:flex');
-        if (existingButtons) {
-            existingButtons.parentNode.insertBefore(authContainer, existingButtons.nextSibling);
-        } else {
-            navbar.appendChild(authContainer);
-        }
     }
 
     // Create login modal
@@ -192,8 +162,17 @@ class ConvertWizAuth {
 
     // Bind event listeners
     bindEventListeners() {
-        // Auth button click
+        // Desktop auth button click
         document.getElementById('auth-btn')?.addEventListener('click', () => {
+            if (this.isLoggedIn) {
+                this.signOut();
+            } else {
+                this.showModal();
+            }
+        });
+
+        // Mobile auth button click
+        document.getElementById('mobile-auth-btn')?.addEventListener('click', () => {
             if (this.isLoggedIn) {
                 this.signOut();
             } else {
@@ -379,31 +358,63 @@ class ConvertWizAuth {
     // Update UI based on authentication state
     updateUI(isLoggedIn) {
         const authBtn = document.getElementById('auth-btn');
+        const mobileAuthBtn = document.getElementById('mobile-auth-btn');
         const userInfo = document.getElementById('user-info');
+        const mobileUserInfo = document.getElementById('mobile-user-info');
         const userGreeting = document.getElementById('user-greeting');
+        const mobileUserGreeting = document.getElementById('mobile-user-greeting');
 
         if (isLoggedIn && this.currentUser) {
-            // Update auth button to logout
-            authBtn.innerHTML = `
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            `;
-            authBtn.className = 'bg-red-500/20 hover:bg-red-500/30 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2';
+            // Update desktop auth button to logout
+            if (authBtn) {
+                authBtn.innerHTML = `
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                `;
+                authBtn.className = 'bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2 font-medium';
+            }
+
+            // Update mobile auth button to logout
+            if (mobileAuthBtn) {
+                mobileAuthBtn.innerHTML = `
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                `;
+                mobileAuthBtn.className = 'w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center space-x-2 font-medium';
+            }
 
             // Show user info
             const displayName = this.currentUser.displayName || this.currentUser.email.split('@')[0];
-            userGreeting.textContent = `Welcome, ${displayName}!`;
-            userInfo.classList.remove('hidden');
+            if (userGreeting) {
+                userGreeting.textContent = `Welcome, ${displayName}!`;
+                userInfo?.classList.remove('hidden');
+            }
+            if (mobileUserGreeting) {
+                mobileUserGreeting.textContent = `Welcome, ${displayName}!`;
+                mobileUserInfo?.classList.remove('hidden');
+            }
         } else {
-            // Update auth button to login
-            authBtn.innerHTML = `
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login</span>
-            `;
-            authBtn.className = 'bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2';
+            // Update desktop auth button to login
+            if (authBtn) {
+                authBtn.innerHTML = `
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                `;
+                authBtn.className = 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2 font-medium';
+            }
+
+            // Update mobile auth button to login
+            if (mobileAuthBtn) {
+                mobileAuthBtn.innerHTML = `
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                `;
+                mobileAuthBtn.className = 'w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center space-x-2 font-medium';
+            }
 
             // Hide user info
-            userInfo.classList.add('hidden');
+            userInfo?.classList.add('hidden');
+            mobileUserInfo?.classList.add('hidden');
         }
     }
 
