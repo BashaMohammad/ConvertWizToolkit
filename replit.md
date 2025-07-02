@@ -27,8 +27,9 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Modular page system with dynamic tool initialization
 
 ### 2. Homepage & Navigation
-- Professional SaaS-style landing page with tool showcase
-- Responsive grid layout displaying 4 conversion tools as interactive cards
+- Professional SaaS-style landing page with categorized tool showcase
+- Three organized categories: Image Tools, Unit Converters, and Utility Tools
+- Responsive grid layout with proper tool categorization and no duplicates
 - Sticky navigation header with desktop and mobile menu support
 - Feature highlight section emphasizing speed, privacy, and mobile compatibility
 
