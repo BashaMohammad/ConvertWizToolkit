@@ -250,10 +250,42 @@ users/{userId} {
 - **Loading States**: Visual feedback during authentication processes
 - **Form Validation**: Client-side validation with Firebase error handling
 
+## Google AdSense Monetization Integration
+
+ConvertWiz now includes comprehensive Google AdSense integration for revenue generation through strategic advertising:
+
+### AdSense Features
+- **Strategic Ad Placement**: Non-intrusive ads in high-engagement areas
+- **Production-Only Loading**: AdSense script loads only in production environment
+- **Development Placeholders**: Visual ad space indicators during development
+- **Responsive Ad Units**: Auto-sizing ads that adapt to all device screen sizes
+- **Performance Optimized**: Lazy loading with 1-second delay and error handling
+- **Policy Compliant**: Strategic placement following AdSense guidelines
+
+### Ad Placement Strategy
+- **Homepage**: After tools showcase grid, before "Why Choose ConvertWiz?" section
+- **JPG to PNG Tool**: After conversion interface, before next tool section
+- **Currency Converter**: Below conversion results and tool disclaimer
+- **Global Footer**: Above footer on all pages for maximum visibility
+- **Mobile Optimized**: All ad units responsive and touch-friendly
+
+### Technical Implementation
+- **Environment Detection**: Automatic dev vs production mode handling
+- **Error Handling**: Graceful fallback if ads fail to load
+- **CSS Framework**: Comprehensive styling for ad containers and placeholders
+- **Development Testing**: Clear placeholder system with visual indicators
+- **Publisher Integration**: Ready for AdSense Publisher ID configuration
+
+### Revenue Optimization
+- **High-Traffic Placement**: Strategic positioning in user engagement zones
+- **User Experience Balance**: Ads enhance rather than interrupt workflow
+- **Cross-Device Compatibility**: Consistent ad experience on desktop and mobile
+- **Analytics Integration**: Google Analytics tracking for ad performance correlation
+
 ## Changelog
 
 Changelog:
-- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, tool disclaimers, Google Analytics integration (G-7QJXHFPZVE), footer cleanup (removed "Iqbal" references and hidden social media links), optimized responsive layout alignment for all tool sections, reduced excessive margins, and implemented comprehensive Firestore usage tracking system with subscription plans and daily limits
+- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, tool disclaimers, Google Analytics integration (G-7QJXHFPZVE), footer cleanup (removed "Iqbal" references and kept only "Powered by Ali"), optimized responsive layout alignment for all tool sections, reduced excessive margins, implemented comprehensive Firestore usage tracking system with subscription plans and daily limits, and integrated Google AdSense monetization with strategic ad placement and development/production environment handling
 - July 01, 2025. Initial setup
 
 ## Development Notes
