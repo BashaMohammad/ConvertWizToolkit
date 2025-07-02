@@ -219,7 +219,7 @@ ConvertWiz now includes comprehensive user authentication powered by Firebase:
 ## Changelog
 
 Changelog:
-- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, and tool disclaimers
+- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, tool disclaimers, Google Analytics integration (G-7QJXHFPZVE), footer cleanup (removed "Iqbal" references and hidden social media links), optimized responsive layout alignment for all tool sections, and reduced excessive margins
 - July 01, 2025. Initial setup
 
 ## Development Notes
