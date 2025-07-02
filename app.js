@@ -113,5 +113,19 @@ class ConvertWizApp {
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    new ConvertWizApp();
+    console.log('DOM loaded, initializing ConvertWiz app');
+    window.convertWizApp = new ConvertWizApp();
 });
+
+// Backup initialization for immediate script execution
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.convertWizApp) {
+            console.log('Backup: DOM loaded, initializing ConvertWiz app');
+            window.convertWizApp = new ConvertWizApp();
+        }
+    });
+} else {
+    console.log('DOM already loaded, initializing ConvertWiz app immediately');
+    window.convertWizApp = new ConvertWizApp();
+}
