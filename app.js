@@ -1,34 +1,14 @@
-// ConvertWiz - Multi-tool SaaS Application Router
+// ConvertWiz - Multi-tool SaaS Application with Simple Navigation
 
 class ConvertWizApp {
     constructor() {
-        this.routes = {
-            '': 'home',
-            'home': 'home',
-            'jpg-to-png': 'jpg-png-converter',
-            'currency': 'currency-converter', 
-            'land': 'land-converter',
-            'dp-resizer': 'dp-resizer',
-            'word-counter': 'word-counter'
-        };
-        
         this.currentTool = null;
         this.init();
     }
     
     init() {
-        // Handle initial route
-        this.handleRoute();
-        
-        // Listen for hash changes
-        window.addEventListener('hashchange', () => this.handleRoute());
-        
-        // Listen for route changes
-        window.addEventListener('popstate', () => this.handleRoute());
-        
-        // Handle navigation clicks
+        // Handle navigation clicks using data-route attributes
         document.addEventListener('click', (e) => {
-            // Handle any element with data-route attribute
             const element = e.target.closest('[data-route]');
             if (element) {
                 e.preventDefault();
@@ -38,38 +18,33 @@ class ConvertWizApp {
                 return false;
             }
         });
+        
+        // Show home page by default
+        this.showPage('home');
     }
     
     navigateTo(route) {
-        // Use hash-based routing for compatibility with simple servers
-        if (route.startsWith('/')) {
-            window.location.hash = route.substring(1);
-        } else {
-            window.location.hash = route;
-        }
-        this.handleRoute();
-    }
-    
-    handleRoute() {
-        // Get route from hash or pathname
-        let route = window.location.hash.substring(1) || window.location.pathname.substring(1) || '';
+        const pageMap = {
+            '': 'home',
+            'home': 'home',
+            'jpg-to-png': 'jpg-png-converter',
+            'currency': 'currency-converter', 
+            'land': 'land-converter',
+            'dp-resizer': 'dp-resizer',
+            'word-counter': 'word-counter'
+        };
         
-        // Clean up route
-        if (route.startsWith('/')) {
-            route = route.substring(1);
-        }
-        
-        const page = this.routes[route] || 'home';
-        
-        // Clear previous tool instance
-        if (this.currentTool && this.currentTool.destroy) {
-            this.currentTool.destroy();
-        }
-        
+        const page = pageMap[route] || 'home';
         this.showPage(page);
     }
     
     showPage(page) {
+        // Clear previous tool instance
+        if (this.currentTool && this.currentTool.destroy) {
+            this.currentTool.destroy();
+            this.currentTool = null;
+        }
+        
         // Hide all pages
         document.querySelectorAll('.page').forEach(p => {
             p.classList.add('hidden');
@@ -81,28 +56,53 @@ class ConvertWizApp {
             pageElement.classList.remove('hidden');
             pageElement.classList.add('fade-in');
             
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             // Initialize tool if needed
             this.initializeTool(page);
         }
     }
     
     initializeTool(page) {
-        switch(page) {
-            case 'jpg-png-converter':
-                this.currentTool = new JPGtoPNGConverter();
-                break;
-            case 'currency-converter':
-                this.currentTool = new CurrencyConverter();
-                break;
-            case 'land-converter':
-                this.currentTool = new LandUnitConverter();
-                break;
-            case 'dp-resizer':
-                this.currentTool = new InstagramDPResizer();
-                break;
-            case 'word-counter':
-                this.currentTool = new WordCounter();
-                break;
+        try {
+            switch(page) {
+                case 'jpg-png-converter':
+                    this.currentTool = new JPGtoPNGConverter();
+                    break;
+                case 'currency-converter':
+                    this.currentTool = new CurrencyConverter();
+                    break;
+                case 'land-converter':
+                    this.currentTool = new LandUnitConverter();
+                    break;
+                case 'dp-resizer':
+                    this.currentTool = new InstagramDPResizer();
+                    break;
+                case 'word-counter':
+                    this.currentTool = new WordCounter();
+                    break;
+            }
+        } catch (error) {
+            console.error('Error initializing tool:', error);
+        }
+    }
+}
+
+// Utility function to show section by ID and hide others
+function showSection(sectionId) {
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.add('hidden');
+    });
+    const target = document.getElementById(sectionId);
+    if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('fade-in');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Initialize tool if needed
+        if (window.convertWizApp) {
+            window.convertWizApp.initializeTool(sectionId);
         }
     }
 }
@@ -110,6 +110,19 @@ class ConvertWizApp {
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     window.convertWizApp = new ConvertWizApp();
+    
+    // Additional navigation helpers for fallback
+    document.querySelectorAll('[data-route]').forEach(element => {
+        element.addEventListener('click', function(e) {
+            if (!e.defaultPrevented) {
+                e.preventDefault();
+                const route = this.getAttribute('data-route');
+                if (window.convertWizApp) {
+                    window.convertWizApp.navigateTo(route);
+                }
+            }
+        });
+    });
 });
 
 // Backup initialization for immediate script execution
