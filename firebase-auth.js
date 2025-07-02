@@ -56,6 +56,10 @@ class ConvertWizAuth {
         // Initialize UI
         this.initializeAuthUI();
         this.loadUserSession();
+        
+        // Log Firebase configuration (without sensitive data)
+        console.log('Firebase initialized for project:', firebaseConfig.projectId);
+        console.log('Auth domain:', firebaseConfig.authDomain);
     }
 
     // Initialize Authentication UI
@@ -332,10 +336,20 @@ class ConvertWizAuth {
     async signInWithGoogle() {
         try {
             this.showLoading('google-signin-btn', 'Connecting to Google...');
-            await signInWithPopup(auth, googleProvider);
+            console.log('Attempting Google sign-in...');
+            
+            // Configure Google provider
+            googleProvider.setCustomParameters({
+                prompt: 'select_account'
+            });
+            
+            const result = await signInWithPopup(auth, googleProvider);
+            console.log('Google sign-in successful:', result.user.email);
+            
             this.showSuccess('Successfully signed in with Google!');
             setTimeout(() => this.hideModal(), 1500);
         } catch (error) {
+            console.error('Google sign-in error:', error.code, error.message);
             if (error.code !== 'auth/popup-closed-by-user') {
                 this.showError(this.getErrorMessage(error.code));
             }
@@ -530,10 +544,19 @@ class ConvertWizAuth {
             'auth/network-request-failed': 'Network error. Please check your connection',
             'auth/popup-blocked': 'Popup blocked. Please allow popups for this site',
             'auth/popup-closed-by-user': 'Sign-in cancelled',
-            'auth/invalid-credential': 'Invalid email or password'
+            'auth/invalid-credential': 'Invalid email or password',
+            'auth/unauthorized-domain': 'This domain is not authorized for Google sign-in. Please contact support.',
+            'auth/operation-not-allowed': 'Google sign-in is not enabled. Please contact support.',
+            'auth/invalid-api-key': 'Invalid API configuration. Please contact support.',
+            'auth/app-not-authorized': 'App not authorized for this Firebase project.',
+            'auth/invalid-user-token': 'User token is invalid. Please sign in again.',
+            'auth/user-token-expired': 'User token has expired. Please sign in again.',
+            'auth/null-user': 'User account is null. Please try signing in again.',
+            'auth/invalid-provider-id': 'Invalid provider configuration.',
+            'auth/account-exists-with-different-credential': 'An account already exists with the same email but different sign-in method.'
         };
 
-        return errorMessages[errorCode] || 'An error occurred. Please try again';
+        return errorMessages[errorCode] || `Authentication error (${errorCode}). Please try again or contact support.`;
     }
 
     // Show notification (reuse existing notification system)
