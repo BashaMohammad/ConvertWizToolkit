@@ -285,7 +285,7 @@ ConvertWiz now includes comprehensive Google AdSense integration for revenue gen
 ## Changelog
 
 Changelog:
-- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, tool disclaimers, Google Analytics integration (G-7QJXHFPZVE), footer cleanup (removed "Iqbal" references and kept only "Powered by Ali"), optimized responsive layout alignment for all tool sections, reduced excessive margins, implemented comprehensive Firestore usage tracking system with subscription plans and daily limits, and integrated Google AdSense monetization with strategic ad placement and development/production environment handling
+- July 02, 2025. Added Firebase Authentication with email/password and Google OAuth, QR Code Generator tool, complete legal compliance setup (Privacy, Terms, Disclaimer, Credits), cookie consent banner, tool disclaimers, Google Analytics integration (G-7QJXHFPZVE), footer cleanup (removed "Iqbal" references and kept only "Powered by Ali"), optimized responsive layout alignment for all tool sections, reduced excessive margins, implemented comprehensive Firestore usage tracking system with subscription plans and daily limits, integrated Google AdSense monetization with strategic ad placement and development/production environment handling, and completed responsive sidebar AdSense integration with publisher ID ca-pub-2287734666559045, premium user ad removal, and mobile-first responsive design
 - July 01, 2025. Initial setup
 
 ## Development Notes
