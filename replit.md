@@ -176,6 +176,7 @@ Preferred communication style: Simple, everyday language.
 ## Changelog
 
 Changelog:
+- July 02, 2025. Added QR Code Generator tool and legal compliance pages (Privacy Policy and Terms of Use)
 - July 01, 2025. Initial setup
 
 ## Development Notes
