@@ -1792,3 +1792,165 @@ class WeightConverter {
         }
     }
 }
+
+class HeightConverter {
+    constructor() {
+        this.heightFactors = {
+            feet: 30.48,
+            inches: 2.54,
+            centimeters: 1,
+            meters: 100
+        };
+        
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        this.inputField = document.getElementById('height-input');
+        this.fromUnit = document.getElementById('height-from');
+        this.toUnit = document.getElementById('height-to');
+        this.resultField = document.getElementById('height-result');
+        this.clearBtn = document.getElementById('height-clear');
+
+        if (this.inputField) {
+            this.inputField.addEventListener('input', () => this.updateResult());
+        }
+        
+        if (this.fromUnit) {
+            this.fromUnit.addEventListener('change', () => this.updateResult());
+        }
+        
+        if (this.toUnit) {
+            this.toUnit.addEventListener('change', () => this.updateResult());
+        }
+
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => this.clearHeight());
+        }
+
+        // Initial update
+        this.updateResult();
+    }
+
+    convertHeight(value, fromUnit, toUnit) {
+        const cmValue = parseFloat(value) * this.heightFactors[fromUnit];
+        const converted = cmValue / this.heightFactors[toUnit];
+        return converted;
+    }
+
+    updateResult() {
+        if (!this.inputField || !this.fromUnit || !this.toUnit || !this.resultField) return;
+
+        const val = this.inputField.value;
+        if (!val || isNaN(val) || val === '') {
+            this.resultField.textContent = 'Enter a height to see the conversion';
+            return;
+        }
+
+        const result = this.convertHeight(val, this.fromUnit.value, this.toUnit.value);
+        const formattedResult = this.formatResult(result);
+        
+        const fromUnitName = this.getUnitDisplayName(this.fromUnit.value);
+        const toUnitName = this.getUnitDisplayName(this.toUnit.value);
+        
+        this.resultField.textContent = `${val} ${fromUnitName} = ${formattedResult} ${toUnitName}`;
+    }
+
+    formatResult(value) {
+        if (value === 0) return '0';
+        
+        // For very small numbers, use scientific notation
+        if (Math.abs(value) < 0.0001) {
+            return value.toExponential(3);
+        }
+        
+        // For large numbers, use comma separation
+        if (Math.abs(value) >= 1000000) {
+            return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+        
+        // For normal numbers, show appropriate decimal places
+        if (Math.abs(value) >= 100) {
+            return value.toFixed(2);
+        } else if (Math.abs(value) >= 10) {
+            return value.toFixed(2);
+        } else {
+            return value.toFixed(3);
+        }
+    }
+
+    getUnitDisplayName(unit) {
+        const displayNames = {
+            feet: 'feet',
+            inches: 'inches',
+            centimeters: 'centimeters',
+            meters: 'meters'
+        };
+        return displayNames[unit] || unit;
+    }
+
+    clearHeight() {
+        if (this.inputField) {
+            this.inputField.value = '';
+        }
+        if (this.resultField) {
+            this.resultField.textContent = 'Enter a height to see the conversion';
+        }
+        this.showNotification('Height cleared!', 'success');
+    }
+
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 transition-all duration-300 transform translate-x-full`;
+        
+        // Set colors based on type
+        switch (type) {
+            case 'success':
+                notification.classList.add('bg-green-500');
+                break;
+            case 'error':
+                notification.classList.add('bg-red-500');
+                break;
+            case 'warning':
+                notification.classList.add('bg-yellow-500');
+                break;
+            default:
+                notification.classList.add('bg-indigo-500');
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 10);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners
+        if (this.inputField) {
+            this.inputField.removeEventListener('input', this.updateResult);
+        }
+        if (this.fromUnit) {
+            this.fromUnit.removeEventListener('change', this.updateResult);
+        }
+        if (this.toUnit) {
+            this.toUnit.removeEventListener('change', this.updateResult);
+        }
+        if (this.clearBtn) {
+            this.clearBtn.removeEventListener('click', this.clearHeight);
+        }
+    }
+}

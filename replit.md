@@ -98,6 +98,15 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Clear functionality and toast notifications for user feedback
 - Mobile-optimized input fields and dropdowns with focus states
 
+#### Height Converter
+- Height and length unit conversion between 4 common measurement systems
+- Supports feet, inches, centimeters, and meters for human height measurements
+- Real-time conversion with precise decimal formatting optimized for height values
+- Intelligent number formatting with appropriate precision for each unit type
+- Responsive grid layout with professional indigo/blue color scheme
+- Clear functionality and toast notifications for user feedback
+- Mobile-optimized input fields and dropdowns with focus states
+
 ## Data Flow
 
 1. **File Upload Flow:**
