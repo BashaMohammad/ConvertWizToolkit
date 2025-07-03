@@ -11,8 +11,108 @@ function showSection(sectionId) {
     target.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
+    // Update URL and track pageview for AdSense and Analytics
+    updateURLAndTrackPageview(sectionId);
+    
     // Initialize tools based on section
     initializeTool(sectionId);
+    
+    // Update AdSense banner positioning for component pages
+    updateAdSenseBannerPositioning(sectionId);
+  }
+}
+
+// Update URL and trigger pageview tracking for components
+function updateURLAndTrackPageview(sectionId) {
+  // Map section IDs to URL paths
+  const sectionToPath = {
+    'landing-section': '/',
+    'jpg-to-png-section': '/jpg-to-png',
+    'currency-converter-section': '/currency',
+    'land-converter-section': '/land',
+    'dp-resizer-section': '/dp-resizer',
+    'word-counter-section': '/word-counter',
+    'distance-converter-section': '/distance',
+    'weight-converter-section': '/weight',
+    'height-converter-section': '/height',
+    'ip-extractor-section': '/ip-extractor',
+    'qr-generator-section': '/qr-generator'
+  };
+  
+  const newPath = sectionToPath[sectionId] || '/';
+  
+  // Update URL without page reload using History API
+  if (window.location.pathname !== newPath) {
+    window.history.pushState({page: sectionId}, '', newPath);
+  }
+  
+  // Track pageview in Google Analytics (if available)
+  if (typeof gtag !== 'undefined') {
+    gtag('config', 'G-7QJXHFPZVE', {
+      'page_path': newPath,
+      'page_title': getPageTitle(sectionId)
+    });
+  }
+  
+  // Force AdSense refresh for new "page"
+  if (typeof adsbygoogle !== 'undefined' && adsbygoogle.loaded) {
+    try {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.log('AdSense refresh error:', e);
+    }
+  }
+}
+
+// Get page title for Google Analytics
+function getPageTitle(sectionId) {
+  const sectionTitles = {
+    'landing-section': 'ConvertWiz - Free Online Conversion Tools',
+    'jpg-to-png-section': 'JPG to PNG Converter - ConvertWiz',
+    'currency-converter-section': 'Currency Converter - ConvertWiz',
+    'land-converter-section': 'Land Unit Converter - ConvertWiz',
+    'dp-resizer-section': 'Instagram DP Resizer - ConvertWiz',
+    'word-counter-section': 'Word Counter Tool - ConvertWiz',
+    'distance-converter-section': 'Distance Converter - ConvertWiz',
+    'weight-converter-section': 'Weight Converter - ConvertWiz',
+    'height-converter-section': 'Height Converter - ConvertWiz',
+    'ip-extractor-section': 'IP Address Extractor - ConvertWiz',
+    'qr-generator-section': 'QR Code Generator - ConvertWiz'
+  };
+  
+  return sectionTitles[sectionId] || 'ConvertWiz - Conversion Tools';
+}
+
+// Update AdSense banner positioning based on current section
+function updateAdSenseBannerPositioning(sectionId) {
+  const leftBanner = document.querySelector('.adsense-banner-left');
+  const rightBanner = document.querySelector('.adsense-banner-right');
+  
+  // Add component-page class to body for CSS targeting
+  document.body.classList.remove('landing-page', 'component-page');
+  
+  if (sectionId === 'landing-section') {
+    document.body.classList.add('landing-page');
+    // Show left banner, hide right banner on landing
+    if (leftBanner) {
+      leftBanner.classList.remove('hidden');
+      leftBanner.classList.add('visible');
+    }
+    if (rightBanner) {
+      rightBanner.classList.add('hidden');
+      rightBanner.classList.remove('visible');
+    }
+  } else {
+    document.body.classList.add('component-page');
+    // Show right banner, hide left banner on component pages
+    if (leftBanner) {
+      leftBanner.classList.add('hidden');
+      leftBanner.classList.remove('visible');
+    }
+    if (rightBanner) {
+      rightBanner.classList.remove('hidden');
+      rightBanner.classList.add('visible');
+    }
   }
 }
 
@@ -88,6 +188,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Show landing section on initial load
-    showSection('landing-section');
+    // Initialize routing based on current URL
+    initializeRouting();
+    
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', function(event) {
+        const sectionId = getSectionFromPath(window.location.pathname);
+        showSection(sectionId);
+    });
 });
+
+// Initialize routing based on current URL path
+function initializeRouting() {
+    const currentPath = window.location.pathname;
+    const sectionId = getSectionFromPath(currentPath);
+    showSection(sectionId);
+}
+
+// Map URL paths back to section IDs
+function getSectionFromPath(path) {
+    const pathToSection = {
+        '/': 'landing-section',
+        '/jpg-to-png': 'jpg-to-png-section',
+        '/currency': 'currency-converter-section',
+        '/land': 'land-converter-section',
+        '/dp-resizer': 'dp-resizer-section',
+        '/word-counter': 'word-counter-section',
+        '/distance': 'distance-converter-section',
+        '/weight': 'weight-converter-section',
+        '/height': 'height-converter-section',
+        '/ip-extractor': 'ip-extractor-section',
+        '/qr-generator': 'qr-generator-section'
+    };
+    
+    return pathToSection[path] || 'landing-section';
+}
