@@ -643,6 +643,126 @@ body[data-user-plan="premium"] .ads-container {
 }
 
 /* =====================================================
+   QR Generator AdSense Banner Positioning
+   ===================================================== */
+
+/* QR Generator specific left banner positioning */
+.adsense-banner-left.qr-generator {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* QR Generator specific right banner positioning */
+.adsense-banner-right.qr-generator {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* QR Generator bottom banner positioning */
+.adsense-banner-bottom {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 100px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* QR Generator banner hover effects */
+.adsense-banner-left.qr-generator:hover,
+.adsense-banner-right.qr-generator:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-50%) scale(1.02);
+}
+
+.adsense-banner-bottom:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateX(-50%) scale(1.02);
+}
+
+/* QR Generator responsive banner adjustments */
+@media (max-width: 1400px) {
+    .adsense-banner-left.qr-generator,
+    .adsense-banner-right.qr-generator {
+        width: 140px;
+        height: 500px;
+    }
+    
+    .adsense-banner-left.qr-generator {
+        left: 10px;
+    }
+    
+    .adsense-banner-right.qr-generator {
+        right: 10px;
+    }
+    
+    .adsense-banner-bottom {
+        width: 300px;
+        height: 90px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .adsense-banner-left.qr-generator,
+    .adsense-banner-right.qr-generator {
+        display: none; /* Hide vertical banners on smaller screens */
+    }
+    
+    .adsense-banner-bottom {
+        width: 280px;
+        height: 80px;
+        bottom: 5%;
+    }
+}
+
+@media (max-width: 768px) {
+    .adsense-banner-bottom {
+        width: 250px;
+        height: 70px;
+        bottom: 3%;
+    }
+}
+
+@media (max-width: 480px) {
+    .adsense-banner-bottom {
+        width: 200px;
+        height: 60px;
+        bottom: 2%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* =====================================================
    QR Generator Component Layout Fixes
    ===================================================== */
 
