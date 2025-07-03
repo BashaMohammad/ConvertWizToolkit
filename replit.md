@@ -277,6 +277,35 @@ ConvertWiz now includes a comprehensive admin dashboard for system monitoring an
 - **Navigation**: Admin link added to main site footer for easy access
 - **Access Control**: Comprehensive error messaging for unauthorized access attempts
 
+## Subscription & Pricing System
+
+ConvertWiz now includes a comprehensive subscription and pricing page for user plan management:
+
+### Pricing Page Features
+- **Professional Design**: Modern 3-column pricing card layout with glass morphism effects
+- **Responsive Layout**: Mobile-first design that stacks cards vertically on small screens
+- **Plan Tiers**: Free (₹0), Standard (₹199), Premium (₹499) with clear feature differentiation
+- **Current Plan Detection**: Firebase integration to highlight user's current subscription
+- **Most Popular Badge**: Strategic highlighting of Standard plan for conversion optimization
+
+### Plan Features Structure
+- **Free Plan**: 5 conversions/day, basic tools, ads displayed, community support
+- **Standard Plan**: 20 conversions/day, early access to tools, minimal ads, email support
+- **Premium Plan**: Unlimited conversions, exclusive tools, no ads, priority support + API access
+
+### Technical Implementation
+- **Firebase Integration**: Real-time user plan detection and display
+- **Authentication Check**: Shows current plan status for logged-in users
+- **Toast Notifications**: User-friendly feedback for plan selection actions
+- **Payment Integration Ready**: Placeholder structure for future Razorpay/Stripe integration
+- **Responsive Navigation**: Pricing links added to desktop, mobile, and footer navigation
+
+### User Experience Features
+- **Plan Comparison Table**: Detailed feature comparison across all plans
+- **FAQ Section**: Common questions about billing, trials, and plan changes
+- **Money-back Guarantee**: 30-day guarantee messaging for trust building
+- **Coming Soon Actions**: Professional handling of upgrade buttons pending payment integration
+
 ## Google AdSense Monetization Integration
 
 ConvertWiz now includes comprehensive Google AdSense integration for revenue generation through strategic advertising:

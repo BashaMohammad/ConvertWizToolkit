@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans - ConvertWiz</title>
+    <meta name="description" content="Choose the perfect ConvertWiz plan for your conversion needs. Free, Standard, and Premium plans with unlimited access to our conversion tools." />
+    <meta name="keywords" content="convertwiz pricing, subscription plans, conversion tools pricing, premium features" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvOkBjDHllamPmRrJ4mRCk8Kh4aZRoMgo",
+            authDomain: "convertwiz.firebaseapp.com",
+            projectId: "convertwiz",
+            storageBucket: "convertwiz.firebasestorage.app",
+            messagingSenderId: "807062320011",
+            appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firebaseDoc = doc;
+        window.firebaseGetDoc = getDoc;
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <a href="/" class="text-2xl font-bold text-white">
+                        ConvertWiz ⚡
+                    </a>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="/" class="text-white/80 hover:text-white transition-colors">Home</a>
+                    <a href="/subscribe" class="text-white font-semibold border-b-2 border-white">Pricing</a>
+                    <a href="#" class="text-white/80 hover:text-white transition-colors">Contact</a>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-white/20 pt-4">
+                <nav class="flex flex-col space-y-3">
+                    <a href="/" class="text-white/80 hover:text-white transition-colors">Home</a>
+                    <a href="/subscribe" class="text-white font-semibold">Pricing</a>
+                    <a href="#" class="text-white/80 hover:text-white transition-colors">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <!-- Hero Section -->
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                Choose Your Perfect Plan
+            </h1>
+            <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+                Unlock the full potential of ConvertWiz with plans designed for every need. Start free and upgrade as you grow.
+            </p>
+            <div class="inline-block bg-white/20 backdrop-blur-md rounded-full px-6 py-3 text-white">
+                <i class="fas fa-shield-alt mr-2"></i>
+                30-day money-back guarantee on all paid plans
+            </div>
+        </section>
+
+        <!-- Current Plan Notice -->
+        <div id="current-plan-notice" class="hidden mb-8 text-center">
+            <div class="inline-block bg-green-500/20 border border-green-400 text-green-100 px-6 py-3 rounded-lg">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span id="current-plan-text">You are currently on the Free plan</span>
+            </div>
+        </div>
+
+        <!-- Pricing Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <!-- Free Plan -->
+            <div class="pricing-card bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-gift text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Free</h3>
+                    <div class="text-4xl font-bold text-white mb-2">₹0</div>
+                    <p class="text-white/80">per month</p>
+                </div>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>5 conversions per day</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>All basic conversion tools</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-times text-red-400 mr-3"></i>
+                        <span>Ads displayed</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>Community support</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-times text-red-400 mr-3"></i>
+                        <span>Limited to standard tools</span>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300" onclick="handlePlanAction('free')">
+                    Start for Free
+                </button>
+            </div>
+
+            <!-- Standard Plan -->
+            <div class="pricing-card bg-white/10 backdrop-blur-md rounded-xl p-8 border-2 border-orange-400 hover:border-orange-300 transition-all duration-300 hover:scale-105 relative">
+                <!-- Most Popular Badge -->
+                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <div class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                        Most Popular
+                    </div>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-star text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Standard</h3>
+                    <div class="text-4xl font-bold text-white mb-2">₹199</div>
+                    <p class="text-white/80">per month</p>
+                </div>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>20 conversions per day</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>All conversion tools + new releases</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>Minimal ads</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>Email support</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>Early access to new tools</span>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300" onclick="handlePlanAction('standard')">
+                    Upgrade to Standard
+                </button>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="pricing-card bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20 hover:border-purple-400 transition-all duration-300 hover:scale-105">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-crown text-yellow-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Premium</h3>
+                    <div class="text-4xl font-bold text-white mb-2">₹499</div>
+                    <p class="text-white/80">per month</p>
+                </div>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>Unlimited conversions</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>All tools + premium exclusive tools</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>No ads</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>Priority support</span>
+                    </div>
+                    <div class="flex items-center text-white/90">
+                        <i class="fas fa-check text-green-400 mr-3"></i>
+                        <span>Advanced features & API access</span>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300" onclick="handlePlanAction('premium')">
+                    Go Premium
+                </button>
+            </div>
+        </section>
+
+        <!-- Plan Comparison Table -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-white text-center mb-8">Detailed Plan Comparison</h2>
+            <div class="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead class="bg-white/20">
+                            <tr>
+                                <th class="text-left p-4 font-semibold">Feature</th>
+                                <th class="text-center p-4 font-semibold">Free</th>
+                                <th class="text-center p-4 font-semibold">Standard</th>
+                                <th class="text-center p-4 font-semibold">Premium</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/10">
+                                <td class="p-4">Daily Conversions</td>
+                                <td class="text-center p-4">5</td>
+                                <td class="text-center p-4">20</td>
+                                <td class="text-center p-4">Unlimited</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="p-4">Ads</td>
+                                <td class="text-center p-4">Yes</td>
+                                <td class="text-center p-4">Minimal</td>
+                                <td class="text-center p-4">None</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="p-4">Basic Tools</td>
+                                <td class="text-center p-4"><i class="fas fa-check text-green-400"></i></td>
+                                <td class="text-center p-4"><i class="fas fa-check text-green-400"></i></td>
+                                <td class="text-center p-4"><i class="fas fa-check text-green-400"></i></td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="p-4">Premium Tools</td>
+                                <td class="text-center p-4"><i class="fas fa-times text-red-400"></i></td>
+                                <td class="text-center p-4"><i class="fas fa-times text-red-400"></i></td>
+                                <td class="text-center p-4"><i class="fas fa-check text-green-400"></i></td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="p-4">API Access</td>
+                                <td class="text-center p-4"><i class="fas fa-times text-red-400"></i></td>
+                                <td class="text-center p-4"><i class="fas fa-times text-red-400"></i></td>
+                                <td class="text-center p-4"><i class="fas fa-check text-green-400"></i></td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="p-4">Support</td>
+                                <td class="text-center p-4">Community</td>
+                                <td class="text-center p-4">Email</td>
+                                <td class="text-center p-4">Priority</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white/10 backdrop-blur-md rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-3">Can I change plans anytime?</h3>
+                    <p class="text-white/80">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-3">Is there a free trial?</h3>
+                    <p class="text-white/80">Our Free plan is permanent! You can also try Standard/Premium with our 30-day money-back guarantee.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-3">What payment methods do you accept?</h3>
+                    <p class="text-white/80">We accept all major credit cards, debit cards, UPI, and net banking through secure payment gateways.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-3">Do you offer refunds?</h3>
+                    <p class="text-white/80">Yes, we offer a 30-day money-back guarantee on all paid plans. No questions asked.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="text-center">
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-8">
+                <h2 class="text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
+                <p class="text-xl text-white/90 mb-6">Join thousands of users who trust ConvertWiz for their conversion needs.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300" onclick="handlePlanAction('free')">
+                        Start Free Today
+                    </button>
+                    <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-300" onclick="handlePlanAction('standard')">
+                        Try Standard Plan
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white/5 backdrop-blur-md border-t border-white/10 mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center">
+                <div class="flex flex-wrap justify-center items-center gap-4 mb-4 text-sm">
+                    <a href="/" class="text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    <a href="subscribe.html" class="text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-credit-card mr-1"></i>Pricing
+                    </a>
+                    <a href="privacy.html" class="text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-shield-alt mr-1"></i>Privacy Policy
+                    </a>
+                    <a href="terms.html" class="text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-file-contract mr-1"></i>Terms of Use
+                    </a>
+                </div>
+                <p class="text-gray-400 text-sm">
+                    © 2025 ConvertWiz. All rights reserved. | Powered by Ali
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <span id="toast-message">Notification</span>
+    </div>
+
+    <script>
+        class SubscriptionPage {
+            constructor() {
+                this.currentUser = null;
+                this.currentPlan = 'free';
+                this.init();
+            }
+
+            async init() {
+                try {
+                    await this.waitForFirebase();
+                    this.setupAuthListener();
+                } catch (error) {
+                    console.error('Subscription page initialization error:', error);
+                }
+            }
+
+            waitForFirebase() {
+                return new Promise((resolve) => {
+                    const checkFirebase = () => {
+                        if (window.firebaseAuth && window.firebaseDb) {
+                            resolve();
+                        } else {
+                            setTimeout(checkFirebase, 100);
+                        }
+                    };
+                    checkFirebase();
+                });
+            }
+
+            setupAuthListener() {
+                window.firebaseAuth.onAuthStateChanged(async (user) => {
+                    this.currentUser = user;
+                    if (user) {
+                        await this.loadUserPlan();
+                        this.updateCurrentPlanDisplay();
+                    } else {
+                        this.hideCurrentPlanNotice();
+                    }
+                });
+            }
+
+            async loadUserPlan() {
+                if (!this.currentUser) return;
+
+                try {
+                    const userDoc = window.firebaseDoc(window.firebaseDb, 'users', this.currentUser.uid);
+                    const docSnap = await window.firebaseGetDoc(userDoc);
+                    
+                    if (docSnap.exists()) {
+                        this.currentPlan = docSnap.data().plan || 'free';
+                    }
+                } catch (error) {
+                    console.error('Error loading user plan:', error);
+                }
+            }
+
+            updateCurrentPlanDisplay() {
+                const notice = document.getElementById('current-plan-notice');
+                const text = document.getElementById('current-plan-text');
+                
+                if (notice && text) {
+                    text.textContent = `You are currently on the ${this.currentPlan.charAt(0).toUpperCase() + this.currentPlan.slice(1)} plan`;
+                    notice.classList.remove('hidden');
+                }
+
+                // Highlight current plan card
+                this.highlightCurrentPlan();
+            }
+
+            highlightCurrentPlan() {
+                // Remove existing highlights
+                document.querySelectorAll('.pricing-card').forEach(card => {
+                    card.classList.remove('ring-2', 'ring-green-400');
+                });
+
+                // Add highlight to current plan
+                const planCards = document.querySelectorAll('.pricing-card');
+                let cardIndex = 0;
+                if (this.currentPlan === 'standard') cardIndex = 1;
+                if (this.currentPlan === 'premium') cardIndex = 2;
+
+                if (planCards[cardIndex]) {
+                    planCards[cardIndex].classList.add('ring-2', 'ring-green-400');
+                }
+            }
+
+            hideCurrentPlanNotice() {
+                const notice = document.getElementById('current-plan-notice');
+                if (notice) {
+                    notice.classList.add('hidden');
+                }
+            }
+
+            showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toast-message');
+                
+                toastMessage.textContent = message;
+                toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-transform duration-300 z-50 ${
+                    type === 'success' ? 'bg-green-500' : 
+                    type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+                } text-white`;
+                
+                toast.classList.remove('translate-x-full');
+                
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full');
+                }, 3000);
+            }
+        }
+
+        // Global functions
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function handlePlanAction(plan) {
+            const subscriptionPage = window.subscriptionPageInstance;
+            
+            if (plan === 'free') {
+                if (subscriptionPage && subscriptionPage.currentUser) {
+                    subscriptionPage.showToast('You are already on the Free plan!', 'info');
+                } else {
+                    window.location.href = '/';
+                }
+            } else {
+                subscriptionPage.showToast(`${plan.charAt(0).toUpperCase() + plan.slice(1)} plan subscription coming soon! Payment integration in development.`, 'info');
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.subscriptionPageInstance = new SubscriptionPage();
+        });
+    </script>
+</body>
+</html>
