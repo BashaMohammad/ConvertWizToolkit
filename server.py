@@ -16,26 +16,31 @@ class SPAHandler(http.server.SimpleHTTPRequestHandler):
         path = parsed_path.path
         
         # Handle special routes first
-        if path == '/admin':
-            # Serve admin.html for admin route
-            with open('admin.html', 'rb') as f:
-                content = f.read()
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.send_header('Content-length', str(len(content)))
-            self.end_headers()
-            self.wfile.write(content)
-            return
-        elif path == '/admin-dashboard':
-            # Serve admin-dashboard.html for admin dashboard route
-            with open('admin-dashboard.html', 'rb') as f:
-                content = f.read()
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.send_header('Content-length', str(len(content)))
-            self.end_headers()
-            self.wfile.write(content)
-            return
+        if path == '/admin' or path == '/admin-dashboard':
+            # Serve admin-dashboard.html for both admin routes
+            try:
+                with open('admin-dashboard.html', 'rb') as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.send_header('Content-length', str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
+            except FileNotFoundError:
+                # If admin-dashboard.html doesn't exist, serve admin.html as fallback
+                try:
+                    with open('admin.html', 'rb') as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header('Content-type', 'text/html')
+                    self.send_header('Content-length', str(len(content)))
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+                except FileNotFoundError:
+                    # Return 404 if neither file exists
+                    self.send_error(404, "Admin dashboard not found")
         elif path == '/subscribe':
             # Serve subscribe.html for subscription route
             with open('subscribe.html', 'rb') as f:

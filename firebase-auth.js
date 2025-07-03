@@ -504,7 +504,7 @@ class ConvertWizAuth {
         const isAdmin = this.currentUser && adminEmails.includes(this.currentUser.email);
         
         // Find admin links in navigation
-        const adminLinks = document.querySelectorAll('a[href*="admin-dashboard"]');
+        const adminLinks = document.querySelectorAll('a[href*="admin"]');
         const adminNavItems = document.querySelectorAll('.admin-nav-item');
         
         if (isAdmin) {
