@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConvertWiz Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvOkBjDHllamPmRrJ4mRCk8Kh4aZRoMgo",
+            authDomain: "convertwiz.firebaseapp.com",
+            projectId: "convertwiz",
+            storageBucket: "convertwiz.firebasestorage.app",
+            messagingSenderId: "807062320011",
+            appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firebaseCollection = collection;
+        window.firebaseGetDocs = getDocs;
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">
+                <i class="fas fa-chart-line mr-3"></i>
+                ConvertWiz Admin Dashboard
+            </h1>
+            <p class="text-white/80">User Analytics & System Overview</p>
+        </div>
+
+        <!-- Access Control Notice -->
+        <div id="access-denied" class="hidden bg-red-500/20 border border-red-400 text-red-100 px-4 py-3 rounded-lg mb-6">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            Access denied. This dashboard is restricted to authorized administrators only.
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="text-center text-white">
+            <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+            <p>Loading dashboard data...</p>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div id="dashboard-content" class="hidden">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Users -->
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white/80 text-sm">Total Users</p>
+                            <p class="text-3xl font-bold" id="totalUsers">0</p>
+                        </div>
+                        <div class="bg-blue-500 p-3 rounded-full">
+                            <i class="fas fa-users text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Conversions -->
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white/80 text-sm">Today's Conversions</p>
+                            <p class="text-3xl font-bold" id="todayConversions">0</p>
+                        </div>
+                        <div class="bg-green-500 p-3 rounded-full">
+                            <i class="fas fa-sync text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Free Plan Users -->
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white/80 text-sm">Free Plan Users</p>
+                            <p class="text-3xl font-bold" id="freeUsers">0</p>
+                        </div>
+                        <div class="bg-purple-500 p-3 rounded-full">
+                            <i class="fas fa-gift text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Users -->
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white/80 text-sm">Premium Users</p>
+                            <p class="text-3xl font-bold" id="premiumUsers">0</p>
+                        </div>
+                        <div class="bg-yellow-500 p-3 rounded-full">
+                            <i class="fas fa-crown text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- User Plan Distribution -->
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">
+                        <i class="fas fa-pie-chart mr-2"></i>
+                        User Plan Distribution
+                    </h3>
+                    <canvas id="planChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Daily Usage Trends -->
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Usage Overview
+                    </h3>
+                    <canvas id="usageChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white/20 backdrop-blur-md rounded-lg p-6">
+                <h3 class="text-xl font-bold text-white mb-4">
+                    <i class="fas fa-clock mr-2"></i>
+                    Recent Activity
+                </h3>
+                <div id="recent-activity" class="space-y-3">
+                    <!-- Activity items will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Main Site -->
+        <div class="text-center mt-8">
+            <a href="/" class="inline-block bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to ConvertWiz
+            </a>
+        </div>
+    </div>
+
+    <script>
+        class AdminDashboard {
+            constructor() {
+                this.authorizedEmail = 'iqbalaiwork@gmail.com';
+                this.init();
+            }
+
+            async init() {
+                try {
+                    // Wait for Firebase to initialize
+                    await this.waitForFirebase();
+                    
+                    // Check authentication
+                    window.firebaseAuth.onAuthStateChanged(async (user) => {
+                        if (user && user.email === this.authorizedEmail) {
+                            await this.loadDashboard();
+                        } else {
+                            this.showAccessDenied();
+                        }
+                    });
+                } catch (error) {
+                    console.error('Dashboard initialization error:', error);
+                    this.showError('Failed to initialize dashboard');
+                }
+            }
+
+            waitForFirebase() {
+                return new Promise((resolve) => {
+                    const checkFirebase = () => {
+                        if (window.firebaseAuth && window.firebaseDb) {
+                            resolve();
+                        } else {
+                            setTimeout(checkFirebase, 100);
+                        }
+                    };
+                    checkFirebase();
+                });
+            }
+
+            async loadDashboard() {
+                try {
+                    const stats = await this.fetchUserStats();
+                    this.updateStatsDisplay(stats);
+                    this.renderCharts(stats);
+                    this.loadRecentActivity();
+                    
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('dashboard-content').classList.remove('hidden');
+                } catch (error) {
+                    console.error('Dashboard load error:', error);
+                    this.showError('Failed to load dashboard data');
+                }
+            }
+
+            async fetchUserStats() {
+                const usersRef = window.firebaseCollection(window.firebaseDb, 'users');
+                const snapshot = await window.firebaseGetDocs(usersRef);
+                
+                let totalUsers = 0;
+                let free = 0;
+                let standard = 0;
+                let premium = 0;
+                let todayConversions = 0;
+                
+                const today = new Date().toISOString().split('T')[0];
+                
+                snapshot.forEach((doc) => {
+                    const user = doc.data();
+                    totalUsers++;
+                    
+                    const plan = user.plan || 'free';
+                    if (plan === 'free') free++;
+                    else if (plan === 'standard') standard++;
+                    else if (plan === 'premium') premium++;
+                    
+                    // Check if user had conversions today
+                    if (user.lastConversionDate) {
+                        const lastConversionDate = user.lastConversionDate.toDate ? 
+                            user.lastConversionDate.toDate().toISOString().split('T')[0] : 
+                            user.lastConversionDate.split('T')[0];
+                            
+                        if (lastConversionDate === today) {
+                            todayConversions += user.dailyUsageCount || 0;
+                        }
+                    }
+                });
+                
+                return { totalUsers, free, standard, premium, todayConversions };
+            }
+
+            updateStatsDisplay(stats) {
+                document.getElementById('totalUsers').textContent = stats.totalUsers;
+                document.getElementById('todayConversions').textContent = stats.todayConversions;
+                document.getElementById('freeUsers').textContent = stats.free;
+                document.getElementById('premiumUsers').textContent = stats.standard + stats.premium;
+            }
+
+            renderCharts(stats) {
+                // Plan Distribution Pie Chart
+                const planCtx = document.getElementById('planChart').getContext('2d');
+                new Chart(planCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Free', 'Standard', 'Premium'],
+                        datasets: [{
+                            data: [stats.free, stats.standard, stats.premium],
+                            backgroundColor: ['#8B5CF6', '#06B6D4', '#F59E0B'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Usage Bar Chart
+                const usageCtx = document.getElementById('usageChart').getContext('2d');
+                new Chart(usageCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Users', 'Conversions Today'],
+                        datasets: [{
+                            label: 'Statistics',
+                            data: [stats.totalUsers, stats.todayConversions],
+                            backgroundColor: ['#10B981', '#F59E0B'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            loadRecentActivity() {
+                const activityContainer = document.getElementById('recent-activity');
+                activityContainer.innerHTML = `
+                    <div class="flex items-center space-x-3 text-white/80">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Dashboard loaded successfully</span>
+                        <span class="text-sm">${new Date().toLocaleString()}</span>
+                    </div>
+                    <div class="flex items-center space-x-3 text-white/80">
+                        <i class="fas fa-database"></i>
+                        <span>User data synchronized</span>
+                        <span class="text-sm">${new Date().toLocaleString()}</span>
+                    </div>
+                `;
+            }
+
+            showAccessDenied() {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('access-denied').classList.remove('hidden');
+            }
+
+            showError(message) {
+                document.getElementById('loading').innerHTML = `
+                    <div class="text-red-300">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AdminDashboard();
+        });
+    </script>
+</body>
+</html>

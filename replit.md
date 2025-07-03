@@ -250,6 +250,31 @@ users/{userId} {
 - **Loading States**: Visual feedback during authentication processes
 - **Form Validation**: Client-side validation with Firebase error handling
 
+## Admin Dashboard System
+
+ConvertWiz now includes a comprehensive admin dashboard for system monitoring and user analytics:
+
+### Admin Dashboard Features
+- **Restricted Access**: Only accessible to iqbalaiwork@gmail.com with Firebase authentication
+- **Real-time Analytics**: Total users, plan breakdown, and daily conversion statistics
+- **Visual Charts**: Interactive pie charts for plan distribution and usage bar charts
+- **User Management**: Overview of free, standard, and premium user counts
+- **Activity Monitoring**: Recent system activity and usage trends
+- **Mobile Responsive**: Fully responsive design matching main site aesthetics
+
+### Technical Implementation
+- **Firebase Integration**: Direct Firestore queries for real-time user data
+- **Chart.js Visualization**: Professional charts for data presentation
+- **Access Control**: Client-side authentication check for authorized access
+- **Route Handling**: Python server updated to serve /admin route
+- **Professional UI**: Tailwind CSS styling with gradient backgrounds and glass morphism effects
+
+### Admin Dashboard Access
+- **URL Route**: `/admin` - dedicated admin dashboard page
+- **Authentication**: Firebase auth state monitoring for access control
+- **Data Security**: Only displays aggregated statistics, no personal user data
+- **Navigation**: Admin link added to main site footer for easy access
+
 ## Google AdSense Monetization Integration
 
 ConvertWiz now includes comprehensive Google AdSense integration for revenue generation through strategic advertising:

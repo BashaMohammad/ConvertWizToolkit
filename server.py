@@ -15,6 +15,18 @@ class SPAHandler(http.server.SimpleHTTPRequestHandler):
         parsed_path = urlparse(self.path)
         path = parsed_path.path
         
+        # Handle special routes first
+        if path == '/admin':
+            # Serve admin.html for admin route
+            with open('admin.html', 'rb') as f:
+                content = f.read()
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.send_header('Content-length', str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+        
         # Remove leading slash and handle empty path
         if path == '/':
             path = 'index.html'
