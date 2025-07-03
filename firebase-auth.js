@@ -459,6 +459,12 @@ class ConvertWizAuth {
             
             // Remove plan data attribute for logged out users (show ads)
             document.body.removeAttribute('data-user-plan');
+            
+            // Remove admin dashboard links
+            const adminDashboardLink = document.getElementById('admin-dashboard-link');
+            const mobileAdminDashboardLink = document.getElementById('mobile-admin-dashboard-link');
+            if (adminDashboardLink) adminDashboardLink.remove();
+            if (mobileAdminDashboardLink) mobileAdminDashboardLink.remove();
         }
     }
 
@@ -535,14 +541,30 @@ class ConvertWizAuth {
         if (userInfo && !document.getElementById('admin-dashboard-link')) {
             const adminLink = document.createElement('a');
             adminLink.id = 'admin-dashboard-link';
-            adminLink.href = '/admin-dashboard';
-            adminLink.className = 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors';
-            adminLink.innerHTML = '<i class="fas fa-chart-line mr-2"></i>Admin Dashboard';
+            adminLink.href = 'admin.html';
+            adminLink.className = 'block px-2 py-1 text-xs text-purple-600 hover:text-purple-800 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors mt-1';
+            adminLink.innerHTML = '<i class="fas fa-chart-line mr-1"></i>Admin Dashboard';
             
-            // Insert after user greeting
-            const userGreeting = document.getElementById('user-greeting');
-            if (userGreeting) {
-                userGreeting.parentNode.insertBefore(adminLink, userGreeting.nextSibling);
+            // Insert after usage info
+            const usageInfo = document.getElementById('usage-info');
+            if (usageInfo) {
+                usageInfo.parentNode.insertBefore(adminLink, usageInfo.nextSibling);
+            }
+        }
+        
+        // Also add to mobile user info if it exists
+        const mobileUserInfo = document.getElementById('mobile-user-info');
+        if (mobileUserInfo && !document.getElementById('mobile-admin-dashboard-link')) {
+            const mobileAdminLink = document.createElement('a');
+            mobileAdminLink.id = 'mobile-admin-dashboard-link';
+            mobileAdminLink.href = 'admin.html';
+            mobileAdminLink.className = 'block px-2 py-1 text-xs text-purple-600 hover:text-purple-800 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors mt-1';
+            mobileAdminLink.innerHTML = '<i class="fas fa-chart-line mr-1"></i>Admin Dashboard';
+            
+            // Insert after mobile usage info
+            const mobileUsageInfo = document.getElementById('mobile-usage-info');
+            if (mobileUsageInfo) {
+                mobileUsageInfo.parentNode.insertBefore(mobileAdminLink, mobileUsageInfo.nextSibling);
             }
         }
     }
