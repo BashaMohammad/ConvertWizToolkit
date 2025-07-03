@@ -255,7 +255,7 @@ users/{userId} {
 ConvertWiz now includes a comprehensive admin dashboard for system monitoring and user analytics:
 
 ### Admin Dashboard Features
-- **Restricted Access**: Only accessible to iqbalaiwork@gmail.com with Firebase authentication
+- **Multi-Admin Access**: Accessible to authorized administrators (iqbalaiwork@gmail.com, iqbalbashasi@gmail.com, sajoshaikh@gmail.com)
 - **Real-time Analytics**: Total users, plan breakdown, and daily conversion statistics
 - **Visual Charts**: Interactive pie charts for plan distribution and usage bar charts
 - **User Management**: Overview of free, standard, and premium user counts
@@ -270,10 +270,12 @@ ConvertWiz now includes a comprehensive admin dashboard for system monitoring an
 - **Professional UI**: Tailwind CSS styling with gradient backgrounds and glass morphism effects
 
 ### Admin Dashboard Access
-- **URL Route**: `/admin` - dedicated admin dashboard page
-- **Authentication**: Firebase auth state monitoring for access control
+- **URL Route**: `admin.html` - dedicated admin dashboard page
+- **Multi-Admin Support**: Array-based authorization for multiple administrator emails
+- **Authentication**: Firebase auth state monitoring with email verification against authorized list
 - **Data Security**: Only displays aggregated statistics, no personal user data
 - **Navigation**: Admin link added to main site footer for easy access
+- **Access Control**: Comprehensive error messaging for unauthorized access attempts
 
 ## Google AdSense Monetization Integration
 
