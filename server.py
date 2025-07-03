@@ -26,6 +26,16 @@ class SPAHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(content)
             return
+        elif path == '/admin-dashboard':
+            # Serve admin-dashboard.html for admin dashboard route
+            with open('admin-dashboard.html', 'rb') as f:
+                content = f.read()
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.send_header('Content-length', str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
         elif path == '/subscribe':
             # Serve subscribe.html for subscription route
             with open('subscribe.html', 'rb') as f:

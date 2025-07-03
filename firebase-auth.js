@@ -431,6 +431,9 @@ class ConvertWizAuth {
 
             // Update ad visibility based on user plan
             this.updateAdVisibility();
+            
+            // Check for admin access and show admin link
+            this.checkAdminAccess();
         } else {
             // Update desktop auth button to login
             if (authBtn) {
@@ -487,6 +490,60 @@ class ConvertWizAuth {
             console.error('Error checking user plan for ad visibility:', error);
             // On error, assume free user (show ads)
             document.body.removeAttribute('data-user-plan');
+        }
+    }
+
+    // Check admin access and show/hide admin dashboard link
+    checkAdminAccess() {
+        const adminEmails = [
+            'iqbalaiwork@gmail.com',
+            'iqbalbashasi@gmail.com',
+            'sajoshaikh@gmail.com'
+        ];
+        
+        const isAdmin = this.currentUser && adminEmails.includes(this.currentUser.email);
+        
+        // Find admin links in navigation
+        const adminLinks = document.querySelectorAll('a[href*="admin-dashboard"]');
+        const adminNavItems = document.querySelectorAll('.admin-nav-item');
+        
+        if (isAdmin) {
+            // Show admin links for authorized users
+            adminLinks.forEach(link => {
+                link.style.display = 'inline-flex';
+            });
+            adminNavItems.forEach(item => {
+                item.style.display = 'block';
+            });
+            
+            // Add admin link to user dropdown if not exists
+            this.addAdminLinkToDropdown();
+        } else {
+            // Hide admin links for non-admin users
+            adminLinks.forEach(link => {
+                link.style.display = 'none';
+            });
+            adminNavItems.forEach(item => {
+                item.style.display = 'none';
+            });
+        }
+    }
+    
+    // Add admin dashboard link to user dropdown
+    addAdminLinkToDropdown() {
+        const userInfo = document.getElementById('user-info');
+        if (userInfo && !document.getElementById('admin-dashboard-link')) {
+            const adminLink = document.createElement('a');
+            adminLink.id = 'admin-dashboard-link';
+            adminLink.href = '/admin-dashboard';
+            adminLink.className = 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors';
+            adminLink.innerHTML = '<i class="fas fa-chart-line mr-2"></i>Admin Dashboard';
+            
+            // Insert after user greeting
+            const userGreeting = document.getElementById('user-greeting');
+            if (userGreeting) {
+                userGreeting.parentNode.insertBefore(adminLink, userGreeting.nextSibling);
+            }
         }
     }
 

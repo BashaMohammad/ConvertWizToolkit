@@ -196,7 +196,94 @@ document.addEventListener('DOMContentLoaded', () => {
         const sectionId = getSectionFromPath(window.location.pathname);
         showSection(sectionId);
     });
+    
+    // Initialize AdSense lazy loading for Core Web Vitals optimization
+    initializeAdSenseLazyLoading();
 });
+
+// AdSense Lazy Loading for Core Web Vitals Optimization
+function initializeAdSenseLazyLoading() {
+    // Only load AdSense in production environment
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('Development environment detected - AdSense placeholders active');
+        return;
+    }
+    
+    // Lazy load AdSense script with intersection observer
+    const adElements = document.querySelectorAll('.adsense-banner');
+    
+    if (adElements.length === 0) return;
+    
+    const observerOptions = {
+        root: null,
+        rootMargin: '100px',
+        threshold: 0.1
+    };
+    
+    const adObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadAdSenseScript();
+                adObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all ad banners
+    adElements.forEach(ad => adObserver.observe(ad));
+}
+
+// Load AdSense script dynamically
+function loadAdSenseScript() {
+    if (window.adsbygoogle || document.getElementById('adsense-script')) {
+        return; // Already loaded
+    }
+    
+    console.log('AdSense lazy loading initiated');
+    
+    const script = document.createElement('script');
+    script.id = 'adsense-script';
+    script.async = true;
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045';
+    script.crossOrigin = 'anonymous';
+    
+    script.onload = () => {
+        console.log('AdSense script loaded successfully');
+        // Initialize visible ads
+        setTimeout(() => {
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+                console.log('AdSense initialization:', 'Ads pushed to queue');
+            } catch (error) {
+                console.log('AdSense initialization:', error.message);
+            }
+        }, 1000);
+    };
+    
+    script.onerror = () => {
+        console.warn('AdSense script failed to load');
+    };
+    
+    document.head.appendChild(script);
+}
+
+// Optimize images with lazy loading
+function optimizeImageLoading() {
+    const images = document.querySelectorAll('img[data-src]');
+    
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+}
 
 // Initialize routing based on current URL path
 function initializeRouting() {

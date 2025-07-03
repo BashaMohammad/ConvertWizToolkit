@@ -291,6 +291,146 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Mobile Layout Fixes - Update 1 */
+@media (max-width: 375px) {
+    /* Tool card improvements */
+    .converter-card {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    /* Button spacing and visibility */
+    .tool-card button,
+    .converter-card button {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        min-height: 44px; /* Touch-friendly minimum */
+    }
+    
+    /* Try Now buttons */
+    button[data-target] {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+    
+    /* Convert buttons */
+    .btn-primary,
+    .bg-gradient-to-r {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        min-height: 44px;
+    }
+    
+    /* Result sections */
+    .result-section {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    /* Form elements */
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        padding: 0.75rem;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+    
+    /* Container padding */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Grid adjustments */
+    .grid {
+        gap: 1rem;
+    }
+    
+    /* Tool sections */
+    .tool-section {
+        padding: 1rem;
+    }
+}
+
+/* Tool Grid Centering - Update 2 */
+.tools-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tools-grid .grid {
+    justify-items: center;
+    align-items: stretch;
+}
+
+/* AdSense Banner Improvements - Update 3 */
+.adsense-banner {
+    position: relative;
+    z-index: 10;
+}
+
+/* Landing page banner - single vertical */
+.adsense-banner.landing-page {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+/* Component page horizontal banners */
+.adsense-banner.component-page {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.adsense-banner.component-page.horizontal {
+    width: 100%;
+    max-width: 728px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+/* Mobile AdSense adjustments */
+@media (max-width: 768px) {
+    .adsense-banner.landing-page {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        width: 100%;
+        max-width: 320px;
+        margin: 1rem auto;
+    }
+    
+    .adsense-banner.component-page.horizontal {
+        max-width: 320px;
+        margin: 1rem auto;
+    }
+    
+    .adsense-banner-right {
+        display: none;
+    }
+}
+
+/* Lazy loading improvements */
+.adsense-lazy {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.adsense-lazy.loaded {
+    opacity: 1;
+}
+
 /* Loading animation */
 .loading {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
