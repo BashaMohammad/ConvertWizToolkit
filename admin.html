@@ -429,7 +429,8 @@
         const adminEmails = [
             'iqbalaiwork@gmail.com',
             'iqbalbashasi@gmail.com',
-            'sajoshaikh@gmail.com'
+            'sajoshaikh@gmail.com',
+            'support@convertwiz.in'
         ];
 
         // Check authentication and admin access
@@ -448,6 +449,16 @@
                 // Access denied
                 loadingScreen.style.display = 'none';
                 accessDenied.classList.remove('hidden');
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
             }
         });
 
@@ -499,7 +510,7 @@
                     conversions: dailyConversions
                 });
 
-                // Load Google Analytics data
+                // Load Google Analytics data for overview
                 loadAnalyticsData();
                 
             } catch (error) {
@@ -624,7 +635,7 @@
                     
                     // Load tab-specific data
                     if (targetTab === 'analytics') {
-                        loadAnalyticsData();
+                        loadAnalyticsTabData();
                     } else if (targetTab === 'users') {
                         loadUsersData();
                     }
@@ -632,8 +643,8 @@
             });
         }
 
-        // Load analytics data
-        async function loadAnalyticsData() {
+        // Analytics data loading for the Analytics tab
+        function loadAnalyticsTabData() {
             try {
                 // Simulate Google Analytics data (in production, you would use GA API)
                 document.getElementById('ga-active-users').textContent = '127';
@@ -641,7 +652,7 @@
                 document.getElementById('ga-sessions').textContent = '1,892';
                 document.getElementById('ga-bounce-rate').textContent = '34.2%';
                 
-                // Load top countries
+                // Load top countries for Analytics tab
                 const topCountries = [
                     { country: 'United States', percentage: '28%' },
                     { country: 'India', percentage: '22%' },
@@ -651,12 +662,14 @@
                 ];
                 
                 const countriesContainer = document.getElementById('top-countries');
-                countriesContainer.innerHTML = topCountries.map(item => `
-                    <div class="flex justify-between items-center py-1">
-                        <span class="text-gray-600">${item.country}</span>
-                        <span class="text-sm font-semibold text-purple-600">${item.percentage}</span>
-                    </div>
-                `).join('');
+                if (countriesContainer) {
+                    countriesContainer.innerHTML = topCountries.map(item => `
+                        <div class="flex justify-between items-center py-1">
+                            <span class="text-gray-600">${item.country}</span>
+                            <span class="text-sm font-semibold text-purple-600">${item.percentage}</span>
+                        </div>
+                    `).join('');
+                }
                 
                 // Load traffic sources
                 const trafficSources = [

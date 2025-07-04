@@ -460,11 +460,11 @@ class ConvertWizAuth {
             // Remove plan data attribute for logged out users (show ads)
             document.body.removeAttribute('data-user-plan');
             
-            // Remove admin dashboard links
-            const adminDashboardLink = document.getElementById('admin-dashboard-link');
-            const mobileAdminDashboardLink = document.getElementById('mobile-admin-dashboard-link');
-            if (adminDashboardLink) adminDashboardLink.remove();
-            if (mobileAdminDashboardLink) mobileAdminDashboardLink.remove();
+            // Hide admin dashboard links for logged out users
+            const adminLinks = document.querySelectorAll('a[href*="admin"]');
+            const adminNavItems = document.querySelectorAll('.admin-nav-item');
+            adminLinks.forEach(link => link.style.display = 'none');
+            adminNavItems.forEach(item => item.style.display = 'none');
         }
     }
 
@@ -504,7 +504,8 @@ class ConvertWizAuth {
         const adminEmails = [
             'iqbalaiwork@gmail.com',
             'iqbalbashasi@gmail.com',
-            'sajoshaikh@gmail.com'
+            'sajoshaikh@gmail.com',
+            'support@convertwiz.in'
         ];
         
         const isAdmin = this.currentUser && adminEmails.includes(this.currentUser.email);
