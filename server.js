@@ -42,34 +42,41 @@ const adminEmails = [
   'support@convertwiz.in'
 ];
 
-// Middleware to verify admin access
-const verifyAdmin = async (req, res, next) => {
+// Enhanced middleware to verify Firebase ID Token
+const verifyToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: Missing token' });
+  }
+  
+  const idToken = authHeader.split('Bearer ')[1];
   try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ error: 'No authorization token provided' });
-    }
-
     if (!db) {
       return res.status(503).json({ error: 'Backend services unavailable' });
     }
-
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    if (!adminEmails.includes(decodedToken.email)) {
-      return res.status(403).json({ error: 'Access denied: Not an admin' });
-    }
-
+    
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
     req.user = decodedToken;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    console.error('Token verification failed:', error);
+    res.status(401).json({ error: 'Unauthorized: Invalid token' });
   }
+};
+
+// Admin-specific middleware
+const verifyAdmin = async (req, res, next) => {
+  const email = req.user.email;
+  if (!adminEmails.includes(email)) {
+    return res.status(403).json({ error: 'Access denied: Not an admin' });
+  }
+  next();
 };
 
 // API Routes
 
 // Admin Dashboard API - Get all users (admin only)
-app.get('/api/admin/users', verifyAdmin, async (req, res) => {
+app.get('/api/admin/users', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const usersSnapshot = await db.collection('users').get();
     const users = usersSnapshot.docs.map(doc => ({ 

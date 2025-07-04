@@ -368,10 +368,11 @@ ConvertWiz now includes a comprehensive Node.js Express backend for enhanced fun
 - **Environment Configuration**: Secure Firebase credentials via environment variables
 
 ### Security Implementation
-- **Admin Whitelist**: Role-based access control for sensitive operations
-- **Token Verification**: Firebase ID token validation for API access
+- **Enhanced Token Verification**: Improved Firebase ID token validation with proper error handling
+- **Modular Middleware**: Separate token verification and admin authorization layers
+- **Admin Whitelist**: Role-based access control including support@convertwiz.in
 - **Data Privacy**: Email masking and secure data handling
-- **Error Handling**: Comprehensive error responses and logging
+- **Comprehensive Error Handling**: Detailed error responses and security logging
 
 ## Changelog
 
