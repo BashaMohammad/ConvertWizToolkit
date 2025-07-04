@@ -420,6 +420,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Test Firebase connection
+        console.log('Firebase initialized successfully');
+        console.log('Auth instance:', auth);
+        console.log('Firestore instance:', db);
+
         // Admin emails
         const adminEmails = [
             'iqbalaiwork@gmail.com',
@@ -449,9 +454,13 @@
         // Load dashboard data
         async function loadDashboardData() {
             try {
+                console.log('Starting dashboard data load...');
+                
                 // Load user statistics from Firestore
                 const usersRef = collection(db, 'users');
+                console.log('Querying Firestore users collection...');
                 const usersSnapshot = await getDocs(usersRef);
+                console.log('Firestore query completed, documents found:', usersSnapshot.size);
                 
                 let totalUsers = 0;
                 let freeUsers = 0;
@@ -495,11 +504,16 @@
                 
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
-                // Show error message to user
-                document.getElementById('total-users').textContent = 'Error';
-                document.getElementById('free-users').textContent = 'Error';
-                document.getElementById('premium-users').textContent = 'Error';
-                document.getElementById('daily-conversions').textContent = 'Error';
+                showErrorBanner(`Dashboard loading failed: ${error.message || 'Unknown error'}`);
+                
+                // Set error state for all elements
+                const elements = ['total-users', 'free-users', 'premium-users', 'daily-conversions'];
+                elements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.textContent = 'Error';
+                });
+                
+                throw error; // Re-throw to be caught by caller
             }
         }
 
@@ -737,19 +751,48 @@
             const accessDenied = document.getElementById('access-denied');
             const dashboardContent = document.getElementById('dashboard-content');
             
-            if (user && adminEmails.includes(user.email)) {
-                // Admin access granted
-                document.getElementById('admin-email').textContent = user.email;
-                loadingScreen.style.display = 'none';
-                dashboardContent.classList.remove('hidden');
-                await loadDashboardData();
-                initializeTabs(); // Initialize tab functionality
-            } else {
-                // Access denied
+            try {
+                if (user && adminEmails.includes(user.email)) {
+                    // Admin access granted
+                    document.getElementById('admin-email').textContent = user.email;
+                    loadingScreen.style.display = 'none';
+                    dashboardContent.classList.remove('hidden');
+                    
+                    // Load dashboard data with error handling
+                    try {
+                        await loadDashboardData();
+                        initializeTabs(); // Initialize tab functionality
+                    } catch (error) {
+                        console.error('Error loading dashboard data:', error);
+                        showErrorBanner('Unable to load analytics data. Please refresh the page.');
+                    }
+                } else {
+                    // Access denied
+                    loadingScreen.style.display = 'none';
+                    accessDenied.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Authentication error:', error);
                 loadingScreen.style.display = 'none';
                 accessDenied.classList.remove('hidden');
             }
         });
+
+        // Show error banner function
+        function showErrorBanner(message) {
+            const banner = document.createElement('div');
+            banner.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4';
+            banner.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-red-500 hover:text-red-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.querySelector('main').insertBefore(banner, document.querySelector('main').firstChild);
+        }
 
         // Logout functionality
         document.getElementById('logout-btn').addEventListener('click', () => {
