@@ -285,30 +285,30 @@
                             </div>
                         </div>
 
-                        <!-- Color Picker -->
-                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group opacity-75">
+                        <!-- Color Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                             <div class="text-center">
-                                <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-violet-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-palette text-white text-2xl"></i>
                                 </div>
-                                <h4 class="text-lg font-bold text-gray-800 mb-2">Color Picker</h4>
-                                <p class="text-gray-600 text-sm mb-4">Extract colors from images and get hex codes</p>
-                                <button class="w-full bg-gray-400 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
-                                    Coming Soon
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Color Converter</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert HEX to RGB and HSL with live preview</p>
+                                <button data-target="color-converter-section" class="inline-block w-full bg-gradient-to-r from-pink-500 to-violet-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
                                 </button>
                             </div>
                         </div>
 
                         <!-- Image Compressor -->
-                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group opacity-75">
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                             <div class="text-center">
                                 <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-compress text-white text-2xl"></i>
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Image Compressor</h4>
-                                <p class="text-gray-600 text-sm mb-4">Reduce image file size without quality loss</p>
-                                <button class="w-full bg-gray-400 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
-                                    Coming Soon
+                                <p class="text-gray-600 text-sm mb-4">Reduce image file size with quality control</p>
+                                <button data-target="image-compressor-section" class="inline-block w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
                                 </button>
                             </div>
                         </div>
@@ -406,6 +406,20 @@
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Distance Converter</h4>
                                 <p class="text-gray-600 text-sm mb-4">Convert between meters, miles, feet and other distance units</p>
                                 <button data-target="distance-converter-section" class="inline-block w-full bg-gradient-to-r from-cyan-500 to-teal-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Temperature Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-thermometer-half text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Temperature</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert between Celsius, Fahrenheit and Kelvin</p>
+                                <button data-target="temperature-converter-section" class="inline-block w-full bg-gradient-to-r from-blue-500 to-red-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                     Try Now
                                 </button>
                             </div>
@@ -1758,6 +1772,308 @@ Contact: John Doe, Company Inc."></textarea>
                     <p class="text-gray-600 text-sm">
                         <i class="fas fa-info-circle mr-2"></i>
                         <strong>Disclaimer:</strong> This calculator is for general purposes. ConvertWiz does not guarantee accuracy for financial or professional calculations.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- TEMPERATURE CONVERTER SECTION -->
+    <div class="tool-section" id="temperature-converter-section" style="display: none;">
+        <!-- Vertical Right AdSense Banner - Component Page -->
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Temperature Converter Tool</p>
+            </div>
+        </div>
+
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    🌡️ Temperature Converter
+                </h2>
+                <p class="text-xl text-white/90 mb-4">
+                    Convert between Celsius, Fahrenheit, and Kelvin with precision
+                </p>
+            </section>
+
+            <!-- Temperature Converter Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-thermometer-half text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Temperature Converter</h3>
+                        <p class="text-gray-600">Convert between Celsius, Fahrenheit, and Kelvin temperature scales</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Input Section -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">From Unit</label>
+                                <select id="from-unit-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="C">Celsius (°C)</option>
+                                    <option value="F">Fahrenheit (°F)</option>
+                                    <option value="K">Kelvin (K)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Temperature</label>
+                                <input type="number" id="temperature-input" placeholder="Enter temperature value" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" step="0.01">
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 justify-center">
+                            <button id="convert-temperature-btn" class="bg-gradient-to-r from-blue-500 to-red-500 hover:from-blue-600 hover:to-red-600 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-sync-alt mr-2"></i>Convert
+                            </button>
+                            <button id="clear-temperature-btn" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-times mr-2"></i>Clear
+                            </button>
+                        </div>
+                        
+                        <!-- Results Section -->
+                        <div id="temperature-results" class="mt-8">
+                            <p class="text-gray-500">Enter a temperature value to see conversions</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Disclaimer -->
+                <div class="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p class="text-gray-600 text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Disclaimer:</strong> This converter provides accurate temperature conversions for educational and general purposes.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- COLOR CONVERTER SECTION -->
+    <div class="tool-section" id="color-converter-section" style="display: none;">
+        <!-- Vertical Right AdSense Banner - Component Page -->
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Color Converter Tool</p>
+            </div>
+        </div>
+
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    🎨 Color Converter
+                </h2>
+                <p class="text-xl text-white/90 mb-4">
+                    Convert HEX colors to RGB and HSL formats with live preview
+                </p>
+            </section>
+
+            <!-- Color Converter Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-palette text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Color Format Converter</h3>
+                        <p class="text-gray-600">Convert HEX colors to RGB and HSL formats with visual preview</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Input Section -->
+                        <div class="max-w-md mx-auto">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">HEX Color Code</label>
+                            <input type="text" id="hex-input" placeholder="#FF5733" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-center font-mono text-lg">
+                            <p class="text-xs text-gray-500 mt-1">Enter a 6-digit hex color (e.g., #FF5733 or FF5733)</p>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 justify-center">
+                            <button id="convert-color-btn" class="bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-600 hover:to-violet-600 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-sync-alt mr-2"></i>Convert
+                            </button>
+                            <button id="clear-color-btn" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-times mr-2"></i>Clear
+                            </button>
+                        </div>
+                        
+                        <!-- Results Section -->
+                        <div id="color-results" class="mt-8">
+                            <p class="text-gray-500">Enter a hex color to see conversions</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Disclaimer -->
+                <div class="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p class="text-gray-600 text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Disclaimer:</strong> Color conversions are provided for design and development purposes. Screen color accuracy may vary.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- IMAGE COMPRESSOR SECTION -->
+    <div class="tool-section" id="image-compressor-section" style="display: none;">
+        <!-- Vertical Right AdSense Banner - Component Page -->
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Image Compressor Tool</p>
+            </div>
+        </div>
+
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    🗜️ Image Compressor
+                </h2>
+                <p class="text-xl text-white/90 mb-4">
+                    Reduce image file sizes while maintaining quality control
+                </p>
+            </section>
+
+            <!-- Image Compressor Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-compress text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Smart Image Compression</h3>
+                        <p class="text-gray-600">Compress JPG and PNG images with adjustable quality settings</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Upload Section -->
+                        <div class="text-center">
+                            <div id="image-drop-zone" class="border-2 border-dashed border-emerald-300 rounded-xl p-8 bg-emerald-50 hover:bg-emerald-100 transition-colors cursor-pointer">
+                                <div class="flex flex-col items-center">
+                                    <i class="fas fa-cloud-upload-alt text-emerald-500 text-4xl mb-4"></i>
+                                    <p class="text-lg font-semibold text-gray-700 mb-2">Drop image here or click to upload</p>
+                                    <p class="text-sm text-gray-500">Supports JPG and PNG files up to 10MB</p>
+                                </div>
+                                <input type="file" id="image-file-input" accept="image/jpeg,image/png" class="hidden">
+                            </div>
+                        </div>
+                        
+                        <!-- Quality Control -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Compression Quality (%)</label>
+                            <div class="flex items-center space-x-4">
+                                <input type="range" id="quality-slider" min="1" max="100" value="60" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                <span id="quality-value" class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg font-semibold">60%</span>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Smallest</span>
+                                <span>Best Quality</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 justify-center">
+                            <button id="compress-image-btn" disabled class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-compress mr-2"></i>Compress Image
+                            </button>
+                            <button id="reset-compressor-btn" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-times mr-2"></i>Reset
+                            </button>
+                        </div>
+                        
+                        <!-- Results Section -->
+                        <div id="compression-results" class="hidden">
+                            <div class="grid md:grid-cols-2 gap-6 mt-8">
+                                <!-- Original Image -->
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-700 mb-2">Original Image</h4>
+                                    <div id="original-preview" class="bg-white rounded border p-2 mb-2 text-center">
+                                        <!-- Original image preview -->
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        <div>Size: <span id="original-size" class="font-semibold">-</span></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Compressed Image -->
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-700 mb-2">Compressed Image</h4>
+                                    <div id="compressed-preview" class="bg-white rounded border p-2 mb-2 text-center">
+                                        <!-- Compressed image preview -->
+                                    </div>
+                                    <div class="text-sm text-gray-600 mb-3">
+                                        <div>Size: <span id="compressed-size" class="font-semibold">-</span></div>
+                                        <div>Savings: <span id="compression-ratio" class="font-semibold text-emerald-600">-</span></div>
+                                    </div>
+                                    <button id="download-compressed-btn" class="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white py-2 px-4 rounded-lg font-semibold transition-all hover:shadow-lg" disabled>
+                                        <i class="fas fa-download mr-2"></i>Download Compressed
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Disclaimer -->
+                <div class="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p class="text-gray-600 text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Disclaimer:</strong> Image compression may result in quality loss. Test different quality settings to find the best balance for your needs.
                     </p>
                 </div>
             </div>

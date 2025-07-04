@@ -168,6 +168,9 @@ function initializeTool(sectionId) {
             case 'color-converter-section':
                 currentTool = new ColorConverter();
                 break;
+            case 'image-compressor-section':
+                currentTool = new ImageCompressor();
+                break;
         }
     } catch (error) {
         console.warn('Tool initialization failed:', error);

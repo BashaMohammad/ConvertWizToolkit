@@ -2740,6 +2740,224 @@ class TemperatureConverter {
     }
 }
 
+// Image Compressor Tool
+class ImageCompressor {
+    constructor() {
+        this.selectedFile = null;
+        this.compressedBlob = null;
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const dropZone = document.getElementById('image-drop-zone');
+        const fileInput = document.getElementById('image-file-input');
+        const qualitySlider = document.getElementById('quality-slider');
+        const qualityValue = document.getElementById('quality-value');
+        const compressBtn = document.getElementById('compress-image-btn');
+        const resetBtn = document.getElementById('reset-compressor-btn');
+        const downloadBtn = document.getElementById('download-compressed-btn');
+
+        dropZone?.addEventListener('click', () => fileInput?.click());
+        fileInput?.addEventListener('change', (e) => this.handleFileSelect(e));
+        
+        dropZone?.addEventListener('dragover', (e) => this.preventDefaults(e));
+        dropZone?.addEventListener('dragenter', (e) => this.preventDefaults(e));
+        dropZone?.addEventListener('dragleave', (e) => this.preventDefaults(e));
+        dropZone?.addEventListener('drop', (e) => this.handleDrop(e));
+
+        qualitySlider?.addEventListener('input', (e) => {
+            qualityValue.textContent = e.target.value + '%';
+        });
+
+        compressBtn?.addEventListener('click', () => this.compressImage());
+        resetBtn?.addEventListener('click', () => this.reset());
+        downloadBtn?.addEventListener('click', () => this.downloadCompressed());
+    }
+
+    preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    handleDrop(e) {
+        this.preventDefaults(e);
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            this.handleFile(files[0]);
+        }
+    }
+
+    handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            this.handleFile(file);
+        }
+    }
+
+    handleFile(file) {
+        if (!this.validateFile(file)) return;
+        
+        this.selectedFile = file;
+        this.showFileInfo();
+        document.getElementById('compress-image-btn').disabled = false;
+    }
+
+    validateFile(file) {
+        const validTypes = ['image/jpeg', 'image/png'];
+        const maxSize = 10 * 1024 * 1024;
+
+        if (!validTypes.includes(file.type)) {
+            this.showNotification('Please select a JPG or PNG image file', 'error');
+            return false;
+        }
+
+        if (file.size > maxSize) {
+            this.showNotification('File size must be less than 10MB', 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    showFileInfo() {
+        const dropZone = document.getElementById('image-drop-zone');
+        const fileSize = this.formatFileSize(this.selectedFile.size);
+        
+        dropZone.innerHTML = '<div class="flex flex-col items-center">' +
+            '<i class="fas fa-check-circle text-emerald-500 text-4xl mb-4"></i>' +
+            '<p class="text-lg font-semibold text-gray-700 mb-2">' + this.selectedFile.name + '</p>' +
+            '<p class="text-sm text-gray-500">Size: ' + fileSize + '</p>' +
+            '<p class="text-xs text-gray-400 mt-2">Click to select a different file</p>' +
+            '</div>';
+    }
+
+    async compressImage() {
+        if (!this.selectedFile) return;
+
+        const compressBtn = document.getElementById('compress-image-btn');
+        const originalText = compressBtn.innerHTML;
+        
+        try {
+            compressBtn.disabled = true;
+            compressBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Compressing...';
+
+            const quality = document.getElementById('quality-slider').value;
+            const formData = new FormData();
+            formData.append('image', this.selectedFile);
+
+            const response = await fetch('/api/image-compressor?quality=' + quality, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('Compression failed');
+            }
+
+            this.compressedBlob = await response.blob();
+            this.showResults();
+            this.showNotification('Image compressed successfully!', 'success');
+
+        } catch (error) {
+            console.error('Compression error:', error);
+            this.showNotification('Failed to compress image. Please try again.', 'error');
+        } finally {
+            compressBtn.disabled = false;
+            compressBtn.innerHTML = originalText;
+        }
+    }
+
+    showResults() {
+        const resultsSection = document.getElementById('compression-results');
+        const originalPreview = document.getElementById('original-preview');
+        const compressedPreview = document.getElementById('compressed-preview');
+        const originalSize = document.getElementById('original-size');
+        const compressedSize = document.getElementById('compressed-size');
+        const compressionRatio = document.getElementById('compression-ratio');
+        const downloadBtn = document.getElementById('download-compressed-btn');
+
+        const originalReader = new FileReader();
+        originalReader.onload = (e) => {
+            originalPreview.innerHTML = '<img src="' + e.target.result + '" alt="Original" class="max-w-full max-h-48 mx-auto rounded">';
+        };
+        originalReader.readAsDataURL(this.selectedFile);
+
+        const compressedUrl = URL.createObjectURL(this.compressedBlob);
+        compressedPreview.innerHTML = '<img src="' + compressedUrl + '" alt="Compressed" class="max-w-full max-h-48 mx-auto rounded">';
+
+        originalSize.textContent = this.formatFileSize(this.selectedFile.size);
+        compressedSize.textContent = this.formatFileSize(this.compressedBlob.size);
+
+        const savings = ((this.selectedFile.size - this.compressedBlob.size) / this.selectedFile.size * 100).toFixed(1);
+        compressionRatio.textContent = savings + '% smaller';
+
+        downloadBtn.disabled = false;
+        resultsSection.classList.remove('hidden');
+    }
+
+    downloadCompressed() {
+        if (!this.compressedBlob) return;
+
+        const url = URL.createObjectURL(this.compressedBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'compressed_' + this.selectedFile.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        this.showNotification('Download started!', 'success');
+    }
+
+    reset() {
+        this.selectedFile = null;
+        this.compressedBlob = null;
+
+        const dropZone = document.getElementById('image-drop-zone');
+        dropZone.innerHTML = '<div class="flex flex-col items-center">' +
+            '<i class="fas fa-cloud-upload-alt text-emerald-500 text-4xl mb-4"></i>' +
+            '<p class="text-lg font-semibold text-gray-700 mb-2">Drop image here or click to upload</p>' +
+            '<p class="text-sm text-gray-500">Supports JPG and PNG files up to 10MB</p>' +
+            '</div>';
+
+        document.getElementById('compress-image-btn').disabled = true;
+        document.getElementById('download-compressed-btn').disabled = true;
+        document.getElementById('compression-results').classList.add('hidden');
+        document.getElementById('quality-slider').value = 60;
+        document.getElementById('quality-value').textContent = '60%';
+        document.getElementById('image-file-input').value = '';
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    showNotification(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-x-full transition-transform duration-300 ' + 
+            (type === 'error' ? 'bg-red-500' : 'bg-green-500');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+        setTimeout(() => {
+            toast.classList.add('translate-x-full');
+            setTimeout(() => document.body.removeChild(toast), 300);
+        }, 3000);
+    }
+
+    destroy() {
+        if (this.compressedBlob) {
+            URL.revokeObjectURL(URL.createObjectURL(this.compressedBlob));
+        }
+    }
+}
+
 // Color Converter Tool
 class ColorConverter {
     constructor() {
