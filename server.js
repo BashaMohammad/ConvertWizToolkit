@@ -2,10 +2,20 @@
 const express = require('express');
 const path = require('path');
 const admin = require('firebase-admin');
+const multer = require('multer');
+const sharp = require('sharp');
 
 const app = express();
 app.use(express.json());
 app.use(express.static('.'));
+
+// Configure multer for file uploads
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  }
+});
 
 // Initialize Firebase Admin SDK with environment variables
 const firebaseConfig = {
@@ -139,6 +149,126 @@ app.post('/api/percentage-calculator', (req, res) => {
       operation: operation || 'find_percentage'
     }
   });
+});
+
+// Temperature Converter API
+app.post('/api/temperature-converter', (req, res) => {
+  const { value, fromUnit } = req.body;
+  const input = parseFloat(value);
+  if (isNaN(input)) {
+    return res.status(400).json({ error: 'Invalid temperature input' });
+  }
+
+  let celsius, fahrenheit, kelvin;
+  switch (fromUnit) {
+    case 'C':
+      celsius = input;
+      fahrenheit = (input * 9/5) + 32;
+      kelvin = input + 273.15;
+      break;
+    case 'F':
+      celsius = (input - 32) * 5/9;
+      fahrenheit = input;
+      kelvin = celsius + 273.15;
+      break;
+    case 'K':
+      celsius = input - 273.15;
+      fahrenheit = (celsius * 9/5) + 32;
+      kelvin = input;
+      break;
+    default:
+      return res.status(400).json({ error: 'Invalid unit' });
+  }
+
+  res.json({ 
+    celsius: parseFloat(celsius.toFixed(2)), 
+    fahrenheit: parseFloat(fahrenheit.toFixed(2)), 
+    kelvin: parseFloat(kelvin.toFixed(2)),
+    fromUnit,
+    originalValue: input
+  });
+});
+
+// Color Converter API (HEX ↔ RGB ↔ HSL)
+app.post('/api/color-converter', (req, res) => {
+  const { hex } = req.body;
+  if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
+    return res.status(400).json({ error: 'Invalid HEX color format. Use #RRGGBB format.' });
+  }
+
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  const rgb = `rgb(${r}, ${g}, ${b})`;
+
+  // Convert to HSL
+  const rNorm = r / 255, gNorm = g / 255, bNorm = b / 255;
+  const max = Math.max(rNorm, gNorm, bNorm), min = Math.min(rNorm, gNorm, bNorm);
+  let h, s, l = (max + min) / 2;
+
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case rNorm: h = (gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0); break;
+      case gNorm: h = (bNorm - rNorm) / d + 2; break;
+      case bNorm: h = (rNorm - gNorm) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  const hsl = `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+
+  res.json({ 
+    hex: hex.toUpperCase(), 
+    rgb, 
+    hsl,
+    values: {
+      r, g, b,
+      h: Math.round(h * 360),
+      s: Math.round(s * 100),
+      l: Math.round(l * 100)
+    }
+  });
+});
+
+// Image Compressor API (JPG/PNG)
+app.post('/api/image-compressor', upload.single('image'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  try {
+    const originalSize = req.file.buffer.length;
+    const quality = parseInt(req.query.quality) || 60;
+    
+    // Validate quality parameter
+    if (quality < 1 || quality > 100) {
+      return res.status(400).json({ error: 'Quality must be between 1 and 100' });
+    }
+
+    const compressed = await sharp(req.file.buffer)
+      .jpeg({ quality })
+      .toBuffer();
+
+    const compressedSize = compressed.length;
+    const compressionRatio = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+
+    res.json({
+      success: true,
+      originalSize,
+      compressedSize,
+      compressionRatio: `${compressionRatio}%`,
+      quality,
+      data: compressed.toString('base64')
+    });
+  } catch (error) {
+    console.error('Compression failed:', error);
+    res.status(500).json({ error: 'Compression error occurred' });
+  }
 });
 
 // Health check endpoint

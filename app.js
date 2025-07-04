@@ -162,6 +162,12 @@ function initializeTool(sectionId) {
             case 'percentage-calculator-section':
                 currentTool = new PercentageCalculator();
                 break;
+            case 'temperature-converter-section':
+                currentTool = new TemperatureConverter();
+                break;
+            case 'color-converter-section':
+                currentTool = new ColorConverter();
+                break;
         }
     } catch (error) {
         console.warn('Tool initialization failed:', error);

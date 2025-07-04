@@ -142,6 +142,32 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Backend API endpoint /api/percentage-calculator for enhanced calculations
 - Mobile-responsive design with clear operation type selection
 
+#### Temperature Converter
+- Comprehensive temperature conversion between Celsius, Fahrenheit, and Kelvin
+- Real-time conversion with backend API integration and client-side fallback
+- Professional tri-color layout with distinct temperature scale representations
+- Accurate conversion formulas with 2-decimal precision
+- Backend API endpoint /api/temperature-converter for enhanced calculations
+- Mobile-responsive grid layout with color-coded temperature units
+
+#### Color Converter
+- Professional color format conversion tool supporting HEX, RGB, and HSL formats
+- Real-time color preview with visual representation
+- Copy-to-clipboard functionality for all color format outputs
+- Input validation with automatic hex formatting (adds # prefix)
+- Backend API endpoint /api/color-converter for enhanced calculations
+- Individual component value breakdown (R, G, B and H, S, L values)
+- Client-side fallback ensures functionality without backend dependency
+
+#### Image Compressor
+- Advanced image compression tool with adjustable quality settings (1-100%)
+- Supports JPG and PNG formats with 10MB file size limit
+- Drag-and-drop interface with file validation and preview
+- Real-time compression statistics showing original vs compressed size
+- Backend API endpoint /api/image-compressor using Sharp library
+- One-click download of compressed images with automatic filename generation
+- Compression ratio display showing space savings percentage
+
 ## Data Flow
 
 1. **File Upload Flow:**

@@ -2606,3 +2606,336 @@ class PercentageCalculator {
         // Clean up event listeners
     }
 }
+
+// Temperature Converter Tool
+class TemperatureConverter {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const convertBtn = document.getElementById('convert-temperature-btn');
+        const clearBtn = document.getElementById('clear-temperature-btn');
+        const temperatureInput = document.getElementById('temperature-input');
+        const fromUnitSelect = document.getElementById('from-unit-select');
+
+        convertBtn?.addEventListener('click', () => this.convertTemperature());
+        clearBtn?.addEventListener('click', () => this.clearTemperature());
+        
+        // Real-time conversion on input change
+        temperatureInput?.addEventListener('input', () => this.convertTemperature());
+        fromUnitSelect?.addEventListener('change', () => this.convertTemperature());
+    }
+
+    async convertTemperature() {
+        const temperatureInput = document.getElementById('temperature-input');
+        const fromUnitSelect = document.getElementById('from-unit-select');
+        const resultsContainer = document.getElementById('temperature-results');
+
+        const value = parseFloat(temperatureInput.value);
+        const fromUnit = fromUnitSelect.value;
+
+        if (isNaN(value)) {
+            resultsContainer.innerHTML = '<p class="text-gray-500">Enter a temperature value to see conversions</p>';
+            return;
+        }
+
+        try {
+            // Try backend API first
+            const response = await fetch('/api/temperature-converter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value, fromUnit })
+            });
+
+            let result;
+            if (response.ok) {
+                result = await response.json();
+            } else {
+                // Fallback to client-side calculation
+                result = this.calculateClientSide(value, fromUnit);
+            }
+
+            this.displayResults(result);
+        } catch (error) {
+            // Fallback to client-side calculation
+            const result = this.calculateClientSide(value, fromUnit);
+            this.displayResults(result);
+        }
+    }
+
+    calculateClientSide(value, fromUnit) {
+        let celsius, fahrenheit, kelvin;
+        
+        switch (fromUnit) {
+            case 'C':
+                celsius = value;
+                fahrenheit = (value * 9/5) + 32;
+                kelvin = value + 273.15;
+                break;
+            case 'F':
+                celsius = (value - 32) * 5/9;
+                fahrenheit = value;
+                kelvin = celsius + 273.15;
+                break;
+            case 'K':
+                celsius = value - 273.15;
+                fahrenheit = (celsius * 9/5) + 32;
+                kelvin = value;
+                break;
+        }
+
+        return {
+            celsius: parseFloat(celsius.toFixed(2)),
+            fahrenheit: parseFloat(fahrenheit.toFixed(2)),
+            kelvin: parseFloat(kelvin.toFixed(2)),
+            fromUnit,
+            originalValue: value
+        };
+    }
+
+    displayResults(result) {
+        const resultsContainer = document.getElementById('temperature-results');
+        
+        resultsContainer.innerHTML = `
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="text-blue-600 font-semibold mb-1">Celsius</div>
+                    <div class="text-2xl font-bold text-blue-800">${result.celsius}°C</div>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                    <div class="text-red-600 font-semibold mb-1">Fahrenheit</div>
+                    <div class="text-2xl font-bold text-red-800">${result.fahrenheit}°F</div>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                    <div class="text-purple-600 font-semibold mb-1">Kelvin</div>
+                    <div class="text-2xl font-bold text-purple-800">${result.kelvin}K</div>
+                </div>
+            </div>
+        `;
+    }
+
+    clearTemperature() {
+        document.getElementById('temperature-input').value = '';
+        document.getElementById('temperature-results').innerHTML = '<p class="text-gray-500">Enter a temperature value to see conversions</p>';
+    }
+
+    showNotification(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-x-full transition-transform duration-300 ${
+            type === 'error' ? 'bg-red-500' : 'bg-green-500'
+        }`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+        setTimeout(() => {
+            toast.classList.add('translate-x-full');
+            setTimeout(() => document.body.removeChild(toast), 300);
+        }, 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners if needed
+    }
+}
+
+// Color Converter Tool
+class ColorConverter {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const hexInput = document.getElementById('hex-input');
+        const convertBtn = document.getElementById('convert-color-btn');
+        const clearBtn = document.getElementById('clear-color-btn');
+
+        convertBtn?.addEventListener('click', () => this.convertColor());
+        clearBtn?.addEventListener('click', () => this.clearColor());
+        hexInput?.addEventListener('input', () => this.convertColor());
+    }
+
+    async convertColor() {
+        const hexInput = document.getElementById('hex-input');
+        let hex = hexInput.value.trim();
+        
+        if (!hex) {
+            this.clearResults();
+            return;
+        }
+
+        // Add # if not present
+        if (!hex.startsWith('#')) {
+            hex = '#' + hex;
+            hexInput.value = hex;
+        }
+
+        // Validate hex format
+        if (!/^#[0-9A-F]{6}$/i.test(hex)) {
+            this.showError('Please enter a valid 6-digit hex color (e.g., #FF5733)');
+            return;
+        }
+
+        try {
+            // Try backend API first
+            const response = await fetch('/api/color-converter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ hex })
+            });
+
+            let result;
+            if (response.ok) {
+                result = await response.json();
+            } else {
+                // Fallback to client-side calculation
+                result = this.calculateClientSide(hex);
+            }
+
+            this.displayResults(result);
+        } catch (error) {
+            // Fallback to client-side calculation
+            const result = this.calculateClientSide(hex);
+            this.displayResults(result);
+        }
+    }
+
+    calculateClientSide(hex) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+
+        const rgb = `rgb(${r}, ${g}, ${b})`;
+
+        // Convert to HSL
+        const rNorm = r / 255, gNorm = g / 255, bNorm = b / 255;
+        const max = Math.max(rNorm, gNorm, bNorm), min = Math.min(rNorm, gNorm, bNorm);
+        let h, s, l = (max + min) / 2;
+
+        if (max === min) {
+            h = s = 0;
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case rNorm: h = (gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0); break;
+                case gNorm: h = (bNorm - rNorm) / d + 2; break;
+                case bNorm: h = (rNorm - gNorm) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        const hsl = `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+
+        return {
+            hex: hex.toUpperCase(),
+            rgb,
+            hsl,
+            values: {
+                r, g, b,
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            }
+        };
+    }
+
+    displayResults(result) {
+        const resultsContainer = document.getElementById('color-results');
+        
+        resultsContainer.innerHTML = `
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-gray-700">HEX</span>
+                            <button class="copy-color-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" data-value="${result.hex}">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <div class="text-xl font-mono font-bold">${result.hex}</div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-gray-700">RGB</span>
+                            <button class="copy-color-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" data-value="${result.rgb}">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <div class="font-mono">${result.rgb}</div>
+                        <div class="text-sm text-gray-600 mt-1">R:${result.values.r} G:${result.values.g} B:${result.values.b}</div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-gray-700">HSL</span>
+                            <button class="copy-color-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" data-value="${result.hsl}">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <div class="font-mono">${result.hsl}</div>
+                        <div class="text-sm text-gray-600 mt-1">H:${result.values.h}° S:${result.values.s}% L:${result.values.l}%</div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="font-semibold text-gray-700 mb-4">Color Preview</div>
+                    <div class="w-full h-32 rounded-lg border-2 border-gray-300" style="background-color: ${result.hex};"></div>
+                    <div class="mt-4 text-center">
+                        <div class="text-sm text-gray-600">Color: ${result.hex}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Re-attach copy event listeners
+        resultsContainer.querySelectorAll('.copy-color-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.copyColorValue(e.target.closest('.copy-color-btn')));
+        });
+    }
+
+    async copyColorValue(button) {
+        const value = button.getAttribute('data-value');
+        try {
+            await navigator.clipboard.writeText(value);
+            this.showNotification(`Copied ${value} to clipboard`, 'success');
+        } catch (error) {
+            this.showNotification('Failed to copy to clipboard', 'error');
+        }
+    }
+
+    clearColor() {
+        document.getElementById('hex-input').value = '';
+        this.clearResults();
+    }
+
+    clearResults() {
+        document.getElementById('color-results').innerHTML = '<p class="text-gray-500">Enter a hex color to see conversions</p>';
+    }
+
+    showError(message) {
+        const resultsContainer = document.getElementById('color-results');
+        resultsContainer.innerHTML = `<div class="text-red-500 font-medium">${message}</div>`;
+    }
+
+    showNotification(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 transform translate-x-full transition-transform duration-300 ${
+            type === 'error' ? 'bg-red-500' : 'bg-green-500'
+        }`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+        setTimeout(() => {
+            toast.classList.add('translate-x-full');
+            setTimeout(() => document.body.removeChild(toast), 300);
+        }, 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners if needed
+    }
+}
