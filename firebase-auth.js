@@ -880,6 +880,186 @@ class ConvertWizAuth {
         
         this.showNotification(message, 'warning');
     }
+
+    // Admin-only function to manually change user plan for testing
+    async changePlanForTesting(newPlan) {
+        if (!this.isLoggedIn) {
+            console.error('User must be logged in to change plan');
+            return;
+        }
+        
+        // Only allow admin users to change plans
+        const adminEmails = [
+            'iqbalaiwork@gmail.com',
+            'iqbalbashasi@gmail.com',
+            'sajoshaikh@gmail.com'
+        ];
+        
+        if (!adminEmails.includes(this.currentUser.email)) {
+            console.error('Only admin users can change plans');
+            return;
+        }
+        
+        try {
+            const userDocRef = doc(db, 'users', this.currentUser.uid);
+            await updateDoc(userDocRef, {
+                plan: newPlan
+            });
+            
+            this.userPlan = newPlan;
+            this.updateUsageDisplay();
+            this.showNotification(`Plan changed to ${newPlan} successfully!`, 'success');
+        } catch (error) {
+            console.error('Error changing plan:', error);
+            this.showNotification('Error changing plan', 'error');
+        }
+    }
+
+    // Admin-only function to reset daily usage for testing
+    async resetUsageForTesting() {
+        if (!this.isLoggedIn) {
+            console.error('User must be logged in to reset usage');
+            return;
+        }
+        
+        // Only allow admin users to reset usage
+        const adminEmails = [
+            'iqbalaiwork@gmail.com',
+            'iqbalbashasi@gmail.com',
+            'sajoshaikh@gmail.com'
+        ];
+        
+        if (!adminEmails.includes(this.currentUser.email)) {
+            console.error('Only admin users can reset usage');
+            return;
+        }
+        
+        try {
+            const userDocRef = doc(db, 'users', this.currentUser.uid);
+            await updateDoc(userDocRef, {
+                dailyUsageCount: 0,
+                lastConversionDate: serverTimestamp()
+            });
+            
+            this.dailyUsage = 0;
+            this.updateUsageDisplay();
+            this.showNotification('Daily usage reset successfully!', 'success');
+        } catch (error) {
+            console.error('Error resetting usage:', error);
+            this.showNotification('Error resetting usage', 'error');
+        }
+    }
+
+    // Test conversion limits function
+    async testConversionLimits() {
+        if (!this.isLoggedIn) {
+            console.error('User must be logged in to test conversion limits');
+            return;
+        }
+        
+        // Only allow admin users to test
+        const adminEmails = [
+            'iqbalaiwork@gmail.com',
+            'iqbalbashasi@gmail.com',
+            'sajoshaikh@gmail.com'
+        ];
+        
+        if (!adminEmails.includes(this.currentUser.email)) {
+            console.error('Only admin users can test conversion limits');
+            return;
+        }
+        
+        console.log('=== TESTING CONVERSION LIMITS ===');
+        console.log(`Current Plan: ${this.userPlan}`);
+        console.log(`Current Usage: ${this.dailyUsage}`);
+        console.log(`Plan Limit: ${PLAN_LIMITS[this.userPlan]}`);
+        console.log(`Can Convert: ${await this.canPerformConversion()}`);
+        console.log(`Remaining: ${this.getRemainingConversions()}`);
+        
+        // Test functions available in console:
+        console.log('\n=== AVAILABLE TEST FUNCTIONS ===');
+        console.log('convertWizAuth.changePlanForTesting("free")');
+        console.log('convertWizAuth.changePlanForTesting("standard")');
+        console.log('convertWizAuth.changePlanForTesting("premium")');
+        console.log('convertWizAuth.resetUsageForTesting()');
+        console.log('convertWizAuth.incrementUsage()');
+        console.log('convertWizAuth.testConversionLimits()');
+    }
+
+    // Quick test for new user registration with free plan assignment
+    async testNewUserRegistration() {
+        console.log('=== NEW USER REGISTRATION TEST ===');
+        if (!this.isLoggedIn) {
+            console.log('❌ User not logged in - please sign up/login first');
+            return;
+        }
+        
+        console.log(`✅ User registered: ${this.currentUser.email}`);
+        console.log(`✅ Plan assigned: ${this.userPlan}`);
+        console.log(`✅ Daily usage: ${this.dailyUsage}`);
+        console.log(`✅ Can convert: ${await this.canPerformConversion()}`);
+        console.log(`✅ Remaining conversions: ${this.getRemainingConversions()}`);
+        
+        if (this.userPlan === 'free') {
+            console.log('✅ Test PASSED: New user assigned free plan correctly');
+        } else {
+            console.log('❌ Test FAILED: New user should have free plan');
+        }
+    }
+
+    // Complete test suite for subscription limits
+    async runCompleteSubscriptionTest() {
+        if (!this.isLoggedIn) {
+            console.error('User must be logged in to run tests');
+            return;
+        }
+        
+        const adminEmails = [
+            'iqbalaiwork@gmail.com',
+            'iqbalbashasi@gmail.com', 
+            'sajoshaikh@gmail.com'
+        ];
+        
+        if (!adminEmails.includes(this.currentUser.email)) {
+            console.error('Only admin users can run complete test suite');
+            return;
+        }
+        
+        console.log('🚀 STARTING COMPLETE SUBSCRIPTION TEST SUITE');
+        console.log('================================================');
+        
+        // Test 1: Reset to free plan
+        console.log('\n📝 TEST 1: Free Plan Limits (5 conversions/day)');
+        await this.changePlanForTesting('free');
+        await this.resetUsageForTesting();
+        console.log(`Current plan: ${this.userPlan}, Usage: ${this.dailyUsage}`);
+        
+        // Test 2: Try 6 conversions on free plan
+        console.log('\n📝 TEST 2: Attempting 6 conversions on free plan');
+        for (let i = 1; i <= 6; i++) {
+            const canConvert = await this.canPerformConversion();
+            console.log(`Conversion ${i}: ${canConvert ? '✅ Allowed' : '❌ Blocked'}`);
+            if (canConvert) {
+                await this.incrementUsage();
+            }
+        }
+        
+        // Test 3: Standard plan test
+        console.log('\n📝 TEST 3: Standard Plan Limits (20 conversions/day)');
+        await this.changePlanForTesting('standard');
+        await this.resetUsageForTesting();
+        console.log(`Switched to: ${this.userPlan}, Usage reset: ${this.dailyUsage}`);
+        
+        // Test 4: Premium plan test
+        console.log('\n📝 TEST 4: Premium Plan (Unlimited conversions)');
+        await this.changePlanForTesting('premium');
+        await this.resetUsageForTesting();
+        const remaining = this.getRemainingConversions();
+        console.log(`Premium plan remaining: ${remaining} (should be "Unlimited")`);
+        
+        console.log('\n🎉 TEST SUITE COMPLETED!');
+        console.log('Check above results to verify subscription logic works correctly.');
+    }
 }
 
 // Initialize authentication when DOM is loaded

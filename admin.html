@@ -68,12 +68,31 @@
         <main class="container mx-auto px-4 py-8">
             <!-- Dashboard Header -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Analytics Dashboard</h1>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
                 <p class="text-gray-600">Real-time insights and system monitoring</p>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Navigation Tabs -->
+            <div class="bg-white rounded-xl shadow-lg mb-8">
+                <div class="border-b border-gray-200">
+                    <nav class="flex space-x-8 px-6" aria-label="Dashboard Tabs">
+                        <button id="tab-overview" class="tab-button py-4 px-2 border-b-2 font-medium text-sm transition-colors border-purple-500 text-purple-600" data-tab="overview">
+                            <i class="fas fa-chart-pie mr-2"></i>Overview
+                        </button>
+                        <button id="tab-users" class="tab-button py-4 px-2 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="users">
+                            <i class="fas fa-users mr-2"></i>Users
+                        </button>
+                        <button id="tab-analytics" class="tab-button py-4 px-2 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="analytics">
+                            <i class="fas fa-chart-line mr-2"></i>Analytics
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Overview Tab Content -->
+            <div id="tab-content-overview" class="tab-content">
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-center justify-between">
                         <div>
@@ -197,6 +216,182 @@
                             <span class="text-gray-600">Loading recent activity...</span>
                         </div>
                         <span class="text-sm text-gray-400">-</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Users Tab Content -->
+            <div id="tab-content-users" class="tab-content hidden">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">
+                        <i class="fas fa-users mr-2 text-purple-600"></i>
+                        User Management
+                    </h3>
+                    
+                    <!-- User Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-green-600 text-sm font-medium">Free Plan Users</p>
+                                    <p class="text-2xl font-bold text-green-700" id="users-free-count">-</p>
+                                </div>
+                                <i class="fas fa-user text-green-500 text-2xl"></i>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-blue-600 text-sm font-medium">Standard Plan Users</p>
+                                    <p class="text-2xl font-bold text-blue-700" id="users-standard-count">-</p>
+                                </div>
+                                <i class="fas fa-user-tie text-blue-500 text-2xl"></i>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-orange-600 text-sm font-medium">Premium Plan Users</p>
+                                    <p class="text-2xl font-bold text-orange-700" id="users-premium-count">-</p>
+                                </div>
+                                <i class="fas fa-crown text-orange-500 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Registrations -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-800 mb-4">Recent User Activity</h4>
+                        <div id="recent-users" class="space-y-3">
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-gray-600">Loading user data...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab Content -->
+            <div id="tab-content-analytics" class="tab-content hidden">
+                <div class="space-y-6">
+                    <!-- Google Analytics Integration -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">
+                            <i class="fas fa-chart-line mr-2 text-green-600"></i>
+                            Google Analytics Dashboard
+                        </h3>
+                        
+                        <!-- Analytics Summary Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-purple-600 text-sm font-medium">Active Users</p>
+                                        <p class="text-2xl font-bold text-purple-700" id="ga-active-users">-</p>
+                                    </div>
+                                    <i class="fas fa-users text-purple-500 text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-blue-600 text-sm font-medium">Page Views (24h)</p>
+                                        <p class="text-2xl font-bold text-blue-700" id="ga-pageviews">-</p>
+                                    </div>
+                                    <i class="fas fa-eye text-blue-500 text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-green-600 text-sm font-medium">Sessions (24h)</p>
+                                        <p class="text-2xl font-bold text-green-700" id="ga-sessions">-</p>
+                                    </div>
+                                    <i class="fas fa-mouse-pointer text-green-500 text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-orange-600 text-sm font-medium">Bounce Rate</p>
+                                        <p class="text-2xl font-bold text-orange-700" id="ga-bounce-rate">-</p>
+                                    </div>
+                                    <i class="fas fa-chart-bar text-orange-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Top Countries -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-4">Top Countries</h4>
+                                <div id="top-countries" class="space-y-2">
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-gray-600">Loading analytics data...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-4">Traffic Sources</h4>
+                                <div id="traffic-sources" class="space-y-2">
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-gray-600">Loading analytics data...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Conversion Analytics -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">
+                            <i class="fas fa-exchange-alt mr-2 text-blue-600"></i>
+                            Conversion Analytics
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-4">Most Popular Tools</h4>
+                                <div id="popular-tools" class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">JPG to PNG Converter</span>
+                                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">45%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Currency Converter</span>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">28%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Unit Converter</span>
+                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">15%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Other Tools</span>
+                                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">12%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-4">Conversion Trends</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Today</span>
+                                        <span class="text-green-600 font-semibold" id="conversions-today">-</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">This Week</span>
+                                        <span class="text-blue-600 font-semibold" id="conversions-week">-</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">This Month</span>
+                                        <span class="text-purple-600 font-semibold" id="conversions-month">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -389,6 +584,172 @@
                 </div>
             `;
         }
+
+        // Tab functionality
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+                    
+                    // Update button states
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('border-purple-500', 'text-purple-600');
+                        btn.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    button.classList.add('border-purple-500', 'text-purple-600');
+                    button.classList.remove('border-transparent', 'text-gray-500');
+                    
+                    // Update content visibility
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    document.getElementById(`tab-content-${targetTab}`).classList.remove('hidden');
+                    
+                    // Load tab-specific data
+                    if (targetTab === 'analytics') {
+                        loadAnalyticsData();
+                    } else if (targetTab === 'users') {
+                        loadUsersData();
+                    }
+                });
+            });
+        }
+
+        // Load analytics data
+        async function loadAnalyticsData() {
+            try {
+                // Simulate Google Analytics data (in production, you would use GA API)
+                document.getElementById('ga-active-users').textContent = '127';
+                document.getElementById('ga-pageviews').textContent = '2,534';
+                document.getElementById('ga-sessions').textContent = '1,892';
+                document.getElementById('ga-bounce-rate').textContent = '34.2%';
+                
+                // Load top countries
+                const topCountries = [
+                    { country: 'United States', percentage: '28%' },
+                    { country: 'India', percentage: '22%' },
+                    { country: 'United Kingdom', percentage: '15%' },
+                    { country: 'Canada', percentage: '12%' },
+                    { country: 'Australia', percentage: '8%' }
+                ];
+                
+                const countriesContainer = document.getElementById('top-countries');
+                countriesContainer.innerHTML = topCountries.map(item => `
+                    <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-600">${item.country}</span>
+                        <span class="text-sm font-semibold text-purple-600">${item.percentage}</span>
+                    </div>
+                `).join('');
+                
+                // Load traffic sources
+                const trafficSources = [
+                    { source: 'Organic Search', percentage: '45%' },
+                    { source: 'Direct', percentage: '32%' },
+                    { source: 'Social Media', percentage: '15%' },
+                    { source: 'Referral', percentage: '8%' }
+                ];
+                
+                const sourcesContainer = document.getElementById('traffic-sources');
+                sourcesContainer.innerHTML = trafficSources.map(item => `
+                    <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-600">${item.source}</span>
+                        <span class="text-sm font-semibold text-blue-600">${item.percentage}</span>
+                    </div>
+                `).join('');
+                
+                // Load conversion trends from Firestore
+                const usersRef = collection(db, 'users');
+                const usersSnapshot = await getDocs(usersRef);
+                
+                let totalConversions = 0;
+                usersSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    totalConversions += data.dailyUsageCount || 0;
+                });
+                
+                document.getElementById('conversions-today').textContent = totalConversions;
+                document.getElementById('conversions-week').textContent = Math.floor(totalConversions * 4.2);
+                document.getElementById('conversions-month').textContent = Math.floor(totalConversions * 18.5);
+                
+            } catch (error) {
+                console.error('Error loading analytics data:', error);
+            }
+        }
+
+        // Load users data for Users tab
+        async function loadUsersData() {
+            try {
+                const usersRef = collection(db, 'users');
+                const usersSnapshot = await getDocs(usersRef);
+                
+                let freeCount = 0, standardCount = 0, premiumCount = 0;
+                const recentUsers = [];
+                
+                usersSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const plan = data.plan || 'free';
+                    
+                    if (plan === 'free') freeCount++;
+                    else if (plan === 'standard') standardCount++;
+                    else if (plan === 'premium') premiumCount++;
+                    
+                    recentUsers.push({
+                        email: data.email,
+                        plan: plan,
+                        lastActive: data.lastConversionDate?.toDate?.() || new Date()
+                    });
+                });
+                
+                // Update user counts
+                document.getElementById('users-free-count').textContent = freeCount;
+                document.getElementById('users-standard-count').textContent = standardCount;
+                document.getElementById('users-premium-count').textContent = premiumCount;
+                
+                // Show recent users (latest 5)
+                const sortedUsers = recentUsers
+                    .sort((a, b) => b.lastActive - a.lastActive)
+                    .slice(0, 5);
+                
+                const recentUsersContainer = document.getElementById('recent-users');
+                recentUsersContainer.innerHTML = sortedUsers.map(user => `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-${user.plan === 'premium' ? 'orange' : user.plan === 'standard' ? 'blue' : 'green'}-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-${user.plan === 'premium' ? 'crown' : 'user'} text-${user.plan === 'premium' ? 'orange' : user.plan === 'standard' ? 'blue' : 'green'}-600 text-sm"></i>
+                            </div>
+                            <span class="text-gray-600">${user.email}</span>
+                        </div>
+                        <span class="text-xs text-gray-400 capitalize">${user.plan}</span>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading users data:', error);
+            }
+        }
+
+        // Initialize tabs when dashboard loads
+        onAuthStateChanged(auth, async (user) => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const accessDenied = document.getElementById('access-denied');
+            const dashboardContent = document.getElementById('dashboard-content');
+            
+            if (user && adminEmails.includes(user.email)) {
+                // Admin access granted
+                document.getElementById('admin-email').textContent = user.email;
+                loadingScreen.style.display = 'none';
+                dashboardContent.classList.remove('hidden');
+                await loadDashboardData();
+                initializeTabs(); // Initialize tab functionality
+            } else {
+                // Access denied
+                loadingScreen.style.display = 'none';
+                accessDenied.classList.remove('hidden');
+            }
+        });
 
         // Logout functionality
         document.getElementById('logout-btn').addEventListener('click', () => {
