@@ -6,16 +6,19 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 
 ## System Architecture
 
-**Frontend-Only Architecture**
-- Pure client-side application using vanilla HTML, CSS, and JavaScript
-- No backend server required - all processing happens in the browser
-- Static hosting compatible (can be deployed on any web server or CDN)
+**Full-Stack Architecture**
+- Frontend: Vanilla HTML, CSS, and JavaScript with Canvas API for image processing
+- Backend: Node.js Express server with Firebase Admin SDK integration
+- Hybrid processing: Client-side calculations with backend API enhancement
+- Static asset serving with dynamic API endpoints
 
 **Technology Stack:**
 - HTML5 for structure
 - Tailwind CSS for styling (CDN-based)
 - Font Awesome for icons
 - Vanilla JavaScript for functionality
+- Node.js Express backend server
+- Firebase Admin SDK for secure server-side operations
 - Canvas API for image processing
 
 ## System Architecture
@@ -128,6 +131,16 @@ ConvertWiz is a comprehensive, client-side SaaS application offering multiple co
 - Copy to clipboard feature for direct image sharing
 - Professional violet/purple color scheme with gradient styling
 - Responsive two-column layout with dedicated preview section
+
+#### Percentage Calculator
+- Professional percentage calculation tool with multiple operation types
+- Find percentage (X% of Y), percentage change, and total value calculations
+- Real-time calculation with backend API integration and client-side fallback
+- Professional orange/red gradient color scheme matching financial calculator theme
+- Common examples provided (tax, discount, tip, grade calculations)
+- Copy result functionality and comprehensive input validation
+- Backend API endpoint /api/percentage-calculator for enhanced calculations
+- Mobile-responsive design with clear operation type selection
 
 ## Data Flow
 
@@ -338,9 +351,32 @@ ConvertWiz now includes comprehensive Google AdSense integration for revenue gen
 - **Cross-Device Compatibility**: Consistent ad experience on desktop and mobile
 - **Analytics Integration**: Google Analytics tracking for ad performance correlation
 
+## Backend API Integration
+
+ConvertWiz now includes a comprehensive Node.js Express backend for enhanced functionality:
+
+### API Endpoints
+- **Health Check**: `GET /api/health` - Server status and service availability
+- **Percentage Calculator**: `POST /api/percentage-calculator` - Enhanced calculation with multiple operation types
+- **Admin User Management**: `GET /api/admin/users` - Firebase user statistics for authorized admins
+
+### Backend Features
+- **Firebase Admin SDK**: Secure server-side Firebase operations with service account authentication
+- **Admin Authentication**: JWT token verification for admin-only endpoints
+- **API Fallback System**: Client-side calculations with backend enhancement
+- **Static File Serving**: Express server handles SPA routing and static assets
+- **Environment Configuration**: Secure Firebase credentials via environment variables
+
+### Security Implementation
+- **Admin Whitelist**: Role-based access control for sensitive operations
+- **Token Verification**: Firebase ID token validation for API access
+- **Data Privacy**: Email masking and secure data handling
+- **Error Handling**: Comprehensive error responses and logging
+
 ## Changelog
 
 Changelog:
+- July 04, 2025 (Node.js Backend Integration & Percentage Calculator). Implemented complete Node.js Express backend with Firebase Admin SDK, Percentage Calculator tool with backend API, enhanced admin functionality, and production-ready architecture: Node.js Express server with static file serving and SPA routing, Firebase Admin SDK integration for secure server-side operations, Percentage Calculator with multiple operation types (find percentage, percentage change, find total), Backend API endpoints for calculation enhancement and admin user management, Admin authentication with JWT token verification and role-based access, Professional orange/red gradient UI design with real-time calculations, Client-side fallback system ensuring functionality without backend dependency, Comprehensive error handling and security implementation
 - July 04, 2025 (Comprehensive Testing & Analytics Update). Implemented full Firebase subscription testing framework with admin-only testing functions, comprehensive admin dashboard with Analytics/Users/Overview tabs, enhanced subscription logic validation, and final UI cleanup: Firebase subscription plan testing functions (changePlanForTesting, resetUsageForTesting, runCompleteSubscriptionTest), admin-only Analytics tab with Google Analytics integration and conversion tracking, Users tab with real-time user plan statistics and recent activity, removed duplicate AdSense placements from unit converter sections, comprehensive testing suite for new user registration (free plan assignment), 6-conversion limit testing for free users, standard plan (20 conversions) and premium plan (unlimited) validation, 24-hour usage reset verification, dynamic navbar usage display (X/Y conversions left), footer cleanup maintaining only "Ali" attribution, social media icons visible but inactive as requested
 - July 03, 2025 (Final Updates). Implemented comprehensive mobile experience enhancements and admin analytics dashboard: mobile layout padding fixes for screens ≤375px with touch-friendly button sizing, tool grid centering improvements, AdSense lazy loading for Core Web Vitals optimization, footer cleanup removing "iqbal" references, IP Address Extractor privacy disclaimer "No IP addresses are stored. This tool is 100% privacy-friendly", admin analytics dashboard at /admin-dashboard route with Firebase user statistics and Google Analytics integration, multi-admin access for iqbalaiwork@gmail.com/iqbalbashasi@gmail.com/sajoshaikh@gmail.com, JavaScript and CSS performance optimization with intersection observer lazy loading, consistent AdSense banner structure across all 9 component pages including QR Generator
 - July 03, 2025. Implemented AdSense banner layout fixes with vertical left/right positioning, added URL updates with History API for component switching, Google Analytics pageview tracking for each tool, comprehensive QR generator layout optimization, vertical AdSense banners with responsive design, smooth banner transitions between landing and component pages, browser back/forward navigation support, and enhanced mobile responsiveness for all banner placements

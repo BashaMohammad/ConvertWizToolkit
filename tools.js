@@ -2471,3 +2471,138 @@ class QRCodeGenerator {
         }
     }
 }
+
+class PercentageCalculator {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const valueInput = document.getElementById('percentage-value');
+        const percentageInput = document.getElementById('percentage-percent');
+        const operationSelect = document.getElementById('percentage-operation');
+        const calculateBtn = document.getElementById('calculate-percentage');
+        const clearBtn = document.getElementById('clear-percentage');
+
+        if (calculateBtn) {
+            calculateBtn.addEventListener('click', () => this.calculate());
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clear());
+        }
+
+        // Auto-calculate on input change
+        [valueInput, percentageInput, operationSelect].forEach(element => {
+            if (element) {
+                element.addEventListener('input', () => this.calculate());
+            }
+        });
+    }
+
+    async calculate() {
+        const value = parseFloat(document.getElementById('percentage-value')?.value);
+        const percentage = parseFloat(document.getElementById('percentage-percent')?.value);
+        const operation = document.getElementById('percentage-operation')?.value || 'find_percentage';
+
+        if (isNaN(value) || isNaN(percentage)) {
+            this.showResult('Please enter valid numbers', 'error');
+            return;
+        }
+
+        try {
+            // Use backend API if available, fallback to client-side calculation
+            const response = await fetch('/api/percentage-calculator', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ value, percentage, operation })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                this.showResult(data.message, 'success', data.result);
+            } else {
+                // Fallback to client-side calculation
+                this.calculateClientSide(value, percentage, operation);
+            }
+        } catch (error) {
+            // Fallback to client-side calculation
+            this.calculateClientSide(value, percentage, operation);
+        }
+    }
+
+    calculateClientSide(value, percentage, operation) {
+        let result;
+        let message;
+
+        switch (operation) {
+            case 'find_percentage':
+                result = (value * percentage) / 100;
+                message = `${percentage}% of ${value} is ${result}`;
+                break;
+            case 'find_percent_change':
+                result = ((percentage - value) / value) * 100;
+                message = `Percentage change from ${value} to ${percentage} is ${result.toFixed(2)}%`;
+                break;
+            case 'find_total':
+                result = (value * 100) / percentage;
+                message = `If ${value} is ${percentage}%, then the total is ${result}`;
+                break;
+            default:
+                result = (value * percentage) / 100;
+                message = `${percentage}% of ${value} is ${result}`;
+        }
+
+        this.showResult(message, 'success', parseFloat(result.toFixed(2)));
+    }
+
+    showResult(message, type = 'info', result = null) {
+        const resultDiv = document.getElementById('percentage-result');
+        if (!resultDiv) return;
+
+        resultDiv.className = `mt-4 p-4 rounded-lg ${
+            type === 'error' 
+                ? 'bg-red-50 text-red-700 border border-red-200' 
+                : 'bg-green-50 text-green-700 border border-green-200'
+        }`;
+        
+        resultDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="font-semibold">${message}</p>
+                    ${result !== null ? `<p class="text-lg font-bold mt-1">Result: ${result}</p>` : ''}
+                </div>
+                ${result !== null ? `
+                    <button onclick="navigator.clipboard.writeText('${result}')" 
+                            class="ml-4 px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">
+                        Copy
+                    </button>
+                ` : ''}
+            </div>
+        `;
+        resultDiv.classList.remove('hidden');
+    }
+
+    clear() {
+        document.getElementById('percentage-value').value = '';
+        document.getElementById('percentage-percent').value = '';
+        document.getElementById('percentage-operation').selectedIndex = 0;
+        document.getElementById('percentage-result').classList.add('hidden');
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+            type === 'error' ? 'bg-red-500' : 'bg-green-500'
+        } text-white`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
+
+    destroy() {
+        // Clean up event listeners
+    }
+}

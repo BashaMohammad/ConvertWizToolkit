@@ -159,6 +159,9 @@ function initializeTool(sectionId) {
             case 'qr-generator-section':
                 currentTool = new QRCodeGenerator();
                 break;
+            case 'percentage-calculator-section':
+                currentTool = new PercentageCalculator();
+                break;
         }
     } catch (error) {
         console.warn('Tool initialization failed:', error);
