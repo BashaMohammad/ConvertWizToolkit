@@ -2987,8 +2987,12 @@ class ColorConverter {
     convertColorFromHex(hex) {
         if (!/^#[0-9A-F]{6}$/i.test(hex)) return;
         
-        const result = this.calculateClientSide(hex);
-        this.displayResults(result);
+        try {
+            const result = this.calculateClientSide(hex);
+            this.displayResults(result);
+        } catch (error) {
+            console.error('Color conversion error:', error);
+        }
     }
 
     async convertColor() {

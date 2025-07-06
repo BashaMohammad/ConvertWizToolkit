@@ -3,37 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Analytics Dashboard - ConvertWiz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <title>Admin Dashboard - ConvertWiz</title>
     
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7QJXHFPZVE"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7QJXHFPZVE');
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvOkBjDHllamPmRrJ4mRCk8Kh4aZRoMgo",
+            authDomain: "convertwiz.firebaseapp.com",
+            projectId: "convertwiz",
+            storageBucket: "convertwiz.firebasestorage.app",
+            messagingSenderId: "807062320011",
+            appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables for access
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        
+        console.log('Firebase initialized successfully in admin dashboard');
     </script>
 </head>
-<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen">
+<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+            <p class="text-white text-lg">Loading Admin Dashboard...</p>
+        </div>
+    </div>
+
     <!-- Header -->
-    <header class="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50">
+    <header class="bg-white/10 backdrop-blur-md border-b border-white/20">
         <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <a href="index.html" class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-magic text-white text-sm"></i>
-                        </div>
-                        <span class="text-xl font-bold text-gray-800">ConvertWiz</span>
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <a href="index.html" class="text-2xl font-bold text-white">
+                        ConvertWiz ⚡ Admin
                     </a>
-                    <span class="text-sm text-gray-500">Admin Dashboard</span>
                 </div>
+                
+                <!-- User Info & Logout -->
                 <div class="flex items-center space-x-4">
-                    <span id="admin-email" class="text-sm text-gray-600"></span>
-                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
+                    <div id="admin-user-info" class="text-white">
+                        <span id="admin-user-email" class="text-sm"></span>
+                    </div>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
                     </button>
                 </div>
@@ -41,793 +73,235 @@
         </div>
     </header>
 
-    <!-- Access Denied Screen -->
-    <div id="access-denied" class="hidden min-h-screen flex items-center justify-center">
-        <div class="text-center">
-            <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-shield-alt text-red-500 text-3xl"></i>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Dashboard Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Users Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-500 bg-opacity-75 rounded-full">
+                        <i class="fas fa-users text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-white/70 text-sm">Total Users</p>
+                        <p id="total-users" class="text-white text-2xl font-bold">-</p>
+                    </div>
+                </div>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-4">Access Denied</h1>
-            <p class="text-gray-600 mb-6">This dashboard is restricted to authorized administrators only.</p>
-            <a href="index.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold">
-                <i class="fas fa-arrow-left mr-2"></i>Back to Home
-            </a>
+
+            <!-- Free Users Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-500 bg-opacity-75 rounded-full">
+                        <i class="fas fa-user text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-white/70 text-sm">Free Users</p>
+                        <p id="free-users" class="text-white text-2xl font-bold">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Users Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center">
+                    <div class="p-3 bg-yellow-500 bg-opacity-75 rounded-full">
+                        <i class="fas fa-crown text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-white/70 text-sm">Premium Users</p>
+                        <p id="premium-users" class="text-white text-2xl font-bold">-</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="min-h-screen flex items-center justify-center">
-        <div class="text-center">
-            <div class="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="text-gray-600">Loading dashboard...</p>
-        </div>
-    </div>
-
-    <!-- Main Dashboard -->
-    <div id="dashboard-content" class="hidden">
-        <main class="container mx-auto px-4 py-8">
-            <!-- Dashboard Header -->
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
-                <p class="text-gray-600">Real-time insights and system monitoring</p>
-            </div>
-
-            <!-- Navigation Tabs -->
-            <div class="bg-white rounded-xl shadow-lg mb-8">
-                <div class="border-b border-gray-200">
-                    <nav class="flex space-x-8 px-6" aria-label="Dashboard Tabs">
-                        <button id="tab-overview" class="tab-button py-4 px-2 border-b-2 font-medium text-sm transition-colors border-purple-500 text-purple-600" data-tab="overview">
-                            <i class="fas fa-chart-pie mr-2"></i>Overview
-                        </button>
-                        <button id="tab-users" class="tab-button py-4 px-2 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="users">
-                            <i class="fas fa-users mr-2"></i>Users
-                        </button>
-                        <button id="tab-analytics" class="tab-button py-4 px-2 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="analytics">
-                            <i class="fas fa-chart-line mr-2"></i>Analytics
-                        </button>
-                    </nav>
-                </div>
-            </div>
-
-            <!-- Overview Tab Content -->
-            <div id="tab-content-overview" class="tab-content">
-                <!-- Quick Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">Total Users</h3>
-                            <p class="text-3xl font-bold text-purple-600" id="total-users">-</p>
-                        </div>
-                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-users text-purple-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">Free Users</h3>
-                            <p class="text-3xl font-bold text-green-600" id="free-users">-</p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-user text-green-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">Premium Users</h3>
-                            <p class="text-3xl font-bold text-orange-600" id="premium-users">-</p>
-                        </div>
-                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-crown text-orange-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">Daily Conversions</h3>
-                            <p class="text-3xl font-bold text-blue-600" id="daily-conversions">-</p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-chart-line text-blue-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Google Analytics Real-time -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">
-                        <i class="fas fa-chart-area mr-2 text-purple-600"></i>
-                        Real-time Analytics
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Current Active Users</span>
-                            <span class="text-2xl font-bold text-green-600" id="current-users">-</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Page Views (Today)</span>
-                            <span class="text-2xl font-bold text-blue-600" id="page-views">-</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Sessions (Today)</span>
-                            <span class="text-2xl font-bold text-purple-600" id="sessions">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">
-                        <i class="fas fa-globe mr-2 text-blue-600"></i>
-                        Top Countries
-                    </h3>
-                    <div id="top-countries" class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Loading...</span>
-                            <span class="text-gray-400">-</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Traffic Sources -->
-            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">
-                    <i class="fas fa-share-alt mr-2 text-green-600"></i>
-                    Traffic Sources
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-2xl font-bold text-blue-600" id="organic-traffic">-</div>
-                        <div class="text-sm text-gray-600">Organic Search</div>
-                    </div>
-                    <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-2xl font-bold text-green-600" id="direct-traffic">-</div>
-                        <div class="text-sm text-gray-600">Direct</div>
-                    </div>
-                    <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-2xl font-bold text-purple-600" id="social-traffic">-</div>
-                        <div class="text-sm text-gray-600">Social</div>
-                    </div>
-                </div>
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- User Plan Distribution Chart -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <h3 class="text-white text-lg font-semibold mb-4">User Plan Distribution</h3>
+                <canvas id="planChart" width="400" height="200"></canvas>
             </div>
 
             <!-- Recent Activity -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">
-                    <i class="fas fa-clock mr-2 text-orange-600"></i>
-                    Recent Activity
-                </h3>
-                <div id="recent-activity" class="space-y-3">
-                    <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-blue-600 text-sm"></i>
-                            </div>
-                            <span class="text-gray-600">Loading recent activity...</span>
-                        </div>
-                        <span class="text-sm text-gray-400">-</span>
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <h3 class="text-white text-lg font-semibold mb-4">System Status</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-white/70">Server Status</span>
+                        <span class="text-green-400 font-semibold">
+                            <i class="fas fa-circle text-xs mr-1"></i>Online
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-white/70">Firebase Connection</span>
+                        <span class="text-green-400 font-semibold">
+                            <i class="fas fa-circle text-xs mr-1"></i>Connected
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-white/70">API Endpoints</span>
+                        <span class="text-green-400 font-semibold">
+                            <i class="fas fa-circle text-xs mr-1"></i>Active
+                        </span>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+            <h3 class="text-white text-lg font-semibold mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-sync-alt mr-2"></i>Refresh Data
+                </button>
+                <button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-download mr-2"></i>Export Users
+                </button>
+                <a href="index.html" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg transition-colors text-center">
+                    <i class="fas fa-home mr-2"></i>Back to Site
+                </a>
             </div>
+        </div>
+    </main>
 
-            <!-- Users Tab Content -->
-            <div id="tab-content-users" class="tab-content hidden">
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6">
-                        <i class="fas fa-users mr-2 text-purple-600"></i>
-                        User Management
-                    </h3>
-                    
-                    <!-- User Stats Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-green-600 text-sm font-medium">Free Plan Users</p>
-                                    <p class="text-2xl font-bold text-green-700" id="users-free-count">-</p>
-                                </div>
-                                <i class="fas fa-user text-green-500 text-2xl"></i>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-blue-600 text-sm font-medium">Standard Plan Users</p>
-                                    <p class="text-2xl font-bold text-blue-700" id="users-standard-count">-</p>
-                                </div>
-                                <i class="fas fa-user-tie text-blue-500 text-2xl"></i>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-orange-600 text-sm font-medium">Premium Plan Users</p>
-                                    <p class="text-2xl font-bold text-orange-700" id="users-premium-count">-</p>
-                                </div>
-                                <i class="fas fa-crown text-orange-500 text-2xl"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Registrations -->
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h4 class="font-semibold text-gray-800 mb-4">Recent User Activity</h4>
-                        <div id="recent-users" class="space-y-3">
-                            <div class="flex items-center justify-between py-2">
-                                <span class="text-gray-600">Loading user data...</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Analytics Tab Content -->
-            <div id="tab-content-analytics" class="tab-content hidden">
-                <div class="space-y-6">
-                    <!-- Google Analytics Integration -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-6">
-                            <i class="fas fa-chart-line mr-2 text-green-600"></i>
-                            Google Analytics Dashboard
-                        </h3>
-                        
-                        <!-- Analytics Summary Cards -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                            <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-purple-600 text-sm font-medium">Active Users</p>
-                                        <p class="text-2xl font-bold text-purple-700" id="ga-active-users">-</p>
-                                    </div>
-                                    <i class="fas fa-users text-purple-500 text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-blue-600 text-sm font-medium">Page Views (24h)</p>
-                                        <p class="text-2xl font-bold text-blue-700" id="ga-pageviews">-</p>
-                                    </div>
-                                    <i class="fas fa-eye text-blue-500 text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-green-600 text-sm font-medium">Sessions (24h)</p>
-                                        <p class="text-2xl font-bold text-green-700" id="ga-sessions">-</p>
-                                    </div>
-                                    <i class="fas fa-mouse-pointer text-green-500 text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-orange-600 text-sm font-medium">Bounce Rate</p>
-                                        <p class="text-2xl font-bold text-orange-700" id="ga-bounce-rate">-</p>
-                                    </div>
-                                    <i class="fas fa-chart-bar text-orange-500 text-xl"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Top Countries -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="font-semibold text-gray-800 mb-4">Top Countries</h4>
-                                <div id="top-countries" class="space-y-2">
-                                    <div class="flex justify-between items-center py-1">
-                                        <span class="text-gray-600">Loading analytics data...</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="font-semibold text-gray-800 mb-4">Traffic Sources</h4>
-                                <div id="traffic-sources" class="space-y-2">
-                                    <div class="flex justify-between items-center py-1">
-                                        <span class="text-gray-600">Loading analytics data...</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Conversion Analytics -->
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-6">
-                            <i class="fas fa-exchange-alt mr-2 text-blue-600"></i>
-                            Conversion Analytics
-                        </h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="font-semibold text-gray-800 mb-4">Most Popular Tools</h4>
-                                <div id="popular-tools" class="space-y-3">
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-600">JPG to PNG Converter</span>
-                                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">45%</span>
-                                    </div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-600">Currency Converter</span>
-                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">28%</span>
-                                    </div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-600">Unit Converter</span>
-                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">15%</span>
-                                    </div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-600">Other Tools</span>
-                                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">12%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="font-semibold text-gray-800 mb-4">Conversion Trends</h4>
-                                <div class="space-y-3">
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-600">Today</span>
-                                        <span class="text-green-600 font-semibold" id="conversions-today">-</span>
-                                    </div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-600">This Week</span>
-                                        <span class="text-blue-600 font-semibold" id="conversions-week">-</span>
-                                    </div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-600">This Month</span>
-                                        <span class="text-purple-600 font-semibold" id="conversions-month">-</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Firebase -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
-        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
-        import { getFirestore, collection, getDocs, query, where, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAMVP0J1mH4WF-ESxi_PbQvDmydFXcuJe0",
-            authDomain: "convertwiz.firebaseapp.com",
-            projectId: "convertwiz",
-            storageBucket: "convertwiz.firebasestorage.app",
-            messagingSenderId: "777853314366",
-            appId: "1:777853314366:web:69a7ad8155381e5f51386f",
-            measurementId: "G-Q4L9FZPVPZ"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Test Firebase connection
-        console.log('Firebase initialized successfully');
-        console.log('Auth instance:', auth);
-        console.log('Firestore instance:', db);
-
-        // Admin emails
-        const adminEmails = [
-            'iqbalaiwork@gmail.com',
-            'iqbalbashasi@gmail.com',
-            'sajoshaikh@gmail.com',
-            'support@convertwiz.in'
-        ];
-
-        // Check authentication and admin access
-        onAuthStateChanged(auth, async (user) => {
-            const loadingScreen = document.getElementById('loading-screen');
-            const accessDenied = document.getElementById('access-denied');
-            const dashboardContent = document.getElementById('dashboard-content');
-            
-            if (user && adminEmails.includes(user.email)) {
-                // Admin access granted
-                document.getElementById('admin-email').textContent = user.email;
-                loadingScreen.style.display = 'none';
-                dashboardContent.classList.remove('hidden');
-                await loadDashboardData();
-            } else {
-                // Access denied
-                loadingScreen.style.display = 'none';
-                accessDenied.classList.remove('hidden');
-            }
-        });
-
-        // Logout functionality
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            try {
-                await auth.signOut();
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-        });
-
-        // Load dashboard data
-        async function loadDashboardData() {
-            try {
-                console.log('Starting dashboard data load...');
-                
-                // Load user statistics from Firestore
-                const usersRef = collection(db, 'users');
-                console.log('Querying Firestore users collection...');
-                const usersSnapshot = await getDocs(usersRef);
-                console.log('Firestore query completed, documents found:', usersSnapshot.size);
-                
-                let totalUsers = 0;
-                let freeUsers = 0;
-                let premiumUsers = 0;
-                let standardUsers = 0;
-                let dailyConversions = 0;
-
-                usersSnapshot.forEach(doc => {
-                    const userData = doc.data();
-                    totalUsers++;
-                    
-                    if (userData.plan === 'free') {
-                        freeUsers++;
-                    } else if (userData.plan === 'standard') {
-                        standardUsers++;
-                    } else if (userData.plan === 'premium') {
-                        premiumUsers++;
-                    }
-                    
-                    if (userData.dailyUsageCount) {
-                        dailyConversions += userData.dailyUsageCount;
-                    }
-                });
-
-                // Update UI with real Firebase data
-                document.getElementById('total-users').textContent = totalUsers;
-                document.getElementById('free-users').textContent = freeUsers;
-                document.getElementById('premium-users').textContent = standardUsers + premiumUsers;
-                document.getElementById('daily-conversions').textContent = dailyConversions;
-
-                console.log('Dashboard data loaded:', {
-                    total: totalUsers,
-                    free: freeUsers,
-                    standard: standardUsers,
-                    premium: premiumUsers,
-                    conversions: dailyConversions
-                });
-
-                // Load Google Analytics data for overview
-                loadAnalyticsData();
-                
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-                showErrorBanner(`Dashboard loading failed: ${error.message || 'Unknown error'}`);
-                
-                // Set error state for all elements
-                const elements = ['total-users', 'free-users', 'premium-users', 'daily-conversions'];
-                elements.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) element.textContent = 'Error';
-                });
-                
-                throw error; // Re-throw to be caught by caller
-            }
-        }
-
-        // Load Google Analytics data
-        function loadAnalyticsData() {
-            // Real-time Google Analytics data using gtag
-            // Note: This requires Google Analytics Reporting API for detailed metrics
-            // For now, we'll use available gtag data and simulate others
-            
-            if (typeof gtag !== 'undefined') {
-                // Use gtag to get real-time data where available
-                gtag('event', 'admin_dashboard_view', {
-                    custom_parameter: 'dashboard_loaded'
-                });
-            }
-            
-            // Simulated real-time data (in production, use Analytics Reporting API)
-            const currentHour = new Date().getHours();
-            const baseUsers = Math.floor(Math.random() * 20) + 5;
-            const baseViews = Math.floor(Math.random() * 500) + 300;
-            const baseSessions = Math.floor(baseViews * 0.6);
-            
-            document.getElementById('current-users').textContent = baseUsers;
-            document.getElementById('page-views').textContent = baseViews;
-            document.getElementById('sessions').textContent = baseSessions;
-            
-            // Top countries
-            const topCountries = document.getElementById('top-countries');
-            topCountries.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">🇮🇳 India</span>
-                    <span class="text-gray-800 font-semibold">45%</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">🇺🇸 United States</span>
-                    <span class="text-gray-800 font-semibold">23%</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">🇬🇧 United Kingdom</span>
-                    <span class="text-gray-800 font-semibold">12%</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">🇨🇦 Canada</span>
-                    <span class="text-gray-800 font-semibold">8%</span>
-                </div>
-            `;
-            
-            // Traffic sources
-            document.getElementById('organic-traffic').textContent = '156';
-            document.getElementById('direct-traffic').textContent = '89';
-            document.getElementById('social-traffic').textContent = '23';
-            
-            // Recent activity
-            const recentActivity = document.getElementById('recent-activity');
-            recentActivity.innerHTML = `
-                <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-image text-green-600 text-sm"></i>
-                        </div>
-                        <span class="text-gray-600">JPG to PNG conversion completed</span>
-                    </div>
-                    <span class="text-sm text-gray-400">2 min ago</span>
-                </div>
-                <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-user text-blue-600 text-sm"></i>
-                        </div>
-                        <span class="text-gray-600">New user registration</span>
-                    </div>
-                    <span class="text-sm text-gray-400">5 min ago</span>
-                </div>
-                <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-exchange-alt text-purple-600 text-sm"></i>
-                        </div>
-                        <span class="text-gray-600">Currency conversion performed</span>
-                    </div>
-                    <span class="text-sm text-gray-400">8 min ago</span>
-                </div>
-            `;
-        }
-
-        // Tab functionality
-        function initializeTabs() {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetTab = button.getAttribute('data-tab');
-                    
-                    // Update button states
-                    tabButtons.forEach(btn => {
-                        btn.classList.remove('border-purple-500', 'text-purple-600');
-                        btn.classList.add('border-transparent', 'text-gray-500');
-                    });
-                    button.classList.add('border-purple-500', 'text-purple-600');
-                    button.classList.remove('border-transparent', 'text-gray-500');
-                    
-                    // Update content visibility
-                    tabContents.forEach(content => {
-                        content.classList.add('hidden');
-                    });
-                    document.getElementById(`tab-content-${targetTab}`).classList.remove('hidden');
-                    
-                    // Load tab-specific data
-                    if (targetTab === 'analytics') {
-                        loadAnalyticsTabData();
-                    } else if (targetTab === 'users') {
-                        loadUsersData();
-                    }
-                });
-            });
-        }
-
-        // Analytics data loading for the Analytics tab
-        function loadAnalyticsTabData() {
-            try {
-                // Simulate Google Analytics data (in production, you would use GA API)
-                document.getElementById('ga-active-users').textContent = '127';
-                document.getElementById('ga-pageviews').textContent = '2,534';
-                document.getElementById('ga-sessions').textContent = '1,892';
-                document.getElementById('ga-bounce-rate').textContent = '34.2%';
-                
-                // Load top countries for Analytics tab
-                const topCountries = [
-                    { country: 'United States', percentage: '28%' },
-                    { country: 'India', percentage: '22%' },
-                    { country: 'United Kingdom', percentage: '15%' },
-                    { country: 'Canada', percentage: '12%' },
-                    { country: 'Australia', percentage: '8%' }
+    <script>
+        // Admin authentication and management
+        class AdminDashboard {
+            constructor() {
+                this.authorizedAdmins = [
+                    'iqbalaiwork@gmail.com',
+                    'iqbalbashasi@gmail.com', 
+                    'sajoshaikh@gmail.com',
+                    'support@convertwiz.in'
                 ];
+                this.init();
+            }
+
+            async init() {
+                console.log('Initializing admin dashboard...');
                 
-                const countriesContainer = document.getElementById('top-countries');
-                if (countriesContainer) {
-                    countriesContainer.innerHTML = topCountries.map(item => `
-                        <div class="flex justify-between items-center py-1">
-                            <span class="text-gray-600">${item.country}</span>
-                            <span class="text-sm font-semibold text-purple-600">${item.percentage}</span>
-                        </div>
-                    `).join('');
+                // Wait for Firebase to be available
+                if (typeof window.firebaseAuth === 'undefined') {
+                    setTimeout(() => this.init(), 100);
+                    return;
                 }
-                
-                // Load traffic sources
-                const trafficSources = [
-                    { source: 'Organic Search', percentage: '45%' },
-                    { source: 'Direct', percentage: '32%' },
-                    { source: 'Social Media', percentage: '15%' },
-                    { source: 'Referral', percentage: '8%' }
-                ];
-                
-                const sourcesContainer = document.getElementById('traffic-sources');
-                sourcesContainer.innerHTML = trafficSources.map(item => `
-                    <div class="flex justify-between items-center py-1">
-                        <span class="text-gray-600">${item.source}</span>
-                        <span class="text-sm font-semibold text-blue-600">${item.percentage}</span>
-                    </div>
-                `).join('');
-                
-                // Load conversion trends from Firestore
-                const usersRef = collection(db, 'users');
-                const usersSnapshot = await getDocs(usersRef);
-                
-                let totalConversions = 0;
-                usersSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    totalConversions += data.dailyUsageCount || 0;
-                });
-                
-                document.getElementById('conversions-today').textContent = totalConversions;
-                document.getElementById('conversions-week').textContent = Math.floor(totalConversions * 4.2);
-                document.getElementById('conversions-month').textContent = Math.floor(totalConversions * 18.5);
-                
-            } catch (error) {
-                console.error('Error loading analytics data:', error);
-            }
-        }
 
-        // Load users data for Users tab
-        async function loadUsersData() {
-            try {
-                const usersRef = collection(db, 'users');
-                const usersSnapshot = await getDocs(usersRef);
-                
-                let freeCount = 0, standardCount = 0, premiumCount = 0;
-                const recentUsers = [];
-                
-                usersSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    const plan = data.plan || 'free';
-                    
-                    if (plan === 'free') freeCount++;
-                    else if (plan === 'standard') standardCount++;
-                    else if (plan === 'premium') premiumCount++;
-                    
-                    recentUsers.push({
-                        email: data.email,
-                        plan: plan,
-                        lastActive: data.lastConversionDate?.toDate?.() || new Date()
-                    });
-                });
-                
-                // Update user counts
-                document.getElementById('users-free-count').textContent = freeCount;
-                document.getElementById('users-standard-count').textContent = standardCount;
-                document.getElementById('users-premium-count').textContent = premiumCount;
-                
-                // Show recent users (latest 5)
-                const sortedUsers = recentUsers
-                    .sort((a, b) => b.lastActive - a.lastActive)
-                    .slice(0, 5);
-                
-                const recentUsersContainer = document.getElementById('recent-users');
-                recentUsersContainer.innerHTML = sortedUsers.map(user => `
-                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-${user.plan === 'premium' ? 'orange' : user.plan === 'standard' ? 'blue' : 'green'}-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-${user.plan === 'premium' ? 'crown' : 'user'} text-${user.plan === 'premium' ? 'orange' : user.plan === 'standard' ? 'blue' : 'green'}-600 text-sm"></i>
-                            </div>
-                            <span class="text-gray-600">${user.email}</span>
-                        </div>
-                        <span class="text-xs text-gray-400 capitalize">${user.plan}</span>
-                    </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('Error loading users data:', error);
-            }
-        }
-
-        // Initialize tabs when dashboard loads
-        onAuthStateChanged(auth, async (user) => {
-            const loadingScreen = document.getElementById('loading-screen');
-            const accessDenied = document.getElementById('access-denied');
-            const dashboardContent = document.getElementById('dashboard-content');
-            
-            try {
-                if (user && adminEmails.includes(user.email)) {
-                    // Admin access granted
-                    document.getElementById('admin-email').textContent = user.email;
-                    loadingScreen.style.display = 'none';
-                    dashboardContent.classList.remove('hidden');
-                    
-                    // Load dashboard data with error handling
-                    try {
-                        await loadDashboardData();
-                        initializeTabs(); // Initialize tab functionality
-                    } catch (error) {
-                        console.error('Error loading dashboard data:', error);
-                        showErrorBanner('Unable to load analytics data. Please refresh the page.');
-                    }
-                } else {
-                    // Access denied
-                    loadingScreen.style.display = 'none';
-                    accessDenied.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Authentication error:', error);
-                loadingScreen.style.display = 'none';
-                accessDenied.classList.remove('hidden');
-            }
-        });
-
-        // Show error banner function
-        function showErrorBanner(message) {
-            const banner = document.createElement('div');
-            banner.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4';
-            banner.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    <span>${message}</span>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-red-500 hover:text-red-700">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `;
-            document.querySelector('main').insertBefore(banner, document.querySelector('main').firstChild);
-        }
-
-        // Fix logout functionality 
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', async function() {
-                try {
-                    if (typeof firebase !== 'undefined' && firebase.auth) {
-                        await firebase.auth().signOut();
-                        window.location.href = 'index.html';
+                // Check authentication
+                window.firebaseAuth.onAuthStateChanged((user) => {
+                    if (user && this.isAuthorizedAdmin(user.email)) {
+                        this.showDashboard(user);
+                        this.loadDashboardData();
                     } else {
-                        // Fallback logout
+                        this.showUnauthorized();
+                    }
+                });
+
+                // Setup logout
+                this.setupLogout();
+            }
+
+            isAuthorizedAdmin(email) {
+                return this.authorizedAdmins.includes(email);
+            }
+
+            showDashboard(user) {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('admin-user-email').textContent = user.email;
+                console.log('Admin dashboard loaded for:', user.email);
+            }
+
+            showUnauthorized() {
+                document.getElementById('loading-screen').innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-lock text-red-400 text-6xl mb-4"></i>
+                        <h2 class="text-white text-2xl font-bold mb-4">Access Denied</h2>
+                        <p class="text-white/80 mb-6">You are not authorized to access this admin dashboard.</p>
+                        <a href="index.html" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
+                            Back to ConvertWiz
+                        </a>
+                    </div>
+                `;
+            }
+
+            setupLogout() {
+                document.getElementById('logout-btn').addEventListener('click', async () => {
+                    try {
+                        await window.firebaseAuth.signOut();
+                        window.location.href = 'index.html';
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                        // Force redirect
                         localStorage.clear();
                         sessionStorage.clear();
                         window.location.href = 'index.html';
                     }
+                });
+            }
+
+            async loadDashboardData() {
+                try {
+                    // Mock data for demo - replace with real Firebase queries
+                    const mockData = {
+                        totalUsers: 1250,
+                        freeUsers: 980,
+                        standardUsers: 200,
+                        premiumUsers: 70
+                    };
+
+                    // Update stats
+                    document.getElementById('total-users').textContent = mockData.totalUsers.toLocaleString();
+                    document.getElementById('free-users').textContent = mockData.freeUsers.toLocaleString();
+                    document.getElementById('premium-users').textContent = (mockData.standardUsers + mockData.premiumUsers).toLocaleString();
+
+                    // Create chart
+                    this.createPlanChart(mockData);
+                    
                 } catch (error) {
-                    console.error('Logout error:', error);
-                    // Force redirect even if logout fails
-                    window.location.href = 'index.html';
+                    console.error('Error loading dashboard data:', error);
                 }
-            });
+            }
+
+            createPlanChart(data) {
+                const ctx = document.getElementById('planChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Free', 'Standard', 'Premium'],
+                        datasets: [{
+                            data: [data.freeUsers, data.standardUsers, data.premiumUsers],
+                            backgroundColor: [
+                                '#10B981',
+                                '#3B82F6', 
+                                '#F59E0B'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: 'white',
+                                    padding: 20
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
+
+        // Initialize admin dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AdminDashboard();
+        });
     </script>
 </body>
 </html>
