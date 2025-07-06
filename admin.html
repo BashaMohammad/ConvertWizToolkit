@@ -7,17 +7,18 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
+      background: linear-gradient(120deg, #f6f9fc, #edf2fb);
       padding: 2rem;
     }
     .admin-container {
-      max-width: 1000px;
+      max-width: 1080px;
       margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
       padding: 2rem;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 25px rgba(0,0,0,0.08);
     }
     h2 {
       color: #333;
@@ -25,33 +26,45 @@
     }
     .metrics {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
       margin-bottom: 2rem;
     }
     .card {
-      background: #f9fafb;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
     }
     .card h4 {
       margin: 0 0 0.5rem;
-      color: #222;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      font-weight: 500;
     }
     .card p {
-      font-size: 1.1rem;
+      font-size: 2rem;
       font-weight: bold;
-      color: #444;
+      margin: 0;
     }
+    .card.users { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .card.country { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .card.traffic { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .card.visits { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .card.growth { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
     iframe {
       width: 100%;
-      height: 450px;
+      height: 520px;
       border: none;
-      margin-top: 1rem;
-      border-radius: 8px;
-      background: #f5f5f5;
+      margin-top: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     .footer-note {
       text-align: center;
@@ -60,49 +73,44 @@
       color: #888;
     }
     .logout-btn {
-      margin-top: 1rem;
+      margin-top: 2rem;
       background: #ff4d4d;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
     }
-    .placeholder-iframe {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-align: center;
-      font-size: 1.1rem;
-      line-height: 1.5;
+    .logout-btn:hover {
+      background: #e04343;
     }
   </style>
 </head>
 <body>
   <div class="admin-container">
     <h2>Welcome, Admin 👑</h2>
-    <p id="admin-welcome">Here's a live view of ConvertWiz performance stats:</p>
+    <p id="admin-welcome">Real-time ConvertWiz analytics and performance insights:</p>
 
     <div class="metrics">
-      <div class="card">
+      <div class="card users">
         <h4>👥 Users Today</h4>
         <p>278</p>
       </div>
-      <div class="card">
+      <div class="card country">
         <h4>🌍 Top Country</h4>
         <p>India</p>
       </div>
-      <div class="card">
+      <div class="card traffic">
         <h4>🔄 Traffic Type</h4>
         <p>Organic</p>
       </div>
-      <div class="card">
+      <div class="card visits">
         <h4>📆 Monthly Visits</h4>
         <p>12,340</p>
       </div>
-      <div class="card">
+      <div class="card growth">
         <h4>📈 Quarterly Growth</h4>
         <p>+42%</p>
       </div>
@@ -117,7 +125,7 @@
     <button onclick="logout()" class="logout-btn">Logout</button>
 
     <div class="footer-note">
-      ConvertWiz Admin v1.1 | Last synced: Just now · Live GA4 Stats Enabled
+      ConvertWiz Admin v1.2 | Live GA4 Analytics | Last synced: Just now
     </div>
   </div>
 
@@ -140,11 +148,9 @@
 
     // Check authentication with delay to allow auth state to sync
     let authCheckDelay = setTimeout(() => {
-      // Fallback check after 3 seconds
       const currentUser = auth.currentUser;
       if (!currentUser) {
         console.log('No user found after 3 seconds, checking localStorage...');
-        // Check localStorage as fallback
         const userSession = localStorage.getItem('convertWizUser');
         if (!userSession) {
           console.log('No user session found, redirecting to home');
@@ -154,21 +160,18 @@
     }, 3000);
 
     onAuthStateChanged(auth, (user) => {
-      clearTimeout(authCheckDelay); // Cancel fallback check
+      clearTimeout(authCheckDelay);
       
       if (!user) {
-        // Check localStorage as backup
         const userSession = localStorage.getItem('convertWizUser');
         if (userSession) {
           try {
             const userData = JSON.parse(userSession);
             console.log('Found user in localStorage:', userData.email);
-            // Update welcome message with user email
             const welcomeElement = document.getElementById('admin-welcome');
             if (welcomeElement) {
-              welcomeElement.textContent = `Welcome ${userData.email}! Here's a live view of ConvertWiz performance stats:`;
+              welcomeElement.textContent = `Welcome ${userData.email}! Real-time ConvertWiz analytics and performance insights:`;
             }
-            // Don't redirect if we have a valid session
             return;
           } catch (e) {
             console.log('Invalid localStorage session');
@@ -176,16 +179,14 @@
         }
         
         console.log('No authenticated user found, redirecting to home');
-        // Add delay to prevent immediate redirect
         setTimeout(() => {
           window.location.href = "/";
         }, 1000);
       } else {
         console.log('Admin authenticated:', user.email);
-        // Update welcome message with user email
         const welcomeElement = document.getElementById('admin-welcome');
         if (welcomeElement) {
-          welcomeElement.textContent = `Welcome ${user.email}! Here's a live view of ConvertWiz performance stats:`;
+          welcomeElement.textContent = `Welcome ${user.email}! Real-time ConvertWiz analytics and performance insights:`;
         }
       }
     });
@@ -194,7 +195,6 @@
     window.logout = async function() {
       try {
         await signOut(auth);
-        // Clear localStorage
         localStorage.removeItem('convertWizUser');
         window.location.href = "/";
       } catch (error) {
