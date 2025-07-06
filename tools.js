@@ -2968,10 +2968,27 @@ class ColorConverter {
         const hexInput = document.getElementById('hex-input');
         const convertBtn = document.getElementById('convert-color-btn');
         const clearBtn = document.getElementById('clear-color-btn');
+        const colorPicker = document.getElementById('color-picker');
 
         convertBtn?.addEventListener('click', () => this.convertColor());
         clearBtn?.addEventListener('click', () => this.clearColor());
         hexInput?.addEventListener('input', () => this.convertColor());
+        
+        // Real-time color picker updates
+        if (colorPicker) {
+            colorPicker.addEventListener('input', (e) => {
+                const hexValue = e.target.value;
+                if (hexInput) hexInput.value = hexValue;
+                this.convertColorFromHex(hexValue);
+            });
+        }
+    }
+
+    convertColorFromHex(hex) {
+        if (!/^#[0-9A-F]{6}$/i.test(hex)) return;
+        
+        const result = this.calculateClientSide(hex);
+        this.displayResults(result);
     }
 
     async convertColor() {

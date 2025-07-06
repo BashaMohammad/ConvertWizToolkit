@@ -194,13 +194,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Mobile menu toggle
+    // Enhanced mobile menu toggle with Android compatibility
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        // Remove any existing listeners to prevent duplicates
+        mobileMenuBtn.replaceWith(mobileMenuBtn.cloneNode(true));
+        const newMobileMenuBtn = document.getElementById('mobile-menu-btn');
+        
+        newMobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                newMobileMenuBtn.innerHTML = '<i class="fas fa-times text-xl"></i>';
+            } else {
+                mobileMenu.classList.add('hidden');
+                newMobileMenuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            }
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!newMobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+                newMobileMenuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            }
         });
     }
     

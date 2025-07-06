@@ -807,11 +807,26 @@
             document.querySelector('main').insertBefore(banner, document.querySelector('main').firstChild);
         }
 
-        // Ensure Firebase is properly initialized before using logout
-        if (typeof auth !== 'undefined') {
-            console.log('Firebase auth is available in admin dashboard');
-        } else {
-            console.error('Firebase auth not initialized in admin dashboard');
+        // Fix logout functionality 
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async function() {
+                try {
+                    if (typeof firebase !== 'undefined' && firebase.auth) {
+                        await firebase.auth().signOut();
+                        window.location.href = 'index.html';
+                    } else {
+                        // Fallback logout
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    // Force redirect even if logout fails
+                    window.location.href = 'index.html';
+                }
+            });
         }
     </script>
 </body>

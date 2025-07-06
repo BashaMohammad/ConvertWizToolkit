@@ -652,11 +652,24 @@ body[data-env="development"] .ad-placeholder {
     height: 600px;
 }
 
-/* Hide sidebar ads on tablets and mobile */
+/* Hide sidebar ads on tablets and mobile but ensure placeholders are visible */
 @media (max-width: 1023px) {
     .sidebar-ad-right,
     .sidebar-ad-left {
         display: none !important;
+    }
+    
+    /* Ensure ad placeholders are visible on mobile in development */
+    body[data-env="development"] .adsense-placeholder {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 100px;
+        background: #f0f0f0;
+        border: 2px dashed #ccc;
+        text-align: center;
+        padding: 20px;
+        margin: 10px 0;
     }
 }
 
