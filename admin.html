@@ -53,7 +53,7 @@
 <body>
   <div class="admin-container">
     <h2>Welcome, Admin 👑</h2>
-    <p>This dashboard will evolve with powerful tools and insights.</p>
+    <p id="admin-welcome">This dashboard will evolve with powerful tools and insights.</p>
 
     <div class="module">📊 Tool Usage Analytics – Coming Soon</div>
     <div class="module">🗂️ User Feedback Manager – Coming Soon</div>
@@ -83,13 +83,50 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Check authentication
+    // Check authentication with delay to allow auth state to sync
+    let authCheckDelay = setTimeout(() => {
+      // Fallback check after 3 seconds
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.log('No user found after 3 seconds, checking localStorage...');
+        // Check localStorage as fallback
+        const userSession = localStorage.getItem('convertWizUser');
+        if (!userSession) {
+          console.log('No user session found, redirecting to home');
+          window.location.href = "/";
+        }
+      }
+    }, 3000);
+
     onAuthStateChanged(auth, (user) => {
+      clearTimeout(authCheckDelay); // Cancel fallback check
+      
       if (!user) {
-        // No user logged in, redirect to main site
-        window.location.href = "/";
+        // Check localStorage as backup
+        const userSession = localStorage.getItem('convertWizUser');
+        if (userSession) {
+          try {
+            const userData = JSON.parse(userSession);
+            console.log('Found user in localStorage:', userData.email);
+            // Don't redirect if we have a valid session
+            return;
+          } catch (e) {
+            console.log('Invalid localStorage session');
+          }
+        }
+        
+        console.log('No authenticated user found, redirecting to home');
+        // Add delay to prevent immediate redirect
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       } else {
         console.log('Admin authenticated:', user.email);
+        // Update welcome message with user email
+        const welcomeElement = document.getElementById('admin-welcome');
+        if (welcomeElement) {
+          welcomeElement.textContent = `Welcome ${user.email}! This dashboard will evolve with powerful tools and insights.`;
+        }
       }
     });
 
