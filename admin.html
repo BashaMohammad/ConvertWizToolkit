@@ -24,40 +24,7 @@
       color: #333;
       margin-bottom: 10px;
     }
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-    }
-    .card h4 {
-      margin: 0 0 0.5rem;
-      font-size: 0.9rem;
-      opacity: 0.9;
-      font-weight: 500;
-    }
-    .card p {
-      font-size: 2rem;
-      font-weight: bold;
-      margin: 0;
-    }
-    .card.users { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .card.country { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-    .card.traffic { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-    .card.visits { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-    .card.growth { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
     iframe {
       width: 100%;
       height: 520px;
@@ -93,28 +60,7 @@
     <h2>Welcome, Admin 👑</h2>
     <p id="admin-welcome">Real-time ConvertWiz analytics and performance insights:</p>
 
-    <div class="metrics">
-      <div class="card users">
-        <h4>👥 Users Today</h4>
-        <p>278</p>
-      </div>
-      <div class="card country">
-        <h4>🌍 Top Country</h4>
-        <p>India</p>
-      </div>
-      <div class="card traffic">
-        <h4>🔄 Traffic Type</h4>
-        <p>Organic</p>
-      </div>
-      <div class="card visits">
-        <h4>📆 Monthly Visits</h4>
-        <p>12,340</p>
-      </div>
-      <div class="card growth">
-        <h4>📈 Quarterly Growth</h4>
-        <p>+42%</p>
-      </div>
-    </div>
+
 
     <iframe 
       src="https://lookerstudio.google.com/embed/reporting/5b893184-8620-43d9-90c1-e3061253a44f/page/N5QQF" 
