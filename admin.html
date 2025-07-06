@@ -16,7 +16,7 @@
 </head>
 <body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen">
     <!-- Loading Screen -->
-    <div id="loading-screen" class="fixed inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center z-50">
+    <div id="loading-screen" class="fixed inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center z-50" style="top: 0; left: 0; width: 100vw; height: 100vh;">
         <div class="text-center">
             <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
             <p class="text-white text-lg">Loading Admin Dashboard...</p>
@@ -211,6 +211,10 @@
                 }
                 
                 console.log('Admin dashboard UI should now be visible');
+                
+                // Force scroll to top to fix positioning issues
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0;
                 
                 this.setupLogout();
                 this.createChart();
