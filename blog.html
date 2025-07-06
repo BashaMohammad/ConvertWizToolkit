@@ -6,7 +6,35 @@
     <title>Blog - ConvertWiz</title>
     <link href="https://cdn.tailwindcss.com" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <meta name="description" content="Learn about conversion tools, tips, and tricks with ConvertWiz blog">
+    <meta name="description" content="Expert guides on file conversion, image processing, currency exchange, and productivity tools. Learn JPG to PNG conversion, Instagram optimization, and more with ConvertWiz blog.">
+    <meta property="og:title" content="ConvertWiz Blog - Expert Conversion Guides & Tips">
+    <meta property="og:description" content="Expert guides on file conversion, image processing, currency exchange, and productivity tools. Learn JPG to PNG conversion, Instagram optimization, and more.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://convertwiz.replit.app/blog">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ConvertWiz Blog - Expert Conversion Guides & Tips">
+    <meta name="twitter:description" content="Expert guides on file conversion, image processing, currency exchange, and productivity tools.">
+    
+    <!-- Structured Data for Blog -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "ConvertWiz Blog",
+        "description": "Expert guides on file conversion, image processing, currency exchange, and productivity tools",
+        "url": "https://convertwiz.replit.app/blog",
+        "publisher": {
+            "@type": "Organization",
+            "name": "ConvertWiz",
+            "url": "https://convertwiz.replit.app"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://convertwiz.replit.app/blog"
+        }
+    }
+    </script>
     <style>
         .blog-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -76,6 +104,24 @@
         .fade-in {
             animation: fadeInUp 0.6s ease-out;
         }
+        .adsense-banner-blog, .adsense-banner-middle {
+            position: relative;
+        }
+        .ad-placeholder {
+            display: block;
+        }
+        /* Hide development placeholders in production */
+        .production .ad-placeholder {
+            display: none;
+        }
+        /* Show AdSense ads in production */
+        .production .adsbygoogle {
+            display: block !important;
+        }
+        /* Development mode - hide AdSense, show placeholders */
+        .development .adsbygoogle {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -104,6 +150,29 @@
             </p>
         </div>
     </header>
+
+    <!-- Top AdSense Banner -->
+    <div class="adsense-banner-blog bg-gray-50 py-4">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <!-- Production AdSense Ad -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045" crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder bg-gray-200 border-2 border-dashed border-gray-400 p-8 rounded-lg" style="min-height: 100px;">
+                <p class="text-gray-600 font-medium">Blog Header Ad Banner</p>
+                <p class="text-sm text-gray-500">728x90 or Auto-responsive</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Search and Filter Section -->
     <section class="max-w-7xl mx-auto px-4 py-8">
@@ -157,6 +226,29 @@
             </button>
         </div>
         
+        <!-- Middle AdSense Banner -->
+        <div class="adsense-banner-middle bg-gray-50 py-8 my-12 rounded-2xl">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <!-- Production AdSense Ad -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-2287734666559045"
+                     data-ad-slot="1234567891"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+                
+                <!-- Development Placeholder -->
+                <div class="ad-placeholder bg-gray-200 border-2 border-dashed border-gray-400 p-8 rounded-lg" style="min-height: 120px;">
+                    <p class="text-gray-600 font-medium">Blog Middle Ad Banner</p>
+                    <p class="text-sm text-gray-500">Auto-responsive or 300x250</p>
+                </div>
+            </div>
+        </div>
+
         <!-- No Results Message -->
         <div id="no-results" class="text-center py-12 hidden">
             <div class="text-gray-400 text-6xl mb-4">
@@ -341,6 +433,29 @@
         function readPost(postId) {
             const post = blogPosts.find(p => p.id === postId);
             if (post) {
+                // Add structured data for the article
+                const structuredData = {
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": post.title,
+                    "description": post.excerpt,
+                    "image": post.image,
+                    "author": {
+                        "@type": "Organization",
+                        "name": post.author
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "ConvertWiz",
+                        "url": "https://convertwiz.replit.app"
+                    },
+                    "datePublished": post.date,
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": `https://convertwiz.replit.app/blog/article-${post.id}`
+                    }
+                };
+
                 // Create a modal for full article view
                 const modal = document.createElement('div');
                 modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
@@ -353,6 +468,24 @@
                             </button>
                         </div>
                         <div class="p-8">
+                            <!-- Article AdSense Banner -->
+                            <div class="adsense-banner-article bg-gray-50 p-4 rounded-lg mb-6 text-center">
+                                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045" crossorigin="anonymous"></script>
+                                <ins class="adsbygoogle"
+                                     style="display:block"
+                                     data-ad-client="ca-pub-2287734666559045"
+                                     data-ad-slot="1234567892"
+                                     data-ad-format="auto"
+                                     data-full-width-responsive="true"></ins>
+                                <script>
+                                     (adsbygoogle = window.adsbygoogle || []).push({});
+                                </script>
+                                
+                                <div class="ad-placeholder bg-gray-200 border-2 border-dashed border-gray-400 p-4 rounded" style="min-height: 80px;">
+                                    <p class="text-gray-600 text-sm">Article Top Ad</p>
+                                </div>
+                            </div>
+
                             <div class="flex items-center gap-4 mb-6">
                                 <span class="category-badge text-sm px-4 py-2 rounded-full">${post.category}</span>
                                 <span class="text-gray-500 text-sm">${post.readTime}</span>
@@ -362,6 +495,25 @@
                             <div class="prose prose-lg max-w-none">
                                 <p class="text-lg text-gray-600 mb-6">${post.excerpt}</p>
                                 <p class="text-gray-700 leading-relaxed mb-4">This comprehensive guide covers everything you need to know about ${post.title.toLowerCase()}. Our expert team has compiled the most effective techniques and best practices to help you achieve professional results.</p>
+                                
+                                <!-- Mid-Article AdSense Banner -->
+                                <div class="adsense-banner-mid-article bg-gray-50 p-4 rounded-lg my-6 text-center">
+                                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045" crossorigin="anonymous"></script>
+                                    <ins class="adsbygoogle"
+                                         style="display:block"
+                                         data-ad-client="ca-pub-2287734666559045"
+                                         data-ad-slot="1234567893"
+                                         data-ad-format="auto"
+                                         data-full-width-responsive="true"></ins>
+                                    <script>
+                                         (adsbygoogle = window.adsbygoogle || []).push({});
+                                    </script>
+                                    
+                                    <div class="ad-placeholder bg-gray-200 border-2 border-dashed border-gray-400 p-4 rounded" style="min-height: 100px;">
+                                        <p class="text-gray-600 text-sm">Article Middle Ad</p>
+                                    </div>
+                                </div>
+
                                 <p class="text-gray-700 leading-relaxed mb-4">Whether you're a beginner or an experienced user, this article provides valuable insights that will save you time and improve your workflow. Follow our step-by-step instructions and discover advanced tips that most users don't know about.</p>
                                 <p class="text-gray-700 leading-relaxed">Ready to get started? Try ConvertWiz's ${post.category.toLowerCase()} tools and experience the difference quality makes. Our platform offers the most reliable and user-friendly conversion experience available online.</p>
                             </div>
@@ -383,6 +535,9 @@
                             </div>
                         </div>
                     </div>
+                    <script type="application/ld+json">
+                    ${JSON.stringify(structuredData, null, 2)}
+                    </script>
                 `;
                 document.body.appendChild(modal);
                 
@@ -392,6 +547,14 @@
                         modal.remove();
                     }
                 });
+                
+                // Track article view
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'page_view', {
+                        page_title: post.title,
+                        page_location: `https://convertwiz.replit.app/blog/article-${post.id}`
+                    });
+                }
             }
         }
 
@@ -473,9 +636,24 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Detect environment and set body class
+            const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname.includes('replit.dev');
+            document.body.className += isDevelopment ? ' development' : ' production';
+            
             loadFeaturedPost();
             filterPosts();
             setupEventListeners();
+            
+            // Initialize AdSense in production
+            if (!isDevelopment && typeof window.adsbygoogle !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        console.log('AdSense initialization delayed');
+                    }
+                }, 1000);
+            }
         });
     </script>
 </body>
