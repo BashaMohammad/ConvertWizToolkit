@@ -457,7 +457,7 @@ class JPGtoPNGConverter {
         }`;
         notification.innerHTML = `
             <div class="flex items-center">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} mr-2"></i>
+                <i class="fas fa-${type === 'success' ? 'check-circle' : (type === 'error' ? 'exclamation-circle' : 'info-circle')} mr-2"></i>
                 ${message}
             </div>
         `;
