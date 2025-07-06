@@ -301,6 +301,11 @@ app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+// Blog route
+app.get('/blog', (req, res) => {
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
 // Serve static files and SPA routing for all other routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

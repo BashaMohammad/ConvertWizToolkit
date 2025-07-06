@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - ConvertWiz</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="description" content="Learn about conversion tools, tips, and tricks with ConvertWiz blog">
+    <style>
+        .blog-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold text-blue-600">ConvertWiz</a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-gray-700 hover:text-blue-600">Home</a>
+                    <a href="/blog" class="text-blue-600 font-medium">Blog</a>
+                    <a href="/subscribe" class="text-gray-700 hover:text-blue-600">Pricing</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="gradient-bg text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">ConvertWiz Blog</h1>
+            <p class="text-xl text-blue-100 max-w-2xl mx-auto">
+                Expert guides, tips, and insights about file conversion, productivity tools, and digital workflows
+            </p>
+        </div>
+    </header>
+
+    <!-- Blog Posts -->
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="blog-posts">
+            <!-- Blog posts will be loaded here -->
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+            <button id="load-more" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                Load More Posts
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">ConvertWiz</h3>
+                    <p class="text-gray-400">Your ultimate conversion toolkit for images, units, and more.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Tools</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/#jpg-to-png" class="hover:text-white">JPG to PNG</a></li>
+                        <li><a href="/#currency" class="hover:text-white">Currency Converter</a></li>
+                        <li><a href="/#dp-resizer" class="hover:text-white">Instagram DP Resizer</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/privacy" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="/terms" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="/credits" class="hover:text-white">Credits</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 ConvertWiz. All rights reserved. Powered by Ali.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Blog posts data
+        const blogPosts = [
+            {
+                id: 1,
+                title: "How to Convert JPG to PNG: A Complete Guide",
+                excerpt: "Learn the best practices for converting JPG images to PNG format while maintaining quality and transparency.",
+                category: "Image Conversion",
+                date: "2025-01-06",
+                readTime: "5 min read",
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop",
+                author: "ConvertWiz Team"
+            },
+            {
+                id: 2,
+                title: "Currency Conversion Made Simple",
+                excerpt: "Master international currency conversions with real-time exchange rates and practical tips for travelers and businesses.",
+                category: "Finance",
+                date: "2025-01-05",
+                readTime: "7 min read",
+                image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&h=250&fit=crop",
+                author: "ConvertWiz Team"
+            },
+            {
+                id: 3,
+                title: "Instagram Profile Picture Optimization",
+                excerpt: "Create the perfect Instagram profile picture with our resizing tool and expert design tips.",
+                category: "Social Media",
+                date: "2025-01-04",
+                readTime: "4 min read",
+                image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=250&fit=crop",
+                author: "ConvertWiz Team"
+            },
+            {
+                id: 4,
+                title: "Understanding Land Unit Conversions Globally",
+                excerpt: "Navigate international real estate with confidence using our comprehensive land unit conversion guide.",
+                category: "Real Estate",
+                date: "2025-01-03",
+                readTime: "8 min read",
+                image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=250&fit=crop",
+                author: "ConvertWiz Team"
+            },
+            {
+                id: 5,
+                title: "Percentage Calculations in Business",
+                excerpt: "Master percentage calculations for profit margins, discounts, taxes, and business analytics.",
+                category: "Business",
+                date: "2025-01-02",
+                readTime: "6 min read",
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=250&fit=crop",
+                author: "ConvertWiz Team"
+            },
+            {
+                id: 6,
+                title: "Temperature Conversion for Global Collaboration",
+                excerpt: "Work effectively with international teams by understanding Celsius, Fahrenheit, and Kelvin conversions.",
+                category: "Science",
+                date: "2025-01-01",
+                readTime: "5 min read",
+                image: "https://images.unsplash.com/photo-1504198458649-3128b932f49e?w=400&h=250&fit=crop",
+                author: "ConvertWiz Team"
+            }
+        ];
+
+        let displayedPosts = 0;
+        const postsPerPage = 3;
+
+        function createBlogCard(post) {
+            return `
+                <article class="blog-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">${post.category}</span>
+                            <span class="text-gray-500 text-sm">${post.readTime}</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">${post.title}</h2>
+                        <p class="text-gray-600 mb-4 line-clamp-3">${post.excerpt}</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="far fa-calendar mr-2"></i>
+                                <span>${new Date(post.date).toLocaleDateString()}</span>
+                            </div>
+                            <button onclick="readPost(${post.id})" class="text-blue-600 hover:text-blue-800 font-medium">
+                                Read More <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function loadPosts() {
+            const blogContainer = document.getElementById('blog-posts');
+            const postsToShow = blogPosts.slice(displayedPosts, displayedPosts + postsPerPage);
+            
+            postsToShow.forEach(post => {
+                blogContainer.innerHTML += createBlogCard(post);
+            });
+            
+            displayedPosts += postsToShow.length;
+            
+            // Hide load more button if all posts are displayed
+            if (displayedPosts >= blogPosts.length) {
+                document.getElementById('load-more').style.display = 'none';
+            }
+        }
+
+        function readPost(postId) {
+            const post = blogPosts.find(p => p.id === postId);
+            if (post) {
+                // For now, show an alert. In a real implementation, this would navigate to a full blog post page
+                alert(`Opening: ${post.title}\n\nThis would normally navigate to the full blog post. Coming soon!`);
+            }
+        }
+
+        // Load initial posts
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPosts();
+        });
+
+        // Load more posts
+        document.getElementById('load-more').addEventListener('click', loadPosts);
+    </script>
+</body>
+</html>
