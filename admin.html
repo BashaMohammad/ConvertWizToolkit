@@ -192,11 +192,17 @@
 
                 // Check authentication
                 window.firebaseAuth.onAuthStateChanged((user) => {
-                    if (user && this.isAuthorizedAdmin(user.email)) {
+                    console.log('Admin auth state changed:', user ? user.email : 'No user');
+                    if (user && user.email && this.isAuthorizedAdmin(user.email)) {
+                        console.log('Authorized admin detected:', user.email);
                         this.showDashboard(user);
                         this.loadDashboardData();
                     } else {
-                        this.showUnauthorized();
+                        console.log('Access denied for user:', user ? user.email : 'Not logged in');
+                        if (user && user.email && !this.isAuthorizedAdmin(user.email)) {
+                            console.log('User email not in authorized list:', this.authorizedAdmins);
+                        }
+                        setTimeout(() => this.showUnauthorized(), 1000); // Give Firebase time to load
                     }
                 });
 
@@ -205,7 +211,11 @@
             }
 
             isAuthorizedAdmin(email) {
-                return this.authorizedAdmins.includes(email);
+                console.log('Checking admin authorization for:', email);
+                console.log('Authorized emails:', this.authorizedAdmins);
+                const isAuthorized = this.authorizedAdmins.includes(email);
+                console.log('Authorization result:', isAuthorized);
+                return isAuthorized;
             }
 
             showDashboard(user) {
