@@ -589,6 +589,17 @@ body[data-env="development"] .ad-placeholder {
     padding: 1rem;
     color: #666;
     font-size: 0.875rem;
+    min-height: 100px;
+}
+
+/* Mobile ad placeholder visibility - always show in development for testing */
+@media (max-width: 768px) {
+    body[data-env="development"] .ad-placeholder {
+        display: block !important;
+        margin: 1rem auto;
+        max-width: 320px;
+        border-radius: 8px;
+    }
 }
 
 /* Clean responsive ad styling */

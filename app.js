@@ -36,7 +36,11 @@ function updateURLAndTrackPageview(sectionId) {
     'weight-converter-section': '/weight',
     'height-converter-section': '/height',
     'ip-extractor-section': '/ip-extractor',
-    'qr-generator-section': '/qr-generator'
+    'qr-generator-section': '/qr-generator',
+    'percentage-calculator-section': '/percentage',
+    'temperature-converter-section': '/temperature',
+    'color-converter-section': '/color',
+    'image-compressor-section': '/compress'
   };
   
   const newPath = sectionToPath[sectionId] || '/';
@@ -317,7 +321,11 @@ function getSectionFromPath(path) {
         '/weight': 'weight-converter-section',
         '/height': 'height-converter-section',
         '/ip-extractor': 'ip-extractor-section',
-        '/qr-generator': 'qr-generator-section'
+        '/qr-generator': 'qr-generator-section',
+        '/percentage': 'percentage-calculator-section',
+        '/temperature': 'temperature-converter-section',
+        '/color': 'color-converter-section',
+        '/compress': 'image-compressor-section'
     };
     
     return pathToSection[path] || 'landing-section';
