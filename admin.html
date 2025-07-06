@@ -160,6 +160,8 @@
                 
                 // Check localStorage for user session
                 const userSession = localStorage.getItem('convertWizUser');
+                console.log('Checking localStorage for convertWizUser:', userSession ? 'Found' : 'Not found');
+                
                 if (userSession) {
                     try {
                         const userData = JSON.parse(userSession);
@@ -169,6 +171,8 @@
                             console.log('✅ Admin access granted for:', userData.email);
                             this.showDashboard(userData);
                             return;
+                        } else {
+                            console.log('❌ User not authorized:', userData.email);
                         }
                     } catch (error) {
                         console.error('Error parsing user session:', error);
@@ -176,6 +180,7 @@
                 }
                 
                 // If no valid session, show unauthorized
+                console.log('No valid admin session found, showing unauthorized page');
                 this.showUnauthorized();
             }
 
@@ -184,12 +189,28 @@
             }
 
             showDashboard(userData) {
-                document.getElementById('loading-screen').style.display = 'none';
-                document.querySelector('header').style.display = 'block';
-                document.querySelector('main').style.display = 'block';
+                console.log('Showing admin dashboard for:', userData.email);
                 
-                document.getElementById('admin-user-email').textContent = userData.email;
-                console.log('Admin dashboard loaded for:', userData.email);
+                const loadingScreen = document.getElementById('loading-screen');
+                const header = document.querySelector('header');
+                const main = document.querySelector('main');
+                
+                console.log('Elements found:', {
+                    loadingScreen: !!loadingScreen,
+                    header: !!header,
+                    main: !!main
+                });
+                
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (header) header.style.display = 'block';
+                if (main) main.style.display = 'block';
+                
+                const emailElement = document.getElementById('admin-user-email');
+                if (emailElement) {
+                    emailElement.textContent = userData.email;
+                }
+                
+                console.log('Admin dashboard UI should now be visible');
                 
                 this.setupLogout();
                 this.createChart();
