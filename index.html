@@ -124,6 +124,19 @@
                 }
             }
         }
+        
+        // Fix 1: Force logout on browser reopen (disable cache login)
+        window.addEventListener('load', function() {
+            // Clear session storage on page load to force logout
+            if (performance.navigation.type === performance.navigation.TYPE_RELOAD || 
+                performance.navigation.type === performance.navigation.TYPE_NAVIGATE) {
+                sessionStorage.clear();
+                // Also clear Firebase auth session
+                if (typeof auth !== 'undefined' && auth.currentUser) {
+                    auth.signOut().catch(console.error);
+                }
+            }
+        });
     </script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">

@@ -308,6 +308,11 @@ app.get('/blog', (req, res) => {
 
 // Serve static files and SPA routing for all other routes
 app.get('/', (req, res) => {
+  // Force logout on browser reopen - disable cache login
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 

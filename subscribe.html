@@ -183,9 +183,21 @@
                     </div>
                 </div>
                 
-                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300" onclick="handlePlanAction('standard')">
-                    Upgrade to Standard
-                </button>
+                <div class="space-y-3">
+                    <button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300" onclick="handlePlanAction('standard')">
+                        Upgrade to Standard (INR ₹199)
+                    </button>
+                    
+                    <!-- PayPal option for Standard plan -->
+                    <div class="text-center text-white/80 text-sm">or</div>
+                    <a href="https://www.paypal.com/paypalme/convertwizpay/5" target="_blank" rel="noopener noreferrer" class="block w-full">
+                        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center space-x-2">
+                            <i class="fab fa-paypal"></i>
+                            <span>Pay $5 via PayPal</span>
+                        </button>
+                    </a>
+                    <p class="text-xs text-white/60 text-center">PayPal option for international users</p>
+                </div>
             </div>
 
             <!-- Premium Plan -->
@@ -222,9 +234,21 @@
                     </div>
                 </div>
                 
-                <button class="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300" onclick="handlePlanAction('premium')">
-                    Go Premium
-                </button>
+                <div class="space-y-3">
+                    <button class="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300" onclick="handlePlanAction('premium')">
+                        Go Premium (INR ₹499)
+                    </button>
+                    
+                    <!-- Fix 3: PayPal one-time payment for non-INR users -->
+                    <div class="text-center text-white/80 text-sm">or</div>
+                    <a href="https://www.paypal.com/paypalme/convertwizpay/15" target="_blank" rel="noopener noreferrer" class="block w-full">
+                        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center space-x-2">
+                            <i class="fab fa-paypal"></i>
+                            <span>Pay $15 via PayPal</span>
+                        </button>
+                    </a>
+                    <p class="text-xs text-white/60 text-center">PayPal option for international users</p>
+                </div>
             </div>
         </section>
 

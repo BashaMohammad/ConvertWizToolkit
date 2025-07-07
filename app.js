@@ -351,3 +351,61 @@ function getSectionFromPath(path) {
     
     return pathToSection[path] || 'landing-section';
 }
+
+// Fix 2: Mobile menu functionality
+function setupMobileMenu() {
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  if (mobileMenuBtn && mobileMenu) {
+    // Toggle mobile menu
+    mobileMenuBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      mobileMenu.classList.toggle('hidden');
+      
+      // Change icon
+      const icon = mobileMenuBtn.querySelector('i');
+      if (mobileMenu.classList.contains('hidden')) {
+        icon.className = 'fas fa-bars text-xl';
+      } else {
+        icon.className = 'fas fa-times text-xl';
+      }
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+        const icon = mobileMenuBtn.querySelector('i');
+        icon.className = 'fas fa-bars text-xl';
+      }
+    });
+    
+    // Close mobile menu when clicking nav links
+    mobileMenu.querySelectorAll('a, button').forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.add('hidden');
+        const icon = mobileMenuBtn.querySelector('i');
+        icon.className = 'fas fa-bars text-xl';
+      });
+    });
+  }
+}
+
+// Initialize all functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('ConvertWiz navigation initialized');
+    
+    // Initialize routing
+    initializeRouting();
+    
+    // Initialize AdSense lazy loading
+    initializeAdSenseLazyLoading();
+    
+    // Load and optimize images
+    optimizeImageLoading();
+    
+    // Fix 2: Setup mobile menu
+    setupMobileMenu();
+});
