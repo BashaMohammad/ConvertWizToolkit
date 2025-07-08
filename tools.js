@@ -3618,22 +3618,6 @@ class URLShortener {
                 }
 
                 this.showNotification('Short URL created successfully!', 'success');
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Original URL</label>
-                                <div class="bg-white p-3 border rounded-lg text-sm break-all">${longUrl}</div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Short URL</label>
-                                <div class="bg-white p-3 border rounded-lg text-sm break-all font-mono text-violet-600">${data.shortUrl}</div>
-                            </div>
-                            <button onclick="navigator.clipboard.writeText(\"${data.shortUrl}\").then(() => alert(\"Copied to clipboard!\"))" class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg">
-                                <i class="fas fa-copy mr-2"></i>Copy Short URL
-                            </button>
-                        </div>
-                    </div>
-                `;
-                this.showNotification("Short URL created successfully!", "success");
             }
         } catch (error) {
             resultsDiv.innerHTML = "<p class=\"text-red-500\">Error creating short URL. Please try again.</p>";
