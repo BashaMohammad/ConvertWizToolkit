@@ -400,7 +400,10 @@ app.post('/api/shortener', express.urlencoded({extended:true}), express.json(), 
       [shortCode, url]
     );
     
-    const shortUrl = `${req.protocol}://${req.get('host')}/s/${shortCode}`;
+    // Create short URL with custom domain or current host
+    const host = req.get('host');
+    const baseUrl = host.includes('localhost') ? `${req.protocol}://${host}` : 'https://cvz.to';
+    const shortUrl = `${baseUrl}/s/${shortCode}`;
     
     res.json({
       shortUrl,
