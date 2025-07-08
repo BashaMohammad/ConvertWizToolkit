@@ -40,7 +40,12 @@ function updateURLAndTrackPageview(sectionId) {
     'percentage-calculator-section': '/percentage',
     'temperature-converter-section': '/temperature',
     'color-converter-section': '/color',
-    'image-compressor-section': '/compress'
+    'image-compressor-section': '/compress',
+    'text-to-speech-section': '/text-to-speech',
+    'backlink-checker-section': '/backlink-checker',
+    'meta-tag-generator-section': '/meta-tag-generator',
+    'dpi-checker-section': '/dpi-checker',
+    'url-shortener-section': '/url-shortener'
   };
   
   const newPath = sectionToPath[sectionId] || '/';
@@ -174,6 +179,21 @@ function initializeTool(sectionId) {
                 break;
             case 'image-compressor-section':
                 currentTool = new ImageCompressor();
+                break;
+            case 'text-to-speech-section':
+                currentTool = new TextToSpeechConverter();
+                break;
+            case 'backlink-checker-section':
+                currentTool = new BacklinkChecker();
+                break;
+            case 'meta-tag-generator-section':
+                currentTool = new MetaTagGenerator();
+                break;
+            case 'dpi-checker-section':
+                currentTool = new DPIChecker();
+                break;
+            case 'url-shortener-section':
+                currentTool = new URLShortener();
                 break;
         }
     } catch (error) {
@@ -346,7 +366,12 @@ function getSectionFromPath(path) {
         '/percentage': 'percentage-calculator-section',
         '/temperature': 'temperature-converter-section',
         '/color': 'color-converter-section',
-        '/compress': 'image-compressor-section'
+        '/compress': 'image-compressor-section',
+        '/text-to-speech': 'text-to-speech-section',
+        '/backlink-checker': 'backlink-checker-section',
+        '/meta-tag-generator': 'meta-tag-generator-section',
+        '/dpi-checker': 'dpi-checker-section',
+        '/url-shortener': 'url-shortener-section'
     };
     
     return pathToSection[path] || 'landing-section';

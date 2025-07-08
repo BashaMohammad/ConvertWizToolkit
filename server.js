@@ -306,6 +306,45 @@ app.get('/blog', (req, res) => {
   res.sendFile(path.join(__dirname, 'blog.html'));
 });
 
+// ===== New SEO Tool Routes =====
+app.get('/tools/backlink-checker', (req, res) => {
+    res.setHeader('Cache-Control','no-store');
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/tools/meta-tag-generator', (req, res) => {
+    res.setHeader('Cache-Control','no-store');
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/tools/dpi-checker', (req, res) => {
+    res.setHeader('Cache-Control','no-store');
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/tools/url-shortener', (req, res) => {
+    res.setHeader('Cache-Control','no-store');
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/tools/text-to-speech', (req, res) => {
+    res.setHeader('Cache-Control','no-store');
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// === Short URL Tool API (SEO + Usability)
+const shortLinks = {};
+app.post('/api/shortener', express.urlencoded({extended:true}), express.json(), (req, res) => {
+  const id = Date.now().toString(36);
+  shortLinks[id] = req.body.url;
+  res.json({shortUrl:`${req.protocol}://${req.get('host')}/s/${id}`});
+});
+
+app.get('/s/:id', (req, res) => {
+  const dest = shortLinks[req.params.id];
+  if(dest) res.redirect(dest); else res.status(404).send('Short URL not found.');
+});
+
 // Serve static files and SPA routing for all other routes
 app.get('/', (req, res) => {
   // Force logout on browser reopen - disable cache login

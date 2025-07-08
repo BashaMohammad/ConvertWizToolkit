@@ -463,7 +463,7 @@
                     </div>
                     
                     <div class="flex justify-center">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-7xl">
                             <!-- Word Counter -->
                             <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                                 <div class="text-center">
@@ -478,15 +478,15 @@
                                 </div>
                             </div>
 
-                            <!-- Percentage Calculator -->
+                            <!-- Text-to-Speech -->
                             <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                                 <div class="text-center">
                                     <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                        <i class="fas fa-calculator text-white text-2xl"></i>
+                                        <i class="fas fa-volume-up text-white text-2xl"></i>
                                     </div>
-                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Percentage Calculator</h4>
-                                    <p class="text-gray-600 text-sm mb-4">Calculate percentages, tips, discounts, and percentage changes</p>
-                                    <button data-target="percentage-calculator-section" class="inline-block w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Text to Speech</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Convert written text into spoken audio in real-time</p>
+                                    <button data-target="text-to-speech-section" class="inline-block w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
                                         Try Now
                                     </button>
                                 </div>
@@ -550,6 +550,76 @@
                                     <p class="text-gray-600 text-sm mb-4">Create professional PDFs with templates</p>
                                     <button class="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
                                         Premium Only
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Backlink Checker -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-link text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Backlink Checker</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Check your site's backlinks for better SEO optimization</p>
+                                    <button data-target="backlink-checker-section" class="inline-block w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Meta Tag Generator -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-tags text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Meta Tag Generator</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Generate SEO-ready meta tags for webpages</p>
+                                    <button data-target="meta-tag-generator-section" class="inline-block w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- DPI Checker -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-search text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">DPI Checker</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Check image resolution (DPI) for design or print</p>
+                                    <button data-target="dpi-checker-section" class="inline-block w-full bg-gradient-to-r from-amber-500 to-yellow-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- URL Shortener -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-compress text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">URL Shortener</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Create short, shareable URLs for better link management</p>
+                                    <button data-target="url-shortener-section" class="inline-block w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Text to Speech -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-volume-up text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Text to Speech</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Convert written text into spoken audio in real-time</p>
+                                    <button data-target="text-to-speech-section" class="inline-block w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
                                     </button>
                                 </div>
                             </div>
@@ -2366,5 +2436,334 @@ Contact: John Doe, Company Inc."></textarea>
             }
         });
     </script>
+
+    <!-- TEXT-TO-SPEECH SECTION -->
+    <div class="tool-section" id="text-to-speech-section" style="display: none;">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">🔊 Text to Speech</h2>
+                <p class="text-xl text-white/90 mb-4">Convert written text into spoken audio in real-time</p>
+            </section>
+
+            <!-- Text-to-Speech Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-volume-up text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Text to Speech Converter</h3>
+                        <p class="text-gray-600">Convert written text into spoken audio using browser speech synthesis</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Text to Speech</label>
+                            <textarea id="tts-text" rows="6" placeholder="Enter text here..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Voice</label>
+                                <select id="tts-voice" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    <option value="">Default Voice</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Speed</label>
+                                <input type="range" id="tts-rate" min="0.5" max="2" value="1" step="0.1" class="w-full">
+                                <div class="text-center text-sm text-gray-500 mt-1">
+                                    <span id="rate-value">1.0x</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4 justify-center">
+                            <button id="speak-btn" class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-play mr-2"></i>Speak
+                            </button>
+                            <button id="stop-btn" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-stop mr-2"></i>Stop
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- BACKLINK CHECKER SECTION -->
+    <div class="tool-section" id="backlink-checker-section" style="display: none;">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">🔗 Backlink Checker</h2>
+                <p class="text-xl text-white/90 mb-4">Analyze your website's backlinks for better SEO optimization</p>
+            </section>
+
+            <!-- Backlink Checker Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-link text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Website Backlink Analysis</h3>
+                        <p class="text-gray-600">Check your site's backlinks for better SEO performance</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
+                            <input type="url" id="backlink-url" placeholder="https://example.com" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                        </div>
+                        
+                        <div class="flex gap-4 justify-center">
+                            <button id="check-backlinks-btn" class="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-search mr-2"></i>Check Backlinks
+                            </button>
+                        </div>
+                        
+                        <div id="backlink-results" class="mt-8">
+                            <p class="text-gray-500">Enter a website URL to analyze backlinks</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- META TAG GENERATOR SECTION -->
+    <div class="tool-section" id="meta-tag-generator-section" style="display: none;">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">🏷️ Meta Tag Generator</h2>
+                <p class="text-xl text-white/90 mb-4">Generate SEO-ready meta tags for your webpages</p>
+            </section>
+
+            <!-- Meta Tag Generator Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-tags text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">SEO Meta Tag Generator</h3>
+                        <p class="text-gray-600">Create optimized meta tags for better search engine visibility</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Page Title</label>
+                                <input type="text" id="meta-title" placeholder="Your page title" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Keywords</label>
+                                <input type="text" id="meta-keywords" placeholder="keyword1, keyword2, keyword3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea id="meta-description" rows="3" placeholder="A brief description of your page content" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <div class="flex gap-4 justify-center">
+                            <button id="generate-meta-btn" class="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-code mr-2"></i>Generate Meta Tags
+                            </button>
+                        </div>
+                        
+                        <div id="meta-results" class="mt-8">
+                            <p class="text-gray-500">Fill in the fields above to generate meta tags</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- DPI CHECKER SECTION -->
+    <div class="tool-section" id="dpi-checker-section" style="display: none;">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">🔍 DPI Checker</h2>
+                <p class="text-xl text-white/90 mb-4">Check image resolution (DPI) for design or print purposes</p>
+            </section>
+
+            <!-- DPI Checker Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-search text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Image DPI Analysis</h3>
+                        <p class="text-gray-600">Upload an image to check its resolution and DPI information</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                            <input type="file" id="dpi-file" accept="image/*" class="hidden">
+                            <button onclick="document.getElementById('dpi-file').click()" class="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white px-6 py-3 rounded-xl font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-upload mr-2"></i>Choose Image
+                            </button>
+                            <p class="text-gray-500 mt-2">Upload JPG, PNG, or WebP image</p>
+                        </div>
+                        
+                        <div id="dpi-results" class="mt-8">
+                            <p class="text-gray-500">Upload an image to analyze its DPI and resolution</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- URL SHORTENER SECTION -->
+    <div class="tool-section" id="url-shortener-section" style="display: none;">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">🔗 URL Shortener</h2>
+                <p class="text-xl text-white/90 mb-4">Create short, shareable URLs for better link management</p>
+            </section>
+
+            <!-- URL Shortener Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-violet-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-compress text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Link Shortener</h3>
+                        <p class="text-gray-600">Convert long URLs into short, manageable links</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Long URL</label>
+                            <input type="url" id="long-url" placeholder="https://example.com/very/long/url/path" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                        </div>
+                        
+                        <div class="flex gap-4 justify-center">
+                            <button id="shorten-url-btn" class="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-compress mr-2"></i>Shorten URL
+                            </button>
+                        </div>
+                        
+                        <div id="url-shortener-results" class="mt-8">
+                            <p class="text-gray-500">Enter a long URL to create a shortened version</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- TEXT TO SPEECH SECTION -->
+    <div class="tool-section" id="text-to-speech-section" style="display: none;">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <button data-target="landing-section" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">🔊 Text to Speech</h2>
+                <p class="text-xl text-white/90 mb-4">Convert written text into spoken audio in real-time</p>
+            </section>
+
+            <!-- Text to Speech Card -->
+            <div class="max-w-4xl mx-auto">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-volume-up text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Audio Generator</h3>
+                        <p class="text-gray-600">Convert any text into natural-sounding speech</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Text to Convert</label>
+                            <textarea id="tts-text" rows="6" placeholder="Enter the text you want to convert to speech..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Voice</label>
+                                <select id="tts-voice" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    <option value="">Default Voice</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Speed: <span id="rate-value">1x</span></label>
+                                <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4 justify-center">
+                            <button id="speak-btn" class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-play mr-2"></i>Speak
+                            </button>
+                            <button id="stop-btn" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                <i class="fas fa-stop mr-2"></i>Stop
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

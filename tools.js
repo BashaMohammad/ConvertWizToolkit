@@ -3178,3 +3178,432 @@ class ColorConverter {
         // Clean up event listeners if needed
     }
 }
+
+
+// ===== NEW SEO TOOLS =====
+
+// Text-to-Speech Converter
+class TextToSpeechConverter {
+    constructor() {
+        this.initEventListeners();
+        this.loadVoices();
+    }
+
+    initEventListeners() {
+        const speakBtn = document.getElementById("speak-btn");
+        const stopBtn = document.getElementById("stop-btn");
+        const rateSlider = document.getElementById("tts-rate");
+        
+        if (speakBtn) speakBtn.addEventListener("click", () => this.speak());
+        if (stopBtn) stopBtn.addEventListener("click", () => this.stop());
+        if (rateSlider) rateSlider.addEventListener("input", () => this.updateRateDisplay());
+    }
+
+    loadVoices() {
+        const voiceSelect = document.getElementById("tts-voice");
+        if (!voiceSelect) return;
+
+        const voices = speechSynthesis.getVoices();
+        voiceSelect.innerHTML = "<option value=\"\">Default Voice</option>";
+        
+        voices.forEach((voice, index) => {
+            const option = document.createElement("option");
+            option.value = index;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            voiceSelect.appendChild(option);
+        });
+    }
+
+    speak() {
+        const text = document.getElementById("tts-text")?.value;
+        if (!text) {
+            this.showNotification("Please enter some text to speak", "warning");
+            return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voiceSelect = document.getElementById("tts-voice");
+        const rate = document.getElementById("tts-rate")?.value || 1;
+        
+        if (voiceSelect && voiceSelect.value) {
+            const voices = speechSynthesis.getVoices();
+            utterance.voice = voices[voiceSelect.value];
+        }
+        
+        utterance.rate = rate;
+        speechSynthesis.speak(utterance);
+        this.showNotification("Speaking...", "success");
+    }
+
+    stop() {
+        speechSynthesis.cancel();
+        this.showNotification("Speech stopped", "info");
+    }
+
+    updateRateDisplay() {
+        const rate = document.getElementById("tts-rate")?.value;
+        const rateValue = document.getElementById("rate-value");
+        if (rateValue) rateValue.textContent = `${rate}x`;
+    }
+
+    showNotification(message, type = "info") {
+        let notification = document.getElementById("tts-notification");
+        if (!notification) {
+            notification = document.createElement("div");
+            notification.id = "tts-notification";
+            notification.className = "fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform translate-x-full transition-transform duration-300";
+            document.body.appendChild(notification);
+        }
+
+        const colors = {
+            success: "bg-green-500",
+            error: "bg-red-500",
+            info: "bg-blue-500",
+            warning: "bg-yellow-500"
+        };
+
+        notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform transition-all duration-300 ${colors[type] || colors.info}`;
+        notification.textContent = message;
+        notification.style.transform = "translateX(0)";
+
+        setTimeout(() => {
+            notification.style.transform = "translateX(100%)";
+        }, 3000);
+    }
+
+    destroy() {
+        speechSynthesis.cancel();
+    }
+}
+
+// Backlink Checker
+class BacklinkChecker {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const checkBtn = document.getElementById("check-backlinks-btn");
+        if (checkBtn) checkBtn.addEventListener("click", () => this.checkBacklinks());
+    }
+
+    async checkBacklinks() {
+        const urlInput = document.getElementById("backlink-url");
+        const resultsDiv = document.getElementById("backlink-results");
+        
+        if (!urlInput || !resultsDiv) return;
+        
+        const url = urlInput.value.trim();
+        if (!url) {
+            this.showNotification("Please enter a valid URL", "warning");
+            return;
+        }
+
+        resultsDiv.innerHTML = "<div class=\"text-center\"><i class=\"fas fa-spinner fa-spin text-2xl text-teal-500\"></i><p class=\"mt-2\">Analyzing backlinks...</p></div>";
+
+        setTimeout(() => {
+            resultsDiv.innerHTML = `
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h4 class="font-bold text-lg mb-4">Backlink Analysis for ${url}</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-lg shadow text-center">
+                            <div class="text-2xl font-bold text-teal-600">24</div>
+                            <div class="text-sm text-gray-600">Total Backlinks</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow text-center">
+                            <div class="text-2xl font-bold text-green-600">18</div>
+                            <div class="text-sm text-gray-600">Referring Domains</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow text-center">
+                            <div class="text-2xl font-bold text-blue-600">65</div>
+                            <div class="text-sm text-gray-600">Domain Authority</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p class="text-sm text-yellow-800">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            This is a demo analysis. For real backlink data, integrate with SEO APIs like Ahrefs, SEMrush, or Moz.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }, 2000);
+    }
+
+    showNotification(message, type = "info") {
+        let notification = document.getElementById("backlink-notification");
+        if (!notification) {
+            notification = document.createElement("div");
+            notification.id = "backlink-notification";
+            notification.className = "fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform translate-x-full transition-transform duration-300";
+            document.body.appendChild(notification);
+        }
+
+        const colors = {
+            success: "bg-green-500",
+            error: "bg-red-500",
+            info: "bg-blue-500",
+            warning: "bg-yellow-500"
+        };
+
+        notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform transition-all duration-300 ${colors[type] || colors.info}`;
+        notification.textContent = message;
+        notification.style.transform = "translateX(0)";
+
+        setTimeout(() => {
+            notification.style.transform = "translateX(100%)";
+        }, 3000);
+    }
+
+    destroy() {}
+}
+
+// Meta Tag Generator
+class MetaTagGenerator {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const generateBtn = document.getElementById("generate-meta-btn");
+        if (generateBtn) generateBtn.addEventListener("click", () => this.generateMetaTags());
+    }
+
+    generateMetaTags() {
+        const title = document.getElementById("meta-title")?.value || "";
+        const description = document.getElementById("meta-description")?.value || "";
+        const keywords = document.getElementById("meta-keywords")?.value || "";
+        const resultsDiv = document.getElementById("meta-results");
+        
+        if (!resultsDiv) return;
+        
+        if (!title && !description && !keywords) {
+            this.showNotification("Please fill in at least one field", "warning");
+            return;
+        }
+
+        const metaTags = [];
+        
+        if (title) {
+            metaTags.push(`<title>${title}</title>`);
+        }
+        
+        if (description) {
+            metaTags.push(`<meta name="description" content="${description}">`);
+        }
+        
+        if (keywords) {
+            metaTags.push(`<meta name="keywords" content="${keywords}">`);
+        }
+
+        const html = metaTags.join("\n");
+        
+        resultsDiv.innerHTML = `
+            <div class="bg-gray-50 rounded-lg p-6">
+                <h4 class="font-bold text-lg mb-4">Generated Meta Tags</h4>
+                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                    <pre>${html}</pre>
+                </div>
+                <button onclick="navigator.clipboard.writeText(\`${html.replace(/\`/g, "\\`")}\`).then(() => alert(\"Copied to clipboard!\"))" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg">
+                    <i class="fas fa-copy mr-2"></i>Copy to Clipboard
+                </button>
+            </div>
+        `;
+    }
+
+    showNotification(message, type = "info") {
+        let notification = document.getElementById("meta-notification");
+        if (!notification) {
+            notification = document.createElement("div");
+            notification.id = "meta-notification";
+            notification.className = "fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform translate-x-full transition-transform duration-300";
+            document.body.appendChild(notification);
+        }
+
+        const colors = {
+            success: "bg-green-500",
+            error: "bg-red-500",
+            info: "bg-blue-500",
+            warning: "bg-yellow-500"
+        };
+
+        notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform transition-all duration-300 ${colors[type] || colors.info}`;
+        notification.textContent = message;
+        notification.style.transform = "translateX(0)";
+
+        setTimeout(() => {
+            notification.style.transform = "translateX(100%)";
+        }, 3000);
+    }
+
+    destroy() {}
+}
+
+// DPI Checker
+class DPIChecker {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const fileInput = document.getElementById("dpi-file");
+        if (fileInput) fileInput.addEventListener("change", (e) => this.handleFile(e.target.files[0]));
+    }
+
+    handleFile(file) {
+        if (!file) return;
+        
+        const resultsDiv = document.getElementById("dpi-results");
+        if (!resultsDiv) return;
+
+        resultsDiv.innerHTML = "<div class=\"text-center\"><i class=\"fas fa-spinner fa-spin text-2xl text-amber-500\"></i><p class=\"mt-2\">Analyzing image...</p></div>";
+
+        const img = new Image();
+        img.onload = () => {
+            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            const megapixels = (img.width * img.height / 1000000).toFixed(1);
+            const estimatedDPI = Math.round(Math.sqrt(img.width * img.height) / 10);
+
+            resultsDiv.innerHTML = `
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h4 class="font-bold text-lg mb-4">Image Analysis Results</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-sm text-gray-600">Resolution</div>
+                            <div class="text-xl font-bold text-amber-600">${img.width} × ${img.height}</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-sm text-gray-600">File Size</div>
+                            <div class="text-xl font-bold text-amber-600">${fileSizeMB} MB</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-sm text-gray-600">Megapixels</div>
+                            <div class="text-xl font-bold text-amber-600">${megapixels} MP</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="text-sm text-gray-600">Estimated DPI</div>
+                            <div class="text-xl font-bold text-amber-600">${estimatedDPI}</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-sm text-blue-800">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            DPI estimation based on image dimensions. For accurate DPI, check image metadata or source specifications.
+                        </p>
+                    </div>
+                </div>
+            `;
+        };
+
+        img.onerror = () => {
+            resultsDiv.innerHTML = "<p class=\"text-red-500\">Error loading image. Please try a different file.</p>";
+        };
+
+        img.src = URL.createObjectURL(file);
+    }
+
+    destroy() {}
+}
+
+// URL Shortener
+class URLShortener {
+    constructor() {
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const shortenBtn = document.getElementById("shorten-url-btn");
+        if (shortenBtn) shortenBtn.addEventListener("click", () => this.shortenURL());
+    }
+
+    async shortenURL() {
+        const urlInput = document.getElementById("long-url");
+        const resultsDiv = document.getElementById("url-shortener-results");
+        
+        if (!urlInput || !resultsDiv) return;
+        
+        const longUrl = urlInput.value.trim();
+        if (!longUrl) {
+            this.showNotification("Please enter a valid URL", "warning");
+            return;
+        }
+
+        if (!this.isValidURL(longUrl)) {
+            this.showNotification("Please enter a valid URL starting with http:// or https://", "error");
+            return;
+        }
+
+        resultsDiv.innerHTML = "<div class=\"text-center\"><i class=\"fas fa-spinner fa-spin text-2xl text-violet-500\"></i><p class=\"mt-2\">Creating short URL...</p></div>";
+
+        try {
+            const response = await fetch("/api/shortener", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: longUrl })
+            });
+
+            const data = await response.json();
+            
+            if (data.shortUrl) {
+                resultsDiv.innerHTML = `
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h4 class="font-bold text-lg mb-4">Shortened URL Created</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Original URL</label>
+                                <div class="bg-white p-3 border rounded-lg text-sm break-all">${longUrl}</div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Short URL</label>
+                                <div class="bg-white p-3 border rounded-lg text-sm break-all font-mono text-violet-600">${data.shortUrl}</div>
+                            </div>
+                            <button onclick="navigator.clipboard.writeText(\"${data.shortUrl}\").then(() => alert(\"Copied to clipboard!\"))" class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-copy mr-2"></i>Copy Short URL
+                            </button>
+                        </div>
+                    </div>
+                `;
+                this.showNotification("Short URL created successfully!", "success");
+            }
+        } catch (error) {
+            resultsDiv.innerHTML = "<p class=\"text-red-500\">Error creating short URL. Please try again.</p>";
+            this.showNotification("Error creating short URL", "error");
+        }
+    }
+
+    isValidURL(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
+    showNotification(message, type = "info") {
+        let notification = document.getElementById("url-notification");
+        if (!notification) {
+            notification = document.createElement("div");
+            notification.id = "url-notification";
+            notification.className = "fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform translate-x-full transition-transform duration-300";
+            document.body.appendChild(notification);
+        }
+
+        const colors = {
+            success: "bg-green-500",
+            error: "bg-red-500",
+            info: "bg-blue-500",
+            warning: "bg-yellow-500"
+        };
+
+        notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform transition-all duration-300 ${colors[type] || colors.info}`;
+        notification.textContent = message;
+        notification.style.transform = "translateX(0)";
+
+        setTimeout(() => {
+            notification.style.transform = "translateX(100%)";
+        }, 3000);
+    }
+
+    destroy() {}
+}
