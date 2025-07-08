@@ -2560,7 +2560,7 @@ class PercentageCalculator {
 
     showResult(message, type = 'info', result = null) {
         const resultDiv = document.getElementById('percentage-result');
-        if (!resultDiv) return;ltDiv) return;
+        if (!resultDiv) return;
 
         resultDiv.className = `mt-4 p-4 rounded-lg ${
             type === 'error' 
