@@ -3564,16 +3564,26 @@ class URLShortener {
                                     <div class="text-sm text-gray-600 mb-2">Original URL</div>
                                     <div class="text-sm text-gray-800 break-all">${data.originalUrl}</div>
                                 </div>
+                                <div class="bg-white p-4 rounded-lg shadow mb-4">
+                                    <div class="text-sm text-gray-600 mb-2">Short Code (6 chars) ⚡</div>
+                                    <div class="text-3xl font-bold text-violet-600 mb-3 font-mono tracking-wider bg-gray-50 p-3 rounded-lg text-center">${data.shortCode}</div>
+                                    <div class="flex gap-2">
+                                        <button onclick="navigator.clipboard.writeText('${data.shortCode}'); this.innerHTML='<i class=\\"fas fa-check\\"></i> Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy Code', 2000)" 
+                                                class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg text-sm transition-all w-full">
+                                            <i class="fas fa-copy"></i> Copy Short Code
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="bg-white p-4 rounded-lg shadow">
-                                    <div class="text-sm text-gray-600 mb-2">Short URL</div>
-                                    <div class="text-lg font-bold text-violet-600 break-all mb-3">${data.shortUrl}</div>
+                                    <div class="text-sm text-gray-600 mb-2">Full URL (for sharing)</div>
+                                    <div class="text-sm text-gray-700 break-all mb-3 bg-gray-50 p-2 rounded">${data.shortUrl}</div>
                                     <div class="flex gap-2">
                                         <button onclick="navigator.clipboard.writeText('${data.shortUrl}'); this.innerHTML='<i class=\\"fas fa-check\\"></i> Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy URL', 2000)" 
-                                                class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm transition-all flex-1">
                                             <i class="fas fa-copy"></i> Copy URL
                                         </button>
                                         <a href="${data.shortUrl}" target="_blank" 
-                                           class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                                           class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition-all flex-1 text-center">
                                             <i class="fas fa-external-link-alt"></i> Test URL
                                         </a>
                                     </div>
