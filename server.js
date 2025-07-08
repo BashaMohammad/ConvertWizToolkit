@@ -332,17 +332,115 @@ app.get('/tools/text-to-speech', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// === Short URL Tool API (SEO + Usability)
-const shortLinks = {};
-app.post('/api/shortener', express.urlencoded({extended:true}), express.json(), (req, res) => {
-  const id = Date.now().toString(36);
-  shortLinks[id] = req.body.url;
-  res.json({shortUrl:`${req.protocol}://${req.get('host')}/s/${id}`});
+// User Dashboard Route
+app.get('/dashboard', (req, res) => {
+    res.setHeader('Cache-Control','no-store');
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-app.get('/s/:id', (req, res) => {
-  const dest = shortLinks[req.params.id];
-  if(dest) res.redirect(dest); else res.status(404).send('Short URL not found.');
+// === PostgreSQL Database Integration ===
+const { Pool } = require('pg');
+
+// Initialize PostgreSQL connection
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+// Test database connection
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error('Error connecting to PostgreSQL database:', err);
+  } else {
+    console.log('✅ Successfully connected to PostgreSQL database');
+    release();
+  }
+});
+
+// === Short URL Tool API (SEO + Usability) ===
+// Generate truly short alphanumeric code
+function generateShortCode() {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+app.post('/api/shortener', express.urlencoded({extended:true}), express.json(), async (req, res) => {
+  try {
+    const { url } = req.body;
+    
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+    
+    // Generate a short code
+    let shortCode = generateShortCode();
+    
+    // Ensure uniqueness by checking database
+    let isUnique = false;
+    while (!isUnique) {
+      const existingUrl = await pool.query(
+        'SELECT id FROM short_urls WHERE short_code = $1',
+        [shortCode]
+      );
+      
+      if (existingUrl.rows.length === 0) {
+        isUnique = true;
+      } else {
+        shortCode = generateShortCode();
+      }
+    }
+    
+    // Store in PostgreSQL database (never expires by default)
+    await pool.query(
+      'INSERT INTO short_urls (short_code, original_url, created_at) VALUES ($1, $2, NOW())',
+      [shortCode, url]
+    );
+    
+    const shortUrl = `${req.protocol}://${req.get('host')}/s/${shortCode}`;
+    
+    res.json({
+      shortUrl,
+      shortCode,
+      originalUrl: url,
+      qrCodeData: shortUrl // This will be used for QR code generation
+    });
+  } catch (error) {
+    console.error('Error creating short URL:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/s/:id', async (req, res) => {
+  try {
+    const shortCode = req.params.id;
+    
+    // Get URL from database
+    const result = await pool.query(
+      'SELECT original_url, is_active FROM short_urls WHERE short_code = $1',
+      [shortCode]
+    );
+    
+    if (result.rows.length === 0 || !result.rows[0].is_active) {
+      return res.status(404).send('Short URL not found or has expired.');
+    }
+    
+    const originalUrl = result.rows[0].original_url;
+    
+    // Increment click counter and update last clicked timestamp
+    await pool.query(
+      'UPDATE short_urls SET clicks = clicks + 1, last_clicked_at = NOW() WHERE short_code = $1',
+      [shortCode]
+    );
+    
+    res.redirect(originalUrl);
+  } catch (error) {
+    console.error('Error redirecting short URL:', error);
+    res.status(500).send('Internal server error');
+  }
 });
 
 // Serve static files and SPA routing for all other routes

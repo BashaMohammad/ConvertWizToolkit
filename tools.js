@@ -3545,9 +3545,79 @@ class URLShortener {
             const data = await response.json();
             
             if (data.shortUrl) {
+                // Generate QR code for the short URL
+                const qrCanvas = document.createElement('canvas');
+                const qr = new QRious({
+                    element: qrCanvas,
+                    value: data.shortUrl,
+                    size: 200,
+                    background: 'white',
+                    foreground: '#7c3aed'
+                });
+
                 resultsDiv.innerHTML = `
                     <div class="bg-gray-50 rounded-lg p-6">
-                        <h4 class="font-bold text-lg mb-4">Shortened URL Created</h4>
+                        <h4 class="font-bold text-lg mb-4">✅ URL Shortened Successfully!</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <div class="bg-white p-4 rounded-lg shadow mb-4">
+                                    <div class="text-sm text-gray-600 mb-2">Original URL</div>
+                                    <div class="text-sm text-gray-800 break-all">${data.originalUrl}</div>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-sm text-gray-600 mb-2">Short URL</div>
+                                    <div class="text-lg font-bold text-violet-600 break-all mb-3">${data.shortUrl}</div>
+                                    <div class="flex gap-2">
+                                        <button onclick="navigator.clipboard.writeText('${data.shortUrl}'); this.innerHTML='<i class=\\"fas fa-check\\"></i> Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy URL', 2000)" 
+                                                class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                                            <i class="fas fa-copy"></i> Copy URL
+                                        </button>
+                                        <a href="${data.shortUrl}" target="_blank" 
+                                           class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                                            <i class="fas fa-external-link-alt"></i> Test URL
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="bg-white p-4 rounded-lg shadow text-center">
+                                    <div class="text-sm text-gray-600 mb-3">QR Code</div>
+                                    <div id="qr-container" class="flex justify-center mb-4"></div>
+                                    <button id="download-qr-btn" 
+                                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                                        <i class="fas fa-download"></i> Download QR Code
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p class="text-sm text-blue-800">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Your short URL never expires and includes click tracking. The QR code can be downloaded for offline use.
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                // Add QR code to container
+                const qrContainer = document.getElementById('qr-container');
+                if (qrContainer) {
+                    qrContainer.appendChild(qrCanvas);
+                }
+
+                // Add download functionality
+                const downloadBtn = document.getElementById('download-qr-btn');
+                if (downloadBtn) {
+                    downloadBtn.addEventListener('click', () => {
+                        const link = document.createElement('a');
+                        link.download = `qr-${data.shortCode}.png`;
+                        link.href = qrCanvas.toDataURL();
+                        link.click();
+                        this.showNotification('QR Code downloaded successfully!', 'success');
+                    });
+                }
+
+                this.showNotification('Short URL created successfully!', 'success');
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Original URL</label>

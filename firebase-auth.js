@@ -434,6 +434,9 @@ class ConvertWizAuth {
             
             // Check for admin access and show admin link
             this.checkAdminAccess();
+            
+            // Show dashboard link for logged-in users
+            this.showDashboardLink(true);
         } else {
             // Update desktop auth button to login
             if (authBtn) {
@@ -456,6 +459,9 @@ class ConvertWizAuth {
             // Hide user info
             userInfo?.classList.add('hidden');
             mobileUserInfo?.classList.add('hidden');
+            
+            // Hide dashboard link for logged-out users
+            this.showDashboardLink(false);
             
             // Remove plan data attribute for logged out users (show ads)
             document.body.removeAttribute('data-user-plan');
@@ -1060,6 +1066,19 @@ class ConvertWizAuth {
         
         console.log('\n🎉 TEST SUITE COMPLETED!');
         console.log('Check above results to verify subscription logic works correctly.');
+    }
+
+    // Show/hide dashboard link based on authentication state
+    showDashboardLink(show) {
+        const dashboardNavItem = document.getElementById('dashboard-nav-item');
+        const mobileDashboardNavItem = document.getElementById('mobile-dashboard-nav-item');
+        
+        if (dashboardNavItem) {
+            dashboardNavItem.style.display = show ? 'block' : 'none';
+        }
+        if (mobileDashboardNavItem) {
+            mobileDashboardNavItem.style.display = show ? 'block' : 'none';
+        }
     }
 }
 

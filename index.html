@@ -111,6 +111,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <script>
         tailwind.config = {
@@ -190,6 +191,9 @@
                             <i class="fas fa-crown mr-1"></i>Pricing
                         </a>
                         <a href="#about" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">About</a>
+                        <a href="dashboard.html" id="dashboard-nav-item" class="nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
+                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        </a>
                         <a href="admin.html" class="admin-nav-item nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
                             <i class="fas fa-chart-line mr-1"></i>Admin
                         </a>
@@ -226,6 +230,9 @@
                         <i class="fas fa-crown mr-1"></i>Pricing
                     </a>
                     <a href="#about" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">About</a>
+                    <a href="dashboard.html" id="mobile-dashboard-nav-item" class="nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
+                        <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                    </a>
                     <button id="mobile-admin-link" class="admin-nav-item nav-link text-gray-700 hover:text-purple-600 transition-colors text-left" style="display: none;">
                         <i class="fas fa-chart-line mr-1"></i>Admin
                     </button>
