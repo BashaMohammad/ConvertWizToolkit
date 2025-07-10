@@ -3627,7 +3627,7 @@ class URLShortener {
                                     <div class="text-sm text-gray-600 mb-2">Short URL (Click to Visit)</div>
                                     <div class="text-lg font-bold text-violet-600 break-all mb-3 bg-gray-50 p-3 rounded-lg">${data.shortUrl}</div>
                                     <div class="flex gap-2">
-                                        <button onclick="navigator.clipboard.writeText('${data.shortUrl}'); this.innerHTML='<i class=\\"fas fa-check\\"></i> Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy URL', 2000)" 
+                                        <button onclick="navigator.clipboard.writeText('${data.shortUrl}'); this.innerHTML='<i class=\\"fas fa-check\\"></i> Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy Short URL', 2000)" 
                                                 class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg text-sm transition-all flex-1">
                                             <i class="fas fa-copy"></i> Copy Short URL
                                         </button>
