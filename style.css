@@ -383,9 +383,9 @@ html {
 .adsense-banner.landing-page {
     position: fixed;
     top: 50%;
-    right: 20px;
+    left: 20px;
     transform: translateY(-50%);
-    z-index: 1000;
+    z-index: 30;
     display: block !important;
 }
 
@@ -407,14 +407,7 @@ html {
 /* Mobile AdSense adjustments */
 @media (max-width: 768px) {
     .adsense-banner.landing-page {
-        position: relative;
-        top: auto;
-        right: auto;
-        transform: none;
-        width: 100%;
-        max-width: 320px;
-        margin: 1rem auto;
-        display: block !important;
+        display: none !important;
     }
     
     .adsense-banner.component-page.horizontal {
@@ -424,7 +417,7 @@ html {
     }
     
     .adsense-banner-right {
-        display: block !important;
+        display: none !important;
     }
     
     /* Ensure ad placeholders are visible in development */
