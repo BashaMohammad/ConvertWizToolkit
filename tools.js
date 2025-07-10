@@ -3627,7 +3627,7 @@ class URLShortener {
                                     <div class="text-sm text-gray-600 mb-2">Short URL (Click to Visit)</div>
                                     <div class="text-lg font-bold text-violet-600 break-all mb-3 bg-gray-50 p-3 rounded-lg">${data.shortUrl}</div>
                                     <div class="flex gap-2">
-                                        <button onclick="navigator.clipboard.writeText('${data.shortUrl}'); this.innerHTML='<i class=\\"fas fa-check\\"></i> Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy Short URL', 2000)" 
+                                        <button id="copy-short-url-btn" data-url="${data.shortUrl}"
                                                 class="bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg text-sm transition-all flex-1">
                                             <i class="fas fa-copy"></i> Copy Short URL
                                         </button>
@@ -3657,6 +3657,25 @@ class URLShortener {
                 const qrContainer = document.getElementById('qr-container');
                 if (qrContainer) {
                     qrContainer.appendChild(qrCanvas);
+                }
+
+                // Add copy functionality
+                const copyBtn = document.getElementById('copy-short-url-btn');
+                if (copyBtn) {
+                    copyBtn.addEventListener('click', async () => {
+                        const url = copyBtn.getAttribute('data-url');
+                        try {
+                            await navigator.clipboard.writeText(url);
+                            const originalText = copyBtn.innerHTML;
+                            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            setTimeout(() => {
+                                copyBtn.innerHTML = originalText;
+                            }, 2000);
+                            this.showNotification('URL copied to clipboard!', 'success');
+                        } catch (err) {
+                            this.showNotification('Failed to copy URL', 'error');
+                        }
+                    });
                 }
 
                 // Add download functionality
@@ -3839,8 +3858,7 @@ class URLShortener {
                         <div class="text-sm text-gray-600 mb-2">Original: <span class="text-gray-800">${result.original}</span></div>
                         <div class="text-lg font-bold text-violet-600 mb-3">${result.short}</div>
                         <div class="flex gap-2">
-                            <button onclick="navigator.clipboard.writeText('${result.short}'); this.innerHTML='Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy', 2000)" 
-                                    class="bg-violet-500 hover:bg-violet-600 text-white px-3 py-1 rounded text-sm transition-all">
+                            <button class="copy-bulk-url-btn bg-violet-500 hover:bg-violet-600 text-white px-3 py-1 rounded text-sm transition-all" data-url="${result.short}">
                                 <i class="fas fa-copy"></i> Copy
                             </button>
                             <a href="${result.short}" target="_blank" 
@@ -3870,6 +3888,25 @@ class URLShortener {
         `;
 
         resultsDiv.innerHTML = resultsHTML;
+        
+        // Add event listeners for all copy buttons
+        const copyBtns = resultsDiv.querySelectorAll('.copy-bulk-url-btn');
+        copyBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const url = btn.getAttribute('data-url');
+                try {
+                    await navigator.clipboard.writeText(url);
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                    }, 2000);
+                    this.showNotification('URL copied to clipboard!', 'success');
+                } catch (err) {
+                    this.showNotification('Failed to copy URL', 'error');
+                }
+            });
+        });
     }
 
     downloadCSV() {
