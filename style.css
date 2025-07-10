@@ -111,6 +111,75 @@
     }
 }
 
+/* Enhanced Mobile Button Sizes for Touch Accessibility */
+@media (max-width: 768px) {
+    /* Primary action buttons minimum 48px height */
+    button, 
+    input[type="submit"], 
+    input[type="button"],
+    .btn {
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Mobile menu button enhanced touch target */
+    #mobile-menu-btn {
+        min-height: 48px !important;
+        min-width: 48px !important;
+        padding: 12px !important;
+    }
+    
+    /* Authentication buttons */
+    .auth-btn {
+        min-height: 48px !important;
+        padding: 12px 24px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Cookie consent button */
+    .cookie-consent-btn {
+        min-height: 48px !important;
+        padding: 12px 24px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Tool action buttons */
+    .tool-section button {
+        min-height: 48px !important;
+        padding: 12px 24px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Input fields for better touch interaction */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="url"],
+    input[type="number"],
+    textarea,
+    select {
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+        font-size: 16px !important;
+    }
+    
+    /* File upload areas */
+    input[type="file"] {
+        min-height: 48px !important;
+        padding: 12px !important;
+    }
+    
+    /* Navigation links */
+    .nav-link,
+    .mobile-nav-link {
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+}
+
 /* Smooth card hover animations for land converter */
 .bg-white.hover\:scale-105:hover {
     transform: scale(1.05) translateY(-2px);

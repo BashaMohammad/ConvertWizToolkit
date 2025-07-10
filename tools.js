@@ -1202,10 +1202,10 @@ class InstagramDPResizer {
                     // Background fill option
                     const useBackground = this.backgroundOption ? this.backgroundOption.checked : true;
                     if (useBackground) {
-                        // Instagram-style gradient background
+                        // Enhanced Instagram-style gradient background
                         const gradient = ctx.createLinearGradient(0, 0, this.dpSize, this.dpSize);
-                        gradient.addColorStop(0, '#f9f9f9');
-                        gradient.addColorStop(1, '#ffffff');
+                        gradient.addColorStop(0, '#ff7e5f');
+                        gradient.addColorStop(1, '#feb47b');
                         ctx.fillStyle = gradient;
                         ctx.fillRect(0, 0, this.dpSize, this.dpSize);
                     }

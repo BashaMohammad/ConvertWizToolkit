@@ -235,7 +235,7 @@ app.post('/api/color-converter', (req, res) => {
   });
 });
 
-// Image Compressor API (JPG/PNG)
+// Image Compressor API (JPG/PNG) - Enhanced with better quality control
 app.post('/api/image-compressor', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -245,13 +245,15 @@ app.post('/api/image-compressor', upload.single('image'), async (req, res) => {
     const originalSize = req.file.buffer.length;
     const quality = parseInt(req.query.quality) || 60;
     
-    // Validate quality parameter
+    // Enhanced quality control range (50-70 as suggested in fixes)
+    const adjustedQuality = Math.min(Math.max(quality, 50), 70);
+    
     if (quality < 1 || quality > 100) {
       return res.status(400).json({ error: 'Quality must be between 1 and 100' });
     }
 
     const compressed = await sharp(req.file.buffer)
-      .jpeg({ quality })
+      .jpeg({ quality: adjustedQuality, progressive: true })
       .toBuffer();
 
     const compressedSize = compressed.length;
@@ -262,7 +264,8 @@ app.post('/api/image-compressor', upload.single('image'), async (req, res) => {
       originalSize,
       compressedSize,
       compressionRatio: `${compressionRatio}%`,
-      quality,
+      quality: adjustedQuality,
+      qualityUsed: adjustedQuality,
       data: compressed.toString('base64')
     });
   } catch (error) {

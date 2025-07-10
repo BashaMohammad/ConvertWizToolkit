@@ -140,6 +140,19 @@ function initializeTool(sectionId) {
         switch(sectionId) {
             case 'jpg-to-png-section':
                 currentTool = new JPGtoPNGConverter();
+                // Add GA4 event tracking for JPG to PNG converter
+                const jpgToPngBtn = document.getElementById('convert-bulk-btn');
+                if (jpgToPngBtn) {
+                    jpgToPngBtn.addEventListener('click', () => {
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'convert_trigger', { 
+                                tool: 'JPGtoPNG',
+                                event_category: 'conversion',
+                                event_label: 'bulk_convert'
+                            });
+                        }
+                    });
+                }
                 break;
             case 'currency-converter-section':
                 currentTool = new CurrencyConverter();
@@ -149,6 +162,19 @@ function initializeTool(sectionId) {
                 break;
             case 'dp-resizer-section':
                 currentTool = new InstagramDPResizer();
+                // Add GA4 event tracking for DP Resizer
+                const resizeBtn = document.getElementById('process-dp-btn');
+                if (resizeBtn) {
+                    resizeBtn.addEventListener('click', () => {
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'resize_trigger', { 
+                                tool: 'DPResizer',
+                                event_category: 'image_processing',
+                                event_label: 'resize_dp'
+                            });
+                        }
+                    });
+                }
                 break;
             case 'word-counter-section':
                 currentTool = new WordCounter();
@@ -179,6 +205,19 @@ function initializeTool(sectionId) {
                 break;
             case 'image-compressor-section':
                 currentTool = new ImageCompressor();
+                // Add GA4 event tracking for Image Compressor
+                const compressBtn = document.getElementById('compress-image-btn');
+                if (compressBtn) {
+                    compressBtn.addEventListener('click', () => {
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'compress_trigger', { 
+                                tool: 'ImageCompressor',
+                                event_category: 'compression',
+                                event_label: 'compress_image'
+                            });
+                        }
+                    });
+                }
                 break;
             case 'text-to-speech-section':
                 currentTool = new TextToSpeechConverter();
@@ -194,6 +233,31 @@ function initializeTool(sectionId) {
                 break;
             case 'url-shortener-section':
                 currentTool = new URLShortener();
+                // Add GA4 event tracking for URL Shortener
+                const shortenBtn = document.getElementById('shorten-url-btn');
+                const bulkShortenBtn = document.getElementById('bulk-shorten-btn');
+                if (shortenBtn) {
+                    shortenBtn.addEventListener('click', () => {
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'shorten_trigger', { 
+                                tool: 'URLShortener',
+                                event_category: 'url_processing',
+                                event_label: 'single_url'
+                            });
+                        }
+                    });
+                }
+                if (bulkShortenBtn) {
+                    bulkShortenBtn.addEventListener('click', () => {
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'bulk_shorten_trigger', { 
+                                tool: 'URLShortener',
+                                event_category: 'url_processing',
+                                event_label: 'bulk_urls'
+                            });
+                        }
+                    });
+                }
                 break;
         }
     } catch (error) {
