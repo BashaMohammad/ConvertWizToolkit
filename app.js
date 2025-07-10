@@ -256,6 +256,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize AdSense lazy loading for Core Web Vitals optimization
     initializeAdSenseLazyLoading();
+    
+    // Initialize mobile menu functionality
+    setupMobileMenu();
 });
 
 // AdSense Lazy Loading for Core Web Vitals Optimization
@@ -382,9 +385,13 @@ function setupMobileMenu() {
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
   
+  console.log('Setting up mobile menu - Button:', !!mobileMenuBtn, 'Menu:', !!mobileMenu);
+  
   if (mobileMenuBtn && mobileMenu) {
+    console.log('Mobile menu elements found, setting up event listeners');
     // Toggle mobile menu
     mobileMenuBtn.addEventListener('click', function(e) {
+      console.log('Mobile menu button clicked');
       e.preventDefault();
       e.stopPropagation();
       mobileMenu.classList.toggle('hidden');
@@ -393,8 +400,10 @@ function setupMobileMenu() {
       const icon = mobileMenuBtn.querySelector('i');
       if (mobileMenu.classList.contains('hidden')) {
         icon.className = 'fas fa-bars text-xl';
+        console.log('Mobile menu closed');
       } else {
         icon.className = 'fas fa-times text-xl';
+        console.log('Mobile menu opened');
       }
     });
     
@@ -415,6 +424,8 @@ function setupMobileMenu() {
         icon.className = 'fas fa-bars text-xl';
       });
     });
+  } else {
+    console.log('Mobile menu elements not found');
   }
 }
 

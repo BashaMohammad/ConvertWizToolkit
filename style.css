@@ -528,6 +528,23 @@ html {
         padding-left: 1rem;
         padding-right: 1rem;
     }
+    
+    /* Mobile menu button - ensure visibility and touch-friendly */
+    #mobile-menu-btn {
+        display: flex !important;
+        min-height: 48px !important;
+        min-width: 48px !important;
+        padding: 12px !important;
+        touch-action: manipulation;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+    
+    #mobile-menu-btn:hover {
+        background-color: rgba(139, 92, 246, 0.1);
+        border-radius: 8px;
+    }
 }
 
 @media (max-width: 480px) {
