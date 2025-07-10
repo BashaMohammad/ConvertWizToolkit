@@ -205,7 +205,7 @@
                             <div id="user-greeting">Welcome!</div>
                             <div id="usage-info" class="text-xs text-gray-500 mt-1">Loading usage...</div>
                         </div>
-                        <button id="auth-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg transition-all flex items-center space-x-2 font-medium">
+                        <button id="auth-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-lg transition-all flex items-center space-x-2 font-medium min-h-[44px]">
                             <i class="fas fa-sign-in-alt"></i>
                             <span>Login</span>
                         </button>
@@ -213,7 +213,7 @@
                 </div>
                 
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-purple-600">
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-purple-600 p-3 -mr-3 min-h-[48px] min-w-[48px] flex items-center justify-center">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
@@ -243,7 +243,7 @@
                             <div id="mobile-user-greeting">Welcome!</div>
                             <div id="mobile-usage-info" class="text-xs text-gray-500 mt-1">Loading usage...</div>
                         </div>
-                        <button id="mobile-auth-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center space-x-2 font-medium">
+                        <button id="mobile-auth-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-center space-x-2 font-medium min-h-[48px]">
                             <i class="fas fa-sign-in-alt"></i>
                             <span>Login</span>
                         </button>
@@ -2542,19 +2542,54 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                     
                     <div class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Long URL</label>
-                            <input type="url" id="long-url" placeholder="https://example.com/very/long/url/path" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent">
-                        </div>
-                        
-                        <div class="flex gap-4 justify-center">
-                            <button id="shorten-url-btn" class="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
-                                <i class="fas fa-compress mr-2"></i>Shorten URL
+                        <!-- Single URL Tab -->
+                        <div class="flex border-b border-gray-200 mb-6">
+                            <button id="single-url-tab" class="px-6 py-3 font-semibold text-violet-600 border-b-2 border-violet-600">
+                                <i class="fas fa-link mr-2"></i>Single URL
                             </button>
+                            <button id="bulk-url-tab" class="px-6 py-3 font-semibold text-gray-500 hover:text-violet-600 transition-colors">
+                                <i class="fas fa-list mr-2"></i>Bulk URLs
+                            </button>
+                        </div>
+
+                        <!-- Single URL Panel -->
+                        <div id="single-url-panel">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Long URL</label>
+                                <input type="url" id="long-url" placeholder="https://example.com/very/long/url/path" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                            </div>
+                            
+                            <div class="flex gap-4 justify-center mt-6">
+                                <button id="shorten-url-btn" class="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                    <i class="fas fa-compress mr-2"></i>Shorten URL
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bulk URL Panel -->
+                        <div id="bulk-url-panel" class="hidden">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Multiple URLs (one per line)</label>
+                                <textarea id="bulk-urls" placeholder="https://example1.com/long/url/path&#10;https://example2.com/another/long/url&#10;https://example3.com/yet/another/url" 
+                                          rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"></textarea>
+                                <p class="text-sm text-gray-500 mt-2">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Enter up to 10 URLs, one per line. Premium users can process unlimited URLs.
+                                </p>
+                            </div>
+                            
+                            <div class="flex gap-4 justify-center mt-6">
+                                <button id="bulk-shorten-btn" class="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg">
+                                    <i class="fas fa-magic mr-2"></i>Shorten All URLs
+                                </button>
+                                <button id="download-csv-btn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-all hover:shadow-lg hidden">
+                                    <i class="fas fa-download mr-2"></i>Download CSV
+                                </button>
+                            </div>
                         </div>
                         
                         <div id="url-shortener-results" class="mt-8">
-                            <p class="text-gray-500">Enter a long URL to create a shortened version</p>
+                            <p class="text-gray-500">Enter URL(s) to create shortened versions</p>
                         </div>
                     </div>
                 </section>

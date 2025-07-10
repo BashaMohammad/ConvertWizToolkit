@@ -2832,7 +2832,10 @@ class ImageCompressor {
     }
 
     async compressImage() {
-        if (!this.selectedFile) return;
+        if (!this.selectedFile) {
+            this.showNotification('Please select an image first', 'error');
+            return;
+        }
 
         const compressBtn = document.getElementById('compress-image-btn');
         const originalText = compressBtn.innerHTML;
@@ -2851,16 +2854,26 @@ class ImageCompressor {
             });
 
             if (!response.ok) {
-                throw new Error('Compression failed');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Compression failed');
             }
 
-            this.compressedBlob = await response.blob();
+            const result = await response.json();
+            
+            // Convert base64 to blob for JPEG
+            const binary = atob(result.data);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            this.compressedBlob = new Blob([bytes], { type: 'image/jpeg' });
+            
             this.showResults();
             this.showNotification('Image compressed successfully!', 'success');
 
         } catch (error) {
             console.error('Compression error:', error);
-            this.showNotification('Failed to compress image. Please try again.', 'error');
+            this.showNotification('Failed to compress image: ' + error.message, 'error');
         } finally {
             compressBtn.disabled = false;
             compressBtn.innerHTML = originalText;
@@ -3508,12 +3521,58 @@ class DPIChecker {
 // URL Shortener
 class URLShortener {
     constructor() {
+        this.bulkResults = [];
         this.initEventListeners();
+        this.initTabs();
     }
 
     initEventListeners() {
         const shortenBtn = document.getElementById("shorten-url-btn");
+        const bulkShortenBtn = document.getElementById("bulk-shorten-btn");
+        const downloadCsvBtn = document.getElementById("download-csv-btn");
+        
         if (shortenBtn) shortenBtn.addEventListener("click", () => this.shortenURL());
+        if (bulkShortenBtn) bulkShortenBtn.addEventListener("click", () => this.bulkShortenURLs());
+        if (downloadCsvBtn) downloadCsvBtn.addEventListener("click", () => this.downloadCSV());
+    }
+
+    initTabs() {
+        const singleTab = document.getElementById("single-url-tab");
+        const bulkTab = document.getElementById("bulk-url-tab");
+        const singlePanel = document.getElementById("single-url-panel");
+        const bulkPanel = document.getElementById("bulk-url-panel");
+
+        if (singleTab && bulkTab && singlePanel && bulkPanel) {
+            singleTab.addEventListener("click", () => {
+                this.switchTab("single");
+            });
+
+            bulkTab.addEventListener("click", () => {
+                this.switchTab("bulk");
+            });
+        }
+    }
+
+    switchTab(tab) {
+        const singleTab = document.getElementById("single-url-tab");
+        const bulkTab = document.getElementById("bulk-url-tab");
+        const singlePanel = document.getElementById("single-url-panel");
+        const bulkPanel = document.getElementById("bulk-url-panel");
+        const resultsDiv = document.getElementById("url-shortener-results");
+
+        if (tab === "single") {
+            singleTab.className = "px-6 py-3 font-semibold text-violet-600 border-b-2 border-violet-600";
+            bulkTab.className = "px-6 py-3 font-semibold text-gray-500 hover:text-violet-600 transition-colors";
+            singlePanel.classList.remove("hidden");
+            bulkPanel.classList.add("hidden");
+            resultsDiv.innerHTML = '<p class="text-gray-500">Enter a long URL to create a shortened version</p>';
+        } else {
+            bulkTab.className = "px-6 py-3 font-semibold text-violet-600 border-b-2 border-violet-600";
+            singleTab.className = "px-6 py-3 font-semibold text-gray-500 hover:text-violet-600 transition-colors";
+            bulkPanel.classList.remove("hidden");
+            singlePanel.classList.add("hidden");
+            resultsDiv.innerHTML = '<p class="text-gray-500">Enter multiple URLs to create shortened versions</p>';
+        }
     }
 
     async shortenURL() {
@@ -3590,12 +3649,7 @@ class URLShortener {
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p class="text-sm text-blue-800">
-                                <i class="fas fa-info-circle mr-2"></i>
-                                Your short URL never expires and includes click tracking. The QR code can be downloaded for offline use.
-                            </p>
-                        </div>
+
                     </div>
                 `;
 
@@ -3657,6 +3711,197 @@ class URLShortener {
         setTimeout(() => {
             notification.style.transform = "translateX(100%)";
         }, 3000);
+    }
+
+    async bulkShortenURLs() {
+        const bulkTextarea = document.getElementById("bulk-urls");
+        const resultsDiv = document.getElementById("url-shortener-results");
+        const bulkBtn = document.getElementById("bulk-shorten-btn");
+        const downloadBtn = document.getElementById("download-csv-btn");
+        
+        if (!bulkTextarea || !resultsDiv || !bulkBtn) return;
+        
+        const urls = bulkTextarea.value.trim().split('\n').filter(url => url.trim().length > 0);
+        
+        if (urls.length === 0) {
+            this.showNotification("Please enter at least one URL", "warning");
+            return;
+        }
+
+        if (urls.length > 10) {
+            this.showNotification("Free users can process up to 10 URLs at once. Upgrade to Premium for unlimited bulk processing.", "warning");
+            return;
+        }
+
+        // Validate all URLs first
+        const invalidUrls = urls.filter(url => !this.isValidURL(url.trim()));
+        if (invalidUrls.length > 0) {
+            this.showNotification(`Invalid URLs found: ${invalidUrls.slice(0, 3).join(', ')}`, "error");
+            return;
+        }
+
+        bulkBtn.disabled = true;
+        bulkBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing URLs...';
+        
+        resultsDiv.innerHTML = `
+            <div class="text-center">
+                <i class="fas fa-spinner fa-spin text-2xl text-violet-500"></i>
+                <p class="mt-2">Processing ${urls.length} URLs...</p>
+                <div class="mt-4 bg-gray-200 rounded-full h-2">
+                    <div id="bulk-progress" class="bg-violet-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+            </div>
+        `;
+
+        this.bulkResults = [];
+        const progressBar = document.getElementById("bulk-progress");
+
+        try {
+            for (let i = 0; i < urls.length; i++) {
+                const url = urls[i].trim();
+                const progress = ((i + 1) / urls.length) * 100;
+                
+                try {
+                    const response = await fetch("/api/shortener", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ url })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.shortUrl) {
+                        this.bulkResults.push({
+                            original: url,
+                            short: data.shortUrl,
+                            code: data.shortCode,
+                            status: 'success'
+                        });
+                    } else {
+                        this.bulkResults.push({
+                            original: url,
+                            status: 'error',
+                            error: 'Failed to shorten'
+                        });
+                    }
+                } catch (error) {
+                    this.bulkResults.push({
+                        original: url,
+                        status: 'error',
+                        error: error.message
+                    });
+                }
+
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
+                
+                // Small delay to show progress
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+
+            this.showBulkResults();
+            downloadBtn.classList.remove('hidden');
+            this.showNotification(`Successfully processed ${this.bulkResults.filter(r => r.status === 'success').length} out of ${urls.length} URLs`, 'success');
+
+        } catch (error) {
+            resultsDiv.innerHTML = `<p class="text-red-500">Error processing URLs: ${error.message}</p>`;
+            this.showNotification("Error processing bulk URLs", "error");
+        } finally {
+            bulkBtn.disabled = false;
+            bulkBtn.innerHTML = '<i class="fas fa-magic mr-2"></i>Shorten All URLs';
+        }
+    }
+
+    showBulkResults() {
+        const resultsDiv = document.getElementById("url-shortener-results");
+        const successCount = this.bulkResults.filter(r => r.status === 'success').length;
+        const errorCount = this.bulkResults.filter(r => r.status === 'error').length;
+
+        let resultsHTML = `
+            <div class="bg-gray-50 rounded-lg p-6">
+                <h4 class="font-bold text-lg mb-4">
+                    ✅ Bulk Processing Complete! 
+                    <span class="text-green-600">${successCount} success</span>
+                    ${errorCount > 0 ? `<span class="text-red-600">, ${errorCount} failed</span>` : ''}
+                </h4>
+                <div class="space-y-4 max-h-96 overflow-y-auto">
+        `;
+
+        this.bulkResults.forEach((result, index) => {
+            if (result.status === 'success') {
+                resultsHTML += `
+                    <div class="bg-white p-4 rounded-lg shadow border border-green-200">
+                        <div class="flex items-start justify-between mb-2">
+                            <span class="text-xs text-gray-500">#${index + 1}</span>
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Success</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">Original: <span class="text-gray-800">${result.original}</span></div>
+                        <div class="text-lg font-bold text-violet-600 mb-3">${result.short}</div>
+                        <div class="flex gap-2">
+                            <button onclick="navigator.clipboard.writeText('${result.short}'); this.innerHTML='Copied!'; setTimeout(() => this.innerHTML='<i class=\\"fas fa-copy\\"></i> Copy', 2000)" 
+                                    class="bg-violet-500 hover:bg-violet-600 text-white px-3 py-1 rounded text-sm transition-all">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <a href="${result.short}" target="_blank" 
+                               class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-all">
+                                <i class="fas fa-external-link-alt"></i> Test
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultsHTML += `
+                    <div class="bg-white p-4 rounded-lg shadow border border-red-200">
+                        <div class="flex items-start justify-between mb-2">
+                            <span class="text-xs text-gray-500">#${index + 1}</span>
+                            <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Failed</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">URL: <span class="text-gray-800">${result.original}</span></div>
+                        <div class="text-sm text-red-600">Error: ${result.error}</div>
+                    </div>
+                `;
+            }
+        });
+
+        resultsHTML += `
+                </div>
+            </div>
+        `;
+
+        resultsDiv.innerHTML = resultsHTML;
+    }
+
+    downloadCSV() {
+        if (this.bulkResults.length === 0) {
+            this.showNotification("No results to download", "warning");
+            return;
+        }
+
+        let csv = "Original URL,Short URL,Short Code,Status,Error\n";
+        
+        this.bulkResults.forEach(result => {
+            const row = [
+                `"${result.original}"`,
+                result.short ? `"${result.short}"` : '""',
+                result.code ? `"${result.code}"` : '""',
+                `"${result.status}"`,
+                result.error ? `"${result.error}"` : '""'
+            ].join(',');
+            csv += row + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `convertwiz-bulk-urls-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        this.showNotification('CSV file downloaded successfully!', 'success');
     }
 
     destroy() {}

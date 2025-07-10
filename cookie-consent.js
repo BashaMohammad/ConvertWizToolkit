@@ -30,7 +30,7 @@ class CookieConsent {
                         We use cookies to ensure the best browsing experience. By using ConvertWiz, you accept our cookie policy.
                     </p>
                 </div>
-                <button id="accept-cookies" class="bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button id="accept-cookies" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex-shrink-0 min-h-[48px] cursor-pointer">
                     Accept
                 </button>
             </div>
