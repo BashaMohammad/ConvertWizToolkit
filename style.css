@@ -1035,3 +1035,39 @@ body[data-user-plan="premium"] .ads-container {
         margin-right: auto;
     }
 }
+
+/* =====================================================
+   Mobile AdSense Banner Adjustments
+   ===================================================== */
+
+/* Hide vertical banners on mobile devices to prevent screen coverage */
+@media (max-width: 1024px) {
+    .adsense-banner-right.component-page,
+    .adsense-banner-left.component-page {
+        display: none !important;
+    }
+}
+
+/* Mobile-only banner adjustments for component pages */
+@media (max-width: 768px) {
+    /* Hide all vertical AdSense banners on mobile */
+    .adsense-banner-right,
+    .adsense-banner-left {
+        display: none !important;
+    }
+    
+    /* Ensure component pages have full width on mobile */
+    .tool-section .container {
+        max-width: 100% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+/* Ultra-mobile adjustments */
+@media (max-width: 480px) {
+    .tool-section .container {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+}
