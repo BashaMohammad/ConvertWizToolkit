@@ -103,7 +103,7 @@
           'page_title': document.title,
           'page_location': window.location.href,
           'is_ai_referral': isAIReferral,
-          'referrer_domain': referrer ? new URL(referrer).hostname : 'direct'
+          'referrer_domain': referrer ? (referrer.includes('://') ? new URL(referrer).hostname : 'direct') : 'direct'
         });
       })();
     </script>
@@ -191,13 +191,15 @@
                     <nav class="flex space-x-6">
                         <button data-target="landing-section" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Home</button>
                         <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
-                        <a href="/blog" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
                             <i class="fas fa-blog mr-1"></i>Blog
                         </a>
                         <a href="subscribe.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
                             <i class="fas fa-crown mr-1"></i>Pricing
                         </a>
-                        <a href="#about" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">About</a>
+                        <a href="#contact" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                            <i class="fas fa-envelope mr-1"></i>Contact
+                        </a>
                         <a href="dashboard.html" id="dashboard-nav-item" class="nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
                             <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
                         </a>
@@ -230,13 +232,18 @@
                 <div class="flex flex-col space-y-3 pt-4">
                     <button data-target="landing-section" class="nav-link text-gray-700 hover:text-purple-600 transition-colors text-left">Home</button>
                     <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
-                    <a href="/blog" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                    <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
                         <i class="fas fa-blog mr-1"></i>Blog
                     </a>
                     <a href="subscribe.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
                         <i class="fas fa-crown mr-1"></i>Pricing
                     </a>
-                    <a href="#about" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">About</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-envelope mr-1"></i>Contact
+                    </a>
+                    <a href="#support" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-life-ring mr-1"></i>Support
+                    </a>
                     <a href="dashboard.html" id="mobile-dashboard-nav-item" class="nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
                         <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
                     </a>

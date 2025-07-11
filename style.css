@@ -73,6 +73,103 @@
     will-change: max-height, opacity;
 }
 
+/* Banner Ad Consistency - Desktop and Mobile */
+.adsense-banner {
+    position: fixed;
+    z-index: 10;
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Desktop Banner Positioning */
+.adsense-banner-right {
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+}
+
+.adsense-banner-left {
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+}
+
+/* Mobile Banner Styling */
+@media (max-width: 1024px) {
+    .adsense-banner {
+        position: relative !important;
+        width: 100% !important;
+        height: 150px !important;
+        max-height: 150px !important;
+        margin: 20px 0 !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+    }
+    
+    .adsense-banner-right,
+    .adsense-banner-left {
+        position: relative !important;
+        width: 100% !important;
+        height: 150px !important;
+        max-height: 150px !important;
+        margin: 20px auto !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+    }
+    
+    /* Mobile banner placement below tool content */
+    .tool-section .adsense-banner {
+        order: 999;
+        margin-top: 30px;
+    }
+}
+
+/* Development Ad Placeholders */
+.ad-placeholder {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    border: 2px dashed #9ca3af;
+    border-radius: 8px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 150px;
+    width: 100%;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.ad-placeholder p {
+    margin: 5px 0;
+    line-height: 1.2;
+}
+
+/* Ensure AdSense placeholders are visible */
+.adsense-placeholder,
+.adsbygoogle {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Component page specific banner styling */
+.component-page .adsense-banner {
+    display: block !important;
+    visibility: visible !important;
+}
+
 .region-content.collapsed {
     max-height: 0 !important;
     opacity: 0 !important;
