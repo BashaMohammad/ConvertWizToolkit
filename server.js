@@ -459,6 +459,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// ✅ SPA Wildcard Route - Catches all unknown paths and redirects to index.html
+// This fixes 404 errors on mobile/desktop when refreshing component pages
+// Must be the LAST route in server.js to ensure all known routes work first
+app.use((req, res, next) => {
+  // Only handle GET requests for HTML pages
+  if (req.method === 'GET' && req.accepts('html')) {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  } else {
+    next();
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`ConvertWiz server running on port ${PORT}`);
