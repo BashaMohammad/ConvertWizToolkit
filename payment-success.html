@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - ConvertWiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8 text-center">
+      <!-- Success Icon -->
+      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <i class="fas fa-check-circle text-4xl text-green-500"></i>
+      </div>
+
+      <!-- Success Message -->
+      <h1 class="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h1>
+      <p class="text-gray-600 mb-6">Thank you for supporting ConvertWiz</p>
+
+      <!-- Payment Details -->
+      <div id="payment-details" class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+        <h3 class="font-semibold text-gray-800 mb-2">Payment Details</h3>
+        <div id="details-content">
+          <div class="flex justify-between py-1">
+            <span class="text-gray-600">Transaction ID:</span>
+            <span id="transaction-id" class="font-mono text-sm">Loading...</span>
+          </div>
+          <div class="flex justify-between py-1">
+            <span class="text-gray-600">Plan:</span>
+            <span id="plan-name">Loading...</span>
+          </div>
+          <div class="flex justify-between py-1">
+            <span class="text-gray-600">Amount:</span>
+            <span id="amount">Loading...</span>
+          </div>
+          <div class="flex justify-between py-1">
+            <span class="text-gray-600">Date:</span>
+            <span id="payment-date">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Next Steps -->
+      <div class="bg-blue-50 rounded-lg p-4 mb-6">
+        <h3 class="font-semibold text-blue-800 mb-2">
+          <i class="fas fa-info-circle mr-2"></i>What's Next?
+        </h3>
+        <p class="text-blue-700 text-sm">
+          Your subscription has been activated! You can now enjoy unlimited conversions and premium features.
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-3">
+        <a href="/dashboard.html" class="block w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+          <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+        </a>
+        <a href="/" class="block w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition duration-200">
+          <i class="fas fa-home mr-2"></i>Back to Home
+        </a>
+        <button onclick="downloadReceipt()" class="block w-full text-gray-600 py-2 px-4 rounded-lg hover:bg-gray-100 transition duration-200">
+          <i class="fas fa-download mr-2"></i>Download Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load payment details from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const paymentData = localStorage.getItem('payment_response');
+      
+      if (paymentData) {
+        const payment = JSON.parse(paymentData);
+        
+        document.getElementById('transaction-id').textContent = payment.payment_id || 'N/A';
+        document.getElementById('plan-name').textContent = payment.plan || 'Unknown';
+        document.getElementById('amount').textContent = `₹${payment.amount || 0}`;
+        document.getElementById('payment-date').textContent = new Date(payment.timestamp).toLocaleDateString('en-IN') || 'N/A';
+      } else {
+        document.getElementById('details-content').innerHTML = '<p class="text-gray-500">Payment details not available</p>';
+      }
+    });
+
+    function downloadReceipt() {
+      const paymentData = localStorage.getItem('payment_response');
+      
+      if (paymentData) {
+        const payment = JSON.parse(paymentData);
+        const receiptContent = `
+ConvertWiz Payment Receipt
+=========================
+
+Transaction ID: ${payment.payment_id}
+Plan: ${payment.plan} Plan
+Amount: ₹${payment.amount}
+Date: ${new Date(payment.timestamp).toLocaleString('en-IN')}
+Status: Successful
+
+Thank you for choosing ConvertWiz!
+        `;
+        
+        const blob = new Blob([receiptContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ConvertWiz_Receipt_${payment.payment_id}.txt`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    }
+  </script>
+</body>
+</html>

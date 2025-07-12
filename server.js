@@ -9,6 +9,19 @@ const app = express();
 app.use(express.json());
 app.use(express.static('.'));
 
+// Payment webhook endpoint for Razorpay
+app.post('/api/payment/webhook', express.raw({type: 'application/json'}), (req, res) => {
+  try {
+    // Razorpay webhook verification would go here
+    // For now, just acknowledge receipt
+    console.log('Payment webhook received:', req.body);
+    res.status(200).json({ status: 'received' });
+  } catch (error) {
+    console.error('Payment webhook error:', error);
+    res.status(500).json({ error: 'Webhook processing failed' });
+  }
+});
+
 // ✅ SEO + AdSense Enhanced Component Configuration
 const components = [
   {
@@ -566,6 +579,19 @@ app.get('/', (req, res) => {
   res.setHeader('Expires', '0');
   res.setHeader('Surrogate-Control', 'no-store');
   res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Payment routes - serve specific payment pages
+app.get('/test-payment.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'test-payment.html'));
+});
+
+app.get('/payment-success.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'payment-success.html'));
+});
+
+app.get('/payment-failed.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'payment-failed.html'));
 });
 
 // ✅ SPA Wildcard Route - Catches all unknown paths and redirects to index.html
