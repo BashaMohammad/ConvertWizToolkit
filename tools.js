@@ -3601,6 +3601,16 @@ class URLShortener {
                 body: JSON.stringify({ url: longUrl })
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                const text = await response.text();
+                throw new Error(`Server returned HTML instead of JSON: ${text.substring(0, 100)}...`);
+            }
+
             const data = await response.json();
             
             if (data.shortUrl) {
@@ -3786,6 +3796,16 @@ class URLShortener {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ url })
                     });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const contentType = response.headers.get("content-type");
+                    if (!contentType || !contentType.includes("application/json")) {
+                        const text = await response.text();
+                        throw new Error(`Server returned HTML instead of JSON: ${text.substring(0, 100)}...`);
+                    }
 
                     const data = await response.json();
                     

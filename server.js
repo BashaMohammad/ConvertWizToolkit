@@ -458,30 +458,54 @@ app.post('/api/shortener', express.urlencoded({extended:true}), express.json(), 
     if (!url) {
       return res.status(400).json({ error: 'URL is required' });
     }
+
+    // Validate URL format
+    try {
+      new URL(url);
+    } catch (urlError) {
+      return res.status(400).json({ error: 'Invalid URL format' });
+    }
     
-    // Generate a short code
+    // Generate a short code with retry mechanism
     let shortCode = generateShortCode();
+    let attempts = 0;
+    const maxAttempts = 10;
     
     // Ensure uniqueness by checking database
     let isUnique = false;
-    while (!isUnique) {
-      const existingUrl = await pool.query(
-        'SELECT id FROM short_urls WHERE short_code = $1',
-        [shortCode]
-      );
-      
-      if (existingUrl.rows.length === 0) {
-        isUnique = true;
-      } else {
-        shortCode = generateShortCode();
+    while (!isUnique && attempts < maxAttempts) {
+      try {
+        const existingUrl = await pool.query(
+          'SELECT id FROM short_urls WHERE short_code = $1',
+          [shortCode]
+        );
+        
+        if (existingUrl.rows.length === 0) {
+          isUnique = true;
+        } else {
+          shortCode = generateShortCode();
+          attempts++;
+        }
+      } catch (dbError) {
+        console.error('Database query error:', dbError);
+        return res.status(500).json({ error: 'Database connection error' });
       }
+    }
+
+    if (!isUnique) {
+      return res.status(500).json({ error: 'Unable to generate unique short code' });
     }
     
     // Store in PostgreSQL database (never expires by default)
-    await pool.query(
-      'INSERT INTO short_urls (short_code, original_url, created_at) VALUES ($1, $2, NOW())',
-      [shortCode, url]
-    );
+    try {
+      await pool.query(
+        'INSERT INTO short_urls (short_code, original_url, created_at) VALUES ($1, $2, NOW())',
+        [shortCode, url]
+      );
+    } catch (insertError) {
+      console.error('Database insert error:', insertError);
+      return res.status(500).json({ error: 'Failed to save URL' });
+    }
     
     // Create short URL with custom domain or current host
     const host = req.get('host');
@@ -492,11 +516,16 @@ app.post('/api/shortener', express.urlencoded({extended:true}), express.json(), 
       shortUrl,
       shortCode,
       originalUrl: url,
-      qrCodeData: shortUrl // This will be used for QR code generation
+      qrCodeData: shortUrl,
+      success: true
     });
   } catch (error) {
     console.error('Error creating short URL:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      error: 'Internal server error',
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
+    });
   }
 });
 
