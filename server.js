@@ -9,6 +9,59 @@ const app = express();
 app.use(express.json());
 app.use(express.static('.'));
 
+// ✅ SEO + AdSense Enhanced Component Configuration
+const components = [
+  {
+    id: "jpg-to-png",
+    title: "JPG to PNG Converter - Free Online Image Converter | ConvertWiz",
+    description: "Convert JPG images to high-quality PNG format instantly. Fast, secure, and free image converter tool by ConvertWiz. No registration required.",
+    keywords: "JPG to PNG, Image Converter, Free PNG Converter, JPEG to PNG, Convert Images Online",
+    showAd: true
+  },
+  {
+    id: "image-compressor",
+    title: "Image Compressor Tool - Reduce File Size Online | ConvertWiz",
+    description: "Reduce image size without losing quality. Compress JPEG, PNG, and WebP files online for free using ConvertWiz advanced algorithms.",
+    keywords: "Image Compression, Reduce Image Size, JPG Compressor, PNG Optimizer, File Size Reducer",
+    showAd: true
+  },
+  {
+    id: "url-shortener",
+    title: "URL Shortener with QR Code Generator | ConvertWiz",
+    description: "Shorten long URLs and download QR Codes instantly. Ideal for sharing links on social media and business cards. Free URL shortening service.",
+    keywords: "Short URL, QR Code Generator, Link Shortener, Custom URLs, Social Media Links",
+    showAd: true
+  },
+  {
+    id: "word-counter",
+    title: "Word Counter Tool - Count Words & Characters Online | ConvertWiz",
+    description: "Count words, characters, sentences, and paragraphs online. Perfect tool for writers, students, and professionals with reading time estimation.",
+    keywords: "Word Count Tool, Character Counter, Online Editor, Text Analysis, Writing Tools",
+    showAd: true
+  },
+  {
+    id: "text-to-speech",
+    title: "Text to Speech Converter - AI Voice Generator | ConvertWiz",
+    description: "Convert text into lifelike audio using AI-powered voices. Supports multiple languages and download options for accessibility.",
+    keywords: "Text to Voice, TTS Generator, Online Speech Tool, AI Voice, Audio Converter",
+    showAd: true
+  },
+  {
+    id: "meta-tag-generator",
+    title: "Meta Tag Generator - SEO Optimization Tool | ConvertWiz",
+    description: "Generate SEO-optimized meta tags for better search engine rankings. Create title tags, meta descriptions, and Open Graph tags instantly.",
+    keywords: "Meta Tag Generator, SEO Tools, Title Tag Creator, Meta Description, Open Graph",
+    showAd: true
+  },
+  {
+    id: "backlink-checker",
+    title: "Backlink Checker - SEO Link Analysis Tool | ConvertWiz",
+    description: "Check your website's backlink profile and analyze SEO performance. Monitor domain authority and link quality for better rankings.",
+    keywords: "Backlink Checker, SEO Analysis, Link Building, Domain Authority, Website SEO",
+    showAd: true
+  }
+];
+
 // Configure multer for file uploads
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -284,6 +337,33 @@ app.get('/api/health', (req, res) => {
       express: true
     }
   });
+});
+
+// ✅ SEO Enhancement API - Get component metadata
+app.get('/api/seo/:componentId', (req, res) => {
+  const component = components.find(c => c.id === req.params.componentId);
+  if (!component) {
+    return res.status(404).json({ error: 'Component not found' });
+  }
+  res.json({
+    title: component.title,
+    description: component.description,
+    keywords: component.keywords,
+    showAd: component.showAd,
+    canonical: `https://convertwiz.in/${component.id}`,
+    ogType: 'website',
+    ogImage: `https://convertwiz.in/images/${component.id}-og.jpg`
+  });
+});
+
+// ✅ Get all components for sitemap generation
+app.get('/api/components', (req, res) => {
+  res.json(components.map(c => ({
+    id: c.id,
+    title: c.title.split(' | ')[0], // Remove site name for cleaner display
+    description: c.description,
+    url: `/${c.id}`
+  })));
 });
 
 // Success/Cancel pages for future payment integration
