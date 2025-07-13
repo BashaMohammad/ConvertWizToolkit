@@ -1,0 +1,115 @@
+# ✅ STEP 1: Create the HTML file (index.html)
+echo '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConvertWiz - Your Online Toolkit</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="bg-white text-gray-800 font-sans">
+
+  <header class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 shadow">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">ConvertWiz</h1>
+      <nav class="space-x-4">
+        <a href="/" class="hover:underline">Home</a>
+        <a href="/tools" class="hover:underline">Tools</a>
+        <a href="/blog" class="hover:underline">Blog</a>
+        <a href="/contact" class="hover:underline">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="text-center py-10 px-4">
+    <h2 class="text-3xl font-bold mb-4">Welcome to ConvertWiz</h2>
+    <p class="mb-6 text-gray-600">Your ultimate toolkit for conversions, transformations, and productivity – in one platform.</p>
+    <a href="/tools" class="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700">Start Converting</a>
+  </main>
+
+  <section class="max-w-5xl mx-auto px-4 py-10">
+    <h3 class="text-xl font-semibold text-center mb-4">Professional Conversion Tools</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="p-4 border rounded shadow-sm">
+        <h4 class="font-bold">JPG to PNG</h4>
+        <p class="text-sm text-gray-500">Convert images with transparency support.</p>
+      </div>
+      <div class="p-4 border rounded shadow-sm">
+        <h4 class="font-bold">Currency Converter</h4>
+        <p class="text-sm text-gray-500">Live currency exchange rates.</p>
+      </div>
+      <div class="p-4 border rounded shadow-sm">
+        <h4 class="font-bold">PDF Compressor</h4>
+        <p class="text-sm text-gray-500">Reduce PDF size while maintaining quality.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center text-sm text-gray-400 py-6">
+    © 2025 ConvertWiz.in — All rights reserved.
+  </footer>
+
+</body>
+</html>
+' > index.html
+
+# ✅ STEP 2: Add basic Tailwind-style CSS (style.css)
+echo '
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.shadow {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.rounded {
+  border-radius: 0.5rem;
+}
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+.bg-white { background-color: white; }
+.bg-gradient-to-r { background: linear-gradient(to right, #7e22ce, #4f46e5); }
+.bg-indigo-600 { background-color: #4f46e5; }
+.hover\\:bg-indigo-700:hover { background-color: #4338ca; }
+.text-white { color: white; }
+.text-gray-500 { color: #6b7280; }
+.text-gray-600 { color: #4b5563; }
+.text-gray-800 { color: #1f2937; }
+.text-gray-400 { color: #9ca3af; }
+.p-4 { padding: 1rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.font-bold { font-weight: bold; }
+.font-semibold { font-weight: 600; }
+.font-extrabold { font-weight: 800; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+.text-center { text-align: center; }
+.max-w-7xl { max-width: 80rem; margin-left: auto; margin-right: auto; }
+.max-w-5xl { max-width: 64rem; margin-left: auto; margin-right: auto; }
+.rounded { border-radius: 0.5rem; }
+.border { border: 1px solid #e5e7eb; }
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-left: 1rem;
+}
+.hover\\:underline:hover {
+  text-decoration: underline;
+}
+' > style.css
+
+echo "✅ UI restored. Visit preview again now."
