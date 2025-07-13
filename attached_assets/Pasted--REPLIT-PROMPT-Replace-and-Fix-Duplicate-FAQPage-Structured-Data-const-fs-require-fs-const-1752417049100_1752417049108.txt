@@ -1,0 +1,64 @@
+// REPLIT PROMPT: Replace and Fix Duplicate FAQPage Structured Data
+const fs = require("fs");
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is ConvertWiz?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ConvertWiz is an all-in-one tool for converting files, currencies, land units, and more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is ConvertWiz free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, ConvertWiz is completely free with optional premium features."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to install anything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No installation required. ConvertWiz works directly in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use ConvertWiz on mobile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, ConvertWiz is optimized for mobile and tablet devices."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What file types can I convert?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can convert images (JPG, PNG), documents (PDF, Word), and various unit formats."
+      }
+    }
+  ]
+};
+
+// Read HTML file (replace index.html or any HTML where the FAQ is injected)
+let html = fs.readFileSync("index.html", "utf8");
+
+// Remove existing FAQPage structured data blocks
+html = html.replace(/<script type="application\/ld\+json">[\s\S]*?"@type": "FAQPage"[\s\S]*?<\/script>/g, "");
+
+// Insert the updated FAQ schema block just before </head>
+const schemaBlock = `<script type="application/ld+json">\n${JSON.stringify(faqSchema, null, 2)}\n</script>\n</head>`;
+html = html.replace("</head>", schemaBlock);
+
+// Save updated file
+fs.writeFileSync("index.html", html, "utf8");
+
+console.log("✅ FAQ Structured Data fixed successfully!");
