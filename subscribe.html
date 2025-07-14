@@ -40,6 +40,9 @@
         window.firebaseDoc = doc;
         window.firebaseGetDoc = getDoc;
     </script>
+    
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen">
     <!-- Header -->
@@ -473,6 +476,55 @@
                 }
             }
 
+            initiatePayment(plan) {
+                const amounts = {
+                    'standard': 199,
+                    'premium': 499
+                };
+                
+                const amount = amounts[plan];
+                if (!amount) {
+                    this.showToast('Invalid plan selected', 'error');
+                    return;
+                }
+
+                // Razorpay payment options
+                const options = {
+                    "key": "rzp_live_HXdG9BXkQBfjyG",
+                    "amount": amount * 100, // Amount in paise
+                    "currency": "INR",
+                    "name": "ConvertWiz",
+                    "description": `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
+                    "image": "https://www.convertwiz.in/logo192.png",
+                    "handler": (response) => {
+                        // Store payment details and redirect
+                        localStorage.setItem('payment_response', JSON.stringify({
+                            payment_id: response.razorpay_payment_id,
+                            plan: plan,
+                            amount: amount,
+                            timestamp: new Date().toISOString()
+                        }));
+                        window.location.href = "/payment-success.html";
+                    },
+                    "prefill": {
+                        "name": this.currentUser?.displayName || "ConvertWiz User",
+                        "email": this.currentUser?.email || "user@example.com",
+                        "contact": "9999999999"
+                    },
+                    "theme": {
+                        "color": "#6759ff"
+                    },
+                    "modal": {
+                        "ondismiss": () => {
+                            this.showToast('Payment cancelled', 'info');
+                        }
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.open();
+            }
+
             showToast(message, type = 'info') {
                 const toast = document.getElementById('toast');
                 const toastMessage = document.getElementById('toast-message');
@@ -507,8 +559,8 @@
                     window.location.href = '/';
                 }
             } else {
-                // Redirect to payment page with live Razorpay integration
-                window.location.href = '/test-payment.html';
+                // Direct Razorpay payment integration
+                subscriptionPage.initiatePayment(plan);
             }
         }
 
