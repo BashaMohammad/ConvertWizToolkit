@@ -243,6 +243,9 @@
             });
             document.getElementById('member-since').textContent = memberSince;
 
+            // Always show fallback data first to prevent disappearing dashboard
+            showFallbackDashboard();
+
             try {
                 // Get user data from Firestore with better error handling
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -279,11 +282,14 @@
                     
                     // Update recent activity
                     updateRecentActivity(userData);
+                } else {
+                    // No user document exists, keep fallback data
+                    console.log('No user document found, using fallback data');
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
-                // Show fallback data when Firestore is unavailable
-                showFallbackDashboard();
+                // Fallback data already shown, just log the error
+                console.log('Using offline mode due to Firestore error');
             }
         }
 
@@ -340,21 +346,30 @@
 
         function showFallbackDashboard() {
             // Show basic dashboard with offline data when Firestore fails
-            document.getElementById('current-plan').textContent = 'Free';
-            document.getElementById('sub-plan').textContent = 'Free';
-            document.getElementById('daily-usage').textContent = '0/5';
-            document.getElementById('daily-limit').textContent = '5 conversions';
-            document.getElementById('total-conversions').textContent = '0';
+            const currentPlan = document.getElementById('current-plan');
+            const subPlan = document.getElementById('sub-plan');
+            const dailyUsage = document.getElementById('daily-usage');
+            const dailyLimit = document.getElementById('daily-limit');
+            const totalConversions = document.getElementById('total-conversions');
+            
+            if (currentPlan) currentPlan.textContent = 'Free';
+            if (subPlan) subPlan.textContent = 'Free';
+            if (dailyUsage) dailyUsage.textContent = '0/5';
+            if (dailyLimit) dailyLimit.textContent = '5 conversions';
+            if (totalConversions) totalConversions.textContent = '0';
+            
             updateUserBadge('free');
             
             // Show offline message
             const activityContainer = document.getElementById('recent-activity');
-            activityContainer.innerHTML = `
-                <div class="text-center text-orange-500 py-8">
-                    <i class="fas fa-wifi text-4xl text-orange-300 mb-4"></i>
-                    <p><strong>Offline Mode</strong><br>Some features may be limited while offline.</p>
-                </div>
-            `;
+            if (activityContainer) {
+                activityContainer.innerHTML = `
+                    <div class="text-center text-orange-500 py-8">
+                        <i class="fas fa-wifi text-4xl text-orange-300 mb-4"></i>
+                        <p><strong>Offline Mode</strong><br>Some features may be limited while offline.</p>
+                    </div>
+                `;
+            }
         }
 
         // Logout functionality
