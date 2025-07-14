@@ -17,6 +17,30 @@ const app = express();
 app.use(express.json());
 app.use(express.static('.'));
 
+// Create Razorpay order endpoint
+app.post('/api/create-order', async (req, res) => {
+  try {
+    const { amount, plan } = req.body;
+    
+    const options = {
+      amount: amount * 100, // Convert to paise
+      currency: 'INR',
+      receipt: `order_${plan}_${new Date().getTime()}`,
+      payment_capture: 1
+    };
+
+    const order = await razorpayInstance.orders.create(options);
+    res.json({ 
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency
+    });
+  } catch (error) {
+    console.error('Error creating Razorpay order:', error);
+    res.status(500).json({ error: 'Unable to create order' });
+  }
+});
+
 // Payment webhook endpoint for Razorpay
 app.post('/api/payment/webhook', express.raw({type: 'application/json'}), (req, res) => {
   try {

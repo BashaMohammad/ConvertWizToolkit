@@ -573,16 +573,129 @@
             } else {
                 // Check authentication before payment
                 if (!subscriptionPage || !subscriptionPage.currentUser) {
-                    subscriptionPage.showToast('Please login first to upgrade your plan', 'error');
-                    setTimeout(() => {
-                        window.location.href = '/#auth';
-                    }, 2000);
+                    showAuthRequiredModal();
                     return;
                 }
                 
-                // Direct Razorpay payment integration
-                subscriptionPage.initiatePayment(plan);
+                // Use enhanced payment with order creation API
+                initiateEnhancedPayment(plan, subscriptionPage);
             }
+        }
+
+        // Enhanced payment function using the new API
+        function initiateEnhancedPayment(plan, subscriptionPage) {
+            const amounts = {
+                'standard': 199,
+                'premium': 499
+            };
+
+            const amount = amounts[plan];
+            if (!amount) {
+                subscriptionPage.showToast('Invalid plan selected', 'error');
+                return;
+            }
+
+            subscriptionPage.showToast('Creating payment order...', 'info');
+
+            // Create Razorpay order using the new API
+            fetch('/api/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    amount: amount,
+                    plan: plan
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                const options = {
+                    key: 'rzp_live_HXdG9BXkQBfjyG',
+                    amount: data.amount,
+                    currency: data.currency,
+                    name: 'ConvertWiz',
+                    description: `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
+                    order_id: data.orderId,
+                    handler: function(response) {
+                        console.log('Payment successful:', response);
+                        
+                        // Store enhanced payment details with user info
+                        const paymentData = {
+                            payment_id: response.razorpay_payment_id,
+                            order_id: response.razorpay_order_id,
+                            signature: response.razorpay_signature,
+                            plan: plan,
+                            amount: amount,
+                            user_id: subscriptionPage.currentUser.uid,
+                            user_email: subscriptionPage.currentUser.email,
+                            user_name: subscriptionPage.currentUser.displayName,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        localStorage.setItem('paymentData', JSON.stringify(paymentData));
+                        subscriptionPage.showToast('Payment successful! Redirecting...', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'payment-success.html';
+                        }, 1000);
+                    },
+                    prefill: {
+                        name: subscriptionPage.currentUser.displayName || 'ConvertWiz User',
+                        email: subscriptionPage.currentUser.email
+                    },
+                    theme: {
+                        color: '#6366f1'
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            subscriptionPage.showToast('Payment cancelled', 'info');
+                        }
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function(response) {
+                    console.error('Payment failed:', response.error);
+                    subscriptionPage.showToast(`Payment failed: ${response.error.description}`, 'error');
+                    setTimeout(() => {
+                        window.location.href = 'payment-failed.html';
+                    }, 2000);
+                });
+                
+                rzp.open();
+            })
+            .catch(error => {
+                console.error('Error creating order:', error);
+                subscriptionPage.showToast('Failed to create payment order. Please try again.', 'error');
+            });
+        }
+
+        function showAuthRequiredModal() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+                    <div class="text-center">
+                        <i class="fas fa-user-lock text-4xl text-red-500 mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Authentication Required</h3>
+                        <p class="text-gray-600 mb-6">Please login to your account before upgrading your plan. This ensures proper subscription management and payment tracking.</p>
+                        <div class="flex space-x-4">
+                            <button onclick="window.location.href='index.html'" class="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors">
+                                Go to Login
+                            </button>
+                            <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg transition-colors">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         // Initialize when page loads
