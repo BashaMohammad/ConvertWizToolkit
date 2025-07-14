@@ -5,6 +5,14 @@ const admin = require('firebase-admin');
 const multer = require('multer');
 const sharp = require('sharp');
 
+// ✅ Razorpay Live Configuration
+const Razorpay = require("razorpay");
+
+const razorpayInstance = new Razorpay({
+  key_id: "rzp_live_HXdG9BXkQBfjyG",
+  key_secret: "CyQm3qiy5mMfapVKyul67pGO"
+});
+
 const app = express();
 app.use(express.json());
 app.use(express.static('.'));
@@ -605,6 +613,9 @@ app.use((req, res, next) => {
     next();
   }
 });
+
+// Export Razorpay instance for use in other modules
+module.exports = razorpayInstance;
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
