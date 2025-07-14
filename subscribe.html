@@ -507,7 +507,8 @@
                     window.location.href = '/';
                 }
             } else {
-                subscriptionPage.showToast(`${plan.charAt(0).toUpperCase() + plan.slice(1)} plan subscription coming soon! Payment integration in development.`, 'info');
+                // Redirect to payment page with live Razorpay integration
+                window.location.href = '/test-payment.html';
             }
         }
 
