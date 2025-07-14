@@ -477,6 +477,16 @@
             }
 
             initiatePayment(plan) {
+                // First check if user is logged in
+                if (!this.currentUser) {
+                    this.showToast('Please login to upgrade your plan', 'error');
+                    // Optionally redirect to login or show login modal
+                    setTimeout(() => {
+                        window.location.href = '/#auth';
+                    }, 2000);
+                    return;
+                }
+
                 const amounts = {
                     'standard': 199,
                     'premium': 499
@@ -497,11 +507,13 @@
                     "description": `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
                     "image": "https://www.convertwiz.in/logo192.png",
                     "handler": (response) => {
-                        // Store payment details and redirect
+                        // Store payment details with user information
                         localStorage.setItem('payment_response', JSON.stringify({
                             payment_id: response.razorpay_payment_id,
                             plan: plan,
                             amount: amount,
+                            user_id: this.currentUser.uid,
+                            user_email: this.currentUser.email,
                             timestamp: new Date().toISOString()
                         }));
                         window.location.href = "/payment-success.html";
@@ -559,6 +571,15 @@
                     window.location.href = '/';
                 }
             } else {
+                // Check authentication before payment
+                if (!subscriptionPage || !subscriptionPage.currentUser) {
+                    subscriptionPage.showToast('Please login first to upgrade your plan', 'error');
+                    setTimeout(() => {
+                        window.location.href = '/#auth';
+                    }, 2000);
+                    return;
+                }
+                
                 // Direct Razorpay payment integration
                 subscriptionPage.initiatePayment(plan);
             }
