@@ -32,6 +32,49 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ConvertWiz",
+      "url": "https://www.convertwiz.in",
+      "description": "Free online conversion tools for images, currencies, units, and more. Fast, secure, and mobile-friendly.",
+      "applicationCategory": "Utility",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "JPG to PNG Image Converter",
+        "Instagram Profile Picture Resizer", 
+        "Image Compressor with Quality Control",
+        "Currency Converter with Real-time Rates",
+        "Global Land Unit Converter",
+        "Distance Converter",
+        "Weight Converter", 
+        "Height Converter",
+        "Temperature Converter",
+        "Color Format Converter",
+        "Percentage Calculator",
+        "Word Counter with Reading Time",
+        "IP Address Extractor",
+        "QR Code Generator",
+        "URL Shortener with Analytics",
+        "Text to Speech Converter",
+        "Backlink Checker for SEO",
+        "Meta Tag Generator",
+        "DPI Checker for Images"
+      ],
+      "creator": {
+        "@type": "Organization",
+        "name": "ConvertWiz"
+      }
+    }
+    </script>
+    
+    <!-- Consolidated FAQ Schema for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
         {
@@ -47,47 +90,31 @@
           "name": "Is ConvertWiz free to use?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, ConvertWiz offers a free tier with 5 conversions per day. We also provide Standard (₹199/month for 20 conversions/day) and Premium (₹499/month for unlimited conversions) plans with additional features."
+            "text": "Yes, ConvertWiz offers a free plan with daily usage limits. We also offer Standard (₹199/month) and Premium (₹499/month) plans with increased limits, premium features, and enhanced support. All plans include secure processing and privacy protection."
           }
         },
         {
           "@type": "Question",
-          "name": "Do I need to install anything?",
+          "name": "How secure is my data on ConvertWiz?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No installation required. ConvertWiz works directly in your browser using modern web technologies. All conversions are processed client-side for maximum privacy and speed."
+            "text": "Your data security is our top priority. Most conversions happen directly in your browser without uploading files to our servers. For server-side tools, all data is processed securely and automatically deleted after processing. We never store your personal files."
           }
         },
         {
           "@type": "Question",
-          "name": "Can I use ConvertWiz on mobile?",
+          "name": "What tools are available on ConvertWiz?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, ConvertWiz is fully optimized for mobile and tablet devices with responsive design, touch-friendly interfaces, and mobile-specific features for all conversion tools."
+            "text": "ConvertWiz offers 18+ professional tools including JPG to PNG converter, Instagram DP resizer, image compressor, currency converter, land unit converter, distance/weight/height converters, temperature converter, color converter, percentage calculator, word counter, IP extractor, QR generator, URL shortener, text-to-speech, backlink checker, meta tag generator, and DPI checker."
           }
         },
         {
           "@type": "Question",
-          "name": "What file types can I convert?",
+          "name": "Do I need to register to use ConvertWiz?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "ConvertWiz supports JPG to PNG conversion, image compression, Instagram profile picture resizing, QR code generation, plus unit conversions for currency, land measurements, distance, weight, height, and temperature."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How secure is ConvertWiz?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "ConvertWiz prioritizes privacy with client-side processing, Firebase authentication, secure HTTPS connections, and no server storage of user files. Your data never leaves your device during conversions."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I use ConvertWiz for commercial purposes?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, ConvertWiz can be used for commercial purposes. Our Premium plan includes unlimited conversions, priority support, and API access for business users."
+            "text": "Registration is optional for basic use, but creating a free account gives you access to usage tracking, subscription plans, and premium features. You can sign up with email/password or Google OAuth for enhanced functionality and personalized experience."
           }
         },
         {
@@ -95,543 +122,745 @@
           "name": "What payment methods do you accept?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "We accept all major payment methods through Razorpay including credit cards, debit cards, UPI, net banking, and digital wallets for Indian users, plus PayPal for international customers."
+            "text": "We accept payments through Razorpay for Indian users (supporting UPI, cards, net banking, and wallets) and PayPal for international users. All payments are processed securely with industry-standard encryption and can be made in INR or USD respectively."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use ConvertWiz for commercial purposes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, ConvertWiz can be used for commercial purposes. Our Premium plan (₹499/month) includes unlimited conversions, priority support, API access, and commercial usage rights. Free and Standard plans have usage limits but allow commercial use within those limits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How often are the exchange rates updated in the currency converter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our currency converter uses real-time exchange rates updated continuously throughout the day from reliable financial data providers. This ensures you get the most accurate and current conversion rates for 150+ global currencies."
           }
         }
       ]
     }
     </script>
     
-    <!-- CSS Framework -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50" id="main-nav">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo -->
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-sync text-white text-lg"></i>
-                    </div>
-                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">ConvertWiz</span>
-                </div>
+    <!-- Google Analytics with Enhanced AI Traffic Tracking -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7QJXHFPZVE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-7QJXHFPZVE', {
+        custom_map: {'custom_parameter_1': 'ai_referral_source'}
+      });
 
-                <!-- Desktop Navigation Links -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <div class="flex items-center space-x-6">
-                        <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                            <i class="fas fa-tools mr-1"></i>Tools
-                        </a>
-                        <a href="blog.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+      // Enhanced AI Traffic Detection
+      (function() {
+        const referrer = document.referrer.toLowerCase();
+        const aiSources = [
+          'chat.openai.com',
+          'chatgpt.com', 
+          'perplexity.ai',
+          'gemini.google.com',
+          'claude.ai',
+          'bard.google.com',
+          'you.com',
+          'poe.com',
+          'character.ai'
+        ];
+        
+        const isAIReferral = aiSources.some(source => referrer.includes(source));
+        
+        if (isAIReferral) {
+          gtag('event', 'ai_referral_visit', {
+            'event_category': 'AI Traffic',
+            'event_label': referrer,
+            'custom_parameter_1': referrer,
+            'ai_source': referrer.match(/([^\/]+\.[^\/]+)/)?.[1] || 'unknown'
+          });
+        }
+
+        // Track page load with AI referral context
+        gtag('event', 'page_view', {
+          'page_title': document.title,
+          'page_location': window.location.href,
+          'is_ai_referral': isAIReferral,
+          'referrer_domain': referrer ? (referrer.includes('://') ? new URL(referrer).hostname : 'direct') : 'direct'
+        });
+      })();
+    </script>
+
+    <!-- Google AdSense Verification -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045"
+         crossorigin="anonymous"></script>
+
+    <!-- Google AdSense - Conditionally loaded based on user plan -->
+    <script>
+      // AdSense loading function that checks user plan
+      function loadAdSenseIfAllowed() {
+        // Only load AdSense script in production
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          // Check if user is premium
+          const userPlan = document.body.getAttribute('data-user-plan');
+          const isPremium = userPlan && userPlan !== 'free';
+          
+          if (!isPremium && !window.adsbygoogle) {
+            var script = document.createElement('script');
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045';
+            document.head.appendChild(script);
+            console.log('AdSense script loaded for free user');
+          } else if (isPremium) {
+            console.log('Premium user detected - AdSense script not loaded');
+          }
+        }
+      }
+
+      window.addEventListener('load', function() {
+        // Initial load delay
+        setTimeout(loadAdSenseIfAllowed, 2000);
+        
+        // Re-check when user plan changes
+        setInterval(function() {
+          loadAdSenseIfAllowed();
+        }, 5000); // Check every 5 seconds
+      });
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'purple-gradient': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        'blue-gradient': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        'orange-gradient': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    }
+                }
+            }
+        }
+        
+        // Fix 1: Force logout on browser reopen (disable cache login)
+        window.addEventListener('load', function() {
+            // Clear session storage on page load to force logout
+            if (performance.navigation.type === performance.navigation.TYPE_RELOAD || 
+                performance.navigation.type === performance.navigation.TYPE_NAVIGATE) {
+                sessionStorage.clear();
+                // Also clear Firebase auth session
+                if (typeof auth !== 'undefined' && auth.currentUser) {
+                    auth.signOut().catch(console.error);
+                }
+            }
+        });
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <h1 data-target="landing-section" class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer">
+                    ConvertWiz ⚡
+                </h1>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <nav class="flex space-x-6">
+                        <button data-target="landing-section" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Home</button>
+                        <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
+                        <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
                             <i class="fas fa-blog mr-1"></i>Blog
                         </a>
                         <a href="subscribe.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
                             <i class="fas fa-crown mr-1"></i>Pricing
                         </a>
-                        <a href="/test-payment.html" class="nav-link text-orange-600 hover:text-orange-800 transition-colors">
-                            <i class="fas fa-credit-card mr-1"></i>Pay
-                        </a>
-                        <a href="contact.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <a href="#contact" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
                             <i class="fas fa-envelope mr-1"></i>Contact
                         </a>
-                    </div>
-
-                    <!-- User Authentication & Usage Info -->
-                    <div class="flex items-center space-x-4">
-                        <!-- Usage Display -->
-                        <div id="usage-display" class="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full hidden">
-                            <i class="fas fa-chart-bar mr-1"></i>
-                            <span id="usage-text">Loading...</span>
+                        <a href="dashboard.html" id="dashboard-nav-item" class="nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
+                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        </a>
+                        <a href="admin.html" class="admin-nav-item nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
+                            <i class="fas fa-chart-line mr-1"></i>Admin
+                        </a>
+                    </nav>
+                    
+                    <!-- Authentication Section -->
+                    <div id="auth-section" class="flex items-center space-x-4">
+                        <div id="user-info" class="hidden text-gray-700 text-sm">
+                            <div id="user-greeting">Welcome!</div>
+                            <div id="usage-info" class="text-xs text-gray-500 mt-1">Loading usage...</div>
                         </div>
-                        
-                        <!-- Authentication Button -->
-                        <button id="auth-btn" class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:scale-105">
-                            <i class="fas fa-user mr-2"></i>Login
+                        <button id="auth-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-lg transition-all flex items-center space-x-2 font-medium min-h-[44px]">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Login</span>
                         </button>
-                        
-                        <!-- User Menu (Hidden by default) -->
-                        <div class="relative">
-                            <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-purple-600 p-2 rounded-lg hover:bg-gray-100 transition-colors hidden">
-                                <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-purple-600 p-3 -mr-3 min-h-[48px] min-w-[48px] flex items-center justify-center">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-200">
+                <div class="flex flex-col space-y-3 pt-4">
+                    <button data-target="landing-section" class="nav-link text-gray-700 hover:text-purple-600 transition-colors text-left">Home</button>
+                    <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
+                    <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-blog mr-1"></i>Blog
+                    </a>
+                    <a href="subscribe.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-crown mr-1"></i>Pricing
+                    </a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-envelope mr-1"></i>Contact
+                    </a>
+                    <a href="#support" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-life-ring mr-1"></i>Support
+                    </a>
+                    <a href="dashboard.html" id="mobile-dashboard-nav-item" class="nav-link text-gray-700 hover:text-purple-600 transition-colors" style="display: none;">
+                        <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                    </a>
+                    <button id="mobile-admin-link" class="admin-nav-item nav-link text-gray-700 hover:text-purple-600 transition-colors text-left" style="display: none;">
+                        <i class="fas fa-chart-line mr-1"></i>Admin
+                    </button>
+                    
+                    <!-- Mobile Authentication -->
+                    <div id="mobile-auth-section" class="pt-3 border-t border-gray-200">
+                        <div id="mobile-user-info" class="hidden text-gray-700 text-sm mb-2">
+                            <div id="mobile-user-greeting">Welcome!</div>
+                            <div id="mobile-usage-info" class="text-xs text-gray-500 mt-1">Loading usage...</div>
+                        </div>
+                        <button id="mobile-auth-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-center space-x-2 font-medium min-h-[48px]">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Login</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Vertical Left AdSense Banner - Landing Page -->
+    <div class="adsense-banner adsense-banner-left landing-page" data-ad-type="vertical-left">
+        <!-- Production AdSense Ad -->
+        <ins class="adsbygoogle adsense-placeholder"
+             style="display:inline-block;width:160px;height:600px"
+             data-ad-client="ca-pub-2287734666559045"
+             data-ad-slot="XXXXXXXXX"></ins>
+        
+        <!-- Development Placeholder -->
+        <div class="ad-placeholder adsense-placeholder">
+            <p>Vertical Left Banner<br>160x600</p>
+            <p class="text-xs mt-2">Landing Page</p>
+        </div>
+    </div>
+
+    <!-- Right Sidebar Ad - Landing Page -->
+    <div class="ads-container sidebar-ad-right" data-ad-type="sidebar-landing">
+        <!-- Production AdSense Ad -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:160px;height:600px"
+             data-ad-client="ca-pub-2287734666559045"
+             data-ad-slot="XXXXXXXXX"></ins>
+        
+        <!-- Development Placeholder -->
+        <div class="ad-placeholder">
+            <p>Right Sidebar Ad<br>160x600</p>
+            <p class="text-xs mt-2">Landing Page</p>
+        </div>
+    </div>
+
+    <!-- LANDING SECTION -->
+    <div class="tool-section" id="landing-section">
+        <main class="container mx-auto px-4 py-8">
+            <!-- Hero Section -->
+            <section class="text-center mb-16">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                    Free Online Conversion Tools - ConvertWiz
+                </h1>
+                <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+                    Convert images (JPG to PNG), currencies, units, resize Instagram profile pictures, and more. Fast, secure, mobile-friendly tools with no registration required.
+                </p>
+                <div class="flex justify-center">
+                    <div class="bg-white/20 backdrop-blur-md rounded-full px-6 py-3 text-white font-medium">
+                        <i class="fas fa-star mr-2"></i>
+                        10 Professional Tools • Free to Use • No Registration Required
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tools Categories -->
+            <section id="tools" class="max-w-7xl mx-auto">
+                
+                <!-- Category 1: Image Tools -->
+                <div class="mb-12">
+                    <div class="text-center mb-8">
+                        <h3 class="text-3xl font-bold text-white mb-2">
+                            🖼️ Image Tools
+                        </h3>
+                        <p class="text-white/80 text-lg">Convert and optimize your images for web, social, and email — instantly.</p>
+                        <p class="text-white/70 text-sm mt-2">Professional image conversion and editing tools with lossless quality</p>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl">
+                        <!-- JPG to PNG Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-image text-white text-2xl"></i>
                                 </div>
-                                <span id="user-greeting">Loading...</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                            
-                            <!-- Dropdown Menu -->
-                            <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden z-50">
-                                <div class="py-2">
-                                    <a href="dashboard.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                                    </a>
-                                    <div class="admin-nav-item hidden">
-                                        <a href="#" class="block px-4 py-2 text-purple-600 hover:bg-purple-50">
-                                            <i class="fas fa-shield-alt mr-2"></i>Admin
-                                        </a>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">JPG to PNG</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert JPG images to PNG with bulk upload support</p>
+                                <button data-target="jpg-to-png-section" class="inline-block w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Instagram DP Resizer -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fab fa-instagram text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Instagram DP</h4>
+                                <p class="text-gray-600 text-sm mb-4">Resize images to perfect 320x320px Instagram size</p>
+                                <button data-target="dp-resizer-section" class="inline-block w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Color Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-violet-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-palette text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Color Converter</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert HEX to RGB and HSL with live preview</p>
+                                <button data-target="color-converter-section" class="inline-block w-full bg-gradient-to-r from-pink-500 to-violet-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Image Compressor -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-compress text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Image Compressor</h4>
+                                <p class="text-gray-600 text-sm mb-4">Reduce image file size with quality control</p>
+                                <button data-target="image-compressor-section" class="inline-block w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 2: Unit Converters -->
+                <div class="mb-12">
+                    <div class="text-center mb-8">
+                        <h3 class="text-3xl font-bold text-white mb-2">
+                            📏 Unit Converters
+                        </h3>
+                        <p class="text-white/80 text-lg">Smart everyday conversion tools to save time and simplify your workflow.</p>
+                        <p class="text-white/70 text-sm mt-2">Precise measurement tools with real-time calculation and global currency support</p>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl">
+                        <!-- Currency Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-exchange-alt text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Currency</h4>
+                                <p class="text-gray-600 text-sm mb-4">Live rates for 150+ world currencies</p>
+                                <button data-target="currency-converter-section" class="inline-block w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Global Land Unit Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-globe text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Global Land Units</h4>
+                                <p class="text-gray-600 text-sm mb-4">13+ international land measurement systems from India, China, Japan & more</p>
+                                <button data-target="land-converter-section" class="inline-block w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Signal Strength Meter - Coming Soon -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group opacity-75 relative">
+                            <div class="absolute top-3 right-3">
+                                <i class="fas fa-lock text-gray-400 text-sm"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-signal text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Signal Strength</h4>
+                                <p class="text-gray-600 text-sm mb-4">Check WiFi and network signal quality</p>
+                                <button class="w-full bg-gray-400 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
+                                    Coming Soon
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Weight Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-weight text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Weight Converter</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert between grams, pounds, kilograms and other weight units</p>
+                                <button data-target="weight-converter-section" class="inline-block w-full bg-gradient-to-r from-purple-500 to-violet-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Height Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-arrows-alt-v text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Height Converter</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert between feet, inches, centimeters and meters</p>
+                                <button data-target="height-converter-section" class="inline-block w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Distance Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-ruler text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Distance Converter</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert between meters, miles, feet and other distance units</p>
+                                <button data-target="distance-converter-section" class="inline-block w-full bg-gradient-to-r from-cyan-500 to-teal-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Temperature Converter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-thermometer-half text-white text-2xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-2">Temperature</h4>
+                                <p class="text-gray-600 text-sm mb-4">Convert between Celsius, Fahrenheit and Kelvin</p>
+                                <button data-target="temperature-converter-section" class="inline-block w-full bg-gradient-to-r from-blue-500 to-red-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 3: Utility Tools -->
+                <div class="mb-12">
+                    <div class="text-center mb-8">
+                        <h3 class="text-3xl font-bold text-white mb-2">
+                            🧰 Utility Tools
+                        </h3>
+                        <p class="text-white/80 text-lg">Powerful utilities for link management, text processing, and SEO optimization.</p>
+                        <p class="text-white/70 text-sm mt-2">Essential productivity tools for content creators and digital marketers</p>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-7xl">
+                            <!-- Word Counter -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-edit text-white text-2xl"></i>
                                     </div>
-                                    <hr class="my-1">
-                                    <button id="logout-btn" class="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50">
-                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Word Counter</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Count words, characters, reading time with comprehensive text analysis</p>
+                                    <button data-target="word-counter-section" class="inline-block w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Text-to-Speech -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-volume-up text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Text to Speech</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Convert written text into spoken audio in real-time</p>
+                                    <button data-target="text-to-speech-section" class="inline-block w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- IP Address Extractor -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-network-wired text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">IP Extractor</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Extract IPv4 and IPv6 addresses from logs and text</p>
+                                    <button data-target="ip-extractor-section" class="inline-block w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- QR Code Generator -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-qrcode text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">QR Generator</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Generate QR codes for URLs, text, and contact info</p>
+                                    <button data-target="qr-generator-section" class="inline-block w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- WiFi Scanner - Coming Soon -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group opacity-75 relative">
+                                <div class="absolute top-3 right-3">
+                                    <i class="fas fa-lock text-gray-400 text-sm"></i>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-wifi text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">WiFi Scanner</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Scan and analyze nearby WiFi networks</p>
+                                    <button class="w-full bg-gray-400 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
+                                        Coming Soon
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Premium PDF Maker - Coming Soon -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group opacity-75 relative">
+                                <div class="absolute top-3 right-3">
+                                    <i class="fas fa-crown text-yellow-500 text-sm"></i>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-file-pdf text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">PDF Maker</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Create professional PDFs with templates</p>
+                                    <button class="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
+                                        Premium Only
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Backlink Checker -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-link text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Backlink Checker</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Check your site's backlinks for better SEO optimization</p>
+                                    <button data-target="backlink-checker-section" class="inline-block w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Meta Tag Generator -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-tags text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Meta Tag Generator</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Generate SEO-ready meta tags for webpages</p>
+                                    <button data-target="meta-tag-generator-section" class="inline-block w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- DPI Checker -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-search text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">DPI Checker</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Check image resolution (DPI) for design or print</p>
+                                    <button data-target="dpi-checker-section" class="inline-block w-full bg-gradient-to-r from-amber-500 to-yellow-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- URL Shortener -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-compress text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">URL Shortener</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Create short, shareable URLs for better link management</p>
+                                    <button data-target="url-shortener-section" class="inline-block w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Text to Speech -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-volume-up text-white text-2xl"></i>
+                                    </div>
+                                    <h4 class="text-lg font-bold text-gray-800 mb-2">Text to Speech</h4>
+                                    <p class="text-gray-600 text-sm mb-4">Convert written text into spoken audio in real-time</p>
+                                    <button data-target="text-to-speech-section" class="inline-block w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-purple-600 p-2 rounded-lg">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden bg-white border-t border-gray-200 hidden">
-            <div class="py-4 px-4 space-y-4">
-                <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                    <i class="fas fa-tools mr-1"></i>Tools
-                </a>
-                <a href="blog.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                    <i class="fas fa-blog mr-1"></i>Blog
-                </a>
-                <a href="subscribe.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                    <i class="fas fa-crown mr-1"></i>Pricing
-                </a>
-                <a href="contact.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                    <i class="fas fa-envelope mr-1"></i>Contact
-                </a>
-                
-                <!-- Mobile Usage Display -->
-                <div id="mobile-usage-display" class="text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-lg hidden">
-                    <i class="fas fa-chart-bar mr-1"></i>
-                    <span id="mobile-usage-text">Loading...</span>
+            <!-- Financial Tools & PDF Tools Section -->
+            <section id="financial-pdf-tools" class="mb-16">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-white mb-4">💰 Financial & PDF Tools</h3>
+                    <p class="text-xl text-white/90">Advanced financial calculations and PDF management tools.</p>
+                    <p class="text-white/70 text-sm mt-2">Professional-grade calculators and document processing tools coming soon</p>
                 </div>
                 
-                <!-- Mobile Authentication -->
-                <button id="mobile-auth-btn" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg">
-                    <i class="fas fa-user mr-2"></i>Login
-                </button>
-                
-                <!-- Mobile User Info (Hidden by default) -->
-                <div id="mobile-user-info" class="border-t pt-4 hidden">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                            <i class="fas fa-user text-white text-sm"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- EMI Calculator - Coming Soon -->
+                    <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group relative overflow-hidden">
+                        <!-- Blur overlay for coming soon -->
+                        <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm flex items-center justify-center z-10">
+                            <div class="text-center">
+                                <i class="fas fa-lock text-2xl text-gray-600 mb-2"></i>
+                                <p class="text-gray-700 font-semibold">Coming Soon</p>
+                            </div>
                         </div>
-                        <span id="mobile-user-greeting">Loading...</span>
+                        
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-calculator text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">EMI Calculator</h4>
+                        <p class="text-gray-600 text-sm mb-4">Calculate loan EMIs with interest rates and tenure</p>
+                        <button class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
+                            Coming Soon
+                        </button>
                     </div>
-                    <div class="space-y-2">
-                        <a href="dashboard.html" class="block text-gray-700 hover:text-purple-600 py-2">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                        </a>
-                        <button id="mobile-logout-btn" class="block w-full text-left text-red-600 hover:text-red-700 py-2">
-                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+
+                    <!-- GST Calculator - Coming Soon -->
+                    <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group relative overflow-hidden">
+                        <!-- Blur overlay for coming soon -->
+                        <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm flex items-center justify-center z-10">
+                            <div class="text-center">
+                                <i class="fas fa-lock text-2xl text-gray-600 mb-2"></i>
+                                <p class="text-gray-700 font-semibold">Coming Soon</p>
+                            </div>
+                        </div>
+                        
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-percentage text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">GST Calculator</h4>
+                        <p class="text-gray-600 text-sm mb-4">Calculate GST amounts and inclusive/exclusive prices</p>
+                        <button class="w-full bg-gradient-to-r from-blue-500 to-cyan-600 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
+                            Coming Soon
+                        </button>
+                    </div>
+
+                    <!-- PDF Merger - Coming Soon -->
+                    <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group relative overflow-hidden">
+                        <!-- Blur overlay for coming soon -->
+                        <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm flex items-center justify-center z-10">
+                            <div class="text-center">
+                                <i class="fas fa-lock text-2xl text-gray-600 mb-2"></i>
+                                <p class="text-gray-700 font-semibold">Coming Soon</p>
+                            </div>
+                        </div>
+                        
+                        <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-file-pdf text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">PDF Merger</h4>
+                        <p class="text-gray-600 text-sm mb-4">Combine multiple PDF files into one document</p>
+                        <button class="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
+                            Coming Soon
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </nav>
+            </section>
 
-    <!-- Landing Section -->
-    <div class="tool-section" id="landing-section">
-        <!-- Hero Section -->
-        <section class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 text-white py-20">
-            <div class="container mx-auto px-4 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                    Welcome to ConvertWiz
-                </h1>
-                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-                    Your ultimate toolkit for conversions, transformations, and productivity - 
-                    all in one powerful platform
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button data-target="jpg-to-png-section" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 transform hover:scale-105">
-                        <i class="fas fa-image mr-2"></i>Start Converting
-                    </button>
-                    <a href="#features" class="text-white/90 hover:text-white px-8 py-3 rounded-lg border border-white/30 hover:border-white transition-colors">
-                        <i class="fas fa-info-circle mr-2"></i>Learn More
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tools Showcase -->
-        <section id="tools" class="py-16 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Professional Conversion Tools</h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Choose from our comprehensive suite of conversion tools, designed for professionals and everyday users alike
-                    </p>
-                </div>
-
-                <!-- 🖼️ Image Tools Section -->
-                <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        🖼️ Image Tools
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="jpg-to-png-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-image text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">JPG to PNG</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert JPG images to PNG format with transparency support</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="dp-resizer-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fab fa-instagram text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Instagram DP Resizer</h3>
-                            <p class="text-gray-600 text-sm text-center">Resize images for perfect Instagram profile pictures</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="image-compressor-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-compress text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Image Compressor</h3>
-                            <p class="text-gray-600 text-sm text-center">Reduce image file sizes without losing quality</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="dpi-checker-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-search text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">DPI Checker</h3>
-                            <p class="text-gray-600 text-sm text-center">Check image resolution and DPI information</p>
-                        </div>
+            <!-- About Section -->
+            <section id="about" class="text-center">
+                <h3 class="text-3xl font-bold text-white mb-8">Why Choose ConvertWiz?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-6">
+                        <i class="fas fa-bolt text-yellow-300 text-3xl mb-4"></i>
+                        <h4 class="text-xl font-semibold text-white mb-3">Lightning Fast</h4>
+                        <p class="text-white/80">All conversions happen instantly in your browser. No waiting, no uploads to servers.</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-6">
+                        <i class="fas fa-shield-alt text-green-300 text-3xl mb-4"></i>
+                        <h4 class="text-xl font-semibold text-white mb-3">100% Private</h4>
+                        <p class="text-white/80">Your files never leave your device. Complete privacy and security guaranteed.</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-6">
+                        <i class="fas fa-mobile-alt text-blue-300 text-3xl mb-4"></i>
+                        <h4 class="text-xl font-semibold text-white mb-3">Mobile Friendly</h4>
+                        <p class="text-white/80">Works perfectly on all devices - desktop, tablet, and mobile phones.</p>
                     </div>
                 </div>
-
-                <!-- 📏 Unit Converters Section -->
-                <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        📏 Unit Converters
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="currency-converter-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-dollar-sign text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Currency Converter</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert between 150+ world currencies with real-time rates</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="land-unit-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-globe text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Land Unit Converter</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert between acres, hectares, and international land units</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="distance-converter-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-cyan-500 to-teal-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-ruler text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Distance Converter</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert distances between meters, miles, and other units</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="weight-converter-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-weight text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Weight Converter</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert weights between kilograms, pounds, and other units</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="height-converter-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-arrows-alt-v text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Height Converter</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert heights between feet, meters, and other units</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="temperature-converter-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-thermometer-half text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Temperature Converter</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert between Celsius, Fahrenheit, and Kelvin</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="percentage-calculator-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-percent text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Percentage Calculator</h3>
-                            <p class="text-gray-600 text-sm text-center">Calculate percentages, discounts, and percentage changes</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="color-converter-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-palette text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Color Converter</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert between HEX, RGB, and HSL color formats</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 🧰 Utility Tools Section -->
-                <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        🧰 Utility Tools
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="word-counter-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-file-alt text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Word Counter</h3>
-                            <p class="text-gray-600 text-sm text-center">Count words, characters, and analyze text statistics</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="ip-extractor-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-network-wired text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">IP Address Extractor</h3>
-                            <p class="text-gray-600 text-sm text-center">Extract IP addresses from text and log files</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="qr-generator-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-violet-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-qrcode text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">QR Code Generator</h3>
-                            <p class="text-gray-600 text-sm text-center">Generate QR codes for URLs, text, and contact info</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="url-shortener-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-violet-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-link text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">URL Shortener</h3>
-                            <p class="text-gray-600 text-sm text-center">Create short URLs with analytics and custom domains</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="text-to-speech-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-volume-up text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Text to Speech</h3>
-                            <p class="text-gray-600 text-sm text-center">Convert text to speech with natural voices</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="backlink-checker-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-external-link-alt text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Backlink Checker</h3>
-                            <p class="text-gray-600 text-sm text-center">Analyze website backlinks and domain authority</p>
-                        </div>
-
-                        <div class="tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" data-target="meta-tag-generator-section">
-                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-tags text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">Meta Tag Generator</h3>
-                            <p class="text-gray-600 text-sm text-center">Generate SEO meta tags for better search rankings</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 💰 Financial & PDF Tools Section -->
-                <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        💰 Financial & PDF Tools
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Coming Soon Tools with Blur Overlay -->
-                        <div class="relative tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow opacity-75">
-                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-calculator text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">EMI Calculator</h3>
-                            <p class="text-gray-600 text-sm text-center">Calculate loan EMIs and interest rates</p>
-                            <div class="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                                <span class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                                    Coming Soon
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="relative tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow opacity-75">
-                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-receipt text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">GST Calculator</h3>
-                            <p class="text-gray-600 text-sm text-center">Calculate GST amounts and tax inclusive/exclusive prices</p>
-                            <div class="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                                <span class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                                    Coming Soon
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="relative tool-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow opacity-75">
-                            <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-file-pdf text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">PDF Merger</h3>
-                            <p class="text-gray-600 text-sm text-center">Merge multiple PDF files into one document</p>
-                            <div class="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                                <span class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                                    Coming Soon
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer AdSense Banner -->
-        <div class="adsense-banner adsense-banner-footer" data-ad-type="footer">
-            <!-- Production AdSense Ad -->
-            <ins class="adsbygoogle adsense-placeholder"
-                 style="display:block;width:100%;height:250px"
-                 data-ad-client="ca-pub-2287734666559045"
-                 data-ad-slot="XXXXXXXXX"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            
-            <!-- Development Placeholder -->
-            <div class="ad-placeholder adsense-placeholder">
-                <p>Footer Banner Advertisement</p>
-                <p class="text-xs mt-1">Auto-responsive Ad Unit</p>
-            </div>
-        </div>
-
-        <!-- Features Section -->
-        <section id="features" class="py-16 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Why Choose ConvertWiz?</h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Experience the power of professional-grade conversion tools designed with privacy, speed, and ease of use in mind
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-bolt text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Lightning Fast</h3>
-                        <p class="text-gray-600">Client-side processing ensures your conversions happen instantly without server delays</p>
-                    </div>
-
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-shield-alt text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">100% Private</h3>
-                        <p class="text-gray-600">Your files never leave your device - all processing happens locally in your browser</p>
-                    </div>
-
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-mobile-alt text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Mobile Optimized</h3>
-                        <p class="text-gray-600">Fully responsive design works perfectly on desktop, tablet, and mobile devices</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white py-12">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <!-- Company Info -->
-                    <div>
-                        <div class="flex items-center space-x-3 mb-4">
-                            <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-sync text-white"></i>
-                            </div>
-                            <span class="text-xl font-bold">ConvertWiz</span>
-                        </div>
-                        <p class="text-gray-400 mb-4">
-                            Professional conversion tools for modern users. Fast, secure, and always free.
-                        </p>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Tools -->
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">Popular Tools</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors" data-target="jpg-to-png-section">JPG to PNG</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors" data-target="currency-converter-section">Currency Converter</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors" data-target="dp-resizer-section">Instagram DP Resizer</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors" data-target="qr-generator-section">QR Code Generator</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Resources -->
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">Resources</h3>
-                        <ul class="space-y-2">
-                            <li><a href="blog.html" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
-                            <li><a href="subscribe.html" class="text-gray-400 hover:text-purple-600 transition-colors">
-                                <i class="fas fa-crown mr-1"></i>Pricing Plans
-                            </a></li>
-                            <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
-                            <li><a href="admin.html" class="text-gray-400 hover:text-white transition-colors admin-nav-item">Admin</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Legal -->
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">Legal</h3>
-                        <ul class="space-y-2">
-                            <li><a href="privacy.html" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
-                            <li><a href="terms.html" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
-                            <li><a href="disclaimer.html" class="text-gray-400 hover:text-white transition-colors">Disclaimer</a></li>
-                            <li><a href="credits.html" class="text-gray-400 hover:text-white transition-colors">Credits</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <hr class="border-gray-700 my-8">
-                
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400 mb-4 md:mb-0">
-                        © 2025 ConvertWiz. All rights reserved. Powered by Ali.
-                    </p>
-                    <div class="flex space-x-6">
-                        <span class="text-gray-400">Made with ❤️ for productivity</span>
-                    </div>
-                </div>
-            </div>
-        </footer>
+            </section>
+        </main>
     </div>
 
-    <!-- JPG to PNG Converter Section -->
+    <!-- JPG TO PNG CONVERTER SECTION -->
     <div class="tool-section" id="jpg-to-png-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
         <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
@@ -657,97 +886,141 @@
                 </button>
             </div>
             
+            <!-- Hero Section -->
             <section class="text-center mb-12">
                 <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
                     JPG to PNG Converter
                 </h2>
-                <p class="text-xl text-white/90 mb-8">
-                    Convert your JPG images to PNG format with transparency support. Fast, free, and secure.
+                <p class="text-xl text-white/90 mb-4">
+                    Convert your JPG images to PNG format with perfect quality retention
                 </p>
+                <!-- Daily Limit Counter -->
+                <div id="limit-counter" class="inline-block bg-white/20 backdrop-blur-md rounded-full px-6 py-2 text-white font-medium">
+                    <i class="fas fa-gift mr-2"></i>
+                    <span id="conversions-left">3</span> free conversions left today
+                </div>
             </section>
 
-            <div class="max-w-2xl mx-auto">
-                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8">
-                    <div class="text-center mb-6">
-                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-image text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Upload Your JPG Images</h3>
-                        <p class="text-gray-600">Drag & drop or click to select multiple JPG files</p>
-                    </div>
-                    
-                    <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer">
-                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
-                        <p class="text-gray-600 mb-2">Drop JPG files here or <span class="text-blue-600 font-semibold">browse</span></p>
-                        <p class="text-sm text-gray-500">Supports multiple files • Max 10MB per file</p>
-                        <input type="file" id="file-input" multiple accept=".jpg,.jpeg" class="hidden">
-                    </div>
-
-                    <!-- Progress Section -->
-                    <div id="progress-section" class="mt-6 hidden">
-                        <div class="bg-gray-100 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-medium text-gray-700">Converting...</span>
-                                <span id="progress-text" class="text-sm text-gray-500">0/0</span>
+            <!-- Converter Card -->
+            <div class="max-w-4xl mx-auto">
+                <!-- Upload Section -->
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8 hover:shadow-3xl transition-all duration-300">
+                    <!-- Drag & Drop Area -->
+                    <div id="upload-area" class="border-2 border-dashed border-purple-300 rounded-xl p-12 text-center transition-all duration-300 hover:border-purple-500 hover:bg-purple-50">
+                        <input type="file" id="jpg-input" accept=".jpg,.jpeg,image/jpeg" class="hidden" multiple>
+                        <div id="upload-content">
+                            <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-cloud-upload-alt text-white text-3xl"></i>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Drag & Drop JPG Files Here</h3>
+                            <p class="text-gray-600 mb-4">or click to browse and select multiple files</p>
+                            <button id="browse-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-shadow">
+                                <i class="fas fa-folder-open mr-2"></i>Choose Files
+                            </button>
+                            <p class="text-sm text-gray-500 mt-4">Supports JPG and JPEG formats • Max file size: 10MB</p>
                         </div>
                     </div>
 
-                    <!-- Settings -->
-                    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center">
-                                <input type="checkbox" id="add-watermark" class="mr-2">
-                                <span class="text-sm text-gray-700">Add watermark</span>
-                            </label>
-                            <div class="text-sm text-gray-600">
-                                <span id="daily-counter">3 conversions remaining today</span>
+                    <!-- Watermark Option -->
+                    <div class="mt-6 flex justify-center">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="watermark-toggle" class="sr-only">
+                            <div class="relative">
+                                <div class="w-12 h-6 bg-gray-300 rounded-full shadow-inner transition-colors duration-300"></div>
+                                <div class="dot absolute w-5 h-5 bg-white rounded-full shadow -left-1 -top-0.5 transition-all duration-300"></div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversion Button -->
-                    <button id="convert-btn" class="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg hover:shadow-lg transition-shadow disabled:opacity-50 disabled:cursor-not-allowed">
-                        <i class="fas fa-sync mr-2"></i>
-                        Convert to PNG
-                    </button>
-
-                    <!-- Results Section -->
-                    <div id="results-section" class="mt-6 hidden">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Conversion Results</h4>
-                        <div id="results-container" class="space-y-4">
-                            <!-- Results will be populated here -->
-                        </div>
-                        <button id="download-all-btn" class="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors hidden">
-                            <i class="fas fa-download mr-2"></i>
-                            Download All PNG Files
-                        </button>
-                        <button id="reset-btn" class="w-full mt-2 border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                            <i class="fas fa-redo mr-2"></i>
-                            Convert More Images
-                        </button>
+                            <span class="ml-3 text-gray-700 font-medium select-none">Add watermark</span>
+                        </label>
                     </div>
                 </section>
 
-                <!-- AdSense Banner After Tool -->
-                <div class="adsense-banner adsense-banner-after-tool mt-8" data-ad-type="after-tool">
-                    <!-- Production AdSense Ad -->
-                    <ins class="adsbygoogle adsense-placeholder"
-                         style="display:block;width:100%;height:280px"
-                         data-ad-client="ca-pub-2287734666559045"
-                         data-ad-slot="XXXXXXXXX"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    
-                    <!-- Development Placeholder -->
-                    <div class="ad-placeholder adsense-placeholder">
-                        <p>After Tool Advertisement</p>
-                        <p class="text-xs mt-1">Auto-responsive Ad Unit</p>
+                <!-- Progress Section -->
+                <section id="progress-section" class="hidden converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                            <i class="fas fa-magic text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Converting Your Images...</h3>
+                        <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                            <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500 w-0"></div>
+                        </div>
+                        <p id="progress-text" class="text-gray-600">Processing images...</p>
+                    </div>
+                </section>
+
+                <!-- Results Container -->
+                <div id="results-container" class="hidden">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800">Conversion Results</h3>
+                        <p class="text-gray-600 mt-2">Your converted images are ready for download</p>
+                    </div>
+                    <div id="results-list" class="space-y-6">
+                        <!-- Individual result cards will be inserted here -->
+                    </div>
+                    <div class="text-center mt-8">
+                        <button id="convert-another" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300">
+                            <i class="fas fa-plus mr-3"></i>Convert More Files
+                        </button>
+                    </div>
+
+                    <!-- AdSense Ad Unit - Below Tool Results -->
+                    <div class="mt-8">
+                        <!-- Production AdSense Ad -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-2287734666559045"
+                             data-ad-slot="XXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        
+                        <!-- Development Placeholder -->
+                        <div class="ad-placeholder bg-gray-100 border border-gray-300 rounded-lg p-4 text-center text-gray-600" style="min-height: 150px; display: block;">
+                            <p class="text-sm font-medium">Ad will appear here in production</p>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Daily Limit Reached -->
+                <section id="limit-reached" class="hidden converter-card bg-white rounded-2xl shadow-2xl p-8">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-hourglass-end text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Daily Limit Reached</h3>
+                        <p class="text-gray-600 mb-6">You've reached today's free limit. Come back tomorrow or Login for more.</p>
+                        <div class="space-y-3">
+                            <button class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-shadow">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Login for Unlimited Access
+                            </button>
+                            <p class="text-sm text-gray-500">Free users: 3 conversions per day • Premium: Unlimited</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FAQ Section for JPG to PNG -->
+                <section class="bg-white/10 backdrop-blur-md rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold text-white mb-6">Frequently Asked Questions</h3>
+                    <div class="space-y-4">
+                        <div class="bg-white/5 rounded-lg p-4">
+                            <h4 class="text-lg font-semibold text-white mb-2">How does the JPG to PNG converter work?</h4>
+                            <p class="text-white/90">Our tool converts JPG/JPEG images to PNG format while maintaining quality. The conversion happens in your browser - no files are uploaded to servers.</p>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-4">
+                            <h4 class="text-lg font-semibold text-white mb-2">Is it free to use?</h4>
+                            <p class="text-white/90">Yes, the JPG to PNG converter is 100% free with a daily limit of 3 conversions. Premium users get unlimited conversions.</p>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-4">
+                            <h4 class="text-lg font-semibold text-white mb-2">Are my files secure and private?</h4>
+                            <p class="text-white/90">Absolutely! All conversions happen locally in your browser. Your images never leave your device, ensuring complete privacy.</p>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-4">
+                            <h4 class="text-lg font-semibold text-white mb-2">What's the difference between JPG and PNG?</h4>
+                            <p class="text-white/90">PNG supports transparency and lossless compression, while JPG is better for photos. PNG is ideal for logos, icons, and images with transparent backgrounds.</p>
+                        </div>
+                    </div>
+                </section>
+
+
 
                 <!-- Disclaimer -->
                 <div class="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -2190,8 +2463,7 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
-                <!-- Image Compressor FAQ Schema -->
-                
+
 
                 <!-- Disclaimer -->
                 <div class="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -2299,8 +2571,7 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
-                <!-- Text-to-Speech FAQ Schema -->
-                
+
             </div>
         </main>
     </div>
@@ -2388,8 +2659,7 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
-                <!-- Backlink Checker FAQ Schema -->
-                
+
             </div>
         </main>
     </div>
@@ -2493,8 +2763,7 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
-                <!-- Meta Tag Generator FAQ Schema -->
-                
+
             </div>
         </main>
     </div>
@@ -2675,8 +2944,7 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
-                <!-- URL Shortener FAQ Schema -->
-                
+
             </div>
         </main>
     </div>
