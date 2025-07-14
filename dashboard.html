@@ -244,7 +244,7 @@
             document.getElementById('member-since').textContent = memberSince;
 
             try {
-                // Get user data from Firestore
+                // Get user data from Firestore with better error handling
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
@@ -282,6 +282,8 @@
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
+                // Show fallback data when Firestore is unavailable
+                showFallbackDashboard();
             }
         }
 
@@ -334,6 +336,25 @@
                     <span class="text-green-600 font-semibold">✓ Completed</span>
                 </div>
             `).join('');
+        }
+
+        function showFallbackDashboard() {
+            // Show basic dashboard with offline data when Firestore fails
+            document.getElementById('current-plan').textContent = 'Free';
+            document.getElementById('sub-plan').textContent = 'Free';
+            document.getElementById('daily-usage').textContent = '0/5';
+            document.getElementById('daily-limit').textContent = '5 conversions';
+            document.getElementById('total-conversions').textContent = '0';
+            updateUserBadge('free');
+            
+            // Show offline message
+            const activityContainer = document.getElementById('recent-activity');
+            activityContainer.innerHTML = `
+                <div class="text-center text-orange-500 py-8">
+                    <i class="fas fa-wifi text-4xl text-orange-300 mb-4"></i>
+                    <p><strong>Offline Mode</strong><br>Some features may be limited while offline.</p>
+                </div>
+            `;
         }
 
         // Logout functionality
