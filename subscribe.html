@@ -517,7 +517,7 @@
                     "prefill": {
                         "name": this.currentUser?.displayName || "ConvertWiz User",
                         "email": this.currentUser?.email || "user@example.com",
-                        "contact": "9999999999"
+                        "contact": "" // Let user enter their own phone number
                     },
                     "theme": {
                         "color": "#6759ff"
@@ -717,7 +717,8 @@
                     },
                     prefill: {
                         name: currentUser.displayName || 'ConvertWiz User',
-                        email: currentUser.email
+                        email: currentUser.email,
+                        contact: "" // Let user enter their own number or leave empty
                     },
                     theme: {
                         color: '#6366f1'
