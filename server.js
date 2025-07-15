@@ -55,15 +55,15 @@ app.post('/api/create-order', async (req, res) => {
   }
 });
 
-// 🟡 STEP 1: Auto-Capture Payment Webhook (Razorpay)
+// Razorpay Webhook Handler
 app.post("/razorpay-webhook", express.json(), (req, res) => {
   console.log("🔔 Razorpay webhook received:", JSON.stringify(req.body, null, 2));
   console.log("📋 Headers:", req.headers);
   
-  const secret = process.env.RAZORPAY_WEBHOOK_SECRET || "your_webhook_secret";
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
-  // Skip signature verification if webhook secret is not configured
-  if (secret !== "your_webhook_secret") {
+  // Verify webhook signature if secret is configured
+  if (secret && req.headers["x-razorpay-signature"]) {
     const shasum = crypto.createHmac("sha256", secret);
     shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest("hex");
@@ -72,29 +72,61 @@ app.post("/razorpay-webhook", express.json(), (req, res) => {
       console.log("❌ Invalid webhook signature");
       return res.status(403).send("Invalid signature.");
     }
+    console.log("✅ Webhook signature verified");
   } else {
     console.log("⚠️  Webhook signature verification skipped (no secret configured)");
   }
 
   const event = req.body.event;
   const payment = req.body.payload?.payment?.entity;
+  const order = req.body.payload?.order?.entity;
 
   console.log(`📝 Event: ${event}`);
   console.log(`💳 Payment details:`, payment);
+  console.log(`📦 Order details:`, order);
 
-  if (event === "payment.captured") {
-    // Get user email from payment notes or order receipt
-    const userEmail = payment?.notes?.email || payment?.email;
+  if (event === "payment.captured" || event === "order.paid") {
+    // Try multiple sources for user email
+    let userEmail = null;
     
-    if (userEmail) {
+    // Check payment notes
+    if (payment?.notes?.email) {
+      userEmail = payment.notes.email;
+    }
+    // Check order notes
+    else if (order?.notes?.email) {
+      userEmail = order.notes.email;
+    }
+    // Check payment entity email
+    else if (payment?.email) {
+      userEmail = payment.email;
+    }
+    
+    if (userEmail && userEmail !== 'no_email_provided') {
       premiumUsers[userEmail] = true;
-      console.log(`✅ Premium access granted to ${userEmail}`);
+      console.log(`✅ Premium access granted to ${userEmail} via ${event}`);
+      
+      // Store payment details for audit
+      const paymentRecord = {
+        payment_id: payment?.id,
+        order_id: order?.id || payment?.order_id,
+        amount: payment?.amount || order?.amount,
+        email: userEmail,
+        event: event,
+        timestamp: new Date().toISOString()
+      };
+      console.log(`📝 Payment record:`, paymentRecord);
+      
     } else {
-      console.log("⚠️  No user email found in payment data");
+      console.log("⚠️  No user email found in webhook data");
+      console.log("Available data sources checked:");
+      console.log("- payment.notes.email:", payment?.notes?.email);
+      console.log("- order.notes.email:", order?.notes?.email);
+      console.log("- payment.email:", payment?.email);
     }
   }
 
-  res.json({ status: "Webhook received" });
+  res.json({ status: "Webhook received successfully" });
 });
 
 // Manual premium grant endpoint for testing (remove in production)
