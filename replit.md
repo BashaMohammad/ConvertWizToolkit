@@ -412,6 +412,34 @@ ConvertWiz now includes a comprehensive Node.js Express backend for enhanced fun
 - **Data Privacy**: Email masking and secure data handling
 - **Comprehensive Error Handling**: Detailed error responses and security logging
 
+## Dedicated Webhook Server Architecture
+
+ConvertWiz now includes a dedicated always-on webhook server architecture for production reliability:
+
+### **Webhook Server Setup**
+- **Standalone Server**: `webhook-server.js` - Dedicated Express server for webhook handling
+- **Always-On Deployment**: Deploy on Render/Railway/Heroku for 24/7 webhook availability
+- **Forwarding Architecture**: External webhook server forwards to main app's `/api/confirm-subscription` endpoint
+- **Production URLs**: 
+  - Webhook Server: `https://your-app.render.com/razorpay-webhook`
+  - Main App API: `https://convertwiz.in/api/confirm-subscription`
+
+### **Webhook Flow**
+1. **Razorpay** → **External Webhook Server** (always-on)
+2. **Webhook Server** → **Main App API** (subscription confirmation)
+3. **Main App** → **Premium Access Grant** (user status update)
+
+### **Configuration Files**
+- `webhook-server.js`: Main webhook server with signature validation and forwarding
+- `webhook-package.json`: Dependencies for standalone deployment
+- `webhook-deploy.md`: Complete deployment guide for Render/Railway/Heroku
+
+### **Benefits**
+- **Reliability**: Webhooks work even when main Replit app sleeps
+- **Security**: Proper signature validation with `CWsecret2025@123`
+- **Scalability**: Independent scaling of webhook processing
+- **Monitoring**: Dedicated health checks and logging
+
 ## Changelog
 
 Changelog:

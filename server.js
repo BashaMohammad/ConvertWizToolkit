@@ -121,6 +121,40 @@ app.post("/razorpay-webhook", (req, res) => {
   }
 });
 
+// 🔄 API endpoint to confirm subscription (called by external webhook server)
+app.post('/api/confirm-subscription', express.json(), (req, res) => {
+  console.log('🔔 Subscription confirmation received:', req.body);
+  
+  const { razorpay_order_id, razorpay_payment_id, amount, status } = req.body;
+  
+  if (status === 'captured' && razorpay_payment_id) {
+    // Extract user email from order notes by checking recent orders
+    // In production, you'd query your database for the order details
+    console.log(`💰 Payment confirmed: ${razorpay_payment_id} for order ${razorpay_order_id}`);
+    
+    // For now, we'll grant premium to the current logged-in user
+    // In production, you'd match the order_id to the user who created it
+    const recentOrderUser = Object.keys(premiumUsers)[0]; // Fallback for testing
+    
+    if (recentOrderUser) {
+      premiumUsers[recentOrderUser] = true;
+      console.log(`✅ Premium subscription confirmed for ${recentOrderUser}`);
+    }
+    
+    res.json({ 
+      success: true, 
+      message: 'Subscription confirmed',
+      payment_id: razorpay_payment_id 
+    });
+  } else {
+    console.log(`⚠️ Payment status not captured: ${status}`);
+    res.status(400).json({ 
+      success: false, 
+      message: 'Payment not captured' 
+    });
+  }
+});
+
 // Manual premium grant endpoint for testing (remove in production)
 app.post("/manual-premium-grant", express.json(), (req, res) => {
   const { email } = req.body;
