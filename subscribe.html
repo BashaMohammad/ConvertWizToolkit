@@ -494,15 +494,14 @@
                     return;
                 }
 
-                // Razorpay payment options
+                // Razorpay payment options - Fixed Configuration
                 const options = {
                     "key": "rzp_live_HXdG9BXkQBfjyG",
                     "amount": amount * 100, // Amount in paise
                     "currency": "INR",
                     "name": "ConvertWiz",
-                    "description": `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
-                    "image": "https://www.convertwiz.in/logo192.png",
-                    "timeout": 300, // 5 minutes timeout
+                    "description": `Premium Access - ConvertWiz (${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan)`,
+                    "image": "/logo.png",
                     "handler": (response) => {
                         // Store payment details with user information
                         localStorage.setItem('payment_response', JSON.stringify({
@@ -513,19 +512,23 @@
                             user_email: this.currentUser.email,
                             timestamp: new Date().toISOString()
                         }));
-                        window.location.href = "/payment-success.html";
+                        window.location.href = "/payment-success.html?ref=" + response.razorpay_payment_id;
                     },
                     "prefill": {
-                        "name": this.currentUser?.displayName || "ConvertWiz User",
-                        "email": this.currentUser?.email || "user@example.com",
-                        "contact": "" // Let user enter their own phone number
+                        "name": "",
+                        "email": "",
+                        "contact": "" // Leave empty to avoid auto-fill issues
+                    },
+                    "notes": {
+                        "subscription_type": plan.charAt(0).toUpperCase() + plan.slice(1)
                     },
                     "theme": {
-                        "color": "#6759ff"
+                        "color": "#6A1B9A"
                     },
+                    "timeout": 300, // 5 minutes timeout
                     "modal": {
                         "ondismiss": () => {
-                            this.showToast('Payment cancelled', 'info');
+                            alert("Payment process was cancelled.");
                         }
                     }
                 };
@@ -691,9 +694,9 @@
                     amount: data.amount,
                     currency: data.currency,
                     name: 'ConvertWiz',
-                    description: `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
+                    description: `Premium Access - ConvertWiz (${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan)`,
                     order_id: data.orderId,
-                    timeout: 300, // 5 minutes timeout
+                    image: '/logo.png',
                     handler: function(response) {
                         console.log('Payment successful:', response);
                         
@@ -714,20 +717,24 @@
                         subscriptionPage.showToast('Payment successful! Redirecting...', 'success');
                         
                         setTimeout(() => {
-                            window.location.href = 'payment-success.html';
+                            window.location.href = 'payment-success.html?ref=' + response.razorpay_payment_id;
                         }, 1000);
                     },
                     prefill: {
-                        name: currentUser.displayName || 'ConvertWiz User',
-                        email: currentUser.email,
-                        contact: "" // Let user enter their own number or leave empty
+                        name: '',
+                        email: '',
+                        contact: '' // Leave empty to avoid auto-fill issues
+                    },
+                    notes: {
+                        subscription_type: plan.charAt(0).toUpperCase() + plan.slice(1)
                     },
                     theme: {
-                        color: '#6366f1'
+                        color: '#6A1B9A'
                     },
+                    timeout: 300, // 5 minutes timeout
                     modal: {
                         ondismiss: function() {
-                            subscriptionPage.showToast('Payment cancelled', 'info');
+                            alert('Payment process was cancelled.');
                         }
                     }
                 };
@@ -782,6 +789,7 @@
                 return;
             }
 
+            // PayPal URL Fix - Use correct paypal.me shortlink format
             const paypalUrls = {
                 'standard': 'https://paypal.me/convertwizpay/5',
                 'premium': 'https://paypal.me/convertwizpay/15'
