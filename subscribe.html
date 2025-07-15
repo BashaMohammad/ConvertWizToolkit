@@ -657,15 +657,18 @@
 
         // Get current user with fallbacks
         function getCurrentUser() {
+            console.log('🔍 Getting current user...');
             const subscriptionPage = window.subscriptionPageInstance;
             
             // Try Firebase first
             if (subscriptionPage && subscriptionPage.currentUser) {
+                console.log('✅ User from subscriptionPage:', subscriptionPage.currentUser.email);
                 return subscriptionPage.currentUser;
             }
             
             // Try global Firebase
             if (window.firebaseAuth && window.firebaseAuth.currentUser) {
+                console.log('✅ User from global Firebase:', window.firebaseAuth.currentUser.email);
                 return window.firebaseAuth.currentUser;
             }
             
@@ -675,6 +678,7 @@
                 try {
                     const userData = JSON.parse(userSession);
                     if (userData && userData.email) {
+                        console.log('✅ User from localStorage:', userData.email);
                         return {
                             uid: userData.uid || 'local_user',
                             email: userData.email,
@@ -682,10 +686,11 @@
                         };
                     }
                 } catch (e) {
-                    console.error('Error parsing localStorage user:', e);
+                    console.error('❌ Error parsing localStorage user:', e);
                 }
             }
             
+            console.log('⚠️ No user found');
             return null;
         }
 
@@ -729,6 +734,13 @@
                     throw new Error(data.error);
                 }
                 
+                console.log('🎯 Creating Razorpay instance with options:', {
+                    key: 'rzp_live_HXdG9BXkQBfjyG',
+                    amount: data.amount,
+                    currency: data.currency,
+                    order_id: data.orderId
+                });
+
                 const options = {
                     key: 'rzp_live_HXdG9BXkQBfjyG',
                     amount: data.amount,
@@ -773,16 +785,25 @@
                     timeout: 600 // Optional: timeout to refresh if idle
                 };
                 
-                const rzp = new Razorpay(options);
-                rzp.on('payment.failed', function(response) {
-                    console.error('Payment failed:', response.error);
-                    subscriptionPage.showToast(`Payment failed: ${response.error.description}`, 'error');
-                    setTimeout(() => {
-                        window.location.href = 'payment-failed.html';
-                    }, 2000);
-                });
-                
-                rzp.open();
+                try {
+                    console.log('💳 Creating Razorpay instance...');
+                    const rzp = new Razorpay(options);
+                    
+                    rzp.on('payment.failed', function(response) {
+                        console.error('❌ Payment failed:', response.error);
+                        subscriptionPage.showToast(`Payment failed: ${response.error.description}`, 'error');
+                        setTimeout(() => {
+                            window.location.href = 'payment-failed.html';
+                        }, 2000);
+                    });
+                    
+                    console.log('🚀 Opening Razorpay modal...');
+                    rzp.open();
+                    console.log('✅ Razorpay modal opened successfully');
+                } catch (error) {
+                    console.error('❌ Error initializing Razorpay:', error);
+                    subscriptionPage.showToast('Failed to initialize payment. Please try again.', 'error');
+                }
             })
             .catch(error => {
                 console.error('Error creating order:', error);
