@@ -561,14 +561,14 @@
             const subscriptionPage = window.subscriptionPageInstance;
             
             if (plan === 'free') {
-                if (subscriptionPage && subscriptionPage.currentUser) {
+                if (isUserAuthenticated()) {
                     subscriptionPage.showToast('You are already on the Free plan!', 'info');
                 } else {
                     window.location.href = '/';
                 }
             } else {
-                // Check authentication before payment
-                if (!subscriptionPage || !subscriptionPage.currentUser) {
+                // Enhanced authentication check with fallbacks
+                if (!isUserAuthenticated()) {
                     showAuthRequiredModal();
                     return;
                 }
@@ -576,6 +576,74 @@
                 // Use enhanced payment with order creation API
                 initiateEnhancedPayment(plan, subscriptionPage);
             }
+        }
+
+        // Enhanced authentication check function
+        function isUserAuthenticated() {
+            const subscriptionPage = window.subscriptionPageInstance;
+            
+            // Check 1: Firebase currentUser
+            if (subscriptionPage && subscriptionPage.currentUser) {
+                console.log('Auth check: Firebase user found:', subscriptionPage.currentUser.email);
+                return true;
+            }
+            
+            // Check 2: localStorage session
+            const userSession = localStorage.getItem('convertWizUser');
+            if (userSession) {
+                try {
+                    const userData = JSON.parse(userSession);
+                    if (userData && userData.email) {
+                        console.log('Auth check: localStorage user found:', userData.email);
+                        return true;
+                    }
+                } catch (e) {
+                    console.log('Auth check: Invalid localStorage session');
+                }
+            }
+            
+            // Check 3: Global Firebase auth state
+            if (window.firebaseAuth && window.firebaseAuth.currentUser) {
+                console.log('Auth check: Global Firebase user found:', window.firebaseAuth.currentUser.email);
+                return true;
+            }
+            
+            console.log('Auth check: No authenticated user found');
+            return false;
+        }
+
+        // Get current user with fallbacks
+        function getCurrentUser() {
+            const subscriptionPage = window.subscriptionPageInstance;
+            
+            // Try Firebase first
+            if (subscriptionPage && subscriptionPage.currentUser) {
+                return subscriptionPage.currentUser;
+            }
+            
+            // Try global Firebase
+            if (window.firebaseAuth && window.firebaseAuth.currentUser) {
+                return window.firebaseAuth.currentUser;
+            }
+            
+            // Try localStorage as last resort
+            const userSession = localStorage.getItem('convertWizUser');
+            if (userSession) {
+                try {
+                    const userData = JSON.parse(userSession);
+                    if (userData && userData.email) {
+                        return {
+                            uid: userData.uid || 'local_user',
+                            email: userData.email,
+                            displayName: userData.displayName || userData.email.split('@')[0]
+                        };
+                    }
+                } catch (e) {
+                    console.error('Error parsing localStorage user:', e);
+                }
+            }
+            
+            return null;
         }
 
         // Enhanced payment function using the new API
@@ -588,6 +656,13 @@
             const amount = amounts[plan];
             if (!amount) {
                 subscriptionPage.showToast('Invalid plan selected', 'error');
+                return;
+            }
+
+            // Get current user with fallbacks
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                subscriptionPage.showToast('Authentication error. Please login again.', 'error');
                 return;
             }
 
@@ -627,9 +702,9 @@
                             signature: response.razorpay_signature,
                             plan: plan,
                             amount: amount,
-                            user_id: subscriptionPage.currentUser.uid,
-                            user_email: subscriptionPage.currentUser.email,
-                            user_name: subscriptionPage.currentUser.displayName,
+                            user_id: currentUser.uid,
+                            user_email: currentUser.email,
+                            user_name: currentUser.displayName,
                             timestamp: new Date().toISOString()
                         };
                         
@@ -641,8 +716,8 @@
                         }, 1000);
                     },
                     prefill: {
-                        name: subscriptionPage.currentUser.displayName || 'ConvertWiz User',
-                        email: subscriptionPage.currentUser.email
+                        name: currentUser.displayName || 'ConvertWiz User',
+                        email: currentUser.email
                     },
                     theme: {
                         color: '#6366f1'
@@ -698,8 +773,8 @@
         function handlePayPalPayment(plan) {
             const subscriptionPage = window.subscriptionPageInstance;
             
-            // Check authentication first
-            if (!subscriptionPage || !subscriptionPage.currentUser) {
+            // Enhanced authentication check
+            if (!isUserAuthenticated()) {
                 showAuthRequiredModal();
                 return;
             }
@@ -720,6 +795,12 @@
         }
 
         function showPayPalConfirmationModal(plan, paypalUrl, subscriptionPage) {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                subscriptionPage.showToast('Authentication error. Please login again.', 'error');
+                return;
+            }
+
             const modal = document.createElement('div');
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             modal.innerHTML = `
@@ -728,7 +809,7 @@
                         <i class="fab fa-paypal text-4xl text-blue-500 mb-4"></i>
                         <h3 class="text-xl font-bold text-gray-800 mb-4">PayPal Payment</h3>
                         <div class="text-gray-600 mb-6">
-                            <p>Account: <strong>${subscriptionPage.currentUser.email}</strong></p>
+                            <p>Account: <strong>${currentUser.email}</strong></p>
                             <p>Plan: <strong>${plan.charAt(0).toUpperCase() + plan.slice(1)}</strong></p>
                             <p class="text-sm mt-3 text-orange-600">
                                 <i class="fas fa-exclamation-triangle"></i>
@@ -754,14 +835,20 @@
 
         function proceedToPayPal(paypalUrl, plan, button) {
             const subscriptionPage = window.subscriptionPageInstance;
+            const currentUser = getCurrentUser();
+            
+            if (!currentUser) {
+                subscriptionPage.showToast('Authentication error. Please login again.', 'error');
+                return;
+            }
             
             // Store payment intent for tracking
             const paymentData = {
                 plan: plan,
                 amount: plan === 'standard' ? '$5' : '$15',
-                user_id: subscriptionPage.currentUser.uid,
-                user_email: subscriptionPage.currentUser.email,
-                user_name: subscriptionPage.currentUser.displayName,
+                user_id: currentUser.uid,
+                user_email: currentUser.email,
+                user_name: currentUser.displayName,
                 payment_method: 'PayPal',
                 timestamp: new Date().toISOString(),
                 status: 'pending_paypal'
