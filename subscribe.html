@@ -502,6 +502,7 @@
                     "name": "ConvertWiz",
                     "description": `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
                     "image": "https://www.convertwiz.in/logo192.png",
+                    "timeout": 300, // 5 minutes timeout
                     "handler": (response) => {
                         // Store payment details with user information
                         localStorage.setItem('payment_response', JSON.stringify({
@@ -692,6 +693,7 @@
                     name: 'ConvertWiz',
                     description: `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
                     order_id: data.orderId,
+                    timeout: 300, // 5 minutes timeout
                     handler: function(response) {
                         console.log('Payment successful:', response);
                         
@@ -781,8 +783,8 @@
             }
 
             const paypalUrls = {
-                'standard': 'https://www.paypal.com/paypalme/convertwizpay/5',
-                'premium': 'https://www.paypal.com/paypalme/convertwizpay/15'
+                'standard': 'https://paypal.me/convertwizpay/5',
+                'premium': 'https://paypal.me/convertwizpay/15'
             };
 
             const paypalUrl = paypalUrls[plan];
@@ -814,7 +816,7 @@
                             <p>Plan: <strong>${plan.charAt(0).toUpperCase() + plan.slice(1)}</strong></p>
                             <p class="text-sm mt-3 text-orange-600">
                                 <i class="fas fa-exclamation-triangle"></i>
-                                After PayPal payment, please contact support to activate your plan.
+                                <strong>Manual Activation Required:</strong> After completing PayPal payment, send your transaction details to support@convertwiz.in for plan activation.
                             </p>
                         </div>
                         <div class="flex space-x-4">
@@ -826,7 +828,7 @@
                             </button>
                         </div>
                         <p class="text-xs text-gray-500 mt-4">
-                            PayPal payments require manual activation. Contact support@convertwiz.in after payment.
+                            <strong>Important:</strong> PayPal payments require manual activation. Email support@convertwiz.in with your PayPal transaction ID after payment.
                         </p>
                     </div>
                 </div>
