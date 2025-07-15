@@ -494,14 +494,14 @@
                     return;
                 }
 
-                // Razorpay payment options - Fixed Configuration
+                // Razorpay Final Fix - Remove hardcoded contact number
                 const options = {
                     "key": "rzp_live_HXdG9BXkQBfjyG",
-                    "amount": amount * 100, // Amount in paise
+                    "amount": amount * 100, // ₹ to paise
                     "currency": "INR",
                     "name": "ConvertWiz",
-                    "description": `Premium Access - ConvertWiz (${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan)`,
-                    "image": "/logo.png",
+                    "description": "Subscription Payment",
+                    "image": "/assets/logo.png",
                     "handler": (response) => {
                         // Store payment details with user information
                         localStorage.setItem('payment_response', JSON.stringify({
@@ -515,22 +515,14 @@
                         window.location.href = "/payment-success.html?ref=" + response.razorpay_payment_id;
                     },
                     "prefill": {
-                        "name": "",
-                        "email": "",
-                        "contact": "" // Leave empty to avoid auto-fill issues
-                    },
-                    "notes": {
-                        "subscription_type": plan.charAt(0).toUpperCase() + plan.slice(1)
+                        "name": "ConvertWiz User",
+                        "email": this.currentUser?.email || "",
+                        "contact": "" // Leave contact blank
                     },
                     "theme": {
-                        "color": "#6A1B9A"
+                        "color": "#5468ff" // UI blue gradient color preserved
                     },
-                    "timeout": 300, // 5 minutes timeout
-                    "modal": {
-                        "ondismiss": () => {
-                            alert("Payment process was cancelled.");
-                        }
-                    }
+                    "timeout": 600 // Optional: timeout to refresh if idle
                 };
                 
                 const rzp = new Razorpay(options);
@@ -694,9 +686,9 @@
                     amount: data.amount,
                     currency: data.currency,
                     name: 'ConvertWiz',
-                    description: `Premium Access - ConvertWiz (${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan)`,
+                    description: 'Subscription Payment',
                     order_id: data.orderId,
-                    image: '/logo.png',
+                    image: '/assets/logo.png',
                     handler: function(response) {
                         console.log('Payment successful:', response);
                         
@@ -721,22 +713,14 @@
                         }, 1000);
                     },
                     prefill: {
-                        name: '',
-                        email: '',
-                        contact: '' // Leave empty to avoid auto-fill issues
-                    },
-                    notes: {
-                        subscription_type: plan.charAt(0).toUpperCase() + plan.slice(1)
+                        name: 'ConvertWiz User',
+                        email: currentUser?.email || '',
+                        contact: '' // Leave contact blank
                     },
                     theme: {
-                        color: '#6A1B9A'
+                        color: '#5468ff' // UI blue gradient color preserved
                     },
-                    timeout: 300, // 5 minutes timeout
-                    modal: {
-                        ondismiss: function() {
-                            alert('Payment process was cancelled.');
-                        }
-                    }
+                    timeout: 600 // Optional: timeout to refresh if idle
                 };
                 
                 const rzp = new Razorpay(options);
