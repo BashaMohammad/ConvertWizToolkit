@@ -20,7 +20,7 @@ app.use(express.static('.'));
 
 // Premium users storage (in production, use database)
 const premiumUsers = {
-  'iqbalbashasi@gmail.com': true // Manually granted premium access due to successful payment
+  'iqbalaiwork@gmail.com': true // Manually granted premium access due to successful payment
 };
 
 // Create Razorpay order endpoint
