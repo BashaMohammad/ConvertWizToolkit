@@ -512,7 +512,9 @@
                             user_email: this.currentUser.email,
                             timestamp: new Date().toISOString()
                         }));
-                        window.location.href = "/payment-success.html?ref=" + response.razorpay_payment_id;
+                        
+                        // 🟡 STEP 2: Poll premium status after payment
+                        this.checkPremiumStatus(this.currentUser.email);
                     },
                     "prefill": {
                         "name": "ConvertWiz User",
@@ -544,6 +546,43 @@
                 setTimeout(() => {
                     toast.classList.add('translate-x-full');
                 }, 3000);
+            }
+
+            // 🟡 STEP 2: Premium status polling function
+            checkPremiumStatus(userEmail, paymentId = null) {
+                this.showToast('Verifying payment...', 'info');
+                
+                let checkInterval = setInterval(async () => {
+                    try {
+                        const response = await fetch(`/check-premium?email=${encodeURIComponent(userEmail)}`);
+                        const result = await response.json();
+                        
+                        if (result?.isPremium) {
+                            clearInterval(checkInterval);
+                            this.showToast('Payment verified! Redirecting to dashboard...', 'success');
+                            
+                            setTimeout(() => {
+                                if (paymentId) {
+                                    window.location.href = `/payment-success.html?ref=${paymentId}`;
+                                } else {
+                                    window.location.href = '/'; // redirect to home or dashboard
+                                }
+                            }, 1500);
+                        }
+                    } catch (error) {
+                        console.error('Premium status check failed:', error);
+                    }
+                }, 3000); // Check every 3 seconds
+
+                // Stop checking after 2 minutes
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    if (paymentId) {
+                        window.location.href = `/payment-success.html?ref=${paymentId}`;
+                    } else {
+                        this.showToast('Payment processing... Please check your account in a few minutes.', 'info');
+                    }
+                }, 120000); // 2 minutes timeout
             }
         }
 
@@ -708,8 +747,9 @@
                         localStorage.setItem('paymentData', JSON.stringify(paymentData));
                         subscriptionPage.showToast('Payment successful! Redirecting...', 'success');
                         
+                        // 🟡 STEP 2: Poll premium status after payment
                         setTimeout(() => {
-                            window.location.href = 'payment-success.html?ref=' + response.razorpay_payment_id;
+                            this.checkPremiumStatus(currentUser.email, response.razorpay_payment_id);
                         }, 1000);
                     },
                     prefill: {

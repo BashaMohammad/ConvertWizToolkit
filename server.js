@@ -4,6 +4,7 @@ const path = require('path');
 const admin = require('firebase-admin');
 const multer = require('multer');
 const sharp = require('sharp');
+const crypto = require('crypto');
 
 // ✅ Razorpay Live Configuration
 const Razorpay = require("razorpay");
@@ -16,6 +17,9 @@ const razorpayInstance = new Razorpay({
 const app = express();
 app.use(express.json());
 app.use(express.static('.'));
+
+// Premium users storage (in production, use database)
+const premiumUsers = {};
 
 // Create Razorpay order endpoint
 app.post('/api/create-order', async (req, res) => {
@@ -41,7 +45,39 @@ app.post('/api/create-order', async (req, res) => {
   }
 });
 
-// Payment webhook endpoint for Razorpay
+// 🟡 STEP 1: Auto-Capture Payment Webhook (Razorpay)
+app.post("/razorpay-webhook", express.json(), (req, res) => {
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET || "your_webhook_secret"; // replace with your Razorpay webhook secret
+
+  const shasum = crypto.createHmac("sha256", secret);
+  shasum.update(JSON.stringify(req.body));
+  const digest = shasum.digest("hex");
+
+  if (digest !== req.headers["x-razorpay-signature"]) {
+    return res.status(403).send("Invalid signature.");
+  }
+
+  const event = req.body.event;
+  const payment = req.body.payload?.payment?.entity;
+
+  if (event === "payment.captured" && payment?.email) {
+    // Mark user as Premium in your DB
+    const email = payment.email;
+    premiumUsers[email] = true; // Simulated premium state
+    console.log(`✅ Premium access granted to ${email}`);
+  }
+
+  res.json({ status: "Webhook received" });
+});
+
+// 🟡 STEP 3: Add check route to backend
+app.get("/check-premium", (req, res) => {
+  const userEmail = req.query.email || req.session?.user?.email;
+  const isPremium = premiumUsers[userEmail] || false;
+  res.json({ isPremium, email: userEmail });
+});
+
+// Payment webhook endpoint for Razorpay (backup)
 app.post('/api/payment/webhook', express.raw({type: 'application/json'}), (req, res) => {
   try {
     // Razorpay webhook verification would go here
