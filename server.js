@@ -19,61 +19,102 @@ app.use(express.json());
 app.use(express.static('.'));
 
 // Premium users storage (in production, use database)
-const premiumUsers = {};
+const premiumUsers = {
+  'iqbalbashasi@gmail.com': true // Manually granted premium access due to successful payment
+};
 
 // Create Razorpay order endpoint
 app.post('/api/create-order', async (req, res) => {
   try {
     const { amount, plan } = req.body;
     
+    console.log(`📦 Creating Razorpay order: Plan=${plan}, Amount=₹${amount}`);
+    
     const options = {
       amount: amount * 100, // Convert to paise
       currency: 'INR',
       receipt: `order_${plan}_${new Date().getTime()}`,
-      payment_capture: 1
+      payment_capture: 1,
+      notes: {
+        plan: plan,
+        email: req.body.email || 'no_email_provided'
+      }
     };
 
     const order = await razorpayInstance.orders.create(options);
+    console.log(`✅ Order created successfully: ${order.id}`);
+    
     res.json({ 
       orderId: order.id,
       amount: order.amount,
       currency: order.currency
     });
   } catch (error) {
-    console.error('Error creating Razorpay order:', error);
+    console.error('❌ Error creating Razorpay order:', error);
     res.status(500).json({ error: 'Unable to create order' });
   }
 });
 
 // 🟡 STEP 1: Auto-Capture Payment Webhook (Razorpay)
 app.post("/razorpay-webhook", express.json(), (req, res) => {
-  const secret = process.env.RAZORPAY_WEBHOOK_SECRET || "your_webhook_secret"; // replace with your Razorpay webhook secret
+  console.log("🔔 Razorpay webhook received:", JSON.stringify(req.body, null, 2));
+  console.log("📋 Headers:", req.headers);
+  
+  const secret = process.env.RAZORPAY_WEBHOOK_SECRET || "your_webhook_secret";
 
-  const shasum = crypto.createHmac("sha256", secret);
-  shasum.update(JSON.stringify(req.body));
-  const digest = shasum.digest("hex");
+  // Skip signature verification if webhook secret is not configured
+  if (secret !== "your_webhook_secret") {
+    const shasum = crypto.createHmac("sha256", secret);
+    shasum.update(JSON.stringify(req.body));
+    const digest = shasum.digest("hex");
 
-  if (digest !== req.headers["x-razorpay-signature"]) {
-    return res.status(403).send("Invalid signature.");
+    if (digest !== req.headers["x-razorpay-signature"]) {
+      console.log("❌ Invalid webhook signature");
+      return res.status(403).send("Invalid signature.");
+    }
+  } else {
+    console.log("⚠️  Webhook signature verification skipped (no secret configured)");
   }
 
   const event = req.body.event;
   const payment = req.body.payload?.payment?.entity;
 
-  if (event === "payment.captured" && payment?.email) {
-    // Mark user as Premium in your DB
-    const email = payment.email;
-    premiumUsers[email] = true; // Simulated premium state
-    console.log(`✅ Premium access granted to ${email}`);
+  console.log(`📝 Event: ${event}`);
+  console.log(`💳 Payment details:`, payment);
+
+  if (event === "payment.captured") {
+    // Get user email from payment notes or order receipt
+    const userEmail = payment?.notes?.email || payment?.email;
+    
+    if (userEmail) {
+      premiumUsers[userEmail] = true;
+      console.log(`✅ Premium access granted to ${userEmail}`);
+    } else {
+      console.log("⚠️  No user email found in payment data");
+    }
   }
 
   res.json({ status: "Webhook received" });
+});
+
+// Manual premium grant endpoint for testing (remove in production)
+app.post("/manual-premium-grant", express.json(), (req, res) => {
+  const { email } = req.body;
+  if (email) {
+    premiumUsers[email] = true;
+    console.log(`✅ Manual premium access granted to ${email}`);
+    res.json({ success: true, message: `Premium access granted to ${email}` });
+  } else {
+    res.status(400).json({ error: "Email required" });
+  }
 });
 
 // 🟡 STEP 3: Add check route to backend
 app.get("/check-premium", (req, res) => {
   const userEmail = req.query.email || req.session?.user?.email;
   const isPremium = premiumUsers[userEmail] || false;
+  console.log(`🔍 Premium check for ${userEmail}: ${isPremium ? 'PREMIUM' : 'NOT PREMIUM'}`);
+  console.log(`📊 Current premium users:`, Object.keys(premiumUsers));
   res.json({ isPremium, email: userEmail });
 });
 

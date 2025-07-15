@@ -514,6 +514,7 @@
                         }));
                         
                         // 🟡 STEP 2: Poll premium status after payment
+                        console.log('🔍 Starting premium status check for:', this.currentUser.email);
                         this.checkPremiumStatus(this.currentUser.email);
                     },
                     "prefill": {
@@ -550,12 +551,16 @@
 
             // 🟡 STEP 2: Premium status polling function
             checkPremiumStatus(userEmail, paymentId = null) {
+                console.log('🔍 Starting premium status check for:', userEmail);
                 this.showToast('Verifying payment...', 'info');
                 
                 let checkInterval = setInterval(async () => {
                     try {
+                        console.log('🔍 Checking premium status for:', userEmail);
                         const response = await fetch(`/check-premium?email=${encodeURIComponent(userEmail)}`);
                         const result = await response.json();
+                        
+                        console.log('📊 Premium status result:', result);
                         
                         if (result?.isPremium) {
                             clearInterval(checkInterval);
@@ -568,15 +573,18 @@
                                     window.location.href = '/'; // redirect to home or dashboard
                                 }
                             }, 1500);
+                        } else {
+                            console.log('⏳ Premium status not yet updated, checking again in 3 seconds...');
                         }
                     } catch (error) {
-                        console.error('Premium status check failed:', error);
+                        console.error('❌ Premium status check failed:', error);
                     }
                 }, 3000); // Check every 3 seconds
 
                 // Stop checking after 2 minutes
                 setTimeout(() => {
                     clearInterval(checkInterval);
+                    console.log('⏰ Premium status check timeout reached');
                     if (paymentId) {
                         window.location.href = `/payment-success.html?ref=${paymentId}`;
                     } else {
@@ -711,7 +719,8 @@
                 },
                 body: JSON.stringify({
                     amount: amount,
-                    plan: plan
+                    plan: plan,
+                    email: currentUser.email
                 })
             })
             .then(response => response.json())
@@ -729,7 +738,7 @@
                     order_id: data.orderId,
                     image: '/assets/logo.png',
                     handler: function(response) {
-                        console.log('Payment successful:', response);
+                        console.log('💳 Payment successful:', response);
                         
                         // Store enhanced payment details with user info
                         const paymentData = {
@@ -745,11 +754,12 @@
                         };
                         
                         localStorage.setItem('paymentData', JSON.stringify(paymentData));
-                        subscriptionPage.showToast('Payment successful! Redirecting...', 'success');
+                        subscriptionPage.showToast('Payment successful! Verifying...', 'success');
                         
                         // 🟡 STEP 2: Poll premium status after payment
+                        console.log('🔍 Starting premium status check for:', currentUser.email);
                         setTimeout(() => {
-                            this.checkPremiumStatus(currentUser.email, response.razorpay_payment_id);
+                            subscriptionPage.checkPremiumStatus(currentUser.email, response.razorpay_payment_id);
                         }, 1000);
                     },
                     prefill: {
