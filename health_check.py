@@ -1,43 +1,51 @@
 #!/usr/bin/env python3
-# ConvertWiz Health Check Script
+"""
+ConvertWiz Weekly Health Check
+Automated monitoring and reporting system
+"""
+
 import requests
 import datetime
 import json
 
 def check_site_health():
-    """Perform comprehensive site health check"""
-    report = {
+    """Comprehensive site health check"""
+    base_url = "http://localhost:5000"
+    health_report = {
         "timestamp": datetime.datetime.now().isoformat(),
+        "status": "healthy",
         "checks": {}
     }
     
-    # Check main site
-    try:
-        response = requests.get("https://www.convertwiz.in", timeout=10)
-        report["checks"]["main_site"] = {
-            "status": response.status_code,
-            "response_time": response.elapsed.total_seconds(),
-            "success": response.status_code == 200
-        }
-    except Exception as e:
-        report["checks"]["main_site"] = {"error": str(e), "success": False}
+    # Check critical endpoints
+    endpoints = [
+        "/api/health",
+        "/",
+        "/subscribe.html",
+        "/admin.html"
+    ]
     
-    # Check API health
-    try:
-        response = requests.get("https://www.convertwiz.in/api/health", timeout=10)
-        report["checks"]["api_health"] = {
-            "status": response.status_code,
-            "success": response.status_code == 200
-        }
-    except Exception as e:
-        report["checks"]["api_health"] = {"error": str(e), "success": False}
+    for endpoint in endpoints:
+        try:
+            response = requests.get(f"{base_url}{endpoint}", timeout=10)
+            health_report["checks"][endpoint] = {
+                "status": response.status_code,
+                "healthy": response.status_code == 200,
+                "response_time": response.elapsed.total_seconds()
+            }
+        except Exception as e:
+            health_report["checks"][endpoint] = {
+                "status": "error",
+                "healthy": False,
+                "error": str(e)
+            }
     
     # Generate report
-    with open(f"health_report_{datetime.datetime.now().strftime('%Y%m%d')}.json", "w") as f:
-        json.dump(report, f, indent=2)
+    with open(f"weekly_health_{datetime.datetime.now().strftime('%Y%m%d')}.json", "w") as f:
+        json.dump(health_report, f, indent=2)
     
-    print("Health check completed:", datetime.datetime.now())
-    return report
+    print("Weekly health check completed")
+    return health_report
 
 if __name__ == "__main__":
     check_site_health()

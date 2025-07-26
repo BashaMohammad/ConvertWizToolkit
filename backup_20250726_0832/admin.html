@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://www.convertwiz.in/admin.html">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – ConvertWiz</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #f6f9fc, #edf2fb);
+      padding: 2rem;
+    }
+    .admin-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 0 25px rgba(0,0,0,0.08);
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 520px;
+      border: none;
+      margin-top: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .footer-note {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .home-btn, .logout-btn {
+      background: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .home-btn:hover {
+      background: #45a049;
+    }
+    .logout-btn {
+      background: #ff4d4d;
+    }
+    .logout-btn:hover {
+      background: #e04343;
+    }
+    .tab-btn {
+      background: #f8f9fa;
+      border: 2px solid #dee2e6;
+      padding: 10px 20px;
+      margin-right: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn.active {
+      background: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+    .tab-btn:hover {
+      background: #e9ecef;
+    }
+    .tab-btn.active:hover {
+      background: #45a049;
+    }
+    .tab-content {
+      display: none;
+      margin-top: 1rem;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .admin-table th {
+      background: #f8f9fa;
+      padding: 12px;
+      text-align: left;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+    }
+    .admin-table td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .admin-table tr:hover {
+      background: #f8f9fa;
+    }
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .status-active { background: #d4edda; color: #155724; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-expired { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h2>Welcome, Admin 👑</h2>
+    <p id="admin-welcome">Real-time ConvertWiz analytics and performance insights:</p>
+    
+    <!-- Enhanced Admin Navigation -->
+    <div class="admin-nav" style="margin: 1rem 0; border-bottom: 2px solid #eee; padding-bottom: 1rem;">
+      <button onclick="showTab('analytics')" class="tab-btn active" id="analytics-tab">
+        <i class="fas fa-chart-line"></i> Analytics
+      </button>
+      <button onclick="showTab('subscriptions')" class="tab-btn" id="subscriptions-tab">
+        <i class="fas fa-credit-card"></i> Subscriptions
+      </button>
+      <button onclick="showTab('seo')" class="tab-btn" id="seo-tab">
+        <i class="fas fa-search"></i> SEO Tracker
+      </button>
+    </div>
+
+
+
+    <!-- Tab Content Areas -->
+    <div id="analytics-content" class="tab-content active">
+      <iframe 
+        src="https://lookerstudio.google.com/embed/reporting/5b893184-8620-43d9-90c1-e3061253a44f/page/N5QQF" 
+        title="ConvertWiz Analytics"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div id="subscriptions-content" class="tab-content">
+      <h3><i class="fas fa-credit-card"></i> User Subscription Report</h3>
+      <div style="overflow-x: auto;">
+        <table class="admin-table" id="subscriptions-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Plan</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Start Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="subscriptions-body">
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem;">
+                <i class="fas fa-spinner fa-spin"></i> Loading subscription data...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="seo-content" class="tab-content">
+      <h3><i class="fas fa-search"></i> SEO Tool Directory Submissions</h3>
+      <div style="overflow-x: auto;">
+        <table class="admin-table" id="seo-table">
+          <thead>
+            <tr>
+              <th>Directory</th>
+              <th>Domain Authority</th>
+              <th>Status</th>
+              <th>Submission Date</th>
+              <th>Link</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="seo-body">
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 2rem;">
+                <i class="fas fa-spinner fa-spin"></i> Loading SEO tracking data...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Add New SEO Entry -->
+      <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+        <h4>Add New Directory Submission</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+          <input type="text" id="new-directory" placeholder="Directory Name" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          <input type="number" id="new-da" placeholder="Domain Authority" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          <select id="new-status" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <input type="url" id="new-link" placeholder="Directory Link" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          <input type="text" id="new-notes" placeholder="Notes" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          <button onclick="addSeoEntry()" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            <i class="fas fa-plus"></i> Add Entry
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button onclick="goHome()" class="home-btn">
+        <i class="fas fa-home"></i> Home
+      </button>
+      <button onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+
+    <div class="footer-note">
+      ConvertWiz Admin v1.2 | Live GA4 Analytics | Last synced: Just now
+    </div>
+  </div>
+
+  <script type="module">
+    // Firebase v9+ modular SDK
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBEh6m9wcrRG8oJ8xKW1vGqIcWGP4uXNaM",
+      authDomain: "convertwiz.firebaseapp.com",
+      projectId: "convertwiz",
+      storageBucket: "convertwiz.firebasestorage.app",
+      messagingSenderId: "807062320011",
+      appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Check authentication with delay to allow auth state to sync
+    let authCheckDelay = setTimeout(() => {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.log('No user found after 3 seconds, checking localStorage...');
+        const userSession = localStorage.getItem('convertWizUser');
+        if (!userSession) {
+          console.log('No user session found, redirecting to home');
+          window.location.href = "/";
+        }
+      }
+    }, 3000);
+
+    onAuthStateChanged(auth, (user) => {
+      clearTimeout(authCheckDelay);
+      
+      if (!user) {
+        const userSession = localStorage.getItem('convertWizUser');
+        if (userSession) {
+          try {
+            const userData = JSON.parse(userSession);
+            console.log('Found user in localStorage:', userData.email);
+            const welcomeElement = document.getElementById('admin-welcome');
+            if (welcomeElement) {
+              welcomeElement.textContent = `Welcome ${userData.email}! Real-time ConvertWiz analytics and performance insights:`;
+            }
+            return;
+          } catch (e) {
+            console.log('Invalid localStorage session');
+          }
+        }
+        
+        console.log('No authenticated user found, redirecting to home');
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
+      } else {
+        console.log('Admin authenticated:', user.email);
+        const welcomeElement = document.getElementById('admin-welcome');
+        if (welcomeElement) {
+          welcomeElement.textContent = `Welcome ${user.email}! Real-time ConvertWiz analytics and performance insights:`;
+        }
+      }
+    });
+
+    // Global logout function
+    window.logout = async function() {
+      try {
+        await signOut(auth);
+        localStorage.removeItem('convertWizUser');
+        window.location.href = "/";
+      } catch (error) {
+        alert("Logout failed: " + error.message);
+      }
+    };
+
+    // Global home function
+    window.goHome = function() {
+      window.location.href = 'index.html';
+    };
+
+    // Tab switching functionality
+    window.showTab = function(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Remove active class from all tab buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Show selected tab content
+      document.getElementById(tabName + '-content').classList.add('active');
+      document.getElementById(tabName + '-tab').classList.add('active');
+      
+      // Load data for specific tabs
+      if (tabName === 'subscriptions') {
+        loadSubscriptionData();
+      } else if (tabName === 'seo') {
+        loadSeoData();
+      }
+    };
+
+    // Load subscription data
+    async function loadSubscriptionData() {
+      const tbody = document.getElementById('subscriptions-body');
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading subscription data...</td></tr>';
+      
+      try {
+        // Mock subscription data for demo - replace with actual Firestore data
+        const subscriptions = [
+          {
+            email: 'iqbalbashasi@gmail.com',
+            plan: 'Premium',
+            amount: '₹499',
+            paymentMethod: 'Razorpay',
+            startDate: '2025-07-15',
+            status: 'active'
+          },
+          {
+            email: 'user@example.com',
+            plan: 'Standard',
+            amount: '₹199',
+            paymentMethod: 'PayPal',
+            startDate: '2025-07-10',
+            status: 'active'
+          },
+          {
+            email: 'demo@test.com',
+            plan: 'Free',
+            amount: '₹0',
+            paymentMethod: '-',
+            startDate: '2025-07-01',
+            status: 'active'
+          }
+        ];
+        
+        tbody.innerHTML = subscriptions.map(sub => `
+          <tr>
+            <td>${sub.email}</td>
+            <td><span class="status-badge status-${sub.plan.toLowerCase()}">${sub.plan}</span></td>
+            <td>${sub.amount}</td>
+            <td>${sub.paymentMethod}</td>
+            <td>${sub.startDate}</td>
+            <td><span class="status-badge status-${sub.status}">${sub.status}</span></td>
+            <td>
+              <button style="padding: 4px 8px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 4px;">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button style="padding: 4px 8px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: red;">Error loading subscription data</td></tr>';
+      }
+    }
+
+    // Load SEO tracking data
+    async function loadSeoData() {
+      const tbody = document.getElementById('seo-body');
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading SEO tracking data...</td></tr>';
+      
+      try {
+        // Get existing SEO data from localStorage or initialize with default data
+        let seoSubmissions = JSON.parse(localStorage.getItem('adminSeoData')) || [
+          {
+            name: 'Product Hunt',
+            domainAuthority: 85,
+            status: 'approved',
+            submissionDate: '2025-07-10',
+            link: 'https://www.producthunt.com/products/convertwiz',
+            notes: 'Featured on launch day'
+          },
+          {
+            name: 'AlternativeTo',
+            domainAuthority: 75,
+            status: 'pending',
+            submissionDate: '2025-07-12',
+            link: 'https://alternativeto.net/software/convertwiz/',
+            notes: 'Awaiting approval'
+          },
+          {
+            name: 'Capterra',
+            domainAuthority: 90,
+            status: 'approved',
+            submissionDate: '2025-07-08',
+            link: 'https://www.capterra.com/p/convertwiz/',
+            notes: 'Listed in conversion tools category'
+          }
+        ];
+        
+        tbody.innerHTML = seoSubmissions.map((submission, index) => `
+          <tr>
+            <td>${submission.name}</td>
+            <td><strong>${submission.domainAuthority}</strong></td>
+            <td><span class="status-badge status-${submission.status}">${submission.status}</span></td>
+            <td>${submission.submissionDate}</td>
+            <td><a href="${submission.link}" target="_blank" style="color: #007bff; text-decoration: none;"><i class="fas fa-external-link-alt"></i> View</a></td>
+            <td>${submission.notes}</td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: red;">Error loading SEO data</td></tr>';
+      }
+    }
+
+    // Add new SEO entry
+    window.addSeoEntry = function() {
+      const directory = document.getElementById('new-directory').value;
+      const da = document.getElementById('new-da').value;
+      const status = document.getElementById('new-status').value;
+      const link = document.getElementById('new-link').value;
+      const notes = document.getElementById('new-notes').value;
+      
+      if (!directory || !da || !link) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      const newEntry = {
+        name: directory,
+        domainAuthority: parseInt(da),
+        status: status,
+        submissionDate: new Date().toISOString().split('T')[0],
+        link: link,
+        notes: notes || 'No notes'
+      };
+      
+      // Get existing data and add new entry
+      let seoSubmissions = JSON.parse(localStorage.getItem('adminSeoData')) || [];
+      seoSubmissions.unshift(newEntry); // Add to beginning
+      localStorage.setItem('adminSeoData', JSON.stringify(seoSubmissions));
+      
+      // Clear form
+      document.getElementById('new-directory').value = '';
+      document.getElementById('new-da').value = '';
+      document.getElementById('new-status').value = 'pending';
+      document.getElementById('new-link').value = '';
+      document.getElementById('new-notes').value = '';
+      
+      // Reload SEO data
+      loadSeoData();
+      
+      alert('SEO entry added successfully!');
+    };
+  </script>
+</body>
+</html>

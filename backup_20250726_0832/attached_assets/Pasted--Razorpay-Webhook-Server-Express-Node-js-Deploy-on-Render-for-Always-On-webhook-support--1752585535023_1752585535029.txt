@@ -1,0 +1,75 @@
+// Razorpay Webhook Server (Express + Node.js)
+// Deploy on Render for Always-On webhook support
+
+const express = require('express');
+const crypto = require('crypto');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+
+// Razorpay Secret for Signature Validation
+const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
+
+// Dev & Prod URLs
+const SUBSCRIPTION_API_DEV = 'https://35ecc3c8-xxxx.riker.replit.dev/api/confirm-subscription';
+const SUBSCRIPTION_API_PROD = 'https://www.convertwiz.in/api/confirm-subscription';
+
+// Helper: Forward to Confirm API
+async function forwardToSubscriptionAPI(paymentData) {
+  const fetch = (await import('node-fetch')).default;
+
+  const targetURL = process.env.ENV === 'prod' ? SUBSCRIPTION_API_PROD : SUBSCRIPTION_API_DEV;
+
+  try {
+    const res = await fetch(targetURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(paymentData)
+    });
+    const data = await res.text();
+    console.log('Forwarded to Subscription API:', data);
+  } catch (err) {
+    console.error('Failed to forward to subscription API:', err);
+  }
+}
+
+// Webhook Route
+app.post('/razorpay-webhook', (req, res) => {
+  const razorpaySignature = req.headers['x-razorpay-signature'];
+  const generatedSignature = crypto
+    .createHmac('sha256', RAZORPAY_WEBHOOK_SECRET)
+    .update(JSON.stringify(req.body))
+    .digest('hex');
+
+  if (generatedSignature !== razorpaySignature) {
+    return res.status(400).send('Invalid signature');
+  }
+
+  const event = req.body.event;
+  if (event === 'payment.captured') {
+    const paymentData = {
+      razorpay_order_id: req.body.payload.payment.entity.order_id,
+      razorpay_payment_id: req.body.payload.payment.entity.id,
+      amount: req.body.payload.payment.entity.amount,
+      status: 'captured'
+    };
+    forwardToSubscriptionAPI(paymentData);
+  }
+
+  res.status(200).json({ status: 'Webhook received' });
+});
+
+app.get('/', (req, res) => {
+  res.send('Razorpay Webhook Server is Live ✅');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

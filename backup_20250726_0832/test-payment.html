@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://www.convertwiz.in/test-payment.html">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConvertWiz Payment Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">ConvertWiz Payment Test</h1>
+        <p class="text-gray-600">Test Razorpay integration</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Standard Plan -->
+        <div class="border border-gray-200 rounded-lg p-4">
+          <h3 class="font-semibold text-lg text-gray-800">Standard Plan</h3>
+          <p class="text-gray-600 mb-2">20 conversions/day</p>
+          <p class="text-2xl font-bold text-blue-600 mb-3">₹199/month</p>
+          <button id="rzp-standard" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+            <i class="fas fa-credit-card mr-2"></i>Pay ₹199
+          </button>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="border border-gray-200 rounded-lg p-4 bg-gradient-to-r from-purple-50 to-pink-50">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-semibold text-lg text-gray-800">Premium Plan</h3>
+            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Most Popular</span>
+          </div>
+          <p class="text-gray-600 mb-2">Unlimited conversions</p>
+          <p class="text-2xl font-bold text-purple-600 mb-3">₹499/month</p>
+          <button id="rzp-premium" class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-200">
+            <i class="fas fa-crown mr-2"></i>Pay ₹499
+          </button>
+        </div>
+
+        <!-- Test Payment -->
+        <div class="border border-gray-200 rounded-lg p-4 bg-yellow-50">
+          <h3 class="font-semibold text-lg text-gray-800">Test Payment</h3>
+          <p class="text-gray-600 mb-2">For development testing</p>
+          <p class="text-2xl font-bold text-yellow-600 mb-3">₹10</p>
+          <button id="rzp-test" class="w-full bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition duration-200">
+            <i class="fas fa-flask mr-2"></i>Test Pay ₹10
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center">
+        <a href="/" class="text-blue-600 hover:text-blue-800 transition duration-200">
+          <i class="fas fa-arrow-left mr-2"></i>Back to ConvertWiz
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    function createPayment(amount, plan) {
+      var options = {
+        "key": "rzp_live_HXdG9BXkQBfjyG",
+        "amount": amount * 100, // Amount in paise
+        "currency": "INR",
+        "name": "ConvertWiz",
+        "description": `${plan} Plan Subscription`,
+        "image": "https://www.convertwiz.in/logo192.png",
+        "handler": function (response) {
+          // Store payment details and redirect
+          localStorage.setItem('payment_response', JSON.stringify({
+            payment_id: response.razorpay_payment_id,
+            plan: plan,
+            amount: amount,
+            timestamp: new Date().toISOString()
+          }));
+          window.location.href = "/payment-success.html";
+        },
+        "prefill": {
+          "name": "Ali Test",
+          "email": "ali@example.com",
+          "contact": "9999999999"
+        },
+        "theme": {
+          "color": "#6759ff"
+        },
+        "modal": {
+          "ondismiss": function() {
+            window.location.href = "/payment-failed.html";
+          }
+        }
+      };
+      
+      var rzp = new Razorpay(options);
+      rzp.open();
+    }
+
+    // Event listeners
+    document.getElementById('rzp-standard').onclick = function(e) {
+      e.preventDefault();
+      createPayment(199, 'Standard');
+    };
+
+    document.getElementById('rzp-premium').onclick = function(e) {
+      e.preventDefault();
+      createPayment(499, 'Premium');
+    };
+
+    document.getElementById('rzp-test').onclick = function(e) {
+      e.preventDefault();
+      createPayment(10, 'Test');
+    };
+  </script>
+</body>
+</html>
