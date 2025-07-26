@@ -1,0 +1,51 @@
+{
+  "summary": {
+    "total": 5,
+    "approved": 0,
+    "pending": 0,
+    "broken": 5,
+    "last_updated": "2025-07-26T08:47:05.267987"
+  },
+  "directories": [
+    {
+      "name": "Product Hunt",
+      "domain_authority": 85,
+      "status": "broken",
+      "date": "2025-07-10",
+      "link": "https://www.producthunt.com/posts/convertwiz",
+      "notes": "Featured on launch day"
+    },
+    {
+      "name": "AlternativeTo",
+      "domain_authority": 75,
+      "status": "broken",
+      "date": "2025-07-12",
+      "link": "https://alternativeto.net/software/convertwiz/",
+      "notes": "Awaiting approval"
+    },
+    {
+      "name": "Capterra",
+      "domain_authority": 90,
+      "status": "broken",
+      "date": "2025-07-08",
+      "link": "https://www.capterra.com/p/convertwiz/",
+      "notes": "Listed in conversion tools category"
+    },
+    {
+      "name": "G2",
+      "domain_authority": 88,
+      "status": "broken",
+      "date": "2025-07-15",
+      "link": "https://www.g2.com/products/convertwiz/",
+      "notes": "Software marketplace listing"
+    },
+    {
+      "name": "Trustpilot",
+      "domain_authority": 82,
+      "status": "broken",
+      "date": "2025-07-20",
+      "link": "https://www.trustpilot.com/review/convertwiz.in",
+      "notes": "Customer review platform"
+    }
+  ]
+}
