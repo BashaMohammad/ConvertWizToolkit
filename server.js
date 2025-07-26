@@ -386,52 +386,51 @@ app.post('/api/percentage-calculator', (req, res) => {
 
 // Temperature Converter API
 app.post('/api/temperature-converter', (req, res) => {
-  const { value, fromUnit } = req.body;
-  const input = parseFloat(value);
+  const { temperature, fromUnit, toUnit } = req.body;
+  const input = parseFloat(temperature);
   if (isNaN(input)) {
     return res.status(400).json({ error: 'Invalid temperature input' });
   }
 
-  let celsius, fahrenheit, kelvin;
+  let result;
   switch (fromUnit) {
-    case 'C':
-      celsius = input;
-      fahrenheit = (input * 9/5) + 32;
-      kelvin = input + 273.15;
+    case 'celsius':
+      if (toUnit === 'fahrenheit') result = (input * 9/5) + 32;
+      else if (toUnit === 'kelvin') result = input + 273.15;
+      else result = input;
       break;
-    case 'F':
-      celsius = (input - 32) * 5/9;
-      fahrenheit = input;
-      kelvin = celsius + 273.15;
+    case 'fahrenheit':
+      if (toUnit === 'celsius') result = (input - 32) * 5/9;
+      else if (toUnit === 'kelvin') result = ((input - 32) * 5/9) + 273.15;
+      else result = input;
       break;
-    case 'K':
-      celsius = input - 273.15;
-      fahrenheit = (celsius * 9/5) + 32;
-      kelvin = input;
+    case 'kelvin':
+      if (toUnit === 'celsius') result = input - 273.15;
+      else if (toUnit === 'fahrenheit') result = ((input - 273.15) * 9/5) + 32;
+      else result = input;
       break;
     default:
       return res.status(400).json({ error: 'Invalid unit' });
   }
 
   res.json({ 
-    celsius: parseFloat(celsius.toFixed(2)), 
-    fahrenheit: parseFloat(fahrenheit.toFixed(2)), 
-    kelvin: parseFloat(kelvin.toFixed(2)),
+    result: parseFloat(result.toFixed(2)),
     fromUnit,
+    toUnit,
     originalValue: input
   });
 });
 
 // Color Converter API (HEX ↔ RGB ↔ HSL)
 app.post('/api/color-converter', (req, res) => {
-  const { hex } = req.body;
-  if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) {
+  const { color, fromFormat, toFormat } = req.body;
+  if (!color || !/^#[0-9A-F]{6}$/i.test(color)) {
     return res.status(400).json({ error: 'Invalid HEX color format. Use #RRGGBB format.' });
   }
 
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
 
   const rgb = `rgb(${r}, ${g}, ${b})`;
 
@@ -455,8 +454,14 @@ app.post('/api/color-converter', (req, res) => {
 
   const hsl = `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
 
+  let result;
+  if (toFormat === 'rgb') result = rgb;
+  else if (toFormat === 'hsl') result = hsl;
+  else result = color;
+
   res.json({ 
-    hex: hex.toUpperCase(), 
+    result,
+    hex: color.toUpperCase(), 
     rgb, 
     hsl,
     values: {
