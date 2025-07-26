@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="canonical" href="https://www.convertwiz.in/blog.html">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - ConvertWiz</title>
     <link href="https://cdn.tailwindcss.com" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <meta name="description" content="Expert guides on file conversion, image processing, currency exchange, and productivity tools. Learn JPG to PNG conversion, Instagram optimization, and more with ConvertWiz blog.">
+    <meta name="description" content="Expert guides on file conversion, image processing, currency exchange, and productivity tools. Learn JPG to PNG conversion, Instagram optimization, and more ...">
     <meta property="og:title" content="ConvertWiz Blog - Expert Conversion Guides & Tips">
     <meta property="og:description" content="Expert guides on file conversion, image processing, currency exchange, and productivity tools. Learn JPG to PNG conversion, Instagram optimization, and more.">
     <meta property="og:type" content="website">
@@ -381,7 +383,7 @@
             return `
                 <article class="${cardClass}" style="animation-delay: ${Math.random() * 0.3}s">
                     <div class="relative">
-                        <img src="${post.image}" alt="${post.title}" class="w-full h-${isFeatured ? '64' : '48'} object-cover">
+                        <img loading="lazy" src="${post.image}" alt="${post.title}" class="w-full h-${isFeatured ? '64' : '48'} object-cover">
                         ${isFeatured ? '<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>' : ''}
                     </div>
                     <div class="p-6">
@@ -462,7 +464,7 @@
                 modal.innerHTML = `
                     <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         <div class="relative">
-                            <img src="${post.image}" alt="${post.title}" class="w-full h-64 object-cover">
+                            <img loading="lazy" src="${post.image}" alt="${post.title}" class="w-full h-64 object-cover">
                             <button onclick="this.closest('.fixed').remove()" class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100">
                                 <i class="fas fa-times text-gray-600"></i>
                             </button>
@@ -656,5 +658,15 @@
             }
         });
     </script>
+
+<script>
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (typeof adsbygoogle !== 'undefined') {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  }, 1000);
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,141 @@
+# ✅ Replit Prompt – ConvertWiz Admin Analytics Dashboard v1
+
+cd convertwiz-frontend
+
+cat > admin.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – ConvertWiz</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      padding: 2rem;
+    }
+    .admin-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: #f9fafb;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .card h4 {
+      margin: 0 0 0.5rem;
+      color: #222;
+    }
+    .card p {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #444;
+    }
+    iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      margin-top: 1rem;
+    }
+    .footer-note {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    .logout-btn {
+      margin-top: 1rem;
+      background: #ff4d4d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+  <div class="admin-container">
+    <h2>Welcome, Admin 👑</h2>
+    <p>Here’s a live view of ConvertWiz performance stats:</p>
+
+    <div class="metrics">
+      <div class="card">
+        <h4>👥 Users Today</h4>
+        <p>278</p>
+      </div>
+      <div class="card">
+        <h4>🌍 Top Country</h4>
+        <p>India</p>
+      </div>
+      <div class="card">
+        <h4>🔄 Traffic Type</h4>
+        <p>Organic</p>
+      </div>
+      <div class="card">
+        <h4>📆 Monthly Visits</h4>
+        <p>12,340</p>
+      </div>
+      <div class="card">
+        <h4>📈 Quarterly Growth</h4>
+        <p>+42%</p>
+      </div>
+    </div>
+
+    <iframe 
+      src="https://lookerstudio.google.com/embed/reporting/xxxxxx/page/yyy" 
+      title="ConvertWiz Analytics"
+      allowfullscreen>
+    </iframe>
+
+    <button onclick="logout()" class="logout-btn">Logout</button>
+
+    <div class="footer-note">
+      ConvertWiz Admin v1.1 | Last synced: Just now · Live GA4 Stats Enabled
+    </div>
+  </div>
+
+  <script>
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "/login.html";
+      }
+    });
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "/";
+      }).catch((error) => {
+        alert("Logout failed: " + error.message);
+      });
+    }
+  </script>
+</body>
+</html>
+EOF
+
+# ✅ Re-deploy to make changes live
+npx vercel deploy --prod

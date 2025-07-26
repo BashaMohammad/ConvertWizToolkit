@@ -1,0 +1,85 @@
+# ✅ Replit Prompt – Beautify Admin Page with Version Info & Module Placeholders
+
+cd convertwiz-frontend
+
+# Overwrite admin.html with styled content
+cat > admin.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – ConvertWiz</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      padding: 2rem;
+    }
+    .admin-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #222;
+      margin-bottom: 10px;
+    }
+    .module {
+      background: #eef1f5;
+      border: 1px dashed #aaa;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #666;
+    }
+    .logout-btn {
+      margin-top: 2rem;
+      background: #ff4d4d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .footer-note {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #999;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+  <div class="admin-container">
+    <h2>Welcome, Admin 👑</h2>
+    <p>This dashboard will evolve with powerful tools and insights.</p>
+
+    <div class="module">📊 Tool Usage Analytics – Coming Soon</div>
+    <div class="module">🗂️ User Feedback Manager – Coming Soon</div>
+    <div class="module">🧠 Blog/Content Trigger Controls – Coming Soon</div>
+
+    <button onclick="logout()" class="logout-btn">Logout</button>
+
+    <div class="footer-note">
+      ConvertWiz Admin v1.0 – Last Updated: July 2025
+    </div>
+  </div>
+
+  <script>
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "/login.html";
+      }

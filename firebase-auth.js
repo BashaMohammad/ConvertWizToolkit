@@ -1089,3 +1089,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Export for external use
 window.ConvertWizAuth = ConvertWizAuth;
+// Enhanced offline handling
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+// Add connection state monitoring
+firebase.database().ref('.info/connected').on('value', function(snapshot) {
+  if (snapshot.val() === true) {
+    console.log('✅ Firebase connected');
+  } else {
+    console.log('⚠️ Firebase offline');
+  }
+});
