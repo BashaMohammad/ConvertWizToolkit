@@ -474,13 +474,12 @@
                 }
             }
 
-            initiatePayment(plan) {
+            async initiatePayment(plan) {
                 // First check if user is logged in
                 if (!this.currentUser) {
-                    this.showToast('Please login to upgrade your plan', 'error');
-                    // Optionally redirect to login or show login modal
+                    this.showToast('Please sign in before subscribing to a plan', 'error');
                     setTimeout(() => {
-                        window.location.href = '/#auth';
+                        window.location.href = '/auth.html';
                     }, 2000);
                     return;
                 }
@@ -496,42 +495,84 @@
                     return;
                 }
 
-                // Razorpay Final Fix - Remove hardcoded contact number
-                const options = {
-                    "key": "rzp_live_HXdG9BXkQBfjyG",
-                    "amount": amount * 100, // ₹ to paise
-                    "currency": "INR",
-                    "name": "ConvertWiz",
-                    "description": "Subscription Payment",
-                    "image": "/assets/logo.png",
-                    "handler": (response) => {
-                        // Store payment details with user information
-                        localStorage.setItem('payment_response', JSON.stringify({
-                            payment_id: response.razorpay_payment_id,
-                            plan: plan,
+                // Create order with user authentication
+                try {
+                    const orderResponse = await fetch('/api/create-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
                             amount: amount,
+                            plan: plan,
                             user_id: this.currentUser.uid,
-                            user_email: this.currentUser.email,
-                            timestamp: new Date().toISOString()
-                        }));
-                        
-                        // 🟡 STEP 2: Poll premium status after payment
-                        console.log('🔍 Starting premium status check for:', this.currentUser.email);
-                        this.checkPremiumStatus(this.currentUser.email);
-                    },
-                    "prefill": {
-                        "name": "ConvertWiz User",
-                        "email": this.currentUser?.email || "",
-                        "contact": "" // Leave contact blank
-                    },
-                    "theme": {
-                        "color": "#5468ff" // UI blue gradient color preserved
-                    },
-                    "timeout": 600 // Optional: timeout to refresh if idle
-                };
-                
-                const rzp = new Razorpay(options);
-                rzp.open();
+                            user_email: this.currentUser.email
+                        })
+                    });
+
+                    if (!orderResponse.ok) {
+                        const errorData = await orderResponse.json();
+                        if (orderResponse.status === 401) {
+                            this.showToast(errorData.message || 'Authentication required', 'error');
+                            setTimeout(() => {
+                                window.location.href = '/auth.html';
+                            }, 2000);
+                            return;
+                        }
+                        throw new Error(errorData.message || 'Failed to create order');
+                    }
+
+                    const orderData = await orderResponse.json();
+                    
+                    // Razorpay payment options with authenticated order
+                    const options = {
+                        "key": "rzp_live_HXdG9BXkQBfjyG",
+                        "order_id": orderData.orderId,
+                        "amount": orderData.amount,
+                        "currency": orderData.currency,
+                        "name": "ConvertWiz",
+                        "description": `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan Subscription`,
+                        "image": "/assets/logo.png",
+                        "handler": (response) => {
+                            // Store payment details with authenticated user information
+                            localStorage.setItem('payment_response', JSON.stringify({
+                                payment_id: response.razorpay_payment_id,
+                                order_id: response.razorpay_order_id,
+                                signature: response.razorpay_signature,
+                                plan: plan,
+                                amount: amount,
+                                user_id: this.currentUser.uid,
+                                user_email: this.currentUser.email,
+                                timestamp: new Date().toISOString()
+                            }));
+                            
+                            this.showToast('Payment successful! Upgrading your account...', 'success');
+                            console.log('🔍 Starting premium status check for:', this.currentUser.email);
+                            this.checkPremiumStatus(this.currentUser.email, response.razorpay_payment_id);
+                        },
+                        "prefill": {
+                            "name": this.currentUser.displayName || this.currentUser.email,
+                            "email": this.currentUser.email,
+                            "contact": ""
+                        },
+                        "theme": {
+                            "color": "#5468ff"
+                        },
+                        "modal": {
+                            "ondismiss": () => {
+                                console.log('Payment cancelled by user');
+                                this.showToast('Payment cancelled', 'error');
+                            }
+                        }
+                    };
+                    
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                    
+                } catch (error) {
+                    console.error('Payment initiation failed:', error);
+                    this.showToast(error.message || 'Failed to initiate payment', 'error');
+                }
             }
 
             showToast(message, type = 'info') {

@@ -31,31 +31,46 @@ const premiumUsers = {
   'iqbalbashasi@gmail.com': true // Grant premium for testing purposes
 };
 
-// Create Razorpay order endpoint
+// Create Razorpay order endpoint with authentication validation
 app.post('/api/create-order', async (req, res) => {
   try {
-    const { amount, plan } = req.body;
+    const { amount, plan, user_id, user_email } = req.body;
     
-    console.log(`📦 Creating Razorpay order: Plan=${plan}, Amount=₹${amount}`);
+    // Critical Security Check: Validate user authentication
+    if (!user_id || !user_email) {
+      console.log('❌ Payment rejected: User not authenticated');
+      return res.status(401).json({ 
+        error: 'Authentication required',
+        message: 'Please sign in before subscribing to a plan',
+        redirect: '/auth.html'
+      });
+    }
+    
+    console.log(`📦 Creating Razorpay order: Plan=${plan}, Amount=₹${amount}, User=${user_email}`);
     
     const options = {
       amount: amount * 100, // Convert to paise
       currency: 'INR',
-      receipt: `order_${plan}_${new Date().getTime()}`,
+      receipt: `order_${plan}_${user_id}_${new Date().getTime()}`,
       payment_capture: 1,
       notes: {
         plan: plan,
-        email: req.body.email || 'no_email_provided'
+        user_id: user_id,
+        user_email: user_email,
+        created_at: new Date().toISOString()
       }
     };
 
     const order = await razorpayInstance.orders.create(options);
-    console.log(`✅ Order created successfully: ${order.id}`);
+    console.log(`✅ Order created successfully: ${order.id} for user: ${user_email}`);
     
     res.json({ 
       orderId: order.id,
       amount: order.amount,
-      currency: order.currency
+      currency: order.currency,
+      plan: plan,
+      user_id: user_id,
+      user_email: user_email
     });
   } catch (error) {
     console.error('❌ Error creating Razorpay order:', error);
