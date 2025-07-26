@@ -212,6 +212,28 @@ ConvertWiz is a comprehensive, full-stack SaaS application offering 13+ conversi
 
 Preferred communication style: Simple, everyday language.
 
+## Production Deployment Strategy
+
+**Development vs Production Mode:**
+- Core conversion tools (image, temperature, color, etc.) are production-ready
+- Subscription system remains in development phase to prevent payment issues
+- Authentication system enhanced with offline fallback for core tool access
+- AdSense monetization active for production revenue generation
+
+**Production-Ready Components:**
+- All 18+ conversion tools working without authentication requirements
+- Complete SEO optimization and meta tags
+- Google Analytics tracking operational
+- AdSense integration with proper ad placement
+- PostgreSQL database connected and stable
+- Legal compliance pages (Privacy, Terms, Disclaimer, Credits)
+
+**Development-Only Components:**
+- Subscription payment processing (Razorpay integration)
+- Premium plan upgrades and billing
+- Firebase authentication dependency for payments
+- Admin dashboard with live user statistics
+
 ## Legal Compliance Pages
 
 ConvertWiz includes comprehensive legal compliance documentation:

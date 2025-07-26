@@ -31,12 +31,27 @@ const premiumUsers = {
   'iqbalbashasi@gmail.com': true // Grant premium for testing purposes
 };
 
-// Create Razorpay order endpoint with authentication validation
+// Create Razorpay order endpoint with development mode check
 app.post('/api/create-order', async (req, res) => {
   try {
+    // Check if subscription is in development mode
+    const isDevelopment = req.headers.host?.includes('localhost') || 
+                         req.headers.host?.includes('replit') ||
+                         req.query.dev === 'true';
+    
+    if (!isDevelopment) {
+      console.log('🚫 Subscription disabled in production mode');
+      return res.status(503).json({ 
+        error: 'Service temporarily unavailable',
+        message: 'Subscription features are currently in development. Please try again later.',
+        developmentMode: false,
+        productionMode: true
+      });
+    }
+
     const { amount, plan, user_id, user_email } = req.body;
     
-    // Critical Security Check: Validate user authentication
+    // Critical Security Check: Validate user authentication (dev mode only)
     if (!user_id || !user_email) {
       console.log('❌ Payment rejected: User not authenticated');
       return res.status(401).json({ 
@@ -46,23 +61,24 @@ app.post('/api/create-order', async (req, res) => {
       });
     }
     
-    console.log(`📦 Creating Razorpay order: Plan=${plan}, Amount=₹${amount}, User=${user_email}`);
+    console.log(`📦 Creating Razorpay order (DEV): Plan=${plan}, Amount=₹${amount}, User=${user_email}`);
     
     const options = {
       amount: amount * 100, // Convert to paise
       currency: 'INR',
-      receipt: `order_${plan}_${user_id}_${new Date().getTime()}`,
+      receipt: `dev_order_${plan}_${user_id}_${new Date().getTime()}`,
       payment_capture: 1,
       notes: {
         plan: plan,
         user_id: user_id,
         user_email: user_email,
+        environment: 'development',
         created_at: new Date().toISOString()
       }
     };
 
     const order = await razorpayInstance.orders.create(options);
-    console.log(`✅ Order created successfully: ${order.id} for user: ${user_email}`);
+    console.log(`✅ Development order created: ${order.id} for user: ${user_email}`);
     
     res.json({ 
       orderId: order.id,
@@ -70,7 +86,8 @@ app.post('/api/create-order', async (req, res) => {
       currency: order.currency,
       plan: plan,
       user_id: user_id,
-      user_email: user_email
+      user_email: user_email,
+      developmentMode: true
     });
   } catch (error) {
     console.error('❌ Error creating Razorpay order:', error);

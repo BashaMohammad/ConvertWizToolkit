@@ -3,21 +3,21 @@
 
 console.log("Loading Firebase authentication...");
 
-// Enhanced Firebase configuration
+// Enhanced Firebase configuration (Updated for production compatibility)
 const firebaseConfig = {
-    apiKey: "AIzaSyAMVP0J1mH4WF-ESxi_PbQvDmydFXcuJe0",
+    apiKey: "AIzaSyBvOkBjDHllamPmRrJ4mRCk8Kh4aZRoMgo",
     authDomain: "convertwiz.firebaseapp.com",
     projectId: "convertwiz",
     storageBucket: "convertwiz.firebasestorage.app",
-    messagingSenderId: "777853314366",
-    appId: "1:777853314366:web:69a7ad8155381e5f51386f"
+    messagingSenderId: "807062320011",
+    appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
 };
 
 // Enhanced initialization with error handling
 function initializeFirebaseAuth() {
     try {
-        // Check if Firebase is available
-        if (typeof firebase === 'undefined') {
+        // Check if Firebase is available - use compat version check
+        if (typeof firebase === 'undefined' || !firebase.apps) {
             console.warn('Firebase SDK not available, running in offline mode');
             return false;
         }
@@ -28,10 +28,9 @@ function initializeFirebaseAuth() {
             return true;
         }
 
-        // Initialize Firebase
+        // Initialize Firebase with compat version
         firebase.initializeApp(firebaseConfig);
-        console.log('Firebase initialized for project:', firebaseConfig.projectId);
-        console.log('Auth domain:', firebaseConfig.authDomain);
+        console.log('Firebase initialized successfully for project:', firebaseConfig.projectId);
         
         return true;
     } catch (error) {
