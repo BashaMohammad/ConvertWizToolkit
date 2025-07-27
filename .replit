@@ -15,6 +15,10 @@ author = "agent"
 task = "workflow.run"
 args = "ConvertWiz Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Auth Tests"
+
 [[workflows.workflow]]
 name = "ConvertWiz Server"
 author = "agent"
@@ -23,6 +27,14 @@ author = "agent"
 task = "shell.exec"
 args = "node server.js"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Auth Tests"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node auth-tests.js"
 
 [[ports]]
 localPort = 5000
