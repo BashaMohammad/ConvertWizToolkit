@@ -308,21 +308,7 @@
       }
     });
 
-    // Global logout function
-    window.logout = async function() {
-      try {
-        await signOut(auth);
-        localStorage.removeItem('convertWizUser');
-        window.location.href = "/";
-      } catch (error) {
-        alert("Logout failed: " + error.message);
-      }
-    };
-
-    // Global home function
-    window.goHome = function() {
-      window.location.href = 'index.html';
-    };
+    // Functions are defined at the bottom of the script
 
     // Tab switching functionality
     window.showTab = function(tabName) {
@@ -492,6 +478,36 @@
       loadSeoData();
       
       alert('SEO entry added successfully!');
+    };
+    // Logout function
+    window.logout = async function() {
+      try {
+        console.log('Admin logout initiated');
+        
+        // Sign out from Firebase
+        await signOut(auth);
+        
+        // Clear localStorage
+        localStorage.removeItem('convertWizUser');
+        localStorage.removeItem('userSession');
+        
+        console.log('Admin logout successful');
+        
+        // Redirect to home
+        window.location.href = '/';
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Logout failed. Clearing session and redirecting...');
+        
+        // Force clear and redirect
+        localStorage.clear();
+        window.location.href = '/';
+      }
+    };
+
+    // Go home function
+    window.goHome = function() {
+      window.location.href = '/';
     };
   </script>
 </body>

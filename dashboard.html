@@ -261,11 +261,24 @@
                     }
                 }
                 
-                // Delay redirect to allow time for Firebase to initialize
+                // Only redirect if user is definitely not authenticated after 5 seconds
                 authCheckTimeout = setTimeout(() => {
+                    // Double check authentication state before redirecting
+                    if (typeof auth !== 'undefined' && auth.currentUser) {
+                        console.log('Dashboard: User authenticated, staying on dashboard');
+                        return;
+                    }
+                    
+                    // Check localStorage for session
+                    const userSession = localStorage.getItem('convertWizUser');
+                    if (userSession) {
+                        console.log('Dashboard: User session found, staying on dashboard');
+                        return;
+                    }
+                    
                     console.log('Dashboard: No authentication found, redirecting');
                     window.location.href = 'index.html';
-                }, 2000);
+                }, 8000);
             }
         });
 

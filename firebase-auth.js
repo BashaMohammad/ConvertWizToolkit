@@ -82,26 +82,49 @@ function updateUIForAuthenticatedUser(user) {
     if (authBtn && userInfo) {
         authBtn.innerHTML = `
             <div class="relative group">
-                <button class="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-4 py-3 rounded-lg transition-all font-medium min-h-[44px]">
-                    <i class="fas fa-user"></i>
-                    <span>${user.displayName || user.email.split('@')[0]}</span>
+                <button class="flex items-center space-x-2 bg-white border-2 border-purple-200 hover:border-purple-400 text-purple-700 px-4 py-2 rounded-full transition-all font-medium shadow-sm hover:shadow-md">
+                    <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                        ${(user.displayName || user.email).charAt(0).toUpperCase()}
+                    </div>
+                    <span class="text-sm font-medium">${user.displayName || user.email.split('@')[0]}</span>
                     <i class="fas fa-chevron-down text-xs"></i>
                 </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden group-hover:block z-50">
-                    <a href="dashboard.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg">
-                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 hidden group-hover:block z-50">
+                    <a href="dashboard.html" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 rounded-t-lg border-b border-gray-100">
+                        <i class="fas fa-tachometer-alt mr-2 text-purple-600"></i>Dashboard
                     </a>
-                    <button onclick="signOutUser()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-b-lg">
+                    <button onclick="signOutUser()" class="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 rounded-b-lg">
                         <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
                     </button>
                 </div>
             </div>
         `;
         
-        userInfo.classList.remove('hidden');
+        // Show admin button instead of "Loading usage..." for admin users
+        const adminEmails = [
+            'iqbalaiwork@gmail.com',
+            'iqbalbashasi@gmail.com', 
+            'sajoshaikh@gmail.com',
+            'support@convertwiz.in'
+        ];
+        
+        const isAdmin = adminEmails.includes(user.email);
+        
         if (userGreeting) {
             userGreeting.textContent = `Welcome, ${user.displayName || user.email.split('@')[0]}!`;
         }
+        
+        // Update usage info to show admin status or plan info
+        const usageInfo = document.getElementById('usage-info');
+        if (usageInfo) {
+            if (isAdmin) {
+                usageInfo.innerHTML = `<a href="admin.html" class="text-purple-600 hover:text-purple-800 font-medium"><i class="fas fa-crown mr-1"></i>Admin Access</a>`;
+            } else {
+                usageInfo.textContent = 'Free Plan - 5 conversions/day';
+            }
+        }
+        
+        userInfo.classList.remove('hidden');
     }
     
     // Update mobile auth button
