@@ -109,6 +109,9 @@ async function signInWithEmailAndPassword(email, password) {
     } catch (error) {
         console.error('❌ Login failed:', error);
         
+        // CRITICAL: Clear loading state FIRST before anything else
+        showLoading(false);
+        
         // Handle specific Firebase auth errors
         let errorMessage = 'Login failed. Please try again.';
         
@@ -136,17 +139,30 @@ async function signInWithEmailAndPassword(email, password) {
                 errorMessage = error.message || 'An unexpected error occurred.';
         }
         
-        // Ensure loading state is cleared immediately
-        showLoading(false);
-        
         // Show error message
         showError(errorMessage);
         
-        // Re-enable form inputs for retry
-        const emailField = document.getElementById('email');
-        const passwordField = document.getElementById('password');
-        
-        if (emailField) emailField.focus(); // Focus back to email field for retry
+        // Force clear any stuck states
+        setTimeout(() => {
+            showLoading(false);
+            
+            // Re-enable form inputs for retry
+            const emailField = document.getElementById('email');
+            const passwordField = document.getElementById('password');
+            const loginButton = document.getElementById('login-button');
+            
+            if (emailField) {
+                emailField.disabled = false;
+                emailField.focus(); // Focus back to email field for retry
+            }
+            if (passwordField) {
+                passwordField.disabled = false;
+            }
+            if (loginButton) {
+                loginButton.disabled = false;
+                loginButton.textContent = 'Sign In';
+            }
+        }, 100);
         
         // Don't throw error to prevent unhandled promise rejection
         return null;
@@ -219,8 +235,12 @@ function clearError() {
 }
 
 function showLoading(show) {
+    console.log('🔄 showLoading called with:', show);
+    
     const loginButton = document.getElementById('login-button');
     const loadingSpinner = document.getElementById('loading-spinner');
+    const emailField = document.getElementById('email');
+    const passwordField = document.getElementById('password');
     
     if (loginButton) {
         loginButton.disabled = show;
@@ -230,29 +250,32 @@ function showLoading(show) {
         if (!show) {
             loginButton.classList.remove('opacity-50', 'cursor-not-allowed');
             loginButton.classList.add('hover:bg-blue-700', 'focus:ring-2', 'focus:ring-blue-500');
+            console.log('✅ Login button re-enabled');
         } else {
             loginButton.classList.add('opacity-50', 'cursor-not-allowed');
             loginButton.classList.remove('hover:bg-blue-700', 'focus:ring-2', 'focus:ring-blue-500');
+            console.log('🔒 Login button disabled');
         }
     }
     
     if (loadingSpinner) {
         if (show) {
             loadingSpinner.classList.remove('hidden');
+            console.log('🔄 Loading spinner shown');
         } else {
             loadingSpinner.classList.add('hidden');
+            console.log('✅ Loading spinner hidden');
         }
     }
     
-    // Also clear any form field disabled states
-    const emailField = document.getElementById('email');
-    const passwordField = document.getElementById('password');
-    
+    // Force clear form field disabled states
     if (emailField) {
         emailField.disabled = show;
+        if (!show) console.log('✅ Email field re-enabled');
     }
     if (passwordField) {
         passwordField.disabled = show;
+        if (!show) console.log('✅ Password field re-enabled');
     }
 }
 

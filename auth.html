@@ -182,9 +182,12 @@
     <script>
         // Global function to hide loading spinner (emergency fallback)
         function hideLoadingSpinner() {
+            console.log('🚨 Emergency loading state reset triggered');
+            
             const spinner = document.getElementById('loading-spinner');
             if (spinner) {
                 spinner.classList.add('hidden');
+                console.log('✅ Emergency: Loading spinner hidden');
             }
             
             // Re-enable login button
@@ -192,14 +195,33 @@
             if (loginButton) {
                 loginButton.disabled = false;
                 loginButton.textContent = 'Sign In';
+                loginButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                loginButton.classList.add('hover:bg-blue-700', 'focus:ring-2', 'focus:ring-blue-500');
+                console.log('✅ Emergency: Login button re-enabled');
             }
             
             // Re-enable form fields
             const emailField = document.getElementById('email');
             const passwordField = document.getElementById('password');
-            if (emailField) emailField.disabled = false;
-            if (passwordField) passwordField.disabled = false;
+            if (emailField) {
+                emailField.disabled = false;
+                emailField.focus();
+                console.log('✅ Emergency: Email field re-enabled');
+            }
+            if (passwordField) {
+                passwordField.disabled = false;
+                console.log('✅ Emergency: Password field re-enabled');
+            }
         }
+        
+        // Auto-reset loading state after 5 seconds if stuck
+        setTimeout(() => {
+            const spinner = document.getElementById('loading-spinner');
+            if (spinner && !spinner.classList.contains('hidden')) {
+                console.log('🚨 Auto-reset: Loading state stuck, forcing reset');
+                hideLoadingSpinner();
+            }
+        }, 5000);
     </script>
     <script src="firebase-config.js"></script>
     <script src="login.js"></script>
