@@ -338,6 +338,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Make signOutUser globally available for button onclick handlers
+window.signOutUser = signOutUser;
+
 // Export functions for use in other scripts
 window.ConvertWizAuth = {
     initializeFirebaseAuth,
