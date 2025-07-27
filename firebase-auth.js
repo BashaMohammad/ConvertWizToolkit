@@ -179,8 +179,37 @@ async function initializeUserPlan(user) {
 
 // Sign out function
 function signOutUser() {
-    if (typeof firebase !== 'undefined' && firebase.auth) {
-        firebase.auth().signOut().then(() => {
+    if (typeof firebase === 'undefined' || !firebase.auth) {
+        console.log('Firebase auth not available');
+        return;
+    }
+    
+    firebase.auth().signOut().then(() => {
+        console.log('User signed out successfully');
+        // Update UI immediately
+        updateUIForGuestUser();
+        // Optionally redirect to home
+        window.location.reload();
+    }).catch((error) => {
+        console.error('Sign out error:', error);
+    });
+}
+
+// Initialize authentication when DOM is ready
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('ConvertWiz navigation initialized');
+    
+    // Initialize Firebase authentication
+    const initialized = await initializeFirebaseAuth();
+    
+    if (initialized) {
+        // Set up auth state listener
+        setupAuthStateListener();
+    } else {
+        // Fallback to guest mode
+        updateUIForGuestUser();
+    }
+});
             console.log('User signed out successfully');
             window.location.reload();
         }).catch((error) => {
