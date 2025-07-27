@@ -74,17 +74,29 @@ function setupAuthStateListener() {
 
 // Enhanced UI update functions
 function updateUIForAuthenticatedUser(user) {
-    // Update desktop auth button
+    // Update desktop auth button - Show as dropdown with logout option
     const authBtn = document.getElementById('auth-btn');
     const userInfo = document.getElementById('user-info');
     const userGreeting = document.getElementById('user-greeting');
     
     if (authBtn && userInfo) {
         authBtn.innerHTML = `
-            <i class="fas fa-user"></i>
-            <span>${user.displayName || user.email.split('@')[0]}</span>
+            <div class="relative group">
+                <button class="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-4 py-3 rounded-lg transition-all font-medium min-h-[44px]">
+                    <i class="fas fa-user"></i>
+                    <span>${user.displayName || user.email.split('@')[0]}</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden group-hover:block z-50">
+                    <a href="dashboard.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <button onclick="signOutUser()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-b-lg">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
+                    </button>
+                </div>
+            </div>
         `;
-        authBtn.onclick = () => signOutUser();
         
         userInfo.classList.remove('hidden');
         if (userGreeting) {
@@ -99,16 +111,32 @@ function updateUIForAuthenticatedUser(user) {
     
     if (mobileAuthBtn && mobileUserInfo) {
         mobileAuthBtn.innerHTML = `
-            <i class="fas fa-user"></i>
-            <span>${user.displayName || user.email.split('@')[0]}</span>
+            <div class="w-full">
+                <div class="flex items-center justify-between w-full bg-gradient-to-r from-green-600 to-blue-600 text-white px-4 py-3 rounded-lg font-medium">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-user"></i>
+                        <span>${user.displayName || user.email.split('@')[0]}</span>
+                    </div>
+                </div>
+                <div class="mt-2 space-y-1">
+                    <a href="dashboard.html" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <button onclick="signOutUser()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
+                    </button>
+                </div>
+            </div>
         `;
-        mobileAuthBtn.onclick = () => signOutUser();
         
         mobileUserInfo.classList.remove('hidden');
         if (mobileUserGreeting) {
             mobileUserGreeting.textContent = `Welcome, ${user.displayName || user.email.split('@')[0]}!`;
         }
     }
+    
+    // Show/hide admin and dashboard navigation items
+    showNavigationForAuthenticatedUser(user);
 }
 
 function updateUIForGuestUser() {
@@ -143,6 +171,9 @@ function updateUIForGuestUser() {
     if (mobileUserInfo) {
         mobileUserInfo.classList.add('hidden');
     }
+    
+    // Hide admin and dashboard navigation for guests
+    hideNavigationForGuests();
 }
 
 // Enhanced user plan initialization with error handling
@@ -199,6 +230,50 @@ function signOutUser() {
 function updateUsageDisplay() {
     // This will be implemented with subscription system
     console.log('Usage display updated');
+}
+
+// Show/hide navigation items based on user authentication and admin status
+function showNavigationForAuthenticatedUser(user) {
+    // Admin users list
+    const adminEmails = [
+        'iqbalaiwork@gmail.com',
+        'iqbalbashasi@gmail.com', 
+        'sajoshaikh@gmail.com',
+        'support@convertwiz.in'
+    ];
+    
+    const isAdmin = adminEmails.includes(user.email);
+    
+    // Show dashboard navigation for all authenticated users
+    const dashboardNavItems = document.querySelectorAll('#dashboard-nav-item, #mobile-dashboard-nav-item');
+    dashboardNavItems.forEach(item => {
+        if (item) item.style.display = 'block';
+    });
+    
+    // Show admin navigation only for admin users
+    const adminNavItems = document.querySelectorAll('.admin-nav-item, #mobile-admin-link');
+    adminNavItems.forEach(item => {
+        if (item) {
+            item.style.display = isAdmin ? 'block' : 'none';
+        }
+    });
+    
+    console.log(`User ${user.email} - Admin access: ${isAdmin}`);
+}
+
+// Hide navigation items for guest users
+function hideNavigationForGuests() {
+    // Hide dashboard navigation
+    const dashboardNavItems = document.querySelectorAll('#dashboard-nav-item, #mobile-dashboard-nav-item');
+    dashboardNavItems.forEach(item => {
+        if (item) item.style.display = 'none';
+    });
+    
+    // Hide admin navigation
+    const adminNavItems = document.querySelectorAll('.admin-nav-item, #mobile-admin-link');
+    adminNavItems.forEach(item => {
+        if (item) item.style.display = 'none';
+    });
 }
 
 // Initialize authentication when DOM is ready
