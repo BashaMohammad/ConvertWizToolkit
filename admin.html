@@ -263,42 +263,34 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Check authentication with delay to allow auth state to sync
-    let authCheckDelay = setTimeout(() => {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        console.log('No user found after 3 seconds, checking localStorage...');
-        const userSession = localStorage.getItem('convertWizUser');
-        if (!userSession) {
-          console.log('No user session found, redirecting to home');
-          window.location.href = "/";
-        }
-      }
-    }, 3000);
+    // Check authentication with delay to allow auth state to sync (DISABLED AUTO-REDIRECT)
+    let authCheckDisabled = true; // Prevent auto-redirect for admin users
+    console.log('Admin auth check disabled to prevent auto-redirect loops');
 
     onAuthStateChanged(auth, (user) => {
-      clearTimeout(authCheckDelay);
+      console.log('Admin auth state changed:', user ? `User: ${user.email}` : 'No user');
       
       if (!user) {
         const userSession = localStorage.getItem('convertWizUser');
         if (userSession) {
           try {
             const userData = JSON.parse(userSession);
-            console.log('Found user in localStorage:', userData.email);
+            console.log('Admin: Found user in localStorage:', userData.email);
             const welcomeElement = document.getElementById('admin-welcome');
             if (welcomeElement) {
               welcomeElement.textContent = `Welcome ${userData.email}! Real-time ConvertWiz analytics and performance insights:`;
             }
             return;
           } catch (e) {
-            console.log('Invalid localStorage session');
+            console.log('Admin: Invalid localStorage session');
           }
         }
         
-        console.log('No authenticated user found, redirecting to home');
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
+        console.log('Admin: No user found, but not auto-redirecting to prevent loops');
+        const welcomeElement = document.getElementById('admin-welcome');
+        if (welcomeElement) {
+          welcomeElement.textContent = 'Admin Dashboard - Please authenticate to view analytics:';
+        }
       } else {
         console.log('Admin authenticated:', user.email);
         const welcomeElement = document.getElementById('admin-welcome');
@@ -479,28 +471,38 @@
       
       alert('SEO entry added successfully!');
     };
-    // Logout function
+    // Enhanced logout function with multiple fallbacks
     window.logout = async function() {
       try {
-        console.log('Admin logout initiated');
+        console.log('🚪 Admin logout initiated');
         
-        // Sign out from Firebase
-        await signOut(auth);
-        
-        // Clear localStorage
+        // Clear localStorage immediately (don't wait for Firebase)
         localStorage.removeItem('convertWizUser');
+        localStorage.removeItem('convertWizAuthToken');
         localStorage.removeItem('userSession');
+        sessionStorage.clear();
         
-        console.log('Admin logout successful');
+        // Try Firebase signOut (but don't depend on it)
+        try {
+          await signOut(auth);
+          console.log('✅ Firebase signOut successful');
+        } catch (firebaseError) {
+          console.warn('⚠️ Firebase signOut failed, but continuing logout:', firebaseError);
+        }
         
-        // Redirect to home
+        console.log('✅ Admin logout completed successfully');
+        
+        // Force redirect to home page
         window.location.href = '/';
-      } catch (error) {
-        console.error('Logout error:', error);
-        alert('Logout failed. Clearing session and redirecting...');
         
-        // Force clear and redirect
+      } catch (error) {
+        console.error('❌ Admin logout error:', error);
+        
+        // Emergency logout - force clear everything
         localStorage.clear();
+        sessionStorage.clear();
+        
+        // Emergency redirect
         window.location.href = '/';
       }
     };

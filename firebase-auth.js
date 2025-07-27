@@ -233,20 +233,43 @@ async function initializeUserPlan(user) {
 
 // Sign out function
 function signOutUser() {
-    if (typeof firebase === 'undefined' || !firebase.auth) {
-        console.log('Firebase auth not available');
-        return;
-    }
+    console.log('🚪 SignOut initiated from firebase-auth.js');
     
-    firebase.auth().signOut().then(() => {
-        console.log('User signed out successfully');
+    try {
+        // Clear auth state immediately (don't wait for Firebase)
+        localStorage.removeItem('convertWizUser');
+        localStorage.removeItem('convertWizAuthToken');
+        sessionStorage.clear();
+        
         // Update UI immediately
         updateUIForGuestUser();
-        // Optionally redirect to home
-        window.location.reload();
-    }).catch((error) => {
-        console.error('Sign out error:', error);
-    });
+        
+        // Try Firebase signOut (but don't depend on it)
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            firebase.auth().signOut().then(() => {
+                console.log('✅ Firebase signOut successful');
+            }).catch((error) => {
+                console.warn('⚠️ Firebase signOut error (but continuing):', error);
+            });
+        } else {
+            console.log('Firebase auth not available, using localStorage clear only');
+        }
+        
+        console.log('✅ SignOut completed successfully');
+        
+        // Redirect to home page
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 100);
+        
+    } catch (error) {
+        console.error('❌ SignOut error:', error);
+        
+        // Emergency fallback
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/';
+    }
 }
 
 // Update usage display function (placeholder)

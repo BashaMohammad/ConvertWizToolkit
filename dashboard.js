@@ -274,7 +274,7 @@ async function loadUsageStats(user) {
     }
 }
 
-// Enhanced logout function
+// Enhanced logout function with multiple fallback methods
 async function logout() {
     try {
         console.log('🚪 Logging out user...');
@@ -286,26 +286,38 @@ async function logout() {
             logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging out...';
         }
         
-        // Sign out from Firebase
-        if (auth && auth.currentUser) {
-            await auth.signOut();
-            console.log('✅ Firebase signOut successful');
+        // Clear localStorage and sessionStorage FIRST
+        clearAuthState();
+        
+        // Sign out from Firebase (but don't depend on it)
+        try {
+            if (auth && auth.currentUser) {
+                await auth.signOut();
+                console.log('✅ Firebase signOut successful');
+            }
+        } catch (firebaseError) {
+            console.warn('⚠️ Firebase signOut failed, but continuing logout:', firebaseError);
         }
         
-        // Clear localStorage and sessionStorage
-        clearAuthState();
+        // Force clear any cached auth state
+        localStorage.removeItem('convertWizUser');
+        localStorage.removeItem('convertWizAuthToken');
+        sessionStorage.clear();
         
         console.log('✅ Logout completed successfully');
         
-        // Redirect to login page
-        window.location.href = 'login.html';
+        // Force redirect to home page (not login to avoid loops)
+        window.location.href = '/';
         
     } catch (error) {
         console.error('❌ Logout failed:', error);
         
-        // Force clear auth state and redirect anyway
-        clearAuthState();
-        window.location.href = 'login.html';
+        // Emergency logout - force clear everything
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Emergency redirect
+        window.location.href = '/';
     }
 }
 
