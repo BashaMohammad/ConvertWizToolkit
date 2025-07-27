@@ -1,14 +1,7 @@
 // ConvertWiz Authentication System - Clean & Modern
 console.log('🔐 Loading ConvertWiz Authentication...');
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBvOkBjDHllamPmRrJ4mRCk8Kh4aZRoMgo",
-    authDomain: "convertwiz.firebaseapp.com", 
-    projectId: "convertwiz",
-    storageBucket: "convertwiz.firebasestorage.app",
-    messagingSenderId: "807062320011",
-    appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
-};
+let firebaseConfig = null;
 
 // UI Helper Functions
 function showLoading() {
@@ -62,7 +55,7 @@ function switchTab(activeTab) {
 }
 
 // Initialize Firebase and Auth System
-function initializeAuth() {
+async function initializeAuth() {
     if (typeof firebase === 'undefined') {
         console.warn('Firebase not available, showing offline message');
         showToast('Authentication service is temporarily unavailable', 'error');
@@ -70,6 +63,10 @@ function initializeAuth() {
     }
 
     try {
+        // Get Firebase config from server
+        firebaseConfig = await getFirebaseConfig();
+        console.log('Firebase config loaded:', firebaseConfig.projectId);
+        
         // Initialize Firebase
         if (firebase.apps.length === 0) {
             firebase.initializeApp(firebaseConfig);
