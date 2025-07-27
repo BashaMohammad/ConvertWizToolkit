@@ -1,5 +1,5 @@
-// Enhanced Firebase Authentication with Offline Handling
-// ConvertWiz Firebase Integration - Enhanced Version
+// ✅ ConvertWiz Firebase Authentication System (Fixed Version)
+// Enhanced Firebase Integration for Homepage Authentication State Management
 
 console.log("Loading Firebase authentication...");
 
@@ -195,6 +195,12 @@ function signOutUser() {
     });
 }
 
+// Update usage display function (placeholder)
+function updateUsageDisplay() {
+    // This will be implemented with subscription system
+    console.log('Usage display updated');
+}
+
 // Initialize authentication when DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('ConvertWiz navigation initialized');
@@ -207,23 +213,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupAuthStateListener();
     } else {
         // Fallback to guest mode
-        updateUIForGuestUser();
-    }
-});
-            console.log('User signed out successfully');
-            window.location.reload();
-        }).catch((error) => {
-            console.error('Sign out error:', error);
-        });
-    }
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    if (initializeFirebaseAuth()) {
-        setupAuthStateListener();
-    } else {
-        console.log('Running in offline mode');
         updateUIForGuestUser();
     }
 });
