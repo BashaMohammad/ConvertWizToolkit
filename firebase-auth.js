@@ -3,23 +3,22 @@
 
 console.log("Loading Firebase authentication...");
 
-// Enhanced Firebase configuration (Updated for production compatibility)
-const firebaseConfig = {
-    apiKey: "AIzaSyBvOkBjDHllamPmRrJ4mRCk8Kh4aZRoMgo",
-    authDomain: "convertwiz.firebaseapp.com",
-    projectId: "convertwiz",
-    storageBucket: "convertwiz.firebasestorage.app",
-    messagingSenderId: "807062320011",
-    appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
-};
+// Enhanced Firebase configuration (Dynamic loading from server)
+let firebaseConfig = null;
 
 // Enhanced initialization with error handling
-function initializeFirebaseAuth() {
+async function initializeFirebaseAuth() {
     try {
         // Check if Firebase is available - use compat version check
         if (typeof firebase === 'undefined' || !firebase.apps) {
             console.warn('Firebase SDK not available, running in offline mode');
             return false;
+        }
+
+        // Get Firebase config from server
+        if (!firebaseConfig) {
+            firebaseConfig = await getFirebaseConfig();
+            console.log('Firebase config loaded for project:', firebaseConfig.projectId);
         }
 
         // Check if already initialized
@@ -75,34 +74,74 @@ function setupAuthStateListener() {
 
 // Enhanced UI update functions
 function updateUIForAuthenticatedUser(user) {
-    const authButton = document.getElementById('auth-button');
+    // Update desktop auth button
+    const authBtn = document.getElementById('auth-btn');
+    const userInfo = document.getElementById('user-info');
     const userGreeting = document.getElementById('user-greeting');
     
-    if (authButton) {
-        authButton.innerHTML = `
-            <span class="user-name">${user.displayName || user.email}</span>
-            <button onclick="signOutUser()" class="sign-out-btn">Sign Out</button>
+    if (authBtn && userInfo) {
+        authBtn.innerHTML = `
+            <i class="fas fa-user"></i>
+            <span>${user.displayName || user.email.split('@')[0]}</span>
         `;
+        authBtn.onclick = () => signOutUser();
+        
+        userInfo.classList.remove('hidden');
+        if (userGreeting) {
+            userGreeting.textContent = `Welcome, ${user.displayName || user.email.split('@')[0]}!`;
+        }
     }
     
-    if (userGreeting) {
-        userGreeting.textContent = `Welcome, ${user.displayName || user.email}!`;
-        userGreeting.style.display = 'block';
+    // Update mobile auth button
+    const mobileAuthBtn = document.getElementById('mobile-auth-btn');
+    const mobileUserInfo = document.getElementById('mobile-user-info');
+    const mobileUserGreeting = document.getElementById('mobile-user-greeting');
+    
+    if (mobileAuthBtn && mobileUserInfo) {
+        mobileAuthBtn.innerHTML = `
+            <i class="fas fa-user"></i>
+            <span>${user.displayName || user.email.split('@')[0]}</span>
+        `;
+        mobileAuthBtn.onclick = () => signOutUser();
+        
+        mobileUserInfo.classList.remove('hidden');
+        if (mobileUserGreeting) {
+            mobileUserGreeting.textContent = `Welcome, ${user.displayName || user.email.split('@')[0]}!`;
+        }
     }
 }
 
 function updateUIForGuestUser() {
-    const authButton = document.getElementById('auth-button');
-    const userGreeting = document.getElementById('user-greeting');
+    // Update desktop auth button
+    const authBtn = document.getElementById('auth-btn');
+    const userInfo = document.getElementById('user-info');
     
-    if (authButton) {
-        authButton.innerHTML = `
-            <button onclick="showLoginModal()" class="login-btn">Sign In</button>
+    if (authBtn) {
+        authBtn.innerHTML = `
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
         `;
+        authBtn.onclick = () => window.location.href = '/auth.html';
     }
     
-    if (userGreeting) {
-        userGreeting.style.display = 'none';
+    if (userInfo) {
+        userInfo.classList.add('hidden');
+    }
+    
+    // Update mobile auth button
+    const mobileAuthBtn = document.getElementById('mobile-auth-btn');
+    const mobileUserInfo = document.getElementById('mobile-user-info');
+    
+    if (mobileAuthBtn) {
+        mobileAuthBtn.innerHTML = `
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+        `;
+        mobileAuthBtn.onclick = () => window.location.href = '/auth.html';
+    }
+    
+    if (mobileUserInfo) {
+        mobileUserInfo.classList.add('hidden');
     }
 }
 
