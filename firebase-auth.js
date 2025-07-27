@@ -89,7 +89,7 @@ function updateUIForAuthenticatedUser(user) {
                     <span class="text-sm font-medium">${user.displayName || user.email.split('@')[0]}</span>
                     <i class="fas fa-chevron-down text-xs"></i>
                 </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 hidden group-hover:block z-50">
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <a href="dashboard.html" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 rounded-t-lg border-b border-gray-100">
                         <i class="fas fa-tachometer-alt mr-2 text-purple-600"></i>Dashboard
                     </a>
