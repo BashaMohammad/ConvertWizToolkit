@@ -35,8 +35,8 @@
 </head>
 <body class="min-h-screen gradient-bg flex items-center justify-center p-4">
     <!-- Loading Spinner -->
-    <div id="loading-spinner" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
+    <div id="loading-spinner" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="hideLoadingSpinner()">
+        <div class="bg-white rounded-lg p-6 flex items-center space-x-3" onclick="event.stopPropagation()">
             <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
             <span class="text-gray-700">Signing you in...</span>
         </div>
@@ -179,6 +179,28 @@
     </div>
 
     <!-- Firebase Configuration and Auth JavaScript -->
+    <script>
+        // Global function to hide loading spinner (emergency fallback)
+        function hideLoadingSpinner() {
+            const spinner = document.getElementById('loading-spinner');
+            if (spinner) {
+                spinner.classList.add('hidden');
+            }
+            
+            // Re-enable login button
+            const loginButton = document.getElementById('login-button');
+            if (loginButton) {
+                loginButton.disabled = false;
+                loginButton.textContent = 'Sign In';
+            }
+            
+            // Re-enable form fields
+            const emailField = document.getElementById('email');
+            const passwordField = document.getElementById('password');
+            if (emailField) emailField.disabled = false;
+            if (passwordField) passwordField.disabled = false;
+        }
+    </script>
     <script src="firebase-config.js"></script>
     <script src="login.js"></script>
     <script src="auth.js"></script>

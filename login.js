@@ -136,10 +136,20 @@ async function signInWithEmailAndPassword(email, password) {
                 errorMessage = error.message || 'An unexpected error occurred.';
         }
         
-        showError(errorMessage);
+        // Ensure loading state is cleared immediately
         showLoading(false);
         
-        throw error;
+        // Show error message
+        showError(errorMessage);
+        
+        // Re-enable form inputs for retry
+        const emailField = document.getElementById('email');
+        const passwordField = document.getElementById('password');
+        
+        if (emailField) emailField.focus(); // Focus back to email field for retry
+        
+        // Don't throw error to prevent unhandled promise rejection
+        return null;
     }
 }
 
@@ -215,10 +225,34 @@ function showLoading(show) {
     if (loginButton) {
         loginButton.disabled = show;
         loginButton.textContent = show ? 'Signing in...' : 'Sign In';
+        
+        // Ensure button is re-enabled and styles are restored
+        if (!show) {
+            loginButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            loginButton.classList.add('hover:bg-blue-700', 'focus:ring-2', 'focus:ring-blue-500');
+        } else {
+            loginButton.classList.add('opacity-50', 'cursor-not-allowed');
+            loginButton.classList.remove('hover:bg-blue-700', 'focus:ring-2', 'focus:ring-blue-500');
+        }
     }
     
     if (loadingSpinner) {
-        loadingSpinner.classList.toggle('hidden', !show);
+        if (show) {
+            loadingSpinner.classList.remove('hidden');
+        } else {
+            loadingSpinner.classList.add('hidden');
+        }
+    }
+    
+    // Also clear any form field disabled states
+    const emailField = document.getElementById('email');
+    const passwordField = document.getElementById('password');
+    
+    if (emailField) {
+        emailField.disabled = show;
+    }
+    if (passwordField) {
+        passwordField.disabled = show;
     }
 }
 
@@ -236,10 +270,15 @@ function setupLoginForm() {
             const password = passwordInput ? passwordInput.value : '';
             
             try {
-                await signInWithEmailAndPassword(email, password);
+                const result = await signInWithEmailAndPassword(email, password);
+                if (!result) {
+                    // Login failed, form is ready for retry
+                    console.log('Login failed, form ready for retry');
+                }
             } catch (error) {
-                // Error already handled in signInWithEmailAndPassword
-                console.log('Login form submission failed');
+                // Ensure loading state is cleared even on unexpected errors
+                showLoading(false);
+                console.log('Login form submission failed:', error.message);
             }
         });
         
