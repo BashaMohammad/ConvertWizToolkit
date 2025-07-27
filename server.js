@@ -556,6 +556,51 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Authentication status check endpoint
+app.get('/api/auth/check', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    return res.json({ 
+      authenticated: false,
+      message: 'No authentication token provided'
+    });
+  }
+  
+  // In a real implementation, verify the Firebase token here
+  // For now, we'll accept any token as valid for development
+  res.json({
+    authenticated: true,
+    message: 'User is authenticated',
+    development_mode: true
+  });
+});
+
+// User information endpoint
+app.get('/api/auth/user', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ 
+      error: 'Authentication required',
+      message: 'Please provide a valid authentication token'
+    });
+  }
+  
+  // Mock user data for development - in production, decode Firebase token
+  res.json({
+    user: {
+      uid: 'dev_user_123',
+      email: 'user@example.com',
+      displayName: 'Development User',
+      plan: 'free',
+      dailyUsage: 2,
+      usageLimit: 5
+    },
+    development_mode: true
+  });
+});
+
 // ✅ SEO Enhancement API - Get component metadata
 app.get('/api/seo/:componentId', (req, res) => {
   const component = components.find(c => c.id === req.params.componentId);
