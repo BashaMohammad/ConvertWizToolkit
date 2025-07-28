@@ -5,13 +5,16 @@ document.body.setAttribute('data-env', 'development');
 
 // Hide all tool sections and show the one with the given ID
 function showSection(sectionId) {
+  // Force hide ALL tool sections first
   document.querySelectorAll('.tool-section').forEach(section => {
     section.style.display = 'none';
+    section.classList.remove('active');
   });
 
   const target = document.getElementById(sectionId);
   if (target) {
     target.style.display = 'block';
+    target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     // Update URL and track pageview for AdSense and Analytics

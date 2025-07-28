@@ -2719,12 +2719,23 @@ Contact: John Doe, Company Inc."></textarea>
         
         // Initialize ConvertWiz without authentication
         document.addEventListener('DOMContentLoaded', function() {
+            // FORCE HIDE ALL TOOL SECTIONS EXCEPT LANDING
+            document.querySelectorAll('.tool-section:not(#landing-section)').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Ensure landing section is visible
+            const landingSection = document.getElementById('landing-section');
+            if (landingSection) {
+                landingSection.style.display = 'block';
+            }
+            
             // Initialize routing
             if (typeof initializeRouting === 'function') {
                 initializeRouting();
             }
             
-            console.log('✅ ConvertWiz initialized in free mode - all tools accessible');
+            console.log('✅ ConvertWiz initialized - component isolation enforced');
         });
         
         // Set development mode for ad display
