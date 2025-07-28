@@ -9,19 +9,17 @@ document.addEventListener('DOMContentLoaded', function() {
             overall: 'UNKNOWN'
         };
         
-        // Test 1: Only landing section visible on load
+        // Test 1: Only landing section visible on load (has active class)
         const landingSection = document.getElementById('landing-section');
-        const isLandingVisible = landingSection && 
-            landingSection.style.display !== 'none' && 
-            landingSection.style.visibility !== 'hidden';
+        const isLandingActive = landingSection && landingSection.classList.contains('active');
         
         results.tests.test1_landing_only = {
-            status: isLandingVisible ? "PASS" : "FAIL",
-            description: "Landing section visible on load",
-            details: `Landing display: ${landingSection ? landingSection.style.display || 'default' : 'not found'}`
+            status: isLandingActive ? "PASS" : "FAIL",
+            description: "Landing section active on load",
+            details: `Landing has active class: ${isLandingActive ? 'yes' : 'no'}`
         };
         
-        // Test 2: All tool sections hidden by default
+        // Test 2: All tool sections hidden by default (no active class)
         const toolSections = [
             'jpg-to-png-section', 'currency-converter-section', 'land-converter-section',
             'dp-resizer-section', 'word-counter-section', 'distance-converter-section',
@@ -33,16 +31,16 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
         
         let hiddenCount = 0;
-        let visibleTools = [];
+        let activeTools = [];
         
         toolSections.forEach(sectionId => {
             const section = document.getElementById(sectionId);
             if (section) {
-                const isHidden = section.style.display === 'none' || section.style.visibility === 'hidden';
-                if (isHidden) {
+                const hasActiveClass = section.classList.contains('active');
+                if (!hasActiveClass) {
                     hiddenCount++;
                 } else {
-                    visibleTools.push(sectionId);
+                    activeTools.push(sectionId);
                 }
             }
         });
@@ -50,8 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const allToolsHidden = hiddenCount === toolSections.length;
         results.tests.test2_tools_hidden = {
             status: allToolsHidden ? "PASS" : "FAIL",
-            description: "All tool sections hidden by default",
-            details: `${hiddenCount}/${toolSections.length} hidden. Visible: ${visibleTools.join(', ') || 'none'}`
+            description: "All tool sections hidden by default (no active class)",
+            details: `${hiddenCount}/${toolSections.length} without active class. Active tools: ${activeTools.join(', ') || 'none'}`
         };
         
         // Test 3: showSection function exists
@@ -71,21 +69,22 @@ document.addEventListener('DOMContentLoaded', function() {
             details: `${navButtons.length} navigation buttons found`
         };
         
-        // Test 5: Test component switching (if showSection exists)
+        // Test 5: Test component switching with active classes
         let switchingWorks = false;
         if (showSectionExists) {
             try {
                 // Test switching to JPG section
                 window.showSection('jpg-to-png-section');
                 const jpgSection = document.getElementById('jpg-to-png-section');
-                const jpgVisible = jpgSection && jpgSection.style.display !== 'none';
-                const landingHidden = landingSection.style.display === 'none';
+                const jpgActive = jpgSection && jpgSection.classList.contains('active');
+                const landingNotActive = !landingSection.classList.contains('active');
                 
                 // Switch back to landing
                 window.showSection('landing-section');
-                const landingBackVisible = landingSection.style.display !== 'none';
+                const landingBackActive = landingSection.classList.contains('active');
+                const jpgNotActive = !jpgSection.classList.contains('active');
                 
-                switchingWorks = jpgVisible && landingHidden && landingBackVisible;
+                switchingWorks = jpgActive && landingNotActive && landingBackActive && jpgNotActive;
             } catch (error) {
                 console.error('Component switching test error:', error);
             }

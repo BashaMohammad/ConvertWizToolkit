@@ -262,20 +262,17 @@
     </script>
 
 <style>
-/* EMERGENCY COMPONENT ISOLATION */
-.tool-section:not(#landing-section) {
+/* COMPONENT ISOLATION FIX */
+.tool-section {
     display: none !important;
-    visibility: hidden !important;
 }
 
 .tool-section.active {
     display: block !important;
-    visibility: visible !important;
 }
 
-#landing-section {
+#landing-section.active {
     display: block !important;
-    visibility: visible !important;
 }
 </style>
 </head>

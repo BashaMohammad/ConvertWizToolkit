@@ -31,12 +31,10 @@
     
     // Force isolation function
     function enforceComponentIsolation() {
-        // Hide ALL sections first
+        // Remove active class from ALL sections first
         COMPONENT_SECTIONS.forEach(sectionId => {
             const section = document.getElementById(sectionId);
             if (section) {
-                section.style.display = 'none';
-                section.style.visibility = 'hidden';
                 section.classList.remove('active');
             }
         });
@@ -44,8 +42,6 @@
         // Show only landing section by default
         const landingSection = document.getElementById('landing-section');
         if (landingSection) {
-            landingSection.style.display = 'block';
-            landingSection.style.visibility = 'visible';
             landingSection.classList.add('active');
         }
         
@@ -57,21 +53,17 @@
         window.showSection = function(targetSectionId) {
             console.log(`🔄 Switching to section: ${targetSectionId}`);
             
-            // Hide all sections
+            // Remove active class from all sections
             COMPONENT_SECTIONS.forEach(sectionId => {
                 const section = document.getElementById(sectionId);
                 if (section) {
-                    section.style.display = 'none';
-                    section.style.visibility = 'hidden';
                     section.classList.remove('active');
                 }
             });
             
-            // Show target section
+            // Add active class to target section
             const targetSection = document.getElementById(targetSectionId);
             if (targetSection) {
-                targetSection.style.display = 'block';
-                targetSection.style.visibility = 'visible';
                 targetSection.classList.add('active');
                 
                 // Scroll to top
@@ -90,6 +82,35 @@
             } else {
                 console.error(`❌ Section ${targetSectionId} not found`);
             }
+        };
+        
+        // Hash-based navigation
+        window.showTool = function(toolId) {
+            const sectionMap = {
+                'jpg-to-png': 'jpg-to-png-section',
+                'currency-converter': 'currency-converter-section',
+                'land-converter': 'land-converter-section',
+                'dp-resizer': 'dp-resizer-section',
+                'word-counter': 'word-counter-section',
+                'distance-converter': 'distance-converter-section',
+                'weight-converter': 'weight-converter-section',
+                'height-converter': 'height-converter-section',
+                'ip-extractor': 'ip-extractor-section',
+                'qr-generator': 'qr-generator-section',
+                'percentage-calculator': 'percentage-calculator-section',
+                'temperature-converter': 'temperature-converter-section',
+                'color-converter': 'color-converter-section',
+                'image-compressor': 'image-compressor-section',
+                'text-to-speech': 'text-to-speech-section',
+                'backlink-checker': 'backlink-checker-section',
+                'meta-tag-generator': 'meta-tag-generator-section',
+                'dpi-checker': 'dpi-checker-section',
+                'url-shortener': 'url-shortener-section',
+                'home': 'landing-section'
+            };
+            
+            const sectionId = sectionMap[toolId] || 'landing-section';
+            window.showSection(sectionId);
         };
     }
     
@@ -149,6 +170,14 @@
     
     // Initialize routing
     function initializeRouting() {
+        // Check for hash first
+        const hash = location.hash.replace('#', '');
+        if (hash) {
+            window.showTool(hash);
+            return;
+        }
+        
+        // Then check path
         const currentPath = window.location.pathname;
         const sectionId = getPathSection(currentPath);
         window.showSection(sectionId);
@@ -189,6 +218,16 @@
                 e.preventDefault();
                 const sectionId = target.getAttribute('data-target');
                 window.showSection(sectionId);
+            }
+        });
+        
+        // Handle hash changes
+        window.addEventListener('hashchange', function() {
+            const hash = location.hash.replace('#', '');
+            if (hash) {
+                window.showTool(hash);
+            } else {
+                window.showSection('landing-section');
             }
         });
         
