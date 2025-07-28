@@ -55,10 +55,10 @@ function setupAuthStateListener() {
         console.log('🔄 Auth state changed:', user ? `User: ${user.email}` : 'No user');
         
         if (user) {
-            console.log('✅ User already authenticated, redirecting to dashboard');
-            // Save auth state and redirect
+            console.log('✅ User already authenticated, redirecting to landing page');
+            // Save auth state and redirect to landing page to show login details
             saveAuthState(user);
-            window.location.href = 'dashboard.html';
+            window.location.href = '/';
         } else {
             console.log('ℹ️ No authenticated user, staying on login page');
         }
@@ -99,9 +99,9 @@ async function signInWithEmailAndPassword(email, password) {
         // Show success message briefly
         showSuccess('Login successful! Redirecting...');
         
-        // Redirect to dashboard
+        // Redirect to landing page to show login details
         setTimeout(() => {
-            window.location.href = 'dashboard.html';
+            window.location.href = '/';
         }, 1000);
         
         return user;
