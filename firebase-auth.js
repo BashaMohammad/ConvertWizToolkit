@@ -118,9 +118,9 @@ function updateUIForAuthenticatedUser(user) {
         const usageInfo = document.getElementById('usage-info');
         if (usageInfo) {
             if (isAdmin) {
-                usageInfo.innerHTML = `<a href="admin.html" class="text-purple-600 hover:text-purple-800 font-medium"><i class="fas fa-crown mr-1"></i>Admin Access</a>`;
+                usageInfo.innerHTML = `<i class="fas fa-crown mr-1 text-yellow-400"></i>Admin`;
             } else {
-                usageInfo.textContent = 'Free Plan - 5 conversions/day';
+                usageInfo.textContent = 'Free Plan';
             }
         }
         
@@ -135,18 +135,24 @@ function updateUIForAuthenticatedUser(user) {
     if (mobileAuthBtn && mobileUserInfo) {
         mobileAuthBtn.innerHTML = `
             <div class="w-full">
-                <div class="flex items-center justify-between w-full bg-gradient-to-r from-green-600 to-blue-600 text-white px-4 py-3 rounded-lg font-medium">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-user"></i>
+                <div class="flex items-center justify-between w-full bg-gradient-to-r from-green-600 to-blue-600 text-white px-4 py-3 rounded-xl font-medium shadow-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
                         <span>${user.displayName || user.email.split('@')[0]}</span>
                     </div>
+                    <i class="fas fa-chevron-down text-xs"></i>
                 </div>
-                <div class="mt-2 space-y-1">
-                    <a href="dashboard.html" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                <div class="mt-3 space-y-1 bg-gray-50 rounded-xl p-2">
+                    <a href="dashboard.html" class="flex items-center w-full text-left px-4 py-3 text-gray-700 hover:bg-white hover:shadow-sm rounded-lg transition-all">
+                        <i class="fas fa-tachometer-alt mr-3 text-purple-500 w-4"></i>Dashboard
                     </a>
-                    <button onclick="signOutUser()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
+                    ${isAdmin ? `<a href="admin.html" class="flex items-center w-full text-left px-4 py-3 text-gray-700 hover:bg-white hover:shadow-sm rounded-lg transition-all">
+                        <i class="fas fa-crown mr-3 text-yellow-500 w-4"></i>Admin Access
+                    </a>` : ''}
+                    <button onclick="signOutUser()" class="flex items-center w-full text-left px-4 py-3 text-red-600 hover:bg-white hover:shadow-sm rounded-lg transition-all">
+                        <i class="fas fa-sign-out-alt mr-3 text-red-500 w-4"></i>Sign Out
                     </button>
                 </div>
             </div>
@@ -172,6 +178,7 @@ function updateUIForGuestUser() {
             <i class="fas fa-sign-in-alt"></i>
             <span>Login</span>
         `;
+        authBtn.className = 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-2.5 rounded-xl transition-all flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl';
         authBtn.onclick = () => window.location.href = '/auth.html';
     }
     
@@ -188,6 +195,7 @@ function updateUIForGuestUser() {
             <i class="fas fa-sign-in-alt"></i>
             <span>Login</span>
         `;
+        mobileAuthBtn.className = 'w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center space-x-2 font-medium shadow-lg';
         mobileAuthBtn.onclick = () => window.location.href = '/auth.html';
     }
     

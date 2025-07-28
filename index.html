@@ -262,78 +262,101 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
     <!-- Navigation Header -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-lg">
-        <div class="container mx-auto px-4 py-4">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-purple-100">
+        <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <h1 data-target="landing-section" class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer">
-                    ConvertWiz ⚡
-                </h1>
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <h1 data-target="landing-section" class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform">
+                        ConvertWiz ⚡
+                    </h1>
+                </div>
                 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <nav class="flex space-x-6">
-                        <button data-target="landing-section" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Home</button>
-                        <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
-                        <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                            <i class="fas fa-blog mr-1"></i>Blog
+                <div class="hidden md:flex items-center space-x-8">
+                    <!-- Navigation Links -->
+                    <nav class="flex items-center space-x-6">
+                        <button data-target="landing-section" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50">
+                            Home
+                        </button>
+                        <a href="#tools" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50">
+                            Tools
                         </a>
-                        <a href="subscribe.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                            <i class="fas fa-crown mr-1"></i>Pricing
+                        <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
+                            <i class="fas fa-blog mr-2 text-sm"></i>Blog
                         </a>
-                        <a href="mailto:support@convertwiz.in" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                            <i class="fas fa-envelope mr-1"></i>Contact
+                        <a href="subscribe.html" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
+                            <i class="fas fa-crown mr-2 text-sm text-yellow-500"></i>Pricing
                         </a>
-                        <!-- Dashboard and Admin buttons removed - now available in user dropdown -->
+                        <a href="mailto:support@convertwiz.in" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
+                            <i class="fas fa-envelope mr-2 text-sm"></i>Contact
+                        </a>
                     </nav>
                     
                     <!-- Authentication Section -->
-                    <div id="auth-section" class="flex items-center space-x-4">
-                        <div id="user-info" class="hidden text-gray-700 text-sm">
-                            <div id="user-greeting">Welcome!</div>
-                            <div id="usage-info" class="text-xs text-gray-500 mt-1">Loading usage...</div>
+                    <div id="auth-section" class="relative flex items-center">
+                        <!-- Usage Display (when authenticated) -->
+                        <div id="user-info" class="hidden mr-4">
+                            <div id="usage-info" class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                                Loading usage...
+                            </div>
                         </div>
-                        <button id="auth-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-lg transition-all flex items-center space-x-2 font-medium min-h-[44px]">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Login</span>
-                        </button>
+                        
+                        <!-- Auth Button / User Dropdown -->
+                        <div class="relative">
+                            <button id="auth-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-2.5 rounded-xl transition-all flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Login</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-purple-600 p-3 -mr-3 min-h-[48px] min-w-[48px] flex items-center justify-center">
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-purple-600 p-2 rounded-lg hover:bg-purple-50 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
             
             <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-200">
-                <div class="flex flex-col space-y-3 pt-4">
-                    <button data-target="landing-section" class="nav-link text-gray-700 hover:text-purple-600 transition-colors text-left">Home</button>
-                    <a href="#tools" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">Tools</a>
-                    <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                        <i class="fas fa-blog mr-1"></i>Blog
-                    </a>
-                    <a href="subscribe.html" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                        <i class="fas fa-crown mr-1"></i>Pricing
-                    </a>
-                    <a href="mailto:support@convertwiz.in" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                        <i class="fas fa-envelope mr-1"></i>Contact
-                    </a>
-                    <a href="#support" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">
-                        <i class="fas fa-life-ring mr-1"></i>Support
-                    </a>
-                    <!-- Mobile Dashboard and Admin buttons removed - now available in user dropdown -->
-                    
-                    <!-- Mobile Authentication -->
-                    <div id="mobile-auth-section" class="pt-3 border-t border-gray-200">
-                        <div id="mobile-user-info" class="hidden text-gray-700 text-sm mb-2">
-                            <div id="mobile-user-greeting">Welcome!</div>
-                            <div id="mobile-usage-info" class="text-xs text-gray-500 mt-1">Loading usage...</div>
-                        </div>
-                        <button id="mobile-auth-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-center space-x-2 font-medium min-h-[48px]">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Login</span>
+            <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200 shadow-lg">
+                <div class="container mx-auto px-4 py-4">
+                    <div class="flex flex-col space-y-1">
+                        <!-- Navigation Links -->
+                        <button data-target="landing-section" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors text-left px-4 py-3 rounded-lg font-medium">
+                            <i class="fas fa-home mr-3 text-sm w-4"></i>Home
                         </button>
+                        <a href="#tools" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-tools mr-3 text-sm w-4"></i>Tools
+                        </a>
+                        <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-blog mr-3 text-sm w-4"></i>Blog
+                        </a>
+                        <a href="subscribe.html" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-crown mr-3 text-sm w-4 text-yellow-500"></i>Pricing
+                        </a>
+                        <a href="mailto:support@convertwiz.in" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-envelope mr-3 text-sm w-4"></i>Contact
+                        </a>
+                        
+                        <!-- Mobile Authentication -->
+                        <div id="mobile-auth-section" class="pt-4 border-t border-gray-200 mt-2">
+                            <!-- Mobile Usage Info (when authenticated) -->
+                            <div id="mobile-user-info" class="hidden mb-3 px-4">
+                                <div id="mobile-user-greeting" class="text-gray-700 font-medium mb-1">Welcome!</div>
+                                <div id="mobile-usage-info" class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">
+                                    Loading usage...
+                                </div>
+                            </div>
+                            
+                            <!-- Mobile Auth Button -->
+                            <div class="px-4">
+                                <button id="mobile-auth-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center space-x-2 font-medium shadow-lg">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <span>Login</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
