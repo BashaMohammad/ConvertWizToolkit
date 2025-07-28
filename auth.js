@@ -85,6 +85,9 @@ async function initializeAuth() {
                 btn.addEventListener('click', () => {
                     showLoading();
                     const provider = new firebase.auth.GoogleAuthProvider();
+                    // Mark that we're actively logging in
+                    sessionStorage.setItem('convertWizLoggingIn', 'true');
+                    
                     auth.signInWithPopup(provider)
                         .then((result) => {
                             console.log('✅ Google authentication successful');
@@ -114,6 +117,9 @@ async function initializeAuth() {
                 const email = document.getElementById('signin-email').value;
                 const password = document.getElementById('signin-password').value;
                 
+                // Mark that we're actively logging in
+                sessionStorage.setItem('convertWizLoggingIn', 'true');
+                
                 auth.signInWithEmailAndPassword(email, password)
                     .then((userCredential) => {
                         console.log('✅ Email sign-in successful');
@@ -142,6 +148,9 @@ async function initializeAuth() {
                 const name = document.getElementById('signup-name').value;
                 const email = document.getElementById('signup-email').value;
                 const password = document.getElementById('signup-password').value;
+                
+                // Mark that we're actively logging in
+                sessionStorage.setItem('convertWizLoggingIn', 'true');
                 
                 auth.createUserWithEmailAndPassword(email, password)
                     .then((userCredential) => {
@@ -197,11 +206,23 @@ async function initializeAuth() {
         // Check if user is already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
-                console.log('User already logged in:', user.email);
-                showToast('You are already signed in', 'info');
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 1500);
+                // Only redirect if this is a fresh login, not a persisted session
+                const isLoggingIn = sessionStorage.getItem('convertWizLoggingIn');
+                
+                if (isLoggingIn) {
+                    console.log('✅ Login successful, redirecting to landing page');
+                    sessionStorage.removeItem('convertWizLoggingIn');
+                    showToast('Login successful!', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    console.log('ℹ️ User already authenticated from previous session');
+                    showToast('You are already signed in. Redirecting...', 'info');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                }
             }
         });
 

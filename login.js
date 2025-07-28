@@ -55,12 +55,23 @@ function setupAuthStateListener() {
         console.log('🔄 Auth state changed:', user ? `User: ${user.email}` : 'No user');
         
         if (user) {
-            console.log('✅ User already authenticated, redirecting to landing page');
-            // Save auth state and redirect to landing page to show login details
-            saveAuthState(user);
-            window.location.href = '/';
+            // Only redirect if this is a fresh login, not a persisted session
+            // Check if we're in the middle of a login process
+            const isLoggingIn = sessionStorage.getItem('convertWizLoggingIn');
+            
+            if (isLoggingIn) {
+                console.log('✅ Login successful, redirecting to landing page');
+                sessionStorage.removeItem('convertWizLoggingIn');
+                saveAuthState(user);
+                window.location.href = '/';
+            } else {
+                console.log('ℹ️ User already authenticated from previous session, staying on auth page');
+                // User can choose to continue to landing page or log out and use different account
+                showAuthenticatedMessage(user);
+            }
         } else {
-            console.log('ℹ️ No authenticated user, staying on login page');
+            console.log('ℹ️ No authenticated user, showing login form');
+            hideAuthenticatedMessage();
         }
     });
 }
@@ -73,6 +84,9 @@ async function signInWithEmailAndPassword(email, password) {
         if (!auth) {
             throw new Error('Firebase auth not initialized');
         }
+        
+        // Mark that we're actively logging in
+        sessionStorage.setItem('convertWizLoggingIn', 'true');
         
         // Clear any previous error messages
         clearError();
@@ -327,6 +341,62 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Helper functions for authenticated state display
+function showAuthenticatedMessage(user) {
+    // Show a message that user is already logged in with option to continue or logout
+    const authForm = document.querySelector('.auth-container');
+    if (authForm) {
+        const existingMessage = document.getElementById('already-authenticated-message');
+        if (!existingMessage) {
+            const messageDiv = document.createElement('div');
+            messageDiv.id = 'already-authenticated-message';
+            messageDiv.className = 'bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6';
+            messageDiv.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-blue-500 mr-3"></i>
+                        <div>
+                            <p class="text-blue-800 font-medium">Already signed in as ${user.displayName || user.email}</p>
+                            <p class="text-blue-600 text-sm">You can continue to ConvertWiz or sign in with a different account.</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="window.location.href='/'" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+                            Continue to ConvertWiz
+                        </button>
+                        <button onclick="signOutAndStay()" class="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-600">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            `;
+            authForm.insertBefore(messageDiv, authForm.firstChild);
+        }
+    }
+}
+
+function hideAuthenticatedMessage() {
+    const existingMessage = document.getElementById('already-authenticated-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+}
+
+// Sign out but stay on auth page
+async function signOutAndStay() {
+    try {
+        if (auth) {
+            await auth.signOut();
+            console.log('✅ User signed out, staying on auth page');
+            hideAuthenticatedMessage();
+        }
+    } catch (error) {
+        console.error('❌ Sign out failed:', error);
+        showError('Failed to sign out. Please try again.');
+    }
+}
+
 // Export functions for external use
 window.signInWithEmailAndPassword = signInWithEmailAndPassword;
 window.saveAuthState = saveAuthState;
+window.signOutAndStay = signOutAndStay;

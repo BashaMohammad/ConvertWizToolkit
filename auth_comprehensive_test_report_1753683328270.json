@@ -1,0 +1,142 @@
+{
+  "summary": {
+    "total": 21,
+    "passed": 20,
+    "failed": 1,
+    "successRate": "95.2%",
+    "timestamp": "2025-07-28T06:15:28.265Z"
+  },
+  "results": [
+    {
+      "name": "Landing Page Load",
+      "passed": true,
+      "details": "Status: 200",
+      "timestamp": "2025-07-28T06:15:28.226Z"
+    },
+    {
+      "name": "Auth Button Present",
+      "passed": true,
+      "details": "Desktop auth button found",
+      "timestamp": "2025-07-28T06:15:28.227Z"
+    },
+    {
+      "name": "Mobile Auth Present",
+      "passed": true,
+      "details": "Mobile auth button found",
+      "timestamp": "2025-07-28T06:15:28.227Z"
+    },
+    {
+      "name": "User Info Container",
+      "passed": true,
+      "details": "User info container found",
+      "timestamp": "2025-07-28T06:15:28.228Z"
+    },
+    {
+      "name": "Auth Page Load",
+      "passed": true,
+      "details": "Status: 200",
+      "timestamp": "2025-07-28T06:15:28.239Z"
+    },
+    {
+      "name": "Login Form Present",
+      "passed": true,
+      "details": "Sign-in form found",
+      "timestamp": "2025-07-28T06:15:28.239Z"
+    },
+    {
+      "name": "Signup Form Present",
+      "passed": true,
+      "details": "Sign-up form found",
+      "timestamp": "2025-07-28T06:15:28.239Z"
+    },
+    {
+      "name": "Google Auth Present",
+      "passed": true,
+      "details": "Google authentication found",
+      "timestamp": "2025-07-28T06:15:28.239Z"
+    },
+    {
+      "name": "Firebase Scripts Loaded",
+      "passed": true,
+      "details": "Firebase configuration loaded",
+      "timestamp": "2025-07-28T06:15:28.240Z"
+    },
+    {
+      "name": "Auth Page Logged In State",
+      "passed": true,
+      "details": "Would show already authenticated message",
+      "timestamp": "2025-07-28T06:15:28.241Z"
+    },
+    {
+      "name": "API Health Check",
+      "passed": true,
+      "details": "Firebase: false, Express: true",
+      "timestamp": "2025-07-28T06:15:28.245Z"
+    },
+    {
+      "name": "Firebase Config API",
+      "passed": true,
+      "details": "Project: convertwiz",
+      "timestamp": "2025-07-28T06:15:28.248Z"
+    },
+    {
+      "name": "SignOut Function Available",
+      "passed": false,
+      "details": "Global signOutUser function found",
+      "timestamp": "2025-07-28T06:15:28.254Z"
+    },
+    {
+      "name": "Firebase Auth Script",
+      "passed": true,
+      "details": "Firebase auth script loaded",
+      "timestamp": "2025-07-28T06:15:28.255Z"
+    },
+    {
+      "name": "Auth Persistence Logic",
+      "passed": true,
+      "details": "Session storage and localStorage handling implemented",
+      "timestamp": "2025-07-28T06:15:28.255Z"
+    },
+    {
+      "name": "Desktop Navigation",
+      "passed": true,
+      "details": "Desktop navigation structure found",
+      "timestamp": "2025-07-28T06:15:28.260Z"
+    },
+    {
+      "name": "Mobile Menu",
+      "passed": true,
+      "details": "Mobile menu structure found",
+      "timestamp": "2025-07-28T06:15:28.260Z"
+    },
+    {
+      "name": "Consistent Styling",
+      "passed": true,
+      "details": "Unified design elements found",
+      "timestamp": "2025-07-28T06:15:28.260Z"
+    },
+    {
+      "name": "Mobile Auth Section",
+      "passed": true,
+      "details": "Mobile auth section found",
+      "timestamp": "2025-07-28T06:15:28.265Z"
+    },
+    {
+      "name": "Mobile User Info",
+      "passed": true,
+      "details": "Mobile user info container found",
+      "timestamp": "2025-07-28T06:15:28.265Z"
+    },
+    {
+      "name": "Touch-Friendly UI",
+      "passed": true,
+      "details": "Touch-friendly button sizes implemented",
+      "timestamp": "2025-07-28T06:15:28.265Z"
+    }
+  ],
+  "recommendations": [
+    "Address failed test cases to improve authentication reliability",
+    "Consider implementing automated browser testing with Playwright or Puppeteer",
+    "Add monitoring for authentication success rates in production"
+  ]
+}
