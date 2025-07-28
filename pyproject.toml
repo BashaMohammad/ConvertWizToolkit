@@ -4,8 +4,10 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
+    "beautifulsoup4>=4.13.4",
     "flask>=3.1.1",
     "google-analytics-admin>=0.24.1",
+    "lxml>=6.0.0",
     "markdown>=3.8.2",
     "requests>=2.32.4",
 ]

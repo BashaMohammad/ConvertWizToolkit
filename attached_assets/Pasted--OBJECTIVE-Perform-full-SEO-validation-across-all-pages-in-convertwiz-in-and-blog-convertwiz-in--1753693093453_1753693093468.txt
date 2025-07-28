@@ -1,0 +1,74 @@
+# OBJECTIVE:
+Perform full SEO validation across all pages in convertwiz.in and blog.convertwiz.in.
+Replit must NOT change the UI, gradients, or layouts unless explicitly asked.
+
+---
+
+# 1. VALIDATION CHECKS
+Replit must validate the following for every page (tools + blogs):
+
+1. **Meta Tags**
+   - Each page has a unique <title> (50–60 characters).
+   - Each page has a <meta name="description"> (120–150 characters).
+   - A <link rel="canonical" ...> is present.
+
+2. **Content Checks**
+   - Each tool page has a 150–200 word SEO content block (<section class="seo-content">).
+   - Each tool page and blog includes at least 1–2 FAQs.
+   - Blogs are 400–600 words long and include 2+ images with descriptive alt attributes.
+
+3. **Alt Attributes**
+   - Every <img> tag includes a non-empty alt attribute.
+   - Lazy loading enabled: <img loading="lazy" ...>.
+
+4. **Internal Links**
+   - All internal links (tools ↔ blogs) return HTTP 200.
+   - Blog index correctly links to all 7 blogs.
+
+5. **Performance**
+   - Page load time is under 2 seconds (use Lighthouse or Google PageSpeed check).
+   - Ensure no heavy scripts or blocking elements were introduced.
+
+6. **Mobile Responsiveness**
+   - All pages remain fully responsive.
+   - No overlapping content or broken layouts.
+
+7. **Schema Validation**
+   - Only 1 FAQPage schema per page.
+   - No duplicate structured data warnings.
+
+---
+
+# 2. REPORT GENERATION
+After running all checks, Replit must:
+- Produce a **PASS/FAIL report** in the console like this:
+
+SEO Validation Report:
+- Meta Tags: PASS
+- Alt Attributes: PASS
+- Internal Links: PASS
+- Performance (Load < 2s): PASS
+- Mobile Responsive: PASS
+- Schema: PASS
+
+---
+
+# 3. FAILURE HANDLING
+- If any test fails:
+  - Replit must automatically fix the specific failing component (e.g., missing alt tags, duplicate FAQ schema).
+  - Re-run the tests until **100% PASS**.
+  - Provide a final PASS report.
+
+---
+
+# 4. RULES
+- DO NOT modify any UI styles, gradients, or layouts.
+- Only adjust content/SEO elements (meta, alt, internal links, content blocks).
+- If a fix would affect UI, prompt the user before applying.
+
+---
+
+# 5. FINAL OUTPUT
+- Generate a JSON log of test results and highlight any corrections made.
+- Once all tests are PASS, confirm:
+  "SEO Validation Complete: Site is AdSense-ready."
