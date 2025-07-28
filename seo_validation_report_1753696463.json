@@ -1,0 +1,49 @@
+{
+  "timestamp": "2025-07-28T09:54:20.288177",
+  "meta_tags": {
+    "status": "FAIL",
+    "errors": [
+      "/: Meta description missing or not 120-150 chars",
+      "/jpg-to-png: Meta description missing or not 120-150 chars",
+      "/currency: Meta description missing or not 120-150 chars",
+      "/word-counter: Meta description missing or not 120-150 chars",
+      "/image-compressor: Meta description missing or not 120-150 chars",
+      "/qr-generator: Meta description missing or not 120-150 chars",
+      "/text-to-speech: Meta description missing or not 120-150 chars",
+      "/color-converter: Meta description missing or not 120-150 chars",
+      "/percentage-calculator: Meta description missing or not 120-150 chars",
+      "/temperature-converter: Meta description missing or not 120-150 chars",
+      "/distance-converter: Meta description missing or not 120-150 chars",
+      "/weight-converter: Meta description missing or not 120-150 chars",
+      "/height-converter: Meta description missing or not 120-150 chars",
+      "/ip-extractor: Meta description missing or not 120-150 chars",
+      "/backlink-checker: Meta description missing or not 120-150 chars",
+      "/meta-tag-generator: Meta description missing or not 120-150 chars"
+    ]
+  },
+  "content_checks": {
+    "status": "PASS",
+    "errors": []
+  },
+  "alt_attributes": {
+    "status": "PASS",
+    "errors": []
+  },
+  "internal_links": {
+    "status": "PASS",
+    "errors": []
+  },
+  "performance": {
+    "status": "PASS",
+    "errors": []
+  },
+  "mobile_responsive": {
+    "status": "PASS",
+    "errors": []
+  },
+  "schema_validation": {
+    "status": "PASS",
+    "errors": []
+  },
+  "fixes_applied": []
+}
