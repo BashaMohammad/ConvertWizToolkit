@@ -74,22 +74,101 @@
 }
 
 /* Banner Ad Consistency - Desktop and Mobile */
+.adsense-banner {
+    position: fixed;
+    z-index: 10;
+    display: block !important;
+    visibility: visible !important;
+}
 
 /* Desktop Banner Positioning */
+.adsense-banner-right {
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+}
+
+.adsense-banner-left {
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+}
 
 /* Mobile Banner Styling */
 @media (max-width: 1024px) {
-
+    .adsense-banner {
+        position: relative !important;
+        width: 100% !important;
+        height: 150px !important;
+        max-height: 150px !important;
+        margin: 20px 0 !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+    }
+    
+    .adsense-banner-right,
+    .adsense-banner-left {
+        position: relative !important;
+        width: 100% !important;
+        height: 150px !important;
+        max-height: 150px !important;
+        margin: 20px auto !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+    }
+    
     /* Mobile banner placement below tool content */
-    .tool-section 
+    .tool-section .adsense-banner {
+        order: 999;
+        margin-top: 30px;
+    }
 }
 
 /* Development Ad Placeholders */
+.ad-placeholder {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    border: 2px dashed #9ca3af;
+    border-radius: 8px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 150px;
+    width: 100%;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.ad-placeholder p {
+    margin: 5px 0;
+    line-height: 1.2;
+}
 
 /* Ensure AdSense placeholders are visible */
+.adsense-placeholder,
+.adsbygoogle {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
 
 /* Component page specific banner styling */
-.component-page 
+.component-page .adsense-banner {
+    display: block !important;
+    visibility: visible !important;
+}
 
 .region-content.collapsed {
     max-height: 0 !important;
@@ -459,21 +538,72 @@ html {
 }
 
 /* AdSense Banner Improvements - Update 3 */
+.adsense-banner {
+    position: relative;
+    z-index: 10;
+    display: block !important;
+    visibility: visible !important;
+}
 
 /* Landing page banner - single vertical */
+.adsense-banner.landing-page {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    z-index: 30;
+    display: block !important;
+}
 
 /* Component page vertical banners only */
+.adsense-banner.component-page {
+    /* Only show vertical banners on component pages */
+    display: none !important;
+}
+
+.adsense-banner.component-page[data-ad-type="vertical-right"],
+.adsense-banner.component-page[data-ad-type="vertical-left"] {
+    display: block !important;
+}
 
 /* Mobile AdSense adjustments */
 @media (max-width: 768px) {
-
-    /* Hide all horizontal banners on mobile */
-
-    /* Ensure ad placeholders are visible in development */
+    .adsense-banner.landing-page {
+        display: none !important;
+    }
     
+    /* Hide all horizontal banners on mobile */
+    .adsense-banner.component-page.horizontal {
+        display: none !important;
+    }
+    
+    .adsense-banner-right {
+        display: none !important;
+    }
+    
+    /* Ensure ad placeholders are visible in development */
+    .ad-placeholder {
+        display: block !important;
+        visibility: visible !important;
+        min-height: 100px;
+        background: #f3f4f6;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.4;
+    }
 }
 
 /* Lazy loading improvements */
+.adsense-lazy {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.adsense-lazy.loaded {
+    opacity: 1;
+}
 
 /* Loading animation */
 .loading {
@@ -629,38 +759,133 @@ input[type="file"] + label:hover {
 
 /* === AdSense Integration === */
 /* Base ad visibility */
+.adsbygoogle {
+    display: block !important;
+}
+
+.ad-placeholder {
+    display: none;
+}
 
 /* Development mode - show placeholders, hide ads */
-body[data-env="development"] 
+body[data-env="development"] .adsbygoogle {
+    display: none !important;
+}
 
-body[data-env="development"] 
+body[data-env="development"] .ad-placeholder {
+    display: none !important;
+}
 
 /* Only show vertical ad placeholders in development */
-body[data-env="development"] 
+body[data-env="development"] .adsense-banner[data-ad-type="vertical-right"] .ad-placeholder,
+body[data-env="development"] .adsense-banner[data-ad-type="vertical-left"] .ad-placeholder {
+    display: block !important;
+    border: 2px dashed #ccc;
+    background: #f9f9f9;
+    text-align: center;
+    padding: 1rem;
+    color: #666;
+    font-size: 0.875rem;
+    min-height: 400px;
+    width: 160px;
+}
 
 /* Mobile ad placeholder visibility - hide horizontal, show only sidebar verticals */
 @media (max-width: 768px) {
-    body[data-env="development"] 
+    body[data-env="development"] .ad-placeholder {
+        display: none !important;
+    }
     
     /* Only vertical placeholders for desktop view */
-    body[data-env="development"] 
+    body[data-env="development"] .adsense-banner[data-ad-type="vertical-right"] .ad-placeholder,
+    body[data-env="development"] .adsense-banner[data-ad-type="vertical-left"] .ad-placeholder {
+        display: none !important; /* Hide even vertical ads on mobile */
+    }
 }
 
 /* Clean responsive ad styling */
+.adsbygoogle {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
 
 /* === Responsive Sidebar Ads === */
+.ads-container {
+    position: relative;
+    z-index: 10;
+}
 
 /* Landing Page - Right Sidebar Ad */
+.sidebar-ad-right {
+    position: fixed;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+    z-index: 1000;
+    pointer-events: none;
+}
 
+.sidebar-ad-right .adsbygoogle,
+.sidebar-ad-right .ad-placeholder {
+    pointer-events: auto;
+    width: 160px;
+    height: 600px;
+}
+
+/* Tool Pages - Left Sidebar Ad */
+.sidebar-ad-left {
+    position: fixed;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sidebar-ad-left .adsbygoogle,
+.sidebar-ad-left .ad-placeholder {
+    pointer-events: auto;
+    width: 160px;
+    height: 600px;
+}
+
+/* Hide sidebar ads on tablets and mobile but ensure placeholders are visible */
+@media (max-width: 1023px) {
+    .sidebar-ad-right,
+    .sidebar-ad-left {
+        display: none !important;
+    }
+    
     /* Ensure ad placeholders are visible on mobile in development */
-    body[data-env="development"] 
+    body[data-env="development"] .adsense-placeholder {
+        display: none !important;
+    }
     
     /* Only show vertical sidebar placeholders */
-    body[data-env="development"] 
+    body[data-env="development"] .adsense-banner[data-ad-type="vertical-right"] .adsense-placeholder,
+    body[data-env="development"] .adsense-banner[data-ad-type="vertical-left"] .adsense-placeholder {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 400px;
+        width: 160px;
+        background: #f0f0f0;
+        border: 2px dashed #ccc;
+        text-align: center;
+        padding: 20px;
+        margin: 10px 0;
+    }
 }
 
 /* Premium users - hide all ads */
-body[data-user-plan="standard"] 
+body[data-user-plan="standard"] .ads-container,
+body[data-user-plan="premium"] .ads-container {
+    display: none !important;
+}
 
 /* Ensure main content doesn't overlap with sidebar ads on desktop */
 @media (min-width: 1024px) {
@@ -683,20 +908,61 @@ body[data-user-plan="standard"]
    ===================================================== */
 
 /* Base AdSense banner styling */
+.adsense-banner {
+    position: fixed;
+    z-index: 1000;
+    width: 160px;
+    height: 600px;
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
 
 /* Vertical Left AdSense Banner for Landing Page */
+.adsense-banner-left {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
 /* Vertical Right AdSense Banner for Component Pages */
+.adsense-banner-right {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
 /* AdSense banner hover effects */
+.adsense-banner:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-50%) scale(1.02);
+}
 
 /* AdSense banner responsive adjustments */
 @media (max-width: 1400px) {
-
+    .adsense-banner {
+        width: 140px;
+        height: 500px;
+    }
+    
+    .adsense-banner-left {
+        left: 10px;
+    }
+    
+    .adsense-banner-right {
+        right: 10px;
+    }
 }
 
 @media (max-width: 1200px) {
-
+    .adsense-banner {
+        display: none; /* Hide vertical banners on smaller screens */
+    }
+    
     /* Remove padding adjustments when banners are hidden */
     .tool-section .container,
     main.container,
@@ -707,44 +973,165 @@ body[data-user-plan="standard"]
 }
 
 /* Landing page specific banner positioning */
-.landing-page 
+.landing-page .adsense-banner-left {
+    top: 60%;
+    transform: translateY(-50%);
+}
 
 /* Component pages banner positioning */
-.component-page 
+.component-page .adsense-banner-right {
+    top: 55%;
+    transform: translateY(-50%);
+}
 
 /* Ensure banners don't interfere with navigation */
+.adsense-banner {
+    margin-top: 80px; /* Account for fixed header */
+}
 
 /* AdSense placeholder styling for development */
+.adsense-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
 
 /* Smooth transitions for banner visibility */
+.adsense-banner.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) translateX(-100%);
+}
+
+.adsense-banner.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-50%) translateX(0);
+}
 
 /* =====================================================
    QR Generator AdSense Banner Positioning
    ===================================================== */
 
 /* QR Generator specific left banner positioning */
+.adsense-banner-left.qr-generator {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
 
 /* QR Generator specific right banner positioning */
+.adsense-banner-right.qr-generator {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px;
+    height: 600px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
 
 /* QR Generator bottom banner positioning */
+.adsense-banner-bottom {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 100px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
 
 /* QR Generator banner hover effects */
+.adsense-banner-left.qr-generator:hover,
+.adsense-banner-right.qr-generator:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-50%) scale(1.02);
+}
+
+.adsense-banner-bottom:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateX(-50%) scale(1.02);
+}
 
 /* QR Generator responsive banner adjustments */
 @media (max-width: 1400px) {
-
+    .adsense-banner-left.qr-generator,
+    .adsense-banner-right.qr-generator {
+        width: 140px;
+        height: 500px;
+    }
+    
+    .adsense-banner-left.qr-generator {
+        left: 10px;
+    }
+    
+    .adsense-banner-right.qr-generator {
+        right: 10px;
+    }
+    
+    .adsense-banner-bottom {
+        width: 300px;
+        height: 90px;
+    }
 }
 
 @media (max-width: 1200px) {
-
+    .adsense-banner-left.qr-generator,
+    .adsense-banner-right.qr-generator {
+        display: none; /* Hide vertical banners on smaller screens */
+    }
+    
+    .adsense-banner-bottom {
+        width: 280px;
+        height: 80px;
+        bottom: 5%;
+    }
 }
 
 @media (max-width: 768px) {
-    
+    .adsense-banner-bottom {
+        width: 250px;
+        height: 70px;
+        bottom: 3%;
+    }
 }
 
 @media (max-width: 480px) {
-    
+    .adsense-banner-bottom {
+        width: 200px;
+        height: 60px;
+        bottom: 2%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 /* =====================================================
@@ -833,13 +1220,20 @@ body[data-user-plan="standard"]
 
 /* Hide vertical banners on mobile devices to prevent screen coverage */
 @media (max-width: 1024px) {
-    
+    .adsense-banner-right.component-page,
+    .adsense-banner-left.component-page {
+        display: none !important;
+    }
 }
 
 /* Mobile-only banner adjustments for component pages */
 @media (max-width: 768px) {
     /* Hide all vertical AdSense banners on mobile */
-
+    .adsense-banner-right,
+    .adsense-banner-left {
+        display: none !important;
+    }
+    
     /* Ensure component pages have full width on mobile */
     .tool-section .container {
         max-width: 100% !important;
