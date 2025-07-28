@@ -95,15 +95,36 @@ function getPageTitle(sectionId) {
   return sectionTitles[sectionId] || 'ConvertWiz - Conversion Tools';
 }
 
-// Update page layout based on current section (AdSense banners removed)
+// Update AdSense banner positioning based on current section
 function updateAdSenseBannerPositioning(sectionId) {
+  const leftBanner = document.querySelector('.adsense-banner-left');
+  const rightBanner = document.querySelector('.adsense-banner-right');
+  
   // Add component-page class to body for CSS targeting
   document.body.classList.remove('landing-page', 'component-page');
   
   if (sectionId === 'landing-section') {
     document.body.classList.add('landing-page');
+    // Show left banner, hide right banner on landing
+    if (leftBanner) {
+      leftBanner.classList.remove('hidden');
+      leftBanner.classList.add('visible');
+    }
+    if (rightBanner) {
+      rightBanner.classList.add('hidden');
+      rightBanner.classList.remove('visible');
+    }
   } else {
     document.body.classList.add('component-page');
+    // Show right banner, hide left banner on component pages
+    if (leftBanner) {
+      leftBanner.classList.add('hidden');
+      leftBanner.classList.remove('visible');
+    }
+    if (rightBanner) {
+      rightBanner.classList.remove('hidden');
+      rightBanner.classList.add('visible');
+    }
   }
 }
 
