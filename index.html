@@ -6,8 +6,8 @@
     
     <!-- ✅ ConvertWiz SEO Meta Tags -->
     <title>ConvertWiz - Free Online Conversion Tools</title>
-    <meta name="description" content="Professional online conversion tools - Convert JPG to PNG, resize Instagram DPs, convert currencies & units, compress images, shorten URLs, text-to-speech & ..." />
-    <meta name="keywords" content="JPG to PNG converter, Instagram profile picture resizer, currency converter, image compressor, URL shortener, text to speech, QR code generator, meta tag generator, backlink checker, DPI checker, percentage calculator, color converter, temperature converter, free online tools, SEO tools, productivity tools" />
+    <meta name="description" content="ConvertWiz - Free online conversion tools including JPG to PNG, image compression, currency converter, unit converters, QR generator, and 18+ professional tools. No registration required, unlimited conversions." />
+    <meta name="keywords" content="free online converter, JPG to PNG converter, image compressor, currency converter, unit converter, QR code generator, text to speech, color converter, percentage calculator, temperature converter, distance converter, weight converter, height converter, IP extractor, image resizer, file conversion tools, no registration converter, bulk image converter, professional conversion tools, unlimited free conversions" />
     <meta name="robots" content="index, follow" />
     <meta property="og:title" content="ConvertWiz - Smart Online Converters" />
     <meta property="og:description" content="18+ professional conversion tools including image editing, currency conversion, URL shortening, SEO utilities, and more. Privacy-focused with no file uploads to servers." />
@@ -44,10 +44,20 @@
         "priceCurrency": "USD"
       },
       "featureList": [
-        "JPG to PNG Image Converter",
-        "Instagram Profile Picture Resizer", 
-        "Image Compressor with Quality Control",
-        "Currency Converter with Real-time Rates",
+        "JPG to PNG Image Converter - Bulk processing with transparency support",
+        "Instagram Profile Picture Resizer - Perfect 320x320px sizing", 
+        "Image Compressor with Quality Control - Reduce file sizes up to 90%",
+        "Currency Converter with Real-time Rates - 150+ global currencies",
+        "Unit Converters - Distance, weight, height, temperature conversion",
+        "QR Code Generator - Create QR codes for URLs, text, contact info",
+        "Text-to-Speech Converter - Natural voice synthesis",
+        "Color Converter - HEX, RGB, HSL format conversion",
+        "Percentage Calculator - Tax, discount, tip calculations",
+        "IP Address Extractor - Extract IPs from logs and text",
+        "Word Counter - Reading time, character analysis",
+        "URL Shortener - Create short links with analytics",
+        "Image Tools - Professional editing without software",
+        "SEO Tools - Meta tag generator, backlink checker"
         "Global Land Unit Converter",
         "Distance Converter",
         "Weight Converter", 
@@ -246,18 +256,7 @@
             }
         }
         
-        // Fix 1: Force logout on browser reopen (disable cache login)
-        window.addEventListener('load', function() {
-            // Clear session storage on page load to force logout
-            if (performance.navigation.type === performance.navigation.TYPE_RELOAD || 
-                performance.navigation.type === performance.navigation.TYPE_NAVIGATE) {
-                sessionStorage.clear();
-                // Also clear Firebase auth session
-                if (typeof auth !== 'undefined' && auth.currentUser) {
-                    auth.signOut().catch(console.error);
-                }
-            }
-        });
+        // ConvertWiz - All tools now freely accessible without authentication
     </script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
@@ -282,7 +281,7 @@
                         <a href="#tools" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50">
                             Tools
                         </a>
-                        <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
+                        <a href="seo-blog.html" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
                             <i class="fas fa-blog mr-2 text-sm"></i>Blog
                         </a>
                         <a href="subscribe.html" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
@@ -293,22 +292,11 @@
                         </a>
                     </nav>
                     
-                    <!-- Authentication Section -->
-                    <div id="auth-section" class="relative flex items-center">
-                        <!-- Usage Display (when authenticated) -->
-                        <div id="user-info" class="hidden mr-4">
-                            <div id="usage-info" class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                                Loading usage...
-                            </div>
-                        </div>
-                        
-                        <!-- Auth Button / User Dropdown -->
-                        <div class="relative">
-                            <button id="auth-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-2.5 rounded-xl transition-all flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl">
-                                <i class="fas fa-sign-in-alt"></i>
-                                <span>Login</span>
-                            </button>
-                        </div>
+                    <!-- Free Tools Badge -->
+                    <div id="free-tools-section" class="flex items-center">
+                        <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+                            <i class="fas fa-check-circle mr-2"></i>All Tools Free
+                        </span>
                     </div>
                 </div>
                 
@@ -329,7 +317,7 @@
                         <a href="#tools" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
                             <i class="fas fa-tools mr-3 text-sm w-4"></i>Tools
                         </a>
-                        <a href="https://blog.convertwiz.in" target="_blank" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                        <a href="seo-blog.html" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
                             <i class="fas fa-blog mr-3 text-sm w-4"></i>Blog
                         </a>
                         <a href="subscribe.html" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
@@ -339,22 +327,10 @@
                             <i class="fas fa-envelope mr-3 text-sm w-4"></i>Contact
                         </a>
                         
-                        <!-- Mobile Authentication -->
-                        <div id="mobile-auth-section" class="pt-4 border-t border-gray-200 mt-2">
-                            <!-- Mobile Usage Info (when authenticated) -->
-                            <div id="mobile-user-info" class="hidden mb-3 px-4">
-                                <div id="mobile-user-greeting" class="text-gray-700 font-medium mb-1">Welcome!</div>
-                                <div id="mobile-usage-info" class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">
-                                    Loading usage...
-                                </div>
-                            </div>
-                            
-                            <!-- Mobile Auth Button -->
-                            <div class="px-4">
-                                <button id="mobile-auth-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center space-x-2 font-medium shadow-lg">
-                                    <i class="fas fa-sign-in-alt"></i>
-                                    <span>Login</span>
-                                </button>
+                        <!-- Mobile Free Tools Info -->
+                        <div id="mobile-free-section" class="pt-4 border-t border-gray-200 mt-2 px-4">
+                            <div class="w-full bg-green-100 text-green-800 px-4 py-3 rounded-xl text-center font-medium">
+                                <i class="fas fa-check-circle mr-2"></i>All Tools Available Free
                             </div>
                         </div>
                     </div>
@@ -399,15 +375,16 @@
             <!-- Hero Section -->
             <section class="text-center mb-16">
                 <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-                    Free Online Conversion Tools - ConvertWiz
+                    ConvertWiz - Free Online Conversion Tools
                 </h1>
                 <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-                    Convert images (JPG to PNG), currencies, units, resize Instagram profile pictures, and more. Fast, secure, mobile-friendly tools with no registration required.
+                    Professional conversion tools for images, currencies, units, and more. 18+ tools available with unlimited conversions.
+                    <span class="block mt-2 text-lg text-white/80">No registration required. Fast, secure, and completely free to use.</span>
                 </p>
                 <div class="flex justify-center">
                     <div class="bg-white/20 backdrop-blur-md rounded-full px-6 py-3 text-white font-medium">
                         <i class="fas fa-star mr-2"></i>
-                        10 Professional Tools • Free to Use • No Registration Required
+                        18+ Professional Tools • Unlimited Conversions • No Registration Required
                     </div>
                 </div>
             </section>
@@ -431,12 +408,12 @@
                         <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                             <div class="text-center">
                                 <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-image text-white text-2xl"></i>
+                                    <i class="fas fa-image text-white text-2xl" alt="JPG to PNG converter icon"></i>
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">JPG to PNG</h4>
-                                <p class="text-gray-600 text-sm mb-4">Convert JPG images to PNG with bulk upload support</p>
+                                <p class="text-gray-600 text-sm mb-4">Convert JPG images to PNG format with bulk upload support and quality retention. Perfect for web graphics and transparency needs.</p>
                                 <button data-target="jpg-to-png-section" class="inline-block w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
-                                    Try Now
+                                    Try Now - Free & Fast
                                 </button>
                             </div>
                         </div>
@@ -910,7 +887,7 @@
                 <!-- Daily Limit Counter -->
                 <div id="limit-counter" class="inline-block bg-white/20 backdrop-blur-md rounded-full px-6 py-2 text-white font-medium">
                     <i class="fas fa-gift mr-2"></i>
-                    <span id="conversions-left">3</span> free conversions left today
+                    <span id="conversions-left">∞</span> unlimited conversions available
                 </div>
             </section>
 
@@ -2887,20 +2864,15 @@ Contact: John Doe, Company Inc."></textarea>
     <script src="cookie-consent.js"></script>
     <script src="tools.js"></script>
     <script src="app.js"></script>
-    <!-- Subscription Development Mode Controller -->
-    <script src="subscription_dev_mode.js"></script>
+    <!-- ConvertWiz Free Mode - No subscription needed -->
     
     <!-- Firebase Authentication (Enhanced) -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
-    <script src="firebase-auth.js"></script>
-    <script src="test-auth-flow.js"></script>
+    <!-- Firebase authentication removed - All tools now freely accessible -->
     <script src="adsense-fix.js"></script>
     
     <script>
-        // Mobile menu is now handled by app.js
+        // ConvertWiz - Free Tools Mode (No Authentication Required)
+        console.log('🎉 ConvertWiz Free Mode - All tools accessible without login');
         
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -2908,56 +2880,25 @@ Contact: John Doe, Company Inc."></textarea>
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    // Smooth scroll with timeout to prevent infinite loops
                     setTimeout(() => {
                         target.scrollIntoView({
                             behavior: 'smooth',
                             block: 'start'
                         });
                     }, 100);
-                    // Close mobile menu if open
                     document.getElementById('mobile-menu').classList.add('hidden');
                 }
             });
         });
         
-        // Mobile menu initialization moved to app.js for better organization
+        // Initialize ConvertWiz without authentication
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize routing
             if (typeof initializeRouting === 'function') {
                 initializeRouting();
             }
             
-            // Initialize authentication with proper error handling
-            if (typeof window.convertWizAuth !== 'undefined') {
-                try {
-                    window.convertWizAuth.init();
-                    console.log('Firebase authentication initialized successfully');
-                } catch (error) {
-                    console.error('Firebase initialization error:', error);
-                    // Show login button even if Firebase fails
-                    const authBtn = document.getElementById('auth-btn');
-                    const mobileAuthBtn = document.getElementById('mobile-auth-btn');
-                    if (authBtn) authBtn.style.display = 'block';
-                    if (mobileAuthBtn) mobileAuthBtn.style.display = 'block';
-                }
-            } else {
-                console.log('Firebase auth not available, running in offline mode');
-                // Ensure login buttons are visible in offline mode
-                const authBtn = document.getElementById('auth-btn');
-                const mobileAuthBtn = document.getElementById('mobile-auth-btn');
-                if (authBtn) authBtn.style.display = 'block';
-                if (mobileAuthBtn) mobileAuthBtn.style.display = 'block';
-            }
-            
-            // Initialize admin navigation
-            const adminLinks = document.querySelectorAll('.admin-nav-item');
-            adminLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    window.location.href = 'admin.html';
-                });
-            });
+            console.log('✅ ConvertWiz initialized in free mode - all tools accessible');
         });
         
         // Set development mode for ad display
@@ -2967,14 +2908,10 @@ Contact: John Doe, Company Inc."></textarea>
                 document.body.setAttribute('data-env', 'development');
             }
             
-            // Initialize ads in production only and for non-premium users
+            // Initialize ads in production only (all users see ads in free mode)
             if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 setTimeout(function() {
-                    // Check if user is premium before loading ads
-                    const userPlan = document.body.getAttribute('data-user-plan');
-                    const isPremium = userPlan && userPlan !== 'free';
-                    
-                    if (!isPremium && window.adsbygoogle) {
+                    if (window.adsbygoogle) {
                         const ads = document.querySelectorAll('.adsbygoogle');
                         ads.forEach(function(ad) {
                             if (!ad.getAttribute('data-adsbygoogle-status')) {

@@ -1,41 +1,12 @@
-// ✅ ConvertWiz Firebase Authentication System (Fixed Version)
-// Enhanced Firebase Integration for Homepage Authentication State Management
+// ConvertWiz Free Mode - Authentication Disabled
+// All conversion tools are now freely accessible without authentication
 
-console.log("Loading Firebase authentication...");
+console.log("✅ ConvertWiz Free Mode: All tools available without authentication");
 
-// Enhanced Firebase configuration (Dynamic loading from server)
-let firebaseConfig = null;
-
-// Enhanced initialization with error handling
+// Free mode - No Firebase initialization required
 async function initializeFirebaseAuth() {
-    try {
-        // Check if Firebase is available - use compat version check
-        if (typeof firebase === 'undefined' || !firebase.apps) {
-            console.warn('Firebase SDK not available, running in offline mode');
-            return false;
-        }
-
-        // Get Firebase config from server
-        if (!firebaseConfig) {
-            firebaseConfig = await getFirebaseConfig();
-            console.log('Firebase config loaded for project:', firebaseConfig.projectId);
-        }
-
-        // Check if already initialized
-        if (firebase.apps.length > 0) {
-            console.log('Firebase already initialized');
-            return true;
-        }
-
-        // Initialize Firebase with compat version
-        firebase.initializeApp(firebaseConfig);
-        console.log('Firebase initialized successfully for project:', firebaseConfig.projectId);
-        
-        return true;
-    } catch (error) {
-        console.error('Firebase initialization failed:', error);
-        return false;
-    }
+    console.log('ℹ️ Authentication disabled - All tools freely accessible');
+    return false; // No auth needed in free mode
 }
 
 // Enhanced authentication state management

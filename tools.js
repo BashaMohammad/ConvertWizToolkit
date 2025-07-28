@@ -158,21 +158,8 @@ class JPGtoPNGConverter {
     }
     
     getRemainingLimit() {
-        // Use the Firebase authentication system for usage tracking
-        if (window.convertWizAuth) {
-            const remaining = window.convertWizAuth.getRemainingConversions();
-            return remaining === 'Unlimited' ? 999 : remaining;
-        }
-        
-        // Fallback to local storage if Firebase not available
-        const today = new Date().toDateString();
-        const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
-        
-        if (usage.date !== today) {
-            return this.dailyLimit; // New day, full limit available
-        }
-        
-        return Math.max(0, this.dailyLimit - usage.count);
+        // Free mode - Unlimited conversions for all users
+        return 999; // No usage tracking in free mode
     }
     
     async startBulkConversion() {
@@ -361,68 +348,31 @@ class JPGtoPNGConverter {
     }
     
     async checkDailyLimit() {
-        // Use the Firebase authentication system for usage tracking
-        if (window.convertWizAuth) {
-            return await window.convertWizAuth.canPerformConversion();
-        }
-        
-        // Fallback to local storage if Firebase not available
-        const today = new Date().toDateString();
-        const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
-        
-        if (usage.date !== today) {
-            return true; // New day, reset limit
-        }
-        
-        return usage.count < this.dailyLimit;
+        // Free mode - No daily limits
+        return true; // Always allow conversions in free mode
     }
     
     updateDailyUsage() {
-        // Use the Firebase authentication system for usage tracking
-        if (window.convertWizAuth) {
-            window.convertWizAuth.incrementUsage();
-        } else {
-            // Fallback to local storage if Firebase not available
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
-            
-            if (usage.date !== today) {
-                usage = { date: today, count: 0 };
-            }
-            
-            usage.count += 1;
-            localStorage.setItem('convertWizUsage', JSON.stringify(usage));
-        }
-        
-        this.updateDailyCounter();
+        // Free mode - No usage tracking required
+        console.log('✅ ConvertWiz Free Mode: Conversion completed successfully');
     }
     
     updateDailyCounter() {
-        const today = new Date().toDateString();
-        const usage = JSON.parse(localStorage.getItem('convertWizUsage') || '{}');
-        
-        let remaining = this.dailyLimit;
-        if (usage.date === today) {
-            remaining = Math.max(0, this.dailyLimit - usage.count);
-        }
-        
+        // Free mode - Show unlimited availability
         if (this.conversionsLeft) {
-            this.conversionsLeft.textContent = remaining;
+            this.conversionsLeft.textContent = '∞';
         }
         
-        if (remaining === 0 && this.limitCounter) {
-            this.limitCounter.innerHTML = '<i class="fas fa-hourglass-end mr-2"></i>No free conversions left today';
-            this.limitCounter.className = 'inline-block bg-red-500/20 backdrop-blur-md rounded-full px-6 py-2 text-white font-medium';
+        if (this.limitCounter) {
+            this.limitCounter.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Unlimited conversions available';
+            this.limitCounter.className = 'inline-block bg-green-500/20 backdrop-blur-md rounded-full px-6 py-2 text-white font-medium';
         }
     }
     
     showLimitReached() {
-        // Use Firebase warning system if available
-        if (window.convertWizAuth) {
-            window.convertWizAuth.showUsageLimitWarning();
-        } else {
-            this.showNotification('Daily conversion limit reached! Sign up for unlimited access or try again tomorrow.', 'warning');
-        }
+        // Free mode - No limits to reach
+        console.log('✅ ConvertWiz Free Mode: No conversion limits');
+    }
         
         this.uploadArea.parentElement.style.display = 'none';
         this.limitSection.classList.remove('hidden');

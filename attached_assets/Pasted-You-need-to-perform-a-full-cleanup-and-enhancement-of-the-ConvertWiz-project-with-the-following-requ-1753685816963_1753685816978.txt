@@ -1,0 +1,58 @@
+You need to perform a full cleanup and enhancement of the ConvertWiz project with the following requirements:
+
+### 1. Disable Authentication (All Tools Free)
+- Completely remove or bypass Firebase authentication logic across all pages.
+- Ensure all tools (JPG to PNG, Image Compressor, Text-to-Speech, etc.) open directly without login or dashboard checks.
+- Remove all redirect logic tied to authentication.
+- All features should remain accessible while showing “Coming Soon” only for unavailable tools.
+
+### 2. Fix SEO Issues (As Per SiteChecker)
+- Add **unique meta titles and descriptions** to every page (e.g., “Convert JPG to PNG Online – Fast & Free”).
+- Ensure all images, icons, and logos have **alt attributes**.
+- Fix **broken internal links** and 4xx errors by redirecting them to valid pages.
+- Improve internal linking between tool pages (e.g., JPG to PNG → Image Compressor).
+- Implement **FAQ schema** (without duplicate FAQPage warnings).
+- Add **100-150 words of SEO-friendly content** on each tool page explaining its purpose and usage.
+- Add **canonical URL tags** for all pages.
+
+### 3. Add Blog Section (SEO Content)
+- Create a `/blog` page (blog.html) without altering existing UI styles.
+- Add 5 SEO blog placeholders with proper titles and meta tags:
+  1. "Top 5 Online Converters You Must Try in 2025"
+  2. "How to Compress PDFs Without Losing Quality"
+  3. "Fast Image Conversion Tips for Beginners"
+  4. "The Ultimate Guide to Text-to-Speech Tools"
+  5. "Why ConvertWiz is Your All-in-One Tool Hub"
+- Each blog should have at least **400+ words** of placeholder content optimized for SEO.
+
+### 4. Performance & Accessibility
+- Compress and optimize static assets (images, CSS, JS) but **do not alter visual UI elements.**
+- Enable **lazy loading** for large images.
+- Ensure **mobile responsiveness** is fully functional.
+
+---
+
+### 5. Test Cases for Replit (Validation)
+
+**Functional Tests:**
+1. Access homepage → All tools must be accessible without login.
+2. Test all tool pages → Ensure they open and work properly.
+3. Test `/blog` → Ensure all 5 blogs are visible and accessible.
+
+**SEO Tests:**
+4. Verify unique `<title>` and `<meta>` descriptions on every page.
+5. Confirm all images have `alt` attributes.
+6. Check that FAQ schema is implemented without duplicates.
+7. Verify canonical tags are present.
+
+**Performance Tests:**
+8. Validate that page load time is <2 seconds.
+9. Ensure lazy loading for images.
+10. Test mobile responsiveness (no UI overlaps or broken elements).
+
+---
+
+### Important Conditions:
+- **NO UI structure or gradient changes are allowed.**
+- Only backend, SEO, and content enhancements should be made.
+- Replit must confirm all test cases are passed and share a summary.
