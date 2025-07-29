@@ -270,6 +270,9 @@
 .tool-section.active {
     display: block !important;
     visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 
 #landing-section.active {
@@ -280,6 +283,17 @@
 /* Ensure tool sections have proper structure when active */
 .tool-section.active main {
     display: block !important;
+    visibility: visible !important;
+}
+
+.tool-section.active .container {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Force show all child elements of active tool sections */
+.tool-section.active * {
+    visibility: visible !important;
 }
 </style>
 </head>
@@ -2705,6 +2719,7 @@ Contact: John Doe, Company Inc."></textarea>
     <script src="component_test_automated.js"></script>
     <script src="cookie-consent.js"></script>
     <script src="tools.js"></script>
+    <script src="script.js"></script>
     <script src="app.js"></script>
     <!-- ConvertWiz Free Mode - No subscription needed -->
     

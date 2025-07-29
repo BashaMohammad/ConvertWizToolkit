@@ -29,8 +29,28 @@
         'url-shortener-section'
     ];
     
-    // Force isolation function
+    // Force isolation function - preserve server-activated sections
     function enforceComponentIsolation() {
+        // Check if server already activated a tool section
+        const serverActivatedSection = document.querySelector('.tool-section.active');
+        if (serverActivatedSection) {
+            console.log('🎯 Server pre-activated section found:', serverActivatedSection.id);
+            // Don't touch server-activated sections, just hide others
+            COMPONENT_SECTIONS.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section && section !== serverActivatedSection) {
+                    section.classList.remove('active');
+                }
+            });
+            // Hide landing when tool is active
+            const landingSection = document.getElementById('landing-section');
+            if (landingSection) {
+                landingSection.classList.remove('active');
+            }
+            console.log('✅ Component isolation enforced - preserving server activation');
+            return;
+        }
+        
         // Remove active class from ALL sections first
         COMPONENT_SECTIONS.forEach(sectionId => {
             const section = document.getElementById(sectionId);
@@ -184,6 +204,16 @@
         const currentPath = window.location.pathname;
         const sectionId = getPathSection(currentPath);
         console.log(`📍 Path: ${currentPath} -> Section: ${sectionId}`);
+        
+            // Check if we already have an active section from server-side injection
+        const hasActiveSection = document.querySelector('.tool-section.active');
+        if (hasActiveSection) {
+            console.log(`🎯 Server-activated section detected: ${hasActiveSection.id}`);
+            // Don't override server-side activation, just ensure it's properly visible
+            hasActiveSection.style.display = 'block';
+            hasActiveSection.style.visibility = 'visible';
+            return;
+        }
         
         // Force show the section even if showSection function isn't ready
         if (sectionId && sectionId !== 'landing-section') {
