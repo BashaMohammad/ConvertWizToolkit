@@ -56,7 +56,7 @@ if (document.readyState !== 'loading') {
 
 // Add navigation button handlers
 document.addEventListener('click', function(e) {
-    // Handle "Try Now" buttons
+    // Handle "Try Now" buttons and "Back to Home" buttons
     if (e.target.classList.contains('try-now-btn') || e.target.getAttribute('data-target')) {
         e.preventDefault();
         var targetSection = e.target.getAttribute('data-target');
@@ -64,6 +64,17 @@ document.addEventListener('click', function(e) {
             console.log('🚨 EMERGENCY: Button clicked for section =', targetSection);
             showSectionById(targetSection);
         }
+    }
+    
+    // Handle "Back to Home" buttons (check parent elements too)
+    var clickedElement = e.target;
+    var parentElement = clickedElement.parentElement;
+    
+    if ((clickedElement.getAttribute('data-target') === 'landing-section') || 
+        (parentElement && parentElement.getAttribute('data-target') === 'landing-section')) {
+        e.preventDefault();
+        console.log('🚨 EMERGENCY: Back to Home clicked');
+        showSectionById('landing-section');
     }
 });
 
