@@ -224,15 +224,31 @@ function initializeComponentFunctionality(sectionId) {
             }
             break;
         case 'ip-extractor-section':
-            if (typeof IPExtractor !== 'undefined') {
-                setTimeout(() => new IPExtractor(), 100);
-                console.log('✅ INIT: IP Extractor initialized');
+            if (typeof IPAddressExtractor !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        new IPAddressExtractor();
+                        console.log('✅ INIT: IP Address Extractor initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: IP Address Extractor failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: IPAddressExtractor class not found');
             }
             break;
         case 'qr-generator-section':
-            if (typeof QRGenerator !== 'undefined') {
-                setTimeout(() => new QRGenerator(), 100);
-                console.log('✅ INIT: QR Generator initialized');
+            if (typeof QRCodeGenerator !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        new QRCodeGenerator();
+                        console.log('✅ INIT: QR Code Generator initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: QR Code Generator failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: QRCodeGenerator class not found');
             }
             break;
         case 'text-to-speech-section':
@@ -275,6 +291,34 @@ function initializeComponentFunctionality(sectionId) {
                 }, 100);
             } else {
                 console.error('❌ INIT: URLShortener class not found');
+            }
+            break;
+        case 'meta-tag-generator-section':
+            if (typeof MetaTagGenerator !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        new MetaTagGenerator();
+                        console.log('✅ INIT: Meta Tag Generator initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: Meta Tag Generator failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: MetaTagGenerator class not found');
+            }
+            break;
+        case 'backlink-checker-section':
+            if (typeof BacklinkChecker !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        new BacklinkChecker();
+                        console.log('✅ INIT: Backlink Checker initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: Backlink Checker failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: BacklinkChecker class not found');
             }
             break;
         default:
