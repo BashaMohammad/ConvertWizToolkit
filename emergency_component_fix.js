@@ -54,4 +54,65 @@ if (document.readyState !== 'loading') {
     document.addEventListener('DOMContentLoaded', emergencyShowSection);
 }
 
-console.log('🚨 EMERGENCY FIX: System ready');
+// Add navigation button handlers
+document.addEventListener('click', function(e) {
+    // Handle "Try Now" buttons
+    if (e.target.classList.contains('try-now-btn') || e.target.getAttribute('data-target')) {
+        e.preventDefault();
+        var targetSection = e.target.getAttribute('data-target');
+        if (targetSection) {
+            console.log('🚨 EMERGENCY: Button clicked for section =', targetSection);
+            showSectionById(targetSection);
+        }
+    }
+});
+
+// Function to show section by ID
+function showSectionById(sectionId) {
+    console.log('🚨 EMERGENCY: Switching to section =', sectionId);
+    
+    // Hide all sections
+    var allSections = document.querySelectorAll('.tool-section, #landing-section');
+    allSections.forEach(function(section) {
+        section.style.display = 'none';
+        section.classList.remove('active');
+    });
+    
+    // Show target section
+    var target = document.getElementById(sectionId);
+    if (target) {
+        target.style.display = 'block';
+        target.style.visibility = 'visible';
+        target.style.opacity = '1';
+        target.classList.add('active');
+        console.log('🚨 EMERGENCY: SUCCESS - Section switched to =', sectionId);
+        
+        // Update URL to match component
+        var pathMap = {
+            'jpg-to-png-section': '/jpg-to-png',
+            'currency-converter-section': '/currency-converter',
+            'land-converter-section': '/land-converter',
+            'dp-resizer-section': '/dp-resizer',
+            'word-counter-section': '/word-counter',
+            'distance-converter-section': '/distance-converter',
+            'weight-converter-section': '/weight-converter',
+            'height-converter-section': '/height-converter',
+            'ip-extractor-section': '/ip-extractor',
+            'qr-generator-section': '/qr-generator',
+            'percentage-calculator-section': '/percentage-calculator',
+            'temperature-converter-section': '/temperature-converter',
+            'color-converter-section': '/color-converter',
+            'image-compressor-section': '/image-compressor',
+            'landing-section': '/'
+        };
+        
+        var newPath = pathMap[sectionId] || '/';
+        if (window.history && window.history.pushState) {
+            window.history.pushState({}, '', newPath);
+        }
+    } else {
+        console.log('🚨 EMERGENCY: FAILED - Section not found =', sectionId);
+    }
+}
+
+console.log('🚨 EMERGENCY FIX: System ready with navigation');
