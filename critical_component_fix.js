@@ -184,7 +184,25 @@
         const currentPath = window.location.pathname;
         const sectionId = getPathSection(currentPath);
         console.log(`📍 Path: ${currentPath} -> Section: ${sectionId}`);
-        window.showSection(sectionId);
+        
+        // Force show the section even if showSection function isn't ready
+        if (sectionId && sectionId !== 'landing-section') {
+            console.log(`🔧 Force activating section: ${sectionId}`);
+            // Remove active from all sections
+            document.querySelectorAll('.tool-section, #landing-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Add active to target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                console.log(`✅ Activated section: ${sectionId}`);
+            } else {
+                console.log(`❌ Section not found: ${sectionId}`);
+            }
+        } else {
+            window.showSection(sectionId);
+        }
     }
     
     function getPathSection(path) {

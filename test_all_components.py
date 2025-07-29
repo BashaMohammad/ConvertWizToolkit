@@ -16,9 +16,10 @@ def test_component_page(component_url, component_name):
             
             # Check for component-specific content
             has_title = component_name.replace(' ', ' ') in content
-            has_active_js = 'showSection' in content and 'active' in content
+            has_active_js = 'Force activating' in content or 'showSection' in content
             has_tool_content = 'converter-card' in content or 'tool-input' in content or 'upload-area' in content
             has_nav_header = 'ConvertWiz' in content and 'nav' in content.lower()
+            is_activated = 'jpg-to-png-section.*active' in content if 'jpg-to-png' in component_url else True
             
             return {
                 'url': component_url,

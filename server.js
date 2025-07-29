@@ -870,6 +870,56 @@ app.get('/payment-failed.html', (req, res) => {
 });
 
 // ✅ SPA Wildcard Route - Catches all unknown paths and redirects to index.html
+// Component-specific route handling with proper activation
+const componentRoutes = {
+  '/jpg-to-png': 'jpg-to-png-section',
+  '/currency-converter': 'currency-converter-section',
+  '/land-converter': 'land-converter-section',
+  '/dp-resizer': 'dp-resizer-section',
+  '/word-counter': 'word-counter-section',
+  '/distance-converter': 'distance-converter-section',
+  '/weight-converter': 'weight-converter-section',
+  '/height-converter': 'height-converter-section',
+  '/ip-extractor': 'ip-extractor-section',
+  '/qr-generator': 'qr-generator-section',
+  '/percentage-calculator': 'percentage-calculator-section',
+  '/temperature-converter': 'temperature-converter-section',
+  '/color-converter': 'color-converter-section',
+  '/image-compressor': 'image-compressor-section',
+  '/text-to-speech': 'text-to-speech-section',
+  '/backlink-checker': 'backlink-checker-section',
+  '/meta-tag-generator': 'meta-tag-generator-section',
+  '/dpi-checker': 'dpi-checker-section',
+  '/url-shortener': 'url-shortener-section'
+};
+
+// Handle component routes with proper activation
+Object.keys(componentRoutes).forEach(route => {
+  app.get(route, (req, res) => {
+    const fs = require('fs');
+    const sectionId = componentRoutes[route];
+    
+    // Read the index.html file
+    fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, data) => {
+      if (err) {
+        res.status(500).send('Error reading file');
+        return;
+      }
+      
+      // Inject active class for the specific component
+      let modifiedHtml = data;
+      
+      // Add active class to the target section
+      modifiedHtml = modifiedHtml.replace(
+        `class="tool-section" id="${sectionId}"`,
+        `class="tool-section active" id="${sectionId}"`
+      );
+      
+      res.send(modifiedHtml);
+    });
+  });
+});
+
 // This fixes 404 errors on mobile/desktop when refreshing component pages
 // Must be the LAST route in server.js to ensure all known routes work first
 app.use((req, res, next) => {
