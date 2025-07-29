@@ -126,14 +126,20 @@
             </div>
         </section>
 
+        <!-- Search Section -->
+        <section class="max-w-2xl mx-auto mb-12">
+            <div class="relative">
+                <input type="text" id="blog-search" placeholder="Search articles..." class="w-full px-6 py-4 text-lg border-2 border-white/30 rounded-2xl bg-white/20 backdrop-blur-md text-white placeholder-white/70 focus:border-white/50 focus:outline-none transition-all">
+                <i class="fas fa-search absolute right-6 top-1/2 transform -translate-y-1/2 text-white/70 text-xl"></i>
+            </div>
+        </section>
+
         <!-- Blog Posts Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto" id="blog-posts-grid">
             <!-- Blog Post 1: JPG to PNG Conversion -->
             <article class="blog-card bg-white/90 backdrop-blur-md rounded-xl shadow-xl p-6 hover:shadow-2xl">
                 <div class="mb-4">
-                    <div class="w-full h-48 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-image text-white text-4xl"></i>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=200&fit=crop&crop=center" alt="JPG to PNG Conversion" class="w-full h-48 object-cover rounded-lg mb-4">
                     <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Image Conversion</span>
                 </div>
                 <h2 class="text-xl font-bold text-gray-800 mb-3">
@@ -153,9 +159,7 @@
             <!-- Blog Post 2: Image Compression -->
             <article class="blog-card bg-white/90 backdrop-blur-md rounded-xl shadow-xl p-6 hover:shadow-2xl">
                 <div class="mb-4">
-                    <div class="w-full h-48 bg-gradient-to-r from-green-500 to-teal-600 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-compress-alt text-white text-4xl"></i>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop&crop=center" alt="Image Compression" class="w-full h-48 object-cover rounded-lg mb-4">
                     <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Optimization</span>
                 </div>
                 <h2 class="text-xl font-bold text-gray-800 mb-3">
@@ -175,9 +179,7 @@
             <!-- Blog Post 3: Currency Conversion -->
             <article class="blog-card bg-white/90 backdrop-blur-md rounded-xl shadow-xl p-6 hover:shadow-2xl">
                 <div class="mb-4">
-                    <div class="w-full h-48 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-dollar-sign text-white text-4xl"></i>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=200&fit=crop&crop=center" alt="Currency Conversion" class="w-full h-48 object-cover rounded-lg mb-4">
                     <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded">Finance</span>
                 </div>
                 <h2 class="text-xl font-bold text-gray-800 mb-3">
@@ -197,9 +199,7 @@
             <!-- Blog Post 4: QR Code Generation -->
             <article class="blog-card bg-white/90 backdrop-blur-md rounded-xl shadow-xl p-6 hover:shadow-2xl">
                 <div class="mb-4">
-                    <div class="w-full h-48 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-qrcode text-white text-4xl"></i>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=400&h=200&fit=crop&crop=center" alt="QR Code Marketing" class="w-full h-48 object-cover rounded-lg mb-4">
                     <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">Marketing</span>
                 </div>
                 <h2 class="text-xl font-bold text-gray-800 mb-3">
@@ -219,9 +219,7 @@
             <!-- Blog Post 5: Text to Speech -->
             <article class="blog-card bg-white/90 backdrop-blur-md rounded-xl shadow-xl p-6 hover:shadow-2xl">
                 <div class="mb-4">
-                    <div class="w-full h-48 bg-gradient-to-r from-red-500 to-pink-600 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-volume-up text-white text-4xl"></i>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1589998059171-988d887df646?w=400&h=200&fit=crop&crop=center" alt="Text to Speech Technology" class="w-full h-48 object-cover rounded-lg mb-4">
                     <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded">Accessibility</span>
                 </div>
                 <h2 class="text-xl font-bold text-gray-800 mb-3">
@@ -241,9 +239,7 @@
             <!-- Blog Post 6: URL Shortening -->
             <article class="blog-card bg-white/90 backdrop-blur-md rounded-xl shadow-xl p-6 hover:shadow-2xl">
                 <div class="mb-4">
-                    <div class="w-full h-48 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-link text-white text-4xl"></i>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=400&h=200&fit=crop&crop=center" alt="URL Shortening Strategy" class="w-full h-48 object-cover rounded-lg mb-4">
                     <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-0.5 rounded">Marketing</span>
                 </div>
                 <h2 class="text-xl font-bold text-gray-800 mb-3">
@@ -267,9 +263,9 @@
             <p class="text-white/90 mb-6">Get the latest conversion tips, tutorials, and tool updates delivered to your inbox.</p>
             <div class="max-w-md mx-auto flex gap-4">
                 <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-lg border-0 focus:ring-2 focus:ring-purple-500">
-                <button class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all">
+                <a href="mailto:support@convertwiz.in?subject=Newsletter Subscription" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all">
                     Subscribe
-                </button>
+                </a>
             </div>
         </section>
     </main>
@@ -280,7 +276,7 @@
             <div class="flex flex-wrap justify-center items-center gap-4 mb-4 text-sm">
                 <a href="../privacy.html" class="text-gray-600 hover:text-purple-600 transition-colors">Privacy Policy</a>
                 <a href="../terms.html" class="text-gray-600 hover:text-purple-600 transition-colors">Terms of Service</a>
-                <a href="../contact.html" class="text-gray-600 hover:text-purple-600 transition-colors">Contact</a>
+                <a href="mailto:support@convertwiz.in" class="text-gray-600 hover:text-purple-600 transition-colors">Contact</a>
             </div>
             <p class="text-gray-600 text-sm">
                 © 2025 ConvertWiz. All rights reserved. | Powered by Ali
