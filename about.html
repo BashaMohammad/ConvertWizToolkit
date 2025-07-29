@@ -56,11 +56,20 @@
             border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
         }
         
-        /* Clean, card-free styling */
+        /* Beautiful content styling */
         .content-section {
-            border-left: 3px solid rgba(255, 255, 255, 0.3) !important;
-            padding-left: 1.5rem !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 1rem !important;
+            padding: 2rem !important;
             margin-bottom: 2rem !important;
+            backdrop-filter: blur(10px) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .content-section:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
         }
     </style>
 </head>
@@ -103,33 +112,42 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
         <!-- Hero Section -->
-        <section class="text-center mb-16">
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
-                About ConvertWiz
-            </h1>
-            <p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                ConvertWiz is a professional digital conversion platform founded in 2025 with a mission to democratize access to high-quality file conversion tools. We provide 18+ specialized conversion utilities that serve millions of users worldwide, from individual creators to enterprise teams.
-            </p>
+        <section class="text-center mb-20">
+            <div class="max-w-5xl mx-auto">
+                <h1 class="text-6xl md:text-7xl font-bold text-white mb-8 leading-tight tracking-tight">
+                    About ConvertWiz
+                </h1>
+                <div class="w-24 h-1 bg-gradient-to-r from-purple-300 to-pink-300 mx-auto mb-8 rounded-full"></div>
+                <p class="text-2xl text-white/90 leading-relaxed font-light max-w-4xl mx-auto">
+                    ConvertWiz is a professional digital conversion platform founded in 2025 with a mission to democratize access to high-quality file conversion tools. We provide 18+ specialized conversion utilities that serve millions of users worldwide, from individual creators to enterprise teams.
+                </p>
+            </div>
         </section>
 
         <!-- Company Mission -->
-        <section class="mb-16">
-            <div class="
-                <h2 class="text-3xl font-bold text-white mb-6">Our Mission & Vision</h2>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-xl font-semibold text-purple-600 mb-4">
-                            <i class="fas fa-bullseye mr-2"></i>Mission
-                        </h3>
-                        <p class="text-white/90 leading-relaxed">
+        <section class="mb-20">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl font-bold text-white mb-12 text-center">Our Mission & Vision</h2>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="content-section">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-bullseye text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-white">Mission</h3>
+                        </div>
+                        <p class="text-white/90 leading-relaxed text-lg">
                             To provide free, secure, and professional-grade conversion tools that empower individuals and businesses to transform their digital content without compromising on quality, privacy, or accessibility. We believe essential digital tools should be available to everyone, regardless of technical expertise or financial resources.
                         </p>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-semibold text-purple-600 mb-4">
-                            <i class="fas fa-eye mr-2"></i>Vision
-                        </h3>
-                        <p class="text-white/90 leading-relaxed">
+                    <div class="content-section">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-eye text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-white">Vision</h3>
+                        </div>
+                        <p class="text-white/90 leading-relaxed text-lg">
                             To become the world's most trusted platform for digital file conversions, setting the industry standard for security, quality, and user experience. We envision a future where seamless format transformation enables limitless creativity and productivity across all digital workflows.
                         </p>
                     </div>

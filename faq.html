@@ -62,15 +62,18 @@
             color: #7c3aed !important;
         }
         
-        /* Clean, card-free styling */
+        /* Beautiful FAQ styling */
         .faq-item {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-            padding-bottom: 1.5rem !important;
+            transition: all 0.3s ease !important;
         }
         
-        .faq-toggle:hover {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border-radius: 0.5rem !important;
+        .faq-item:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        .faq-toggle.active i {
+            transform: rotate(180deg) !important;
         }
     </style>
     
@@ -163,18 +166,25 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
         <!-- Hero Section -->
-        <section class="text-center mb-16">
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
-                Frequently Asked Questions
-            </h1>
-            <p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                Find comprehensive answers to common questions about ConvertWiz tools, privacy, security, and technical specifications. Our expert support team has compiled detailed responses to help you get the most out of our conversion platform.
-            </p>
+        <section class="text-center mb-20">
+            <div class="max-w-5xl mx-auto">
+                <h1 class="text-6xl md:text-7xl font-bold text-white mb-8 leading-tight tracking-tight">
+                    Frequently Asked Questions
+                </h1>
+                <div class="w-24 h-1 bg-gradient-to-r from-purple-300 to-pink-300 mx-auto mb-8 rounded-full"></div>
+                <p class="text-2xl text-white/90 leading-relaxed font-light max-w-4xl mx-auto">
+                    Find comprehensive answers to common questions about ConvertWiz tools, privacy, security, and technical specifications. Our expert support team has compiled detailed responses to help you get the most out of our conversion platform.
+                </p>
+            </div>
         </section>
 
         <!-- FAQ Categories -->
-        <section class="mb-16">
-            <div class="grid md:grid-cols-4 gap-4 mb-8">
+        <section class="mb-20">
+            <div class="max-w-5xl mx-auto text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-6">Browse by Category</h2>
+                <div class="w-16 h-0.5 bg-white/30 mx-auto mb-8"></div>
+            </div>
+            <div class="grid md:grid-cols-4 gap-6 mb-16 max-w-4xl mx-auto">
                 <button onclick="showCategory('general')" class="faq-category-btn theme-button rounded-lg px-4 py-3 font-semibold transition-all" data-category="general">
                     <i class="fas fa-info-circle mr-2"></i>General
                 </button>
@@ -191,22 +201,22 @@
         </section>
 
         <!-- General FAQ -->
-        <section id="general-faq" class="faq-category mb-16">
-            <h2 class="text-3xl font-bold text-white mb-8">General Questions</h2>
-            <div class="space-y-8">
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-4 focus:outline-none transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Are ConvertWiz conversion tools completely free?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
+        <section id="general-faq" class="faq-category mb-20">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-white mb-12 text-center">General Questions</h2>
+                <div class="space-y-10">
+                    <div class="faq-item bg-white/5 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+                        <button class="faq-toggle w-full text-left focus:outline-none" onclick="toggleFaq(this)">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-2xl font-semibold text-white pr-4">Are ConvertWiz conversion tools completely free?</h3>
+                                <i class="fas fa-chevron-down text-purple-300 text-xl transform transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-content mt-6 text-white/90 leading-relaxed text-lg hidden">
+                            <p>Yes, all ConvertWiz conversion tools are completely free to use. We provide 18+ professional-grade conversion tools including JPG to PNG converter, currency converter, image compressor, word counter, QR code generator, and many more without any charges, registration requirements, or hidden fees.</p>
+                            <p class="mt-4">Our mission is to democratize access to high-quality digital conversion tools. We believe essential utilities should be available to everyone, regardless of technical expertise or financial resources. This commitment ensures students, professionals, and businesses of all sizes can benefit from our conversion platform.</p>
                         </div>
-                    </button>
-                    <div class="faq-content mt-4 text-white/90 leading-relaxed hidden">
-                        <p>Yes, all ConvertWiz conversion tools are completely free to use. We provide 18+ professional-grade conversion tools including JPG to PNG converter, currency converter, image compressor, word counter, QR code generator, and many more without any charges, registration requirements, or hidden fees.</p>
-                        <p class="mt-3">Our mission is to democratize access to high-quality digital conversion tools. We believe essential utilities should be available to everyone, regardless of technical expertise or financial resources. This commitment ensures students, professionals, and businesses of all sizes can benefit from our conversion platform.</p>
                     </div>
-                    <hr class="border-white/20 mt-6">
-                </div>
 
                 <div class="div>
                     <button class="faq-toggle w-full text-left p-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
