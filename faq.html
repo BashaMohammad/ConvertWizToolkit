@@ -63,11 +63,29 @@
         }
         
         /* Override any remaining white cards */
-        .bg-white\/90 {
+        .bg-white\/90, .bg-white\/10 {
             background: rgba(255, 255, 255, 0.9) !important;
             backdrop-filter: blur(16px) !important;
             border-radius: 1rem !important;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+            border: none !important;
+        }
+        
+        /* Style FAQ content text properly */
+        .faq-toggle h3 {
+            color: #1f2937 !important;
+        }
+        
+        .faq-toggle i {
+            color: #7c3aed !important;
+        }
+        
+        .faq-content {
+            color: #374151 !important;
+        }
+        
+        .faq-toggle:hover {
+            background: rgba(196, 181, 253, 0.1) !important;
         }
     </style>
     
