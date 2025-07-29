@@ -1,0 +1,63 @@
+// 🌍 ConvertWiz – Global Land Unit Converter Upgrade
+// Replit Prompt: Add support for international land units
+
+/*
+🔧 Objective:
+Expand the Land Unit Converter to support both Indian and Global land measurement units. 
+Implement intelligent defaults based on user region or allow selection manually.
+*/
+
+// ✅ Step 1: Define global land units
+const globalLandUnits = [
+  'Square Feet', 'Square Meters', 'Square Yards', 'Acres', 'Hectares', 'Bigha (India)', 'Gunta (India)', 'Katha (Nepal)',
+  'Ping (Taiwan)', 'Tsubo (Japan)', 'Mu (China)', 'Dunam (Middle East)', 'Cuerda (Latin America)'
+];
+
+// ✅ Step 2: Setup unit conversion map (only samples shown below for brevity)
+const landConversionRates = {
+  'Square Feet': 1,
+  'Square Meters': 10.7639,
+  'Square Yards': 9,
+  'Acres': 43560,
+  'Hectares': 107639,
+  'Bigha (India)': 27225,
+  'Gunta (India)': 1089,
+  'Katha (Nepal)': 3645,
+  'Ping (Taiwan)': 35.583,
+  'Tsubo (Japan)': 35.583,
+  'Mu (China)': 666.667,
+  'Dunam (Middle East)': 10763.9,
+  'Cuerda (Latin America)': 39304
+};
+
+// ✅ Step 3: Conversion Function
+function convertLandUnits(value, fromUnit) {
+  const fromRate = landConversionRates[fromUnit];
+  if (!fromRate) return {};
+  const baseValue = value * fromRate;
+
+  const results = {};
+  for (const unit of globalLandUnits) {
+    const rate = landConversionRates[unit];
+    results[unit] = +(baseValue / rate).toFixed(4);
+  }
+  return results;
+}
+
+// ✅ Step 4: UI Enhancements
+// Add dropdown for region selection or auto-detect using IP (optional future upgrade)
+// Populate input unit dropdown with globalLandUnits
+// Show conversion table dynamically
+
+// ✅ Sample Usage
+const sampleInput = 1; // 1 Acre
+const fromUnit = 'Acres';
+console.log(`🌍 Land Conversion from ${sampleInput} ${fromUnit}`);
+console.table(convertLandUnits(sampleInput, fromUnit));
+
+/*
+🚀 Next Steps:
+1. Integrate this into the ConvertWiz UI (HTML/JS frontend).
+2. Add unit selector and display cards for each conversion result.
+3. Optional: Add country/region selector to prioritize default units.
+*/

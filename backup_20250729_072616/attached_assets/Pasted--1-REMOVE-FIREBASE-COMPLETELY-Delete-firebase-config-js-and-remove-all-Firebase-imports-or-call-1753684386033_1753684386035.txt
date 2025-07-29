@@ -1,0 +1,182 @@
+# 1. REMOVE FIREBASE COMPLETELY
+- Delete firebase-config.js and remove all Firebase imports or calls from login.js and dashboard.js.
+- Remove Firebase SDK scripts from HTML pages.
+
+# 2. CREATE OTP-AUTH.JS
+Create a new file `otp-auth.js` with the following code:
+
+---------------------------------------
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
+const db = {}; // Temporary in-memory storage for OTPs
+const crypto = require("crypto");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+app.use(bodyParser.json());
+
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Endpoint: Send OTP
+app.post("/send-otp", async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.includes("@")) {
+    return res.status(400).json({ success: false, message: "Invalid email" });
+  }
+  const otp = generateOTP();
+  const expiry = Date.now() + 5 * 60 * 1000; // 5 min expiry
+  db[email] = { otp, expiry };
+
+  const msg = {
+    to: email,
+    from: "no-reply@convertwiz.in",
+    subject: "Your OTP for ConvertWiz Login",
+    text: `Your OTP is ${otp}`,
+  };
+
+  try {
+    await sgMail.send(msg);
+    res.json({ success: true, message: "OTP sent to email" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Failed to send OTP" });
+  }
+});
+
+// Endpoint: Verify OTP
+app.post("/verify-otp", (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !db[email]) {
+    return res.status(400).json({ success: false, message: "No OTP found" });
+  }
+  const stored = db[email];
+  if (Date.now() > stored.expiry) {
+    delete db[email];
+    return res.status(400).json({ success: false, message: "OTP expired" });
+  }
+  if (stored.otp !== otp) {
+    return res.status(400).json({ success: false, message: "Invalid OTP" });
+  }
+
+  // OTP is valid
+  const sessionToken = crypto.randomBytes(16).toString("hex");
+  db[email].sessionToken = sessionToken;
+  res.json({ success: true, sessionToken });
+});
+
+module.exports = app;
+---------------------------------------
+
+# 3. UPDATE LOGIN.HTML
+- Replace email/password fields with:
+  <input type="email" id="email" placeholder="Enter Email" required />
+  <button id="sendOtpBtn">Send OTP</button>
+  <div id="otpSection" style="display:none;">
+    <input type="text" id="otp" placeholder="Enter OTP" required />
+    <button id="verifyOtpBtn">Verify OTP</button>
+  </div>
+  <p id="authMessage"></p>
+
+# 4. UPDATE LOGIN.JS
+Replace the existing code with:
+---------------------------------------
+document.getElementById("sendOtpBtn").addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  const response = await fetch("/send-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const result = await response.json();
+  const msg = document.getElementById("authMessage");
+  if (result.success) {
+    msg.textContent = "OTP sent to your email.";
+    document.getElementById("otpSection").style.display = "block";
+  } else {
+    msg.textContent = result.message;
+  }
+});
+
+document.getElementById("verifyOtpBtn").addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  const otp = document.getElementById("otp").value;
+  const response = await fetch("/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp }),
+  });
+  const result = await response.json();
+  const msg = document.getElementById("authMessage");
+  if (result.success) {
+    localStorage.setItem("sessionToken", result.sessionToken);
+    window.location.href = "dashboard.html";
+  } else {
+    msg.textContent = result.message;
+  }
+});
+---------------------------------------
+
+# 5. DASHBOARD.JS
+---------------------------------------
+window.onload = function () {
+  const token = localStorage.getItem("sessionToken");
+  if (!token) {
+    window.location.href = "login.html";
+  }
+};
+
+function logout() {
+  localStorage.removeItem("sessionToken");
+  window.location.href = "login.html";
+}
+---------------------------------------
+
+# 6. AUTH-TESTS.JS
+Create a new file `auth-tests.js`:
+---------------------------------------
+const fetch = require("node-fetch");
+
+async function testOTPFlow() {
+  console.log("Running OTP Auth Tests...");
+  
+  const testEmail = "testuser@convertwiz.in";
+  
+  // 1. Send OTP
+  let res = await fetch("http://localhost:3000/send-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: testEmail }),
+  });
+  let data = await res.json();
+  console.log("Test 1 - Send OTP:", data.success ? "PASS" : "FAIL");
+
+  // Simulate wrong OTP
+  res = await fetch("http://localhost:3000/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: testEmail, otp: "000000" }),
+  });
+  data = await res.json();
+  console.log("Test 2 - Wrong OTP:", data.success ? "FAIL" : "PASS");
+
+  console.log("Tests complete.");
+}
+
+testOTPFlow();
+---------------------------------------
+
+# 7. PACKAGE.JSON
+Add test script:
+"scripts": {
+  "test-auth": "node auth-tests.js"
+}
+
+# 8. RUN & VALIDATE
+- Start the server and test login flow.
+- Run `npm run test-auth` to confirm:
+  - OTP sending/verification works.
+  - Dashboard is accessible post-login.
+  - Logout works and redirects to login.html.

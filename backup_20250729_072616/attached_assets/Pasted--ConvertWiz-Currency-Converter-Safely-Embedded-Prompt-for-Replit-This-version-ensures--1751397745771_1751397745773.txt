@@ -1,0 +1,107 @@
+// ✅ ConvertWiz – Currency Converter (Safely Embedded Prompt for Replit)
+
+// This version ensures it works independently at /currency route
+// and does NOT impact other components of your app
+
+/* ---------------- ROUTE SETUP (backend) ---------------- */
+// In your Express server (index.js or app.js):
+// Add this route safely
+
+app.get('/currency', (req, res) => {
+  res.sendFile(__dirname + '/public/currency.html');
+});
+
+/* ---------------- HTML: public/currency.html ---------------- */
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter | ConvertWiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="min-h-screen bg-gradient-to-tr from-blue-100 to-blue-300 p-6">
+    <div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl p-8">
+      <h2 class="text-2xl font-bold mb-4 text-center">🌍 Real-Time Currency Converter</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block font-semibold mb-1">From Currency</label>
+          <select id="from-currency" class="w-full p-2 border rounded-md"></select>
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">To Currency</label>
+          <select id="to-currency" class="w-full p-2 border rounded-md"></select>
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="block font-semibold mb-1">Amount</label>
+        <input id="amount" type="number" value="1" class="w-full p-2 border rounded-md">
+      </div>
+      <div class="flex items-center justify-center gap-4 mt-4">
+        <button id="swap-btn" class="text-blue-600 hover:text-blue-800 text-lg">🔁 Swap</button>
+      </div>
+      <div class="mt-6 text-center">
+        <p id="result" class="text-2xl font-bold text-green-700">Converted Amount: --</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/currency.js"></script>
+</body>
+</html>
+
+
+/* ---------------- JS: public/js/currency.js ---------------- */
+
+document.addEventListener('DOMContentLoaded', () => {
+  const fromSelect = document.getElementById('from-currency');
+  const toSelect = document.getElementById('to-currency');
+  const amountInput = document.getElementById('amount');
+  const resultText = document.getElementById('result');
+  const swapBtn = document.getElementById('swap-btn');
+
+  async function loadCurrencies() {
+    const res = await fetch('https://api.exchangerate.host/symbols');
+    const data = await res.json();
+    const symbols = data.symbols;
+
+    for (let code in symbols) {
+      const option1 = new Option(`${code} - ${symbols[code].description}`, code);
+      const option2 = new Option(`${code} - ${symbols[code].description}`, code);
+      fromSelect.append(option1);
+      toSelect.append(option2);
+    }
+
+    fromSelect.value = 'USD';
+    toSelect.value = 'INR';
+    convertCurrency();
+  }
+
+  async function convertCurrency() {
+    const from = fromSelect.value;
+    const to = toSelect.value;
+    const amount = amountInput.value || 1;
+
+    resultText.textContent = 'Fetching...';
+
+    const res = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}`);
+    const data = await res.json();
+
+    resultText.textContent = `Converted Amount: ${data.result.toFixed(2)} ${to}`;
+  }
+
+  fromSelect.addEventListener('change', convertCurrency);
+  toSelect.addEventListener('change', convertCurrency);
+  amountInput.addEventListener('input', convertCurrency);
+  swapBtn.addEventListener('click', () => {
+    const temp = fromSelect.value;
+    fromSelect.value = toSelect.value;
+    toSelect.value = temp;
+    convertCurrency();
+  });
+
+  loadCurrencies();
+});

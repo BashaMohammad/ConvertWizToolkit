@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- ✅ ConvertWiz SEO Meta Tags -->
-    <title>Free Online Converters - 18+ Professional Tools | ConvertWiz</title>
-    <meta name="description" content="Convert images, currencies, units & more with ConvertWiz's 18+ free online conversion tools. JPG to PNG, currency converter, word counter & SEO utilities included. No signup required." />
-    <meta name="keywords" content="online converters, JPG to PNG, currency converter, image converter, word counter, QR generator, SEO tools, free tools, color converter, temperature converter, distance converter, weight converter, height converter, percentage calculator" />
+    <title>JPG to PNG Converter – Free Online Tool | ConvertWiz</title>
+    <meta name="description" content="Convert JPG to PNG online for free with ConvertWiz. Fast, secure, and easy-to-use image converter. No registration required, unlimited conversions." />
+    <meta name="keywords" content="JPG to PNG, free image converter, online PNG tool" />
     <meta name="robots" content="index, follow" />
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Free Online Converters - 18+ Tools | ConvertWiz" />
-    <meta property="og:description" content="Convert images, currencies, units & more with ConvertWiz's 18+ free online tools. JPG to PNG, currency converter, word counter & SEO utilities. No signup required." />
+    <meta property="og:title" content="ConvertWiz - Smart Online Converters" />
+    <meta property="og:description" content="18+ professional conversion tools including image editing, currency conversion, URL shortening, SEO utilities, and more. Privacy-focused with no file uploads to servers." />
     <meta property="og:url" content="https://www.convertwiz.in" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://www.convertwiz.in/assets/convertwiz-preview.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="en_US" />
     <meta name="author" content="ConvertWiz" />
     <meta name="language" content="English" />
     <meta property="og:site_name" content="ConvertWiz" />
@@ -25,27 +20,13 @@
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Free Online Converters - 18+ Tools | ConvertWiz" />
-    <meta name="twitter:description" content="Convert images, currencies, units & more with ConvertWiz's 18+ free online tools. JPG to PNG, currency converter, word counter & SEO utilities. No signup required." />
-    <meta name="twitter:image" content="https://www.convertwiz.in/assets/convertwiz-preview.png" />
-    <meta name="twitter:creator" content="@convertwiz" />
-    <meta name="twitter:site" content="@convertwiz" />
+    <meta name="twitter:title" content="ConvertWiz - Free Online Conversion Tools" />
+    <meta name="twitter:description" content="18+ professional conversion tools including image editing, currency conversion, URL shortening, SEO utilities. Privacy-focused, mobile-friendly and secure." />
     
     <!-- Additional SEO Meta Tags -->
     <meta name="theme-color" content="#8B5CF6" />
     <meta name="msapplication-TileColor" content="#8B5CF6" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="mobile-web-app-capable" content="yes" />
     <link rel="canonical" href="https://www.convertwiz.in/" />
-    
-    <!-- Preconnect to improve performance -->
-    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    <link rel="preconnect" href="https://googletagmanager.com" />
-    <link rel="dns-prefetch" href="//cdn.tailwindcss.com" />
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
     
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -62,27 +43,6 @@
         "price": "0",
         "priceCurrency": "USD"
       },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "1247"
-      },
-      "featureList": [
-        "JPG to PNG Converter",
-        "Currency Converter", 
-        "Image Compressor",
-        "Word Counter",
-        "QR Code Generator",
-        "Distance Converter",
-        "Weight Converter",
-        "Height Converter",
-        "Temperature Converter",
-        "Color Converter",
-        "Percentage Calculator",
-        "IP Address Extractor",
-        "SEO Tools",
-        "Text Processing Tools"
-      ],
       "featureList": [
         "JPG to PNG Image Converter - Bulk processing with transparency support",
         "Instagram Profile Picture Resizer - Perfect 320x320px sizing", 
@@ -241,6 +201,44 @@
       })();
     </script>
 
+    <!-- Google AdSense Verification -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045"
+         crossorigin="anonymous"></script>
+
+    <!-- Google AdSense - Conditionally loaded based on user plan -->
+    <script>
+      // AdSense loading function that checks user plan
+      function loadAdSenseIfAllowed() {
+        // Only load AdSense script in production
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          // Check if user is premium
+          const userPlan = document.body.getAttribute('data-user-plan');
+          const isPremium = userPlan && userPlan !== 'free';
+          
+          if (!isPremium && !window.adsbygoogle) {
+            var script = document.createElement('script');
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045';
+            document.head.appendChild(script);
+            console.log('AdSense script loaded for free user');
+          } else if (isPremium) {
+            console.log('Premium user detected - AdSense script not loaded');
+          }
+        }
+      }
+
+      window.addEventListener('load', function() {
+        // Initial load delay
+        setTimeout(loadAdSenseIfAllowed, 2000);
+        
+        // Re-check when user plan changes
+        setInterval(function() {
+          loadAdSenseIfAllowed();
+        }, 5000); // Check every 5 seconds
+      });
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
@@ -260,42 +258,6 @@
         
         // ConvertWiz - All tools now freely accessible without authentication
     </script>
-
-<style>
-/* COMPONENT ISOLATION FIX */
-.tool-section {
-    display: none !important;
-}
-
-.tool-section.active {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-#landing-section.active {
-    display: block !important;
-    visibility: visible !important;
-}
-
-/* Ensure tool sections have proper structure when active */
-.tool-section.active main {
-    display: block !important;
-    visibility: visible !important;
-}
-
-.tool-section.active .container {
-    display: block !important;
-    visibility: visible !important;
-}
-
-/* Force show all child elements of active tool sections */
-.tool-section.active * {
-    visibility: visible !important;
-}
-</style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
     <!-- Navigation Header -->
@@ -378,13 +340,37 @@
     </header>
 
     <!-- Vertical Left AdSense Banner - Landing Page -->
+    <div class="adsense-banner adsense-banner-left landing-page" data-ad-type="vertical-left">
+        <!-- Production AdSense Ad -->
+        <ins class="adsbygoogle adsense-placeholder"
+             style="display:inline-block;width:160px;height:600px"
+             data-ad-client="ca-pub-2287734666559045"
+             data-ad-slot="XXXXXXXXX"></ins>
+        
+        <!-- Development Placeholder -->
+        <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-left">
+            <p>Vertical Left Banner<br>160x600</p>
+            <p class="text-xs mt-2">Landing Page</p>
+        </div>
     </div>
 
     <!-- Right Sidebar Ad - Landing Page -->
+    <div class="ads-container sidebar-ad-right" data-ad-type="sidebar-landing">
+        <!-- Production AdSense Ad -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:160px;height:600px"
+             data-ad-client="ca-pub-2287734666559045"
+             data-ad-slot="XXXXXXXXX"></ins>
+        
+        <!-- Development Placeholder -->
+        <div class="ad-placeholder" data-ad-type="vertical-right">
+            <p>Right Sidebar Ad<br>160x600</p>
+            <p class="text-xs mt-2">Landing Page</p>
+        </div>
     </div>
 
     <!-- LANDING SECTION -->
-    <div class="tool-section" id="landing-section" style="display: block;">
+    <div class="tool-section" id="landing-section">
         <main class="container mx-auto px-4 py-8">
             <!-- Hero Section -->
             <section class="text-center mb-16">
@@ -865,9 +851,22 @@
     </div>
 
     <!-- JPG TO PNG CONVERTER SECTION -->
-    <div class="tool-section" id="jpg-to-png-section">
+    <div class="tool-section" id="jpg-to-png-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">JPG to PNG Tool</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -957,8 +956,18 @@
                     <!-- AdSense Ad Unit - Below Tool Results -->
                     <div class="mt-8">
                         <!-- Production AdSense Ad -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-2287734666559045"
+                             data-ad-slot="XXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        
                         <!-- Development Placeholder -->
+                        <div class="ad-placeholder bg-gray-100 border border-gray-300 rounded-lg p-4 text-center text-gray-600" style="min-height: 150px; display: block;">
+                            <p class="text-sm font-medium">Ad will appear here in production</p>
                         </div>
+                    </div>
                 </div>
 
                 <!-- Daily Limit Reached -->
@@ -978,6 +987,10 @@
                     </div>
                 </section>
 
+
+
+
+
                 <!-- Disclaimer -->
                 <div class="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
                     <p class="text-gray-600 text-sm">
@@ -989,10 +1002,26 @@
         </main>
     </div>
 
+
+
     <!-- CURRENCY CONVERTER SECTION -->
-    <div class="tool-section" id="currency-converter-section">
+    <div class="tool-section" id="currency-converter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Currency Converter Tool</p>
+            </div>
+        </div>
+
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1063,8 +1092,18 @@
                         <!-- AdSense Ad Unit - Below Tool Results -->
                         <div id="currency-ad-section" class="hidden mt-6">
                             <!-- Production AdSense Ad -->
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-2287734666559045"
+                                 data-ad-slot="XXXXXXXXX"
+                                 data-ad-format="auto"
+                                 data-full-width-responsive="true"></ins>
+                            
                             <!-- Development Placeholder -->
+                            <div class="ad-placeholder bg-gray-100 border border-gray-300 rounded-lg p-4 text-center text-gray-600" style="min-height: 150px; display: block;">
+                                <p class="text-sm font-medium">Ad will appear here in production</p>
                             </div>
+                        </div>
                     </div>
                 </section>
 
@@ -1110,9 +1149,21 @@
     </div>
 
     <!-- LAND UNIT CONVERTER SECTION -->
-    <div class="tool-section" id="land-converter-section">
+    <div class="tool-section" id="land-converter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Land Unit Converter Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1194,9 +1245,21 @@
     </div>
 
     <!-- INSTAGRAM DP RESIZER SECTION -->
-    <div class="tool-section" id="dp-resizer-section">
+    <div class="tool-section" id="dp-resizer-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Instagram DP Resizer Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1302,9 +1365,21 @@
     </div>
 
     <!-- DISTANCE CONVERTER SECTION -->
-    <div class="tool-section" class="tool-section" id="distance-converter-section"">
+    <div class="tool-section" id="distance-converter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Distance Converter Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1419,9 +1494,21 @@
     </div>
 
     <!-- WEIGHT CONVERTER SECTION -->
-    <div class="tool-section" class="tool-section" id="weight-converter-section"">
+    <div class="tool-section" id="weight-converter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Weight Converter Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1503,9 +1590,21 @@
     </div>
 
     <!-- HEIGHT CONVERTER SECTION -->
-    <div class="tool-section" class="tool-section" id="height-converter-section"">
+    <div class="tool-section" id="height-converter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Height Converter Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1581,9 +1680,21 @@
     </div>
 
     <!-- IP ADDRESS EXTRACTOR SECTION -->
-    <div class="tool-section" class="tool-section" id="ip-extractor-section"">
+    <div class="tool-section" id="ip-extractor-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">IP Address Extractor Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1662,9 +1773,21 @@ IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334"></textarea>
     </div>
 
     <!-- WORD COUNTER SECTION -->
-    <div class="tool-section" class="tool-section" id="word-counter-section"">
+    <div class="tool-section" id="word-counter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Word Counter Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1832,9 +1955,22 @@ IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334"></textarea>
     </div>
 
     <!-- QR CODE GENERATOR SECTION -->
-    <div class="tool-section" class="tool-section" id="qr-generator-section"">
+    <div class="tool-section" id="qr-generator-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">QR Code Generator Tool</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -1906,7 +2042,7 @@ Contact: John Doe, Company Inc."></textarea>
                             <div class="mb-4">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4">QR Code Preview:</h3>
                                 <div class="flex justify-center items-center bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border-2 border-violet-200 p-8 min-h-[280px]">
-                                    <canvas id="qr-canvas"></canvas>
+                                    <canvas id="qr-canvas" style="display: none;"></canvas>
                                     <div id="qr-placeholder" class="text-center text-gray-500">
                                         <i class="fas fa-qrcode text-6xl mb-4 text-gray-300"></i>
                                         <p class="text-lg">Enter content above to generate QR code</p>
@@ -1941,9 +2077,22 @@ Contact: John Doe, Company Inc."></textarea>
     </div>
 
     <!-- PERCENTAGE CALCULATOR SECTION -->
-    <div class="tool-section" class="tool-section" id="percentage-calculator-section"">
+    <div class="tool-section" id="percentage-calculator-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Percentage Calculator</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2045,9 +2194,22 @@ Contact: John Doe, Company Inc."></textarea>
     </div>
 
     <!-- TEMPERATURE CONVERTER SECTION -->
-    <div class="tool-section" class="tool-section" id="temperature-converter-section"">
+    <div class="tool-section" id="temperature-converter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Temperature Converter Tool</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2124,9 +2286,22 @@ Contact: John Doe, Company Inc."></textarea>
     </div>
 
     <!-- COLOR CONVERTER SECTION -->
-    <div class="tool-section" id="color-converter-section">
+    <div class="tool-section" id="color-converter-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Color Converter Tool</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2205,9 +2380,22 @@ Contact: John Doe, Company Inc."></textarea>
     </div>
 
     <!-- IMAGE COMPRESSOR SECTION -->
-    <div class="tool-section" class="tool-section" id="image-compressor-section"">
+    <div class="tool-section" id="image-compressor-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Image Compressor Tool</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2307,6 +2495,10 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
+
+
+
+
                 <!-- SEO Content Section for Image Compressor -->
                 <section class="seo-content mt-8 bg-white rounded-xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">About Image Compressor</h2>
@@ -2348,9 +2540,21 @@ Contact: John Doe, Company Inc."></textarea>
     </div>
 
     <!-- TEXT-TO-SPEECH SECTION -->
-    <div class="tool-section" class="tool-section" id="text-to-speech-section"">
+    <div class="tool-section" id="text-to-speech-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Text to Speech Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2407,14 +2611,28 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
+
+
             </div>
         </main>
     </div>
 
     <!-- BACKLINK CHECKER SECTION -->
-    <div class="tool-section" class="tool-section" id="backlink-checker-section"">
+    <div class="tool-section" id="backlink-checker-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Backlink Checker Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2459,14 +2677,28 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
+
+
             </div>
         </main>
     </div>
 
     <!-- META TAG GENERATOR SECTION -->
-    <div class="tool-section" class="tool-section" id="meta-tag-generator-section"">
+    <div class="tool-section" id="meta-tag-generator-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">Meta Tag Generator Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2527,14 +2759,28 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
+
+
             </div>
         </main>
     </div>
 
     <!-- DPI CHECKER SECTION -->
-    <div class="tool-section" class="tool-section" id="dpi-checker-section"">
+    <div class="tool-section" id="dpi-checker-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">DPI Checker Tool</p>
+            </div>
+        </div>
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2577,9 +2823,22 @@ Contact: John Doe, Company Inc."></textarea>
     </div>
 
     <!-- URL SHORTENER SECTION -->
-    <div class="tool-section" class="tool-section" id="url-shortener-section"">
+    <div class="tool-section" id="url-shortener-section" style="display: none;">
         <!-- Vertical Right AdSense Banner - Component Page -->
-        
+        <div class="adsense-banner adsense-banner-right component-page" data-ad-type="vertical-right">
+            <!-- Production AdSense Ad -->
+            <ins class="adsbygoogle adsense-placeholder"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-2287734666559045"
+                 data-ad-slot="XXXXXXXXX"></ins>
+            
+            <!-- Development Placeholder -->
+            <div class="ad-placeholder adsense-placeholder" data-ad-type="vertical-right">
+                <p>Vertical Right Banner<br>160x600</p>
+                <p class="text-xs mt-2">URL Shortener Tool</p>
+            </div>
+        </div>
+
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
@@ -2659,6 +2918,8 @@ Contact: John Doe, Company Inc."></textarea>
                     </div>
                 </section>
 
+
+
             </div>
         </main>
     </div>
@@ -2715,12 +2976,15 @@ Contact: John Doe, Company Inc."></textarea>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-    <script src="emergency_component_fix.js"></script>
+    <script src="cookie-consent.js"></script>
+    <script src="tools.js"></script>
+    <script src="app.js"></script>
     <!-- ConvertWiz Free Mode - No subscription needed -->
     
     <!-- Firebase Authentication (Enhanced) -->
     <!-- Firebase authentication removed - All tools now freely accessible -->
-
+    <script src="adsense-fix.js"></script>
+    
     <script>
         // ConvertWiz - Free Tools Mode (No Authentication Required)
         console.log('🎉 ConvertWiz Free Mode - All tools accessible without login');
@@ -2744,23 +3008,12 @@ Contact: John Doe, Company Inc."></textarea>
         
         // Initialize ConvertWiz without authentication
         document.addEventListener('DOMContentLoaded', function() {
-            // FORCE HIDE ALL TOOL SECTIONS EXCEPT LANDING
-            document.querySelectorAll('.tool-section:not(#landing-section)').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Ensure landing section is visible
-            const landingSection = document.getElementById('landing-section');
-            if (landingSection) {
-                landingSection.style.display = 'block';
-            }
-            
             // Initialize routing
             if (typeof initializeRouting === 'function') {
                 initializeRouting();
             }
             
-            console.log('✅ ConvertWiz initialized - component isolation enforced');
+            console.log('✅ ConvertWiz initialized in free mode - all tools accessible');
         });
         
         // Set development mode for ad display
@@ -2773,7 +3026,12 @@ Contact: John Doe, Company Inc."></textarea>
             // Initialize ads in production only (all users see ads in free mode)
             if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 setTimeout(function() {
-                    );
+                    if (window.adsbygoogle) {
+                        const ads = document.querySelectorAll('.adsbygoogle');
+                        ads.forEach(function(ad) {
+                            if (!ad.getAttribute('data-adsbygoogle-status')) {
+                                try {
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
                                 } catch (e) {
                                     console.warn('AdSense initialization:', e.message);
                                 }

@@ -1,0 +1,91 @@
+// ✅ Replit Backend Setup – ConvertWiz Premium Foundation (Updated with Firebase Auth Middleware)
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import admin from 'firebase-admin';
+import serviceAccount from './firebase-service-account.json' assert { type: 'json' };
+import fs from 'fs';
+
+const app = express();
+app.use(bodyParser.json());
+
+// Initialize Firebase Admin SDK
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+const db = admin.firestore();
+
+// ✅ Admin Whitelist
+const adminEmails = [
+  'iqbalaiwork@gmail.com',
+  'iqbalbashasi@gmail.com',
+  'sajoshaikh@gmail.com',
+  'support@convertwiz.in'
+];
+
+// ✅ Middleware to verify Firebase ID Token securely from frontend
+async function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).send('Unauthorized: Missing token');
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    console.error('Token verification failed:', error);
+    res.status(401).send('Unauthorized: Invalid token');
+  }
+}
+
+// ✅ Admin Dashboard Route (Secure with Token Auth)
+app.get('/admin', verifyToken, async (req, res) => {
+  const email = req.user.email;
+  if (!adminEmails.includes(email)) {
+    return res.status(403).send('Access Denied');
+  }
+  try {
+    const usersSnapshot = await db.collection('users').get();
+    const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(users);
+  } catch (err) {
+    console.error('Firestore fetch error:', err);
+    res.status(500).send('Failed to load users');
+  }
+});
+
+// ✅ Percentage Calculator Endpoint
+app.post('/api/percentage-calculator', (req, res) => {
+  const { value, percentage } = req.body;
+  if (isNaN(value) || isNaN(percentage)) {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
+  const result = (value * percentage) / 100;
+  res.json({ result, message: `${percentage}% of ${value} is ${result}` });
+});
+
+// ✅ Firestore Rules (for reference)
+/*
+match /tools/{toolId} {
+  allow read: if request.auth != null &&
+    get(/databases/(default)/documents/users/$(request.auth.uid)).data.userType == "premium";
+}
+*/
+
+// ✅ Success Page Stub
+app.get('/success', (req, res) => {
+  res.send("🎉 Thank you for subscribing to ConvertWiz Premium!");
+});
+
+// ✅ Cancel Page Stub
+app.get('/cancel', (req, res) => {
+  res.send("❌ Subscription cancelled or not completed.");
+});
+
+// ✅ Run Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`ConvertWiz backend running on port ${PORT}`));

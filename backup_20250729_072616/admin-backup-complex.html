@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://www.convertwiz.in/admin-backup-complex.html">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ConvertWiz</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvOkBjDHllamPmRrJ4mRCk8Kh4aZRoMgo",
+            authDomain: "convertwiz.firebaseapp.com",
+            projectId: "convertwiz",
+            storageBucket: "convertwiz.firebasestorage.app",
+            messagingSenderId: "807062320011",
+            appId: "1:807062320011:web:d1b2c3d4e5f6g7h8i9j0k1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Set persistence to LOCAL for better cross-page auth state
+        auth.setPersistence = true;
+
+        // Global variables for access
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        
+        console.log('Firebase initialized successfully in admin dashboard');
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+            <p class="text-white text-lg">Loading Admin Dashboard...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <a href="index.html" class="text-2xl font-bold text-white">
+                        ConvertWiz ⚡ Admin
+                    </a>
+                </div>
+                
+                <!-- User Info & Logout -->
+                <div class="flex items-center space-x-4">
+                    <div id="admin-user-info" class="text-white">
+                        <span id="admin-user-email" class="text-sm"></span>
+                    </div>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Dashboard Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Users Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-500 bg-opacity-75 rounded-full">
+                        <i class="fas fa-users text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-white/70 text-sm">Total Users</p>
+                        <p id="total-users" class="text-white text-2xl font-bold">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Users Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-500 bg-opacity-75 rounded-full">
+                        <i class="fas fa-user text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-white/70 text-sm">Free Users</p>
+                        <p id="free-users" class="text-white text-2xl font-bold">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Users Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center">
+                    <div class="p-3 bg-yellow-500 bg-opacity-75 rounded-full">
+                        <i class="fas fa-crown text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-white/70 text-sm">Premium Users</p>
+                        <p id="premium-users" class="text-white text-2xl font-bold">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- User Plan Distribution Chart -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <h3 class="text-white text-lg font-semibold mb-4">User Plan Distribution</h3>
+                <canvas id="planChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <h3 class="text-white text-lg font-semibold mb-4">System Status</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-white/70">Server Status</span>
+                        <span class="text-green-400 font-semibold">
+                            <i class="fas fa-circle text-xs mr-1"></i>Online
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-white/70">Firebase Connection</span>
+                        <span class="text-green-400 font-semibold">
+                            <i class="fas fa-circle text-xs mr-1"></i>Connected
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-white/70">API Endpoints</span>
+                        <span class="text-green-400 font-semibold">
+                            <i class="fas fa-circle text-xs mr-1"></i>Active
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+            <h3 class="text-white text-lg font-semibold mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-sync-alt mr-2"></i>Refresh Data
+                </button>
+                <button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-download mr-2"></i>Export Users
+                </button>
+                <a href="index.html" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg transition-colors text-center">
+                    <i class="fas fa-home mr-2"></i>Back to Site
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Admin authentication and management
+        class AdminDashboard {
+            constructor() {
+                this.authorizedAdmins = [
+                    'iqbalaiwork@gmail.com',
+                    'iqbalbashasi@gmail.com', 
+                    'sajoshaikh@gmail.com',
+                    'support@convertwiz.in'
+                ];
+                this.init();
+            }
+
+            async init() {
+                console.log('Initializing admin dashboard...');
+                
+                let retryCount = 0;
+                const maxRetries = 50; // 5 seconds total
+                
+                const checkAuth = () => {
+                    if (typeof window.firebaseAuth === 'undefined') {
+                        retryCount++;
+                        if (retryCount < maxRetries) {
+                            setTimeout(checkAuth, 100);
+                            return;
+                        } else {
+                            console.error('Firebase auth not available after 5 seconds');
+                            this.showUnauthorized();
+                            return;
+                        }
+                    }
+
+                    console.log('Firebase auth available, checking user...');
+                    
+                    // Listen for auth state changes with immediate check
+                    window.firebaseAuth.onAuthStateChanged((user) => {
+                        console.log('Admin auth state changed:', user ? `${user.email} (emailVerified: ${user.emailVerified})` : 'No user');
+                        
+                        // Double check with current user as backup
+                        const actualUser = user || window.firebaseAuth.currentUser;
+                        
+                        if (actualUser && actualUser.email && this.isAuthorizedAdmin(actualUser.email)) {
+                            console.log('✅ Authorized admin access granted for:', actualUser.email);
+                            this.showDashboard(actualUser);
+                            this.loadDashboardData();
+                        } else {
+                            console.log('❌ Access denied for:', actualUser ? actualUser.email : 'No user');
+                            if (actualUser && actualUser.email) {
+                                console.log('User email not in authorized list:', this.authorizedAdmins);
+                                console.log('Email comparison:', this.authorizedAdmins.map(email => `"${email}" === "${actualUser.email}" ? ${email === actualUser.email}`));
+                            }
+                            
+                            // Give more time for Firebase auth state to sync
+                            setTimeout(() => {
+                                const finalUser = window.firebaseAuth.currentUser;
+                                if (!finalUser || !this.isAuthorizedAdmin(finalUser.email)) {
+                                    this.showUnauthorized();
+                                }
+                            }, 3000);
+                        }
+                    });
+                    
+                    this.setupLogout();
+                };
+                
+                checkAuth();
+            }
+
+            isAuthorizedAdmin(email) {
+                console.log('Checking admin authorization for:', email);
+                console.log('Authorized emails:', this.authorizedAdmins);
+                const isAuthorized = this.authorizedAdmins.includes(email);
+                console.log('Authorization result:', isAuthorized);
+                return isAuthorized;
+            }
+
+            showDashboard(user) {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('admin-user-email').textContent = user.email;
+                console.log('Admin dashboard loaded for:', user.email);
+            }
+
+            showUnauthorized() {
+                const currentUser = window.firebaseAuth?.currentUser;
+                const userEmail = currentUser?.email || 'Not logged in';
+                
+                document.getElementById('loading-screen').innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-lock text-red-400 text-6xl mb-4"></i>
+                        <h2 class="text-white text-2xl font-bold mb-4">Access Denied</h2>
+                        <p class="text-white/80 mb-2">Current user: ${userEmail}</p>
+                        <p class="text-white/80 mb-6">You are not authorized to access this admin dashboard.</p>
+                        <div class="space-y-3">
+                            ${!currentUser ? `
+                            <a href="index.html" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors inline-block">
+                                Login as Admin
+                            </a>
+                            ` : ''}
+                            <a href="index.html" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors inline-block">
+                                Back to ConvertWiz
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            setupLogout() {
+                document.getElementById('logout-btn').addEventListener('click', async () => {
+                    try {
+                        await window.firebaseAuth.signOut();
+                        window.location.href = 'index.html';
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                        // Force redirect
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+
+            async loadDashboardData() {
+                try {
+                    // Mock data for demo - replace with real Firebase queries
+                    const mockData = {
+                        totalUsers: 1250,
+                        freeUsers: 980,
+                        standardUsers: 200,
+                        premiumUsers: 70
+                    };
+
+                    // Update stats
+                    document.getElementById('total-users').textContent = mockData.totalUsers.toLocaleString();
+                    document.getElementById('free-users').textContent = mockData.freeUsers.toLocaleString();
+                    document.getElementById('premium-users').textContent = (mockData.standardUsers + mockData.premiumUsers).toLocaleString();
+
+                    // Create chart
+                    this.createPlanChart(mockData);
+                    
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                }
+            }
+
+            createPlanChart(data) {
+                const ctx = document.getElementById('planChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Free', 'Standard', 'Premium'],
+                        datasets: [{
+                            data: [data.freeUsers, data.standardUsers, data.premiumUsers],
+                            backgroundColor: [
+                                '#10B981',
+                                '#3B82F6', 
+                                '#F59E0B'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: 'white',
+                                    padding: 20
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize admin dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AdminDashboard();
+        });
+    </script>
+</body>
+</html>
