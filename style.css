@@ -1,12 +1,16 @@
 /* Custom CSS for additional styling */
 
 /* CRITICAL: Force component isolation */
-.tool-section:not(#landing-section) {
-    display: none !important;
+.tool-section {
+    display: none;
 }
 
 .tool-section.active {
     display: block !important;
+}
+
+#landing-section {
+    display: block;
 }
 .converter-card {
     background: linear-gradient(145deg, #ffffff, #f8fafc);

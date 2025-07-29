@@ -81,11 +81,12 @@ function showSectionById(sectionId) {
     // Show target section
     var target = document.getElementById(sectionId);
     if (target) {
-        target.style.display = 'block';
+        target.style.display = 'block !important';
         target.style.visibility = 'visible';
         target.style.opacity = '1';
         target.classList.add('active');
         console.log('🚨 EMERGENCY: SUCCESS - Section switched to =', sectionId);
+        console.log('🚨 EMERGENCY: Target element found with content length =', target.innerHTML.length);
         
         // Update URL to match component
         var pathMap = {
