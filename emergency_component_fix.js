@@ -249,6 +249,34 @@ function initializeComponentFunctionality(sectionId) {
                 console.error('❌ INIT: TextToSpeechConverter class not found');
             }
             break;
+        case 'dpi-checker-section':
+            if (typeof DPIChecker !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        new DPIChecker();
+                        console.log('✅ INIT: DPI Checker initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: DPI Checker failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: DPIChecker class not found');
+            }
+            break;
+        case 'url-shortener-section':
+            if (typeof URLShortener !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        new URLShortener();
+                        console.log('✅ INIT: URL Shortener initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: URL Shortener failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: URLShortener class not found');
+            }
+            break;
         default:
             console.log('ℹ️  INIT: No specific initialization needed for', sectionId);
     }
