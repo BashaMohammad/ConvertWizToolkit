@@ -269,9 +269,16 @@
 
 .tool-section.active {
     display: block !important;
+    visibility: visible !important;
 }
 
 #landing-section.active {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Ensure tool sections have proper structure when active */
+.tool-section.active main {
     display: block !important;
 }
 </style>

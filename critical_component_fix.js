@@ -170,9 +170,12 @@
     
     // Initialize routing
     function initializeRouting() {
+        console.log(`🔍 Initializing routing for path: ${window.location.pathname}`);
+        
         // Check for hash first
         const hash = location.hash.replace('#', '');
         if (hash) {
+            console.log(`🔗 Hash detected: ${hash}`);
             window.showTool(hash);
             return;
         }
@@ -180,6 +183,7 @@
         // Then check path
         const currentPath = window.location.pathname;
         const sectionId = getPathSection(currentPath);
+        console.log(`📍 Path: ${currentPath} -> Section: ${sectionId}`);
         window.showSection(sectionId);
     }
     
@@ -243,11 +247,13 @@
         createShowSectionFunction();
         setupNavigationHandlers();
         
-        // Run routing after DOM is ready
+        // Run routing after DOM is ready with delay to ensure all elements are loaded
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeRouting);
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initializeRouting, 200);
+            });
         } else {
-            initializeRouting();
+            setTimeout(initializeRouting, 200);
         }
         
         console.log('🎉 CRITICAL FIX: Component isolation complete');
