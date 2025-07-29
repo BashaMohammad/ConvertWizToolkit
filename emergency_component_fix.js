@@ -99,6 +99,9 @@ function showSectionById(sectionId) {
         console.log('🚨 EMERGENCY: SUCCESS - Section switched to =', sectionId);
         console.log('🚨 EMERGENCY: Target element found with content length =', target.innerHTML.length);
         
+        // Initialize component functionality based on section
+        initializeComponentFunctionality(sectionId);
+        
         // Update URL to match component
         var pathMap = {
             'jpg-to-png-section': '/jpg-to-png',
@@ -124,6 +127,100 @@ function showSectionById(sectionId) {
         }
     } else {
         console.log('🚨 EMERGENCY: FAILED - Section not found =', sectionId);
+    }
+}
+
+// Component initialization function
+function initializeComponentFunctionality(sectionId) {
+    console.log('🔧 INITIALIZING: Component functionality for =', sectionId);
+    
+    switch(sectionId) {
+        case 'jpg-to-png-section':
+            if (typeof JPGtoPNGConverter !== 'undefined') {
+                setTimeout(() => new JPGtoPNGConverter(), 100);
+                console.log('✅ INIT: JPG to PNG Converter initialized');
+            }
+            break;
+        case 'currency-converter-section':
+            if (typeof CurrencyConverter !== 'undefined') {
+                setTimeout(() => new CurrencyConverter(), 100);
+                console.log('✅ INIT: Currency Converter initialized');
+            }
+            break;
+        case 'land-converter-section':
+            if (typeof LandUnitConverter !== 'undefined') {
+                setTimeout(() => new LandUnitConverter(), 100);
+                console.log('✅ INIT: Land Unit Converter initialized');
+            }
+            break;
+        case 'dp-resizer-section':
+            if (typeof InstagramDPResizer !== 'undefined') {
+                setTimeout(() => new InstagramDPResizer(), 100);
+                console.log('✅ INIT: DP Resizer initialized');
+            }
+            break;
+        case 'word-counter-section':
+            if (typeof WordCounter !== 'undefined') {
+                setTimeout(() => new WordCounter(), 100);
+                console.log('✅ INIT: Word Counter initialized');
+            }
+            break;
+        case 'distance-converter-section':
+            if (typeof DistanceConverter !== 'undefined') {
+                setTimeout(() => new DistanceConverter(), 100);
+                console.log('✅ INIT: Distance Converter initialized');
+            }
+            break;
+        case 'weight-converter-section':
+            if (typeof WeightConverter !== 'undefined') {
+                setTimeout(() => new WeightConverter(), 100);
+                console.log('✅ INIT: Weight Converter initialized');
+            }
+            break;
+        case 'height-converter-section':
+            if (typeof HeightConverter !== 'undefined') {
+                setTimeout(() => new HeightConverter(), 100);
+                console.log('✅ INIT: Height Converter initialized');
+            }
+            break;
+        case 'color-converter-section':
+            if (typeof ColorConverter !== 'undefined') {
+                setTimeout(() => new ColorConverter(), 100);
+                console.log('✅ INIT: Color Converter initialized');
+            }
+            break;
+        case 'percentage-calculator-section':
+            if (typeof PercentageCalculator !== 'undefined') {
+                setTimeout(() => new PercentageCalculator(), 100);
+                console.log('✅ INIT: Percentage Calculator initialized');
+            }
+            break;
+        case 'temperature-converter-section':
+            if (typeof TemperatureConverter !== 'undefined') {
+                setTimeout(() => new TemperatureConverter(), 100);
+                console.log('✅ INIT: Temperature Converter initialized');
+            }
+            break;
+        case 'image-compressor-section':
+            if (typeof ImageCompressor !== 'undefined') {
+                setTimeout(() => new ImageCompressor(), 100);
+                console.log('✅ INIT: Image Compressor initialized');
+            }
+            break;
+        case 'ip-extractor-section':
+            if (typeof IPExtractor !== 'undefined') {
+                setTimeout(() => new IPExtractor(), 100);
+                console.log('✅ INIT: IP Extractor initialized');
+            }
+            break;
+        case 'qr-generator-section':
+            if (typeof QRGenerator !== 'undefined') {
+                setTimeout(() => new QRGenerator(), 100);
+                console.log('✅ INIT: QR Generator initialized');
+            }
+            break;
+        default:
+            console.log('ℹ️  INIT: No specific initialization needed for', sectionId);
     }
 }
 

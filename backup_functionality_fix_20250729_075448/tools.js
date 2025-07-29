@@ -373,6 +373,10 @@ class JPGtoPNGConverter {
         // Free mode - No limits to reach
         console.log('✅ ConvertWiz Free Mode: No conversion limits');
     }
+        
+        this.uploadArea.parentElement.style.display = 'none';
+        this.limitSection.classList.remove('hidden');
+    }
     
     toggleWatermark() {
         // Visual feedback for toggle
