@@ -235,6 +235,20 @@ function initializeComponentFunctionality(sectionId) {
                 console.log('✅ INIT: QR Generator initialized');
             }
             break;
+        case 'text-to-speech-section':
+            if (typeof TextToSpeechConverter !== 'undefined') {
+                setTimeout(() => {
+                    try {
+                        new TextToSpeechConverter();
+                        console.log('✅ INIT: Text to Speech Converter initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: Text to Speech Converter failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: TextToSpeechConverter class not found');
+            }
+            break;
         default:
             console.log('ℹ️  INIT: No specific initialization needed for', sectionId);
     }
