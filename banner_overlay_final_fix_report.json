@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-07-29T12:03:57.105751",
+  "test_suite": "Banner Overlay Positioning Fix",
+  "total_tests": 4,
+  "passed": 4,
+  "failed": 0,
+  "articles_tested": [
+    {
+      "name": "Instagram Dp Resizer Guide",
+      "status": "FIXED",
+      "details": "Proper relative container with absolute overlay positioning"
+    },
+    {
+      "name": "Word Counter Writing Guide",
+      "status": "FIXED",
+      "details": "Proper relative container with absolute overlay positioning"
+    },
+    {
+      "name": "Dpi Checker Print Guide",
+      "status": "FIXED",
+      "details": "Proper relative container with absolute overlay positioning"
+    },
+    {
+      "name": "Global Land Units Conversion Guide",
+      "status": "FIXED",
+      "details": "Proper relative container with absolute overlay positioning"
+    }
+  ],
+  "success_rate": "4/4 (100.0%)"
+}
