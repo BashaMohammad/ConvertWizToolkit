@@ -137,8 +137,16 @@ function initializeComponentFunctionality(sectionId) {
     switch(sectionId) {
         case 'jpg-to-png-section':
             if (typeof JPGtoPNGConverter !== 'undefined') {
-                setTimeout(() => new JPGtoPNGConverter(), 100);
-                console.log('✅ INIT: JPG to PNG Converter initialized');
+                setTimeout(() => {
+                    try {
+                        new JPGtoPNGConverter();
+                        console.log('✅ INIT: JPG to PNG Converter initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: JPG to PNG Converter failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: JPGtoPNGConverter class not found');
             }
             break;
         case 'currency-converter-section':
@@ -155,8 +163,16 @@ function initializeComponentFunctionality(sectionId) {
             break;
         case 'dp-resizer-section':
             if (typeof InstagramDPResizer !== 'undefined') {
-                setTimeout(() => new InstagramDPResizer(), 100);
-                console.log('✅ INIT: DP Resizer initialized');
+                setTimeout(() => {
+                    try {
+                        new InstagramDPResizer();
+                        console.log('✅ INIT: DP Resizer initialized successfully');
+                    } catch (e) {
+                        console.error('❌ INIT ERROR: DP Resizer failed:', e.message);
+                    }
+                }, 100);
+            } else {
+                console.error('❌ INIT: InstagramDPResizer class not found');
             }
             break;
         case 'word-counter-section':
