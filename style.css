@@ -273,7 +273,7 @@
 
 #watermark-toggle:checked + div .dot,
 #background-option:checked + div .dot {
-    transform: translateX(24px);
+    transform: translateX(1.5rem);
     background-color: white;
 }
 
@@ -333,21 +333,21 @@
     }
 }
 
-#watermark-toggle:checked + div .dot {
-    transform: translateX(100%);
-    background-color: #ffffff;
-}
+/* Removed duplicate rule - using unified rule above */
 
 /* Enhanced toggle switch hover and active states */
-label:hover #watermark-toggle + div {
+label:hover #watermark-toggle + div,
+label:hover #background-option + div {
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
-#watermark-toggle:checked + div {
+#watermark-toggle:checked + div,
+#background-option:checked + div {
     background: linear-gradient(135deg, #8b5cf6, #ec4899);
 }
 
-#watermark-toggle:focus + div {
+#watermark-toggle:focus + div,
+#background-option:focus + div {
     outline: 2px solid #8b5cf6;
     outline-offset: 2px;
 }
