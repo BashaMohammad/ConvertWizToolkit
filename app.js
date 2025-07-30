@@ -1,7 +1,7 @@
 // ✅ UNIVERSAL SECTION NAVIGATION HANDLER FOR CONVERTWIZ
 
-// Set development environment flag for proper ad placeholder display
-document.body.setAttribute('data-env', 'development');
+// Set production environment flag for live deployment
+document.body.setAttribute('data-env', 'production');
 
 // Hide all tool sections and show the one with the given ID
 function showSection(sectionId) {
