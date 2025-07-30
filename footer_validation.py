@@ -1,165 +1,113 @@
 #!/usr/bin/env python3
 """
-Footer Validation Script for Blog Articles
-Validates that all blog articles have correct footer structure matching main ConvertWiz design.
+ConvertWiz Footer Standardization Validation
+Validates that About, FAQ, and Blog index pages have consistent footer structure matching main site
 """
 
 import re
-import os
-from pathlib import Path
+import json
+from datetime import datetime
 
-def validate_footer_structure():
-    """Validate footer structure across all blog articles"""
+def check_footer_consistency(file_path):
+    """Check if footer structure matches main site footer"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Required footer elements
+        checks = {
+            'footer_structure': 'bg-white/90 backdrop-blur-md py-8' in content,
+            'pricing_plans_link': 'Pricing Plans' in content and 'subscribe.html' in content,
+            'privacy_policy_link': 'Privacy Policy' in content and 'privacy.html' in content,
+            'terms_link': 'Terms of Use' in content and 'terms.html' in content,
+            'disclaimer_link': 'Disclaimer' in content and 'disclaimer.html' in content,
+            'credits_link': 'Credits' in content and 'credits.html' in content,
+            'admin_link': 'Admin' in content and 'admin.html' in content,
+            'copyright': '© 2025 ConvertWiz. All rights reserved.' in content,
+            'powered_by': 'Powered by Ali' in content,
+            'legal_links_section': '<!-- Legal Links -->' in content
+        }
+        
+        return checks
+        
+    except FileNotFoundError:
+        return {'error': f'File not found: {file_path}'}
+    except Exception as e:
+        return {'error': f'Error reading {file_path}: {str(e)}'}
+
+def main():
+    print("🔍 Starting ConvertWiz Footer Standardization Validation...")
+    print("=" * 70)
     
-    results = {
-        'status': 'VALIDATION_STARTED',
-        'articles_checked': 0,
-        'articles_passed': 0,
-        'articles_failed': 0,
-        'validation_details': {},
-        'errors': []
+    # Files to validate
+    files_to_check = [
+        'about.html',
+        'faq.html',
+        'blog/index.html'
+    ]
+    
+    validation_results = {}
+    total_files = len(files_to_check)
+    passed_files = 0
+    
+    for file_path in files_to_check:
+        print(f"\n📄 Checking: {file_path}")
+        
+        checks = check_footer_consistency(file_path)
+        
+        if 'error' in checks:
+            print(f"   ❌ ERROR: {checks['error']}")
+            validation_results[file_path] = {'status': 'error', 'checks': checks}
+            continue
+        
+        # Check if all elements passed
+        all_passed = all(checks.values())
+        
+        # Display individual check results
+        for check_name, result in checks.items():
+            status = "✅" if result else "❌"
+            check_label = check_name.replace('_', ' ').title()
+            print(f"   {status} {check_label}")
+        
+        if all_passed:
+            print(f"   🎉 VALIDATION PASSED")
+            passed_files += 1
+            validation_results[file_path] = {'status': 'passed', 'checks': checks}
+        else:
+            print(f"   ❌ VALIDATION FAILED")
+            validation_results[file_path] = {'status': 'failed', 'checks': checks}
+    
+    # Summary
+    print("\n" + "=" * 70)
+    print("📊 FOOTER STANDARDIZATION VALIDATION SUMMARY")
+    print("=" * 70)
+    print(f"Total Pages Checked: {total_files}")
+    print(f"Pages Passed: {passed_files}")
+    print(f"Pages Failed: {total_files - passed_files}")
+    print(f"Success Rate: {(passed_files/total_files)*100:.1f}%")
+    
+    if passed_files == total_files:
+        print("🎉 ALL FOOTER STANDARDIZATIONS PASSED!")
+        print("✨ About, FAQ, and Blog index pages now match main site footer!")
+    else:
+        print("⚠️  Some pages need footer updates")
+        
+    # Save detailed report
+    report = {
+        'timestamp': datetime.now().isoformat(),
+        'summary': {
+            'total_files': total_files,
+            'passed_files': passed_files,
+            'failed_files': total_files - passed_files,
+            'success_rate': (passed_files/total_files)*100
+        },
+        'detailed_results': validation_results
     }
     
-    try:
-        # Blog articles to check
-        blog_files = [
-            'blog/jpg-to-png-complete-guide.html',
-            'blog/instagram-dp-resizer-guide.html',
-            'blog/word-counter-writing-guide.html',
-            'blog/dpi-checker-print-guide.html',
-            'blog/global-land-units-conversion-guide.html'
-        ]
-        
-        # Expected footer elements (must all be present)
-        required_footer_elements = [
-            'bg-white/90 backdrop-blur-md py-8',  # Footer styling
-            'Pricing Plans',  # Pricing link
-            'Privacy Policy',  # Privacy link
-            'Terms of Use',  # Terms link
-            'Disclaimer',  # Disclaimer link
-            'Credits',  # Credits link
-            'Admin',  # Admin link
-            '© 2025 ConvertWiz. All rights reserved.',  # Copyright
-            'Powered by Ali',  # Attribution
-            'mobile-menu-btn',  # Mobile menu script
-        ]
-        
-        print("🔍 Starting Footer Structure Validation...")
-        print("=" * 50)
-        
-        for file_path in blog_files:
-            results['articles_checked'] += 1
-            print(f"\n📄 Checking: {file_path}")
-            
-            if not os.path.exists(file_path):
-                error_msg = f"File not found: {file_path}"
-                results['errors'].append(error_msg)
-                results['validation_details'][file_path] = {'status': 'FILE_NOT_FOUND', 'missing_elements': []}
-                continue
-            
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                
-                missing_elements = []
-                found_elements = []
-                
-                # Check each required element
-                for element in required_footer_elements:
-                    if element in content:
-                        found_elements.append(element)
-                        print(f"   ✅ {element}")
-                    else:
-                        missing_elements.append(element)
-                        print(f"   ❌ MISSING: {element}")
-                
-                # Check for proper HTML structure
-                if '</footer>' in content and '<footer' in content:
-                    found_elements.append('Footer HTML structure')
-                    print(f"   ✅ Footer HTML structure")
-                else:
-                    missing_elements.append('Footer HTML structure')
-                    print(f"   ❌ MISSING: Footer HTML structure")
-                
-                # Check for mobile menu script
-                if 'mobile-menu-btn' in content and 'DOMContentLoaded' in content:
-                    found_elements.append('Mobile menu functionality')
-                    print(f"   ✅ Mobile menu functionality")
-                else:
-                    missing_elements.append('Mobile menu functionality')
-                    print(f"   ❌ MISSING: Mobile menu functionality")
-                
-                # Determine pass/fail status
-                if len(missing_elements) == 0:
-                    results['articles_passed'] += 1
-                    results['validation_details'][file_path] = {
-                        'status': 'PASSED',
-                        'found_elements': len(found_elements),
-                        'missing_elements': []
-                    }
-                    print(f"   🎉 VALIDATION PASSED")
-                else:
-                    results['articles_failed'] += 1
-                    results['validation_details'][file_path] = {
-                        'status': 'FAILED',
-                        'found_elements': len(found_elements),
-                        'missing_elements': missing_elements
-                    }
-                    print(f"   💥 VALIDATION FAILED - {len(missing_elements)} missing elements")
-                
-            except Exception as e:
-                error_msg = f"Error reading {file_path}: {str(e)}"
-                results['errors'].append(error_msg)
-                results['validation_details'][file_path] = {'status': 'ERROR', 'error': str(e)}
-                print(f"   💥 ERROR: {str(e)}")
-        
-        # Calculate success rate
-        if results['articles_checked'] > 0:
-            success_rate = (results['articles_passed'] / results['articles_checked']) * 100
-        else:
-            success_rate = 0
-        
-        print("\n" + "=" * 50)
-        print("📊 FOOTER VALIDATION SUMMARY")
-        print("=" * 50)
-        print(f"Total Articles Checked: {results['articles_checked']}")
-        print(f"Articles Passed: {results['articles_passed']}")
-        print(f"Articles Failed: {results['articles_failed']}")
-        print(f"Success Rate: {success_rate:.1f}%")
-        
-        if results['articles_failed'] == 0:
-            print("🎉 ALL FOOTER VALIDATIONS PASSED!")
-            results['status'] = 'ALL_PASSED'
-        else:
-            print("⚠️  Some footer validations failed")
-            results['status'] = 'SOME_FAILED'
-        
-        if results['errors']:
-            print(f"\n❌ Errors encountered: {len(results['errors'])}")
-            for error in results['errors']:
-                print(f"   - {error}")
-        
-        return results
-        
-    except Exception as e:
-        results['status'] = 'VALIDATION_ERROR'
-        results['errors'].append(f"Validation script error: {str(e)}")
-        print(f"💥 Validation script error: {str(e)}")
-        return results
-
-if __name__ == "__main__":
-    validation_results = validate_footer_structure()
-    
-    # Create validation report
-    import json
-    
     with open('footer_validation_report.json', 'w') as f:
-        json.dump(validation_results, f, indent=2)
+        json.dump(report, f, indent=2)
     
     print(f"\n📝 Detailed validation report saved to: footer_validation_report.json")
-    
-    # Exit with appropriate code
-    if validation_results['status'] == 'ALL_PASSED':
-        exit(0)
-    else:
-        exit(1)
+
+if __name__ == "__main__":
+    main()

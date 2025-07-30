@@ -1,34 +1,56 @@
 {
-  "status": "ALL_PASSED",
-  "articles_checked": 5,
-  "articles_passed": 5,
-  "articles_failed": 0,
-  "validation_details": {
-    "blog/jpg-to-png-complete-guide.html": {
-      "status": "PASSED",
-      "found_elements": 12,
-      "missing_elements": []
-    },
-    "blog/instagram-dp-resizer-guide.html": {
-      "status": "PASSED",
-      "found_elements": 12,
-      "missing_elements": []
-    },
-    "blog/word-counter-writing-guide.html": {
-      "status": "PASSED",
-      "found_elements": 12,
-      "missing_elements": []
-    },
-    "blog/dpi-checker-print-guide.html": {
-      "status": "PASSED",
-      "found_elements": 12,
-      "missing_elements": []
-    },
-    "blog/global-land-units-conversion-guide.html": {
-      "status": "PASSED",
-      "found_elements": 12,
-      "missing_elements": []
-    }
+  "timestamp": "2025-07-30T07:15:52.011099",
+  "summary": {
+    "total_files": 3,
+    "passed_files": 3,
+    "failed_files": 0,
+    "success_rate": 100.0
   },
-  "errors": []
+  "detailed_results": {
+    "about.html": {
+      "status": "passed",
+      "checks": {
+        "footer_structure": true,
+        "pricing_plans_link": true,
+        "privacy_policy_link": true,
+        "terms_link": true,
+        "disclaimer_link": true,
+        "credits_link": true,
+        "admin_link": true,
+        "copyright": true,
+        "powered_by": true,
+        "legal_links_section": true
+      }
+    },
+    "faq.html": {
+      "status": "passed",
+      "checks": {
+        "footer_structure": true,
+        "pricing_plans_link": true,
+        "privacy_policy_link": true,
+        "terms_link": true,
+        "disclaimer_link": true,
+        "credits_link": true,
+        "admin_link": true,
+        "copyright": true,
+        "powered_by": true,
+        "legal_links_section": true
+      }
+    },
+    "blog/index.html": {
+      "status": "passed",
+      "checks": {
+        "footer_structure": true,
+        "pricing_plans_link": true,
+        "privacy_policy_link": true,
+        "terms_link": true,
+        "disclaimer_link": true,
+        "credits_link": true,
+        "admin_link": true,
+        "copyright": true,
+        "powered_by": true,
+        "legal_links_section": true
+      }
+    }
+  }
 }
