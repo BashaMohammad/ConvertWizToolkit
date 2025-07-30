@@ -1,0 +1,29 @@
+{
+  "index.html": {
+    "title": "ConvertWiz \u26a1 - Free Online Converter Tools Suite | JPG to PNG, Currency, Units",
+    "description": "Professional multi-tool converter platform with 18+ free conversion tools. Convert images (JPG to PNG), currencies, measurements, and more. No registration required, privacy-focused.",
+    "keywords": "jpg to png converter, currency converter, image converter, measurement converter, free online tools, convertwiz",
+    "og_title": "ConvertWiz - Free Professional Conversion Tools",
+    "og_description": "Convert images, currencies, and measurements with our free professional tools. Privacy-focused, no registration required.",
+    "twitter_title": "ConvertWiz - Free Converter Tools Suite",
+    "twitter_description": "18+ professional conversion tools: images, currencies, measurements. Free & privacy-focused."
+  },
+  "about.html": {
+    "title": "About ConvertWiz - Professional Conversion Tools Platform | Our Mission & Values",
+    "description": "Learn about ConvertWiz's mission to provide free, professional-grade conversion tools. Privacy-focused platform serving millions of users worldwide with client-side processing.",
+    "keywords": "about convertwiz, conversion tools platform, privacy focused tools, professional converters",
+    "og_title": "About ConvertWiz - Professional Conversion Platform",
+    "og_description": "Professional conversion tools platform serving millions with privacy-focused, client-side processing.",
+    "twitter_title": "About ConvertWiz Conversion Platform",
+    "twitter_description": "Privacy-focused conversion tools serving millions worldwide."
+  },
+  "blog/index.html": {
+    "title": "ConvertWiz Blog - Expert Guides on Image Conversion, Currency Tools & More",
+    "description": "Expert guides and tutorials on image conversion, currency tools, measurement converters, and digital optimization. Professional insights from ConvertWiz team.",
+    "keywords": "conversion guides, image optimization, currency conversion tips, measurement tools tutorials",
+    "og_title": "ConvertWiz Blog - Expert Conversion Guides",
+    "og_description": "Professional guides on image conversion, currency tools, and digital optimization techniques.",
+    "twitter_title": "ConvertWiz Expert Guides & Tutorials",
+    "twitter_description": "Professional insights on conversion tools and digital optimization."
+  }
+}

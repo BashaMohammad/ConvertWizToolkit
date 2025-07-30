@@ -1,78 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.convertwiz.in/</loc>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<!-- Homepage -->
+<url>
+    <loc>https://convertwiz.in/</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+</url>
+
+<!-- Core Pages -->
+<url>
+    <loc>https://convertwiz.in/about.html</loc>
+    <lastmod>2025-07-30</lastmod>
     <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#jpg-to-png-section</loc>
+    <priority>0.8</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/faq.html</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+</url>
+
+<!-- Legal Pages -->
+<url>
+    <loc>https://convertwiz.in/privacy.html</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/terms.html</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/disclaimer.html</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/credits.html</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+
+<!-- Blog System -->
+<url>
+    <loc>https://convertwiz.in/blog/index.html</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/blog/jpg-to-png-complete-guide.html</loc>
+    <lastmod>2025-07-30</lastmod>
     <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#currency-converter-section</loc>
     <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#land-unit-converter-section</loc>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/blog/instagram-dp-resizer-guide.html</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/blog/word-counter-writing-guide.html</loc>
+    <lastmod>2025-07-30</lastmod>
     <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#instagram-dp-resizer-section</loc>
     <priority>0.8</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/blog/dpi-checker-print-guide.html</loc>
+    <lastmod>2025-07-30</lastmod>
     <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#word-counter-section</loc>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+</url>
+
+<url>
+    <loc>https://convertwiz.in/blog/global-land-units-conversion-guide.html</loc>
+    <lastmod>2025-07-30</lastmod>
     <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#distance-converter-section</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#weight-converter-section</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#height-converter-section</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#ip-extractor-section</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/#qr-generator-section</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/privacy.html</loc>
-    <priority>0.3</priority>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/terms.html</loc>
-    <priority>0.3</priority>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/disclaimer.html</loc>
-    <priority>0.3</priority>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>https://www.convertwiz.in/credits.html</loc>
-    <priority>0.2</priority>
-    <changefreq>yearly</changefreq>
-  </url>
+    <priority>0.8</priority>
+</url>
+
 </urlset>

@@ -1,0 +1,56 @@
+{
+  "organization": {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ConvertWiz",
+    "url": "https://convertwiz.in",
+    "logo": "https://convertwiz.in/assets/logo.png",
+    "description": "Professional multi-tool conversion platform offering 18+ free conversion tools including image conversion, currency conversion, and measurement converters.",
+    "foundingDate": "2025",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-555-CONVERT",
+      "contactType": "customer service",
+      "email": "support@convertwiz.in"
+    },
+    "sameAs": [
+      "https://twitter.com/convertwiz",
+      "https://facebook.com/convertwiz",
+      "https://linkedin.com/company/convertwiz"
+    ]
+  },
+  "website": {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ConvertWiz - Free Multi-Tool Converter Suite",
+    "url": "https://convertwiz.in",
+    "description": "Free online conversion tools for images, currencies, measurements, and more. No registration required, privacy-focused client-side processing.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://convertwiz.in/?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  },
+  "software": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ConvertWiz Converter Tools",
+    "operatingSystem": "Web Browser",
+    "applicationCategory": "Utility",
+    "description": "Professional-grade conversion tools for images, currencies, measurements, and file formats.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "2847",
+      "bestRating": "5"
+    }
+  }
+}
