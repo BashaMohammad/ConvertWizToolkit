@@ -1,39 +1,749 @@
 {
-  "timestamp": "2025-07-29T18:00:48.421489",
-  "compliance_rate": "100.0%",
-  "total_requirements": 20,
-  "completed_requirements": 20,
-  "checklist": {
-    "content_depth": {
-      "about_page": "Comprehensive About page with team, mission, values",
-      "faq_page": "Detailed FAQ with structured data and categories",
-      "blog_content": "10 professional articles with human stories",
-      "tool_descriptions": "Enhanced tool descriptions with use cases"
+  "timestamp": "2025-07-30T07:24:22.193590",
+  "overall_score": 90.4,
+  "tests": {
+    "content_quality": {
+      "index.html": {
+        "word_count": 3320,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": true,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "about.html": {
+        "word_count": 373,
+        "meets_minimum": true,
+        "substantial_content": false,
+        "has_headings": true,
+        "has_images": false,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "faq.html": {
+        "word_count": 742,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": false,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "privacy.html": {
+        "word_count": 544,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": false,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "terms.html": {
+        "word_count": 627,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": false,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "disclaimer.html": {
+        "word_count": 345,
+        "meets_minimum": true,
+        "substantial_content": false,
+        "has_headings": true,
+        "has_images": false,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "credits.html": {
+        "word_count": 418,
+        "meets_minimum": true,
+        "substantial_content": false,
+        "has_headings": true,
+        "has_images": false,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "blog/index.html": {
+        "word_count": 560,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": true,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "blog/jpg-to-png-complete-guide.html": {
+        "word_count": 1093,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": true,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "blog/instagram-dp-resizer-guide.html": {
+        "word_count": 1171,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": true,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "blog/word-counter-writing-guide.html": {
+        "word_count": 1059,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": true,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "blog/dpi-checker-print-guide.html": {
+        "word_count": 1122,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": true,
+        "has_meta_description": true,
+        "has_title": true
+      },
+      "blog/global-land-units-conversion-guide.html": {
+        "word_count": 1100,
+        "meets_minimum": true,
+        "substantial_content": true,
+        "has_headings": true,
+        "has_images": true,
+        "has_meta_description": true,
+        "has_title": true
+      }
+    },
+    "navigation_links": {
+      "index.html": {
+        "total_links": 12,
+        "broken_links": [],
+        "valid_links": [
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "subscribe.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "credits.html",
+          "admin.html"
+        ]
+      },
+      "about.html": {
+        "total_links": 14,
+        "broken_links": [],
+        "valid_links": [
+          "about.html",
+          "index.html",
+          "index.html",
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "index.html",
+          "index.html",
+          "subscribe.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "credits.html",
+          "admin.html"
+        ]
+      },
+      "faq.html": {
+        "total_links": 14,
+        "broken_links": [],
+        "valid_links": [
+          "faq.html",
+          "index.html",
+          "index.html",
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "index.html",
+          "index.html",
+          "subscribe.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "credits.html",
+          "admin.html"
+        ]
+      },
+      "privacy.html": {
+        "total_links": 15,
+        "broken_links": [],
+        "valid_links": [
+          "privacy.html",
+          "index.html",
+          "index.html",
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "privacy.html",
+          "index.html",
+          "index.html",
+          "index.html",
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "privacy.html",
+          "terms.html"
+        ]
+      },
+      "terms.html": {
+        "total_links": 13,
+        "broken_links": [],
+        "valid_links": [
+          "terms.html",
+          "index.html",
+          "index.html",
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "privacy.html",
+          "terms.html",
+          "index.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "credits.html"
+        ]
+      },
+      "disclaimer.html": {
+        "total_links": 14,
+        "broken_links": [],
+        "valid_links": [
+          "disclaimer.html",
+          "index.html",
+          "index.html",
+          "blog/index.html",
+          "about.html",
+          "faq.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "index.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "credits.html"
+        ]
+      },
+      "credits.html": {
+        "total_links": 9,
+        "broken_links": [],
+        "valid_links": [
+          "credits.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "credits.html",
+          "privacy.html",
+          "terms.html",
+          "disclaimer.html",
+          "credits.html"
+        ]
+      },
+      "blog/index.html": {
+        "total_links": 18,
+        "broken_links": [
+          "jpg-to-png-complete-guide.html",
+          "instagram-dp-resizer-guide.html",
+          "word-counter-writing-guide.html",
+          "dpi-checker-print-guide.html",
+          "global-land-units-conversion-guide.html"
+        ],
+        "valid_links": [
+          "../index.html",
+          "../index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../about.html",
+          "../faq.html",
+          "../subscribe.html",
+          "../privacy.html",
+          "../terms.html",
+          "../disclaimer.html",
+          "../credits.html",
+          "../admin.html"
+        ]
+      },
+      "blog/jpg-to-png-complete-guide.html": {
+        "total_links": 18,
+        "broken_links": [],
+        "valid_links": [
+          "../index.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../subscribe.html",
+          "../privacy.html",
+          "../terms.html",
+          "../disclaimer.html",
+          "../credits.html",
+          "../admin.html"
+        ]
+      },
+      "blog/instagram-dp-resizer-guide.html": {
+        "total_links": 19,
+        "broken_links": [
+          "jpg-to-png-complete-guide.html"
+        ],
+        "valid_links": [
+          "../index.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../subscribe.html",
+          "../privacy.html",
+          "../terms.html",
+          "../disclaimer.html",
+          "../credits.html",
+          "../admin.html"
+        ]
+      },
+      "blog/word-counter-writing-guide.html": {
+        "total_links": 20,
+        "broken_links": [
+          "instagram-dp-resizer-guide.html",
+          "jpg-to-png-complete-guide.html"
+        ],
+        "valid_links": [
+          "../index.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../subscribe.html",
+          "../privacy.html",
+          "../terms.html",
+          "../disclaimer.html",
+          "../credits.html",
+          "../admin.html"
+        ]
+      },
+      "blog/dpi-checker-print-guide.html": {
+        "total_links": 20,
+        "broken_links": [
+          "jpg-to-png-complete-guide.html",
+          "word-counter-writing-guide.html"
+        ],
+        "valid_links": [
+          "../index.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../subscribe.html",
+          "../privacy.html",
+          "../terms.html",
+          "../disclaimer.html",
+          "../credits.html",
+          "../admin.html"
+        ]
+      },
+      "blog/global-land-units-conversion-guide.html": {
+        "total_links": 21,
+        "broken_links": [
+          "currency-conversion-guide.html",
+          "dpi-checker-print-guide.html",
+          "word-counter-writing-guide.html"
+        ],
+        "valid_links": [
+          "../index.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../index.html",
+          "index.html",
+          "../about.html",
+          "../faq.html",
+          "../index.html",
+          "../subscribe.html",
+          "../privacy.html",
+          "../terms.html",
+          "../disclaimer.html",
+          "../credits.html",
+          "../admin.html"
+        ]
+      }
+    },
+    "legal_compliance": {
+      "privacy.html": {
+        "exists": true,
+        "word_count": 544,
+        "substantial": true,
+        "has_contact_info": true,
+        "updated_recently": true
+      },
+      "terms.html": {
+        "exists": true,
+        "word_count": 627,
+        "substantial": true,
+        "has_contact_info": true,
+        "updated_recently": true
+      },
+      "disclaimer.html": {
+        "exists": true,
+        "word_count": 345,
+        "substantial": false,
+        "has_contact_info": true,
+        "updated_recently": true
+      },
+      "index.html_links": {
+        "links_to_privacy": true,
+        "links_to_terms": true,
+        "links_to_disclaimer": true
+      },
+      "about.html_links": {
+        "links_to_privacy": true,
+        "links_to_terms": true,
+        "links_to_disclaimer": true
+      },
+      "faq.html_links": {
+        "links_to_privacy": true,
+        "links_to_terms": true,
+        "links_to_disclaimer": true
+      }
+    },
+    "seo_optimization": {
+      "index.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": true,
+        "has_open_graph": true,
+        "has_canonical": true
+      },
+      "about.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": false,
+        "has_open_graph": true,
+        "has_canonical": true
+      },
+      "faq.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": false,
+        "has_open_graph": true,
+        "has_canonical": true
+      },
+      "privacy.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": true,
+        "has_h1_tag": true,
+        "has_alt_tags": false,
+        "has_open_graph": true,
+        "has_canonical": true
+      },
+      "terms.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": true,
+        "has_h1_tag": true,
+        "has_alt_tags": false,
+        "has_open_graph": true,
+        "has_canonical": true
+      },
+      "disclaimer.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": true,
+        "has_h1_tag": true,
+        "has_alt_tags": false,
+        "has_open_graph": true,
+        "has_canonical": true
+      },
+      "credits.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": false,
+        "has_open_graph": false,
+        "has_canonical": true
+      },
+      "blog/index.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": true,
+        "has_h1_tag": true,
+        "has_alt_tags": true,
+        "has_open_graph": true,
+        "has_canonical": false
+      },
+      "blog/jpg-to-png-complete-guide.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": true,
+        "has_h1_tag": true,
+        "has_alt_tags": true,
+        "has_open_graph": true,
+        "has_canonical": false
+      },
+      "blog/instagram-dp-resizer-guide.html": {
+        "has_title": true,
+        "title_length_ok": false,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": true,
+        "has_open_graph": true,
+        "has_canonical": false
+      },
+      "blog/word-counter-writing-guide.html": {
+        "has_title": true,
+        "title_length_ok": true,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": true,
+        "has_open_graph": true,
+        "has_canonical": false
+      },
+      "blog/dpi-checker-print-guide.html": {
+        "has_title": true,
+        "title_length_ok": false,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": true,
+        "has_open_graph": true,
+        "has_canonical": false
+      },
+      "blog/global-land-units-conversion-guide.html": {
+        "has_title": true,
+        "title_length_ok": false,
+        "has_meta_description": true,
+        "description_length_ok": false,
+        "has_h1_tag": true,
+        "has_alt_tags": true,
+        "has_open_graph": true,
+        "has_canonical": false
+      }
+    },
+    "performance": {
+      "large_files": [],
+      "external_dependencies": [
+        "https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"
+      ],
+      "inline_styles": 3,
+      "javascript_errors": []
     },
     "user_experience": {
-      "navigation": "Clear navigation with About, FAQ, Contact links",
-      "mobile_responsive": "Mobile-first responsive design",
-      "fast_loading": "Optimized performance with preconnect",
-      "accessibility": "Screen reader friendly with proper semantics"
+      "index.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": false,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      },
+      "about.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": true,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      },
+      "faq.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": false,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      },
+      "privacy.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": false,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      },
+      "terms.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": false,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      },
+      "disclaimer.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": false,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      },
+      "credits.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": false,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      },
+      "blog/index.html": {
+        "has_navigation": true,
+        "has_footer": true,
+        "mobile_responsive": false,
+        "has_contact_info": true,
+        "clear_purpose": true,
+        "professional_design": true
+      }
     },
-    "technical_seo": {
-      "structured_data": "JSON-LD schemas for FAQ and WebApplication",
-      "meta_tags": "Comprehensive meta descriptions and Open Graph",
-      "canonical_urls": "Proper canonical tags on all pages",
-      "sitemap": "XML sitemap with all pages indexed"
-    },
-    "content_quality": {
-      "original_content": "All content original with personal experiences",
-      "expertise_demonstration": "Team credentials and technology details",
-      "user_value": "Clear value proposition and problem solving",
-      "regular_updates": "Fresh blog content with professional insights"
-    },
-    "privacy_compliance": {
-      "privacy_policy": "Updated privacy policy with AdSense compliance",
-      "terms_service": "Clear terms of service and usage guidelines",
-      "contact_information": "Multiple contact methods and support",
-      "data_protection": "Clear data handling and privacy statements"
+    "admin_links_hidden": {
+      "index.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "about.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "faq.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "privacy.html": {
+        "admin_link_hidden": false,
+        "no_active_admin_links": true
+      },
+      "terms.html": {
+        "admin_link_hidden": false,
+        "no_active_admin_links": true
+      },
+      "disclaimer.html": {
+        "admin_link_hidden": false,
+        "no_active_admin_links": true
+      },
+      "credits.html": {
+        "admin_link_hidden": false,
+        "no_active_admin_links": true
+      },
+      "blog/index.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "blog/jpg-to-png-complete-guide.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "blog/instagram-dp-resizer-guide.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "blog/word-counter-writing-guide.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "blog/dpi-checker-print-guide.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      },
+      "blog/global-land-units-conversion-guide.html": {
+        "admin_link_hidden": true,
+        "no_active_admin_links": true
+      }
     }
   },
-  "ready_for_submission": true
+  "recommendations": [
+    "\ud83d\udd17 blog/index.html: Fix broken links: jpg-to-png-complete-guide.html, instagram-dp-resizer-guide.html, word-counter-writing-guide.html, dpi-checker-print-guide.html, global-land-units-conversion-guide.html",
+    "\ud83d\udd17 blog/instagram-dp-resizer-guide.html: Fix broken links: jpg-to-png-complete-guide.html",
+    "\ud83d\udd17 blog/word-counter-writing-guide.html: Fix broken links: instagram-dp-resizer-guide.html, jpg-to-png-complete-guide.html",
+    "\ud83d\udd17 blog/dpi-checker-print-guide.html: Fix broken links: jpg-to-png-complete-guide.html, word-counter-writing-guide.html",
+    "\ud83d\udd17 blog/global-land-units-conversion-guide.html: Fix broken links: currency-conversion-guide.html, dpi-checker-print-guide.html, word-counter-writing-guide.html"
+  ],
+  "score_breakdown": [
+    [
+      "Content Quality",
+      88.46153846153845,
+      0.4
+    ],
+    [
+      "Navigation",
+      93.71980676328504,
+      0.2
+    ],
+    [
+      "Legal Compliance",
+      100.0,
+      0.2
+    ],
+    [
+      "SEO Optimization",
+      76.92307692307693,
+      0.1
+    ],
+    [
+      "User Experience",
+      85.41666666666666,
+      0.1
+    ]
+  ]
 }
