@@ -120,31 +120,89 @@
 </head>
 <body>
     <!-- Navigation Header -->
-    <nav class="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between h-16">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-purple-100">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="../index.html" class="text-2xl font-bold gradient-text">
-                        <i class="fas fa-magic mr-2"></i>ConvertWiz
+                    <a href="../index.html" class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform">
+                        ConvertWiz ⚡
                     </a>
                 </div>
                 
-                <!-- Navigation Links -->
-                <div class="hidden md:flex space-x-6">
-                    <a href="../index.html" class="text-gray-700 hover:text-purple-600 transition-colors">
-                        <i class="fas fa-home mr-1"></i>Home
-                    </a>
-                    <a href="index.html" class="text-purple-600 font-semibold">
-                        <i class="fas fa-blog mr-1"></i>Blog
-                    </a>
-                    <a href="../contact.html" class="text-gray-700 hover:text-purple-600 transition-colors">
-                        <i class="fas fa-envelope mr-1"></i>Contact
-                    </a>
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <!-- Navigation Links -->
+                    <nav class="flex items-center space-x-6">
+                        <a href="../index.html" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50">
+                            Home
+                        </a>
+                        <a href="../index.html#tools" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50">
+                            Tools
+                        </a>
+                        <a href="index.html" class="nav-link text-purple-600 font-semibold px-3 py-2 rounded-lg bg-purple-50 flex items-center">
+                            <i class="fas fa-blog mr-2 text-sm"></i>Blog
+                        </a>
+                        <a href="../about.html" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
+                            <i class="fas fa-info-circle mr-2 text-sm"></i>About
+                        </a>
+                        <a href="../faq.html" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
+                            <i class="fas fa-question-circle mr-2 text-sm"></i>FAQ
+                        </a>
+                        <a href="mailto:support@convertwiz.in" class="nav-link text-gray-600 hover:text-purple-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-purple-50 flex items-center">
+                            <i class="fas fa-envelope mr-2 text-sm"></i>Contact
+                        </a>
+                    </nav>
+                    
+                    <!-- Free Tools Badge -->
+                    <div class="flex items-center">
+                        <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+                            <i class="fas fa-check-circle mr-2"></i>All Tools Free
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-purple-600 p-2 rounded-lg hover:bg-purple-50 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200 shadow-lg">
+                <div class="container mx-auto px-4 py-4">
+                    <div class="flex flex-col space-y-1">
+                        <!-- Navigation Links -->
+                        <a href="../index.html" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-home mr-3 text-sm w-4"></i>Home
+                        </a>
+                        <a href="../index.html#tools" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-tools mr-3 text-sm w-4"></i>Tools
+                        </a>
+                        <a href="index.html" class="nav-link text-purple-600 font-semibold px-4 py-3 rounded-lg bg-purple-50 flex items-center">
+                            <i class="fas fa-blog mr-3 text-sm w-4"></i>Blog
+                        </a>
+                        <a href="../about.html" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-info-circle mr-3 text-sm w-4"></i>About
+                        </a>
+                        <a href="../faq.html" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-question-circle mr-3 text-sm w-4"></i>FAQ
+                        </a>
+                        <a href="mailto:support@convertwiz.in" class="nav-link text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors px-4 py-3 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-envelope mr-3 text-sm w-4"></i>Contact
+                        </a>
+                        
+                        <!-- Mobile Free Tools Info -->
+                        <div class="pt-4 border-t border-gray-200 mt-2 px-4">
+                            <div class="w-full bg-green-100 text-green-800 px-4 py-3 rounded-xl text-center font-medium">
+                                <i class="fas fa-check-circle mr-2"></i>All Tools Available Free
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
@@ -372,17 +430,70 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white/90 backdrop-blur-md mt-16 py-8">
-        <div class="container mx-auto px-4 text-center">
-            <div class="flex flex-wrap justify-center items-center gap-4 mb-4 text-sm">
-                <a href="../privacy.html" class="text-gray-600 hover:text-purple-600 transition-colors">Privacy Policy</a>
-                <a href="../terms.html" class="text-gray-600 hover:text-purple-600 transition-colors">Terms of Service</a>
-                <a href="mailto:support@convertwiz.in" class="text-gray-600 hover:text-purple-600 transition-colors">Contact</a>
+    <footer class="bg-white/90 backdrop-blur-md py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <!-- Legal Links -->
+                <div class="flex flex-wrap justify-center items-center gap-4 mb-4 text-sm">
+                    <a href="../subscribe.html" class="text-gray-600 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-crown mr-1"></i>Pricing Plans
+                    </a>
+                    <a href="../privacy.html" class="text-gray-600 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-shield-alt mr-1"></i>Privacy Policy
+                    </a>
+                    <a href="../terms.html" class="text-gray-600 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-file-contract mr-1"></i>Terms of Use
+                    </a>
+                    <a href="../disclaimer.html" class="text-gray-600 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-exclamation-triangle mr-1"></i>Disclaimer
+                    </a>
+                    <a href="../credits.html" class="text-gray-600 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-heart mr-1"></i>Credits
+                    </a>
+                    <a href="../admin.html" class="text-gray-600 hover:text-purple-600 transition-colors">
+                        <i class="fas fa-chart-line mr-1"></i>Admin
+                    </a>
+                </div>
+                
+                <p class="text-gray-600">
+                    © 2025 ConvertWiz. All rights reserved.
+                </p>
+                <p class="text-gray-500 text-sm mt-2">
+                    Powered by Ali
+                </p>
             </div>
-            <p class="text-gray-600 text-sm">
-                © 2025 ConvertWiz. All rights reserved. | Powered by Ali
-            </p>
         </div>
     </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle('hidden');
+                });
+                
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+                
+                // Close mobile menu when clicking on links
+                const menuLinks = mobileMenu.querySelectorAll('a');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>

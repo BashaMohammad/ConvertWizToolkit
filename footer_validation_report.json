@@ -1,0 +1,34 @@
+{
+  "status": "ALL_PASSED",
+  "articles_checked": 5,
+  "articles_passed": 5,
+  "articles_failed": 0,
+  "validation_details": {
+    "blog/jpg-to-png-complete-guide.html": {
+      "status": "PASSED",
+      "found_elements": 12,
+      "missing_elements": []
+    },
+    "blog/instagram-dp-resizer-guide.html": {
+      "status": "PASSED",
+      "found_elements": 12,
+      "missing_elements": []
+    },
+    "blog/word-counter-writing-guide.html": {
+      "status": "PASSED",
+      "found_elements": 12,
+      "missing_elements": []
+    },
+    "blog/dpi-checker-print-guide.html": {
+      "status": "PASSED",
+      "found_elements": 12,
+      "missing_elements": []
+    },
+    "blog/global-land-units-conversion-guide.html": {
+      "status": "PASSED",
+      "found_elements": 12,
+      "missing_elements": []
+    }
+  },
+  "errors": []
+}
