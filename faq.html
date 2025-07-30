@@ -1,491 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="canonical" href="https://www.convertwiz.in/faq.html">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ - Frequently Asked Questions | ConvertWiz</title>
-    <meta name="description" content="Find answers to frequently asked questions about ConvertWiz conversion tools, privacy, security, file formats, and usage guidelines. Expert support documentation.">
-    <meta name="keywords" content="ConvertWiz FAQ, conversion tools help, file format support, privacy questions, technical support">
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="ConvertWiz FAQ - Frequently Asked Questions">
-    <meta property="og:description" content="Complete FAQ guide for ConvertWiz conversion tools. Learn about file formats, privacy, security, and get expert support.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://convertwiz.in/faq.html">
-    
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <title>FAQ - ConvertWiz | Frequently Asked Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="canonical" href="https://convertwiz.in/faq.html">
-    
-    <style>
-        /* Force ConvertWiz theme styles */
-        body {
-            background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 50%, #9333ea 100%) !important;
-            min-height: 100vh !important;
-        }
-        
-        .theme-card {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(16px) !important;
-            border-radius: 1rem !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-        }
-        
-        .theme-nav {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(16px) !important;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-            border-bottom: 1px solid rgba(147, 51, 234, 0.1) !important;
-        }
-        
-        .theme-gradient-text {
-            background: linear-gradient(45deg, #9333ea, #ec4899) !important;
-            -webkit-background-clip: text !important;
-            background-clip: text !important;
-            color: transparent !important;
-        }
-        
-        .theme-footer {
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(16px) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
-        }
-        
-        .theme-button {
-            background: rgba(255, 255, 255, 0.9) !important;
-            color: #374151 !important;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-        }
-        
-        .theme-button:hover {
-            background: rgba(196, 181, 253, 0.3) !important;
-            color: #7c3aed !important;
-        }
-        
-        /* Beautiful FAQ styling */
-        .faq-item {
-            transition: all 0.3s ease !important;
-        }
-        
-        .faq-item:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
-        }
-        
-        .faq-toggle.active i {
-            transform: rotate(180deg) !important;
-        }
-    </style>
-    
-    <!-- JSON-LD FAQ Schema -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": "Are ConvertWiz conversion tools completely free?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, all ConvertWiz conversion tools are completely free to use. We provide 18+ professional-grade conversion tools including JPG to PNG, currency converter, image compressor, and more without any charges, registration requirements, or hidden fees."
-                }
-            },
-            {
-                "@type": "Question", 
-                "name": "Is my data safe when using ConvertWiz tools?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Absolutely. All file conversions happen directly in your browser using client-side processing. We never upload, store, or access your files on our servers. Your data remains completely private and secure on your device throughout the entire conversion process."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "What file formats does ConvertWiz support?",
-                "acceptedAnswer": {
-                    "@type": "Answer", 
-                    "text": "ConvertWiz supports a wide range of formats including JPG, PNG, WebP for images; 150+ currencies for conversion; metric and imperial units for measurements; text analysis for documents; QR code generation; and various utility tools for SEO, productivity, and business needs."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Do I need to create an account to use ConvertWiz?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "No account creation is required. All ConvertWiz tools are accessible immediately without registration, sign-up, or providing personal information. Simply visit our website and start converting your files instantly."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Are there any file size limits for conversions?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "ConvertWiz imposes reasonable file size limits to ensure optimal performance: up to 10MB for image files, unlimited text for word counter and text tools, and standard limits for other utilities. These limits accommodate most common use cases while maintaining fast processing speeds."
-                }
-            }
-        ]
-    }
-    </script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
+<body class="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500">
     <!-- Navigation Header -->
-    <header class="sticky top-0 z-50 theme-nav">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <!-- Logo -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <a href="index.html" class="text-2xl md:text-3xl font-bold theme-gradient-text hover:scale-105 transition-transform">
-                        ConvertWiz ⚡
+                    <a href="index.html" class="text-2xl font-bold text-white hover:text-white/90 transition-colors">
+                        <i class="fas fa-magic mr-2"></i>ConvertWiz
                     </a>
-                </faq-item">
-                
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <nav class="flex items-center space-x-6">
-                        <a href="index.html" class="text-white/80 hover:text-white transition-colors font-medium px-3 py-2 rounded-lg hover:bg-white/10">
-                            <i class="fas fa-home mr-2 text-sm"></i>Home
-                        </a>
-                        <a href="blog/index.html" class="text-white/80 hover:text-white transition-colors font-medium px-3 py-2 rounded-lg hover:bg-white/10">
-                            <i class="fas fa-blog mr-2 text-sm"></i>Blog
-                        </a>
-                        <a href="about.html" class="text-white/80 hover:text-white transition-colors font-medium px-3 py-2 rounded-lg hover:bg-white/10">
-                            <i class="fas fa-info-circle mr-2 text-sm"></i>About
-                        </a>
-                        <a href="faq.html" class="text-white font-semibold px-3 py-2 rounded-lg bg-white/20">
-                            <i class="fas fa-question-circle mr-2 text-sm"></i>FAQ
-                        </a>
-                        <a href="mailto:support@convertwiz.in" class="text-white/80 hover:text-white transition-colors font-medium px-3 py-2 rounded-lg hover:bg-white/10">
-                            <i class="fas fa-envelope mr-2 text-sm"></i>Contact
-                        </a>
-                    </nav>
-                </faq-item">
-            </faq-item">
-        </faq-item">
-    </header>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    <a href="blog/index.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-blog mr-1"></i>Blog
+                    </a>
+                    <a href="about.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-info-circle mr-1"></i>About
+                    </a>
+                    <a href="faq.html" class="text-white font-semibold">
+                        <i class="fas fa-question-circle mr-1"></i>FAQ
+                    </a>
+                    <a href="mailto:support@convertwiz.in" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-envelope mr-1"></i>Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
+        <!-- Back Navigation -->
+        <div class="mb-6">
+            <a href="index.html" class="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+                <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+        
         <!-- Hero Section -->
-        <section class="text-center mb-20">
-            <div class="max-w-5xl mx-auto">
-                <h1 class="text-6xl md:text-7xl font-bold text-white mb-8 leading-tight tracking-tight">
-                    Frequently Asked Questions
-                </h1>
-                <div class="w-24 h-1 bg-gradient-to-r from-purple-300 to-pink-300 mx-auto mb-8 rounded-full"></faq-item">
-                <p class="text-2xl text-white/90 leading-relaxed font-light max-w-4xl mx-auto">
-                    Find comprehensive answers to common questions about ConvertWiz tools, privacy, security, and technical specifications. Our expert support team has compiled detailed responses to help you get the most out of our conversion platform.
-                </p>
-            </faq-item">
+        <section class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                <i class="fas fa-question-circle mr-3"></i>Frequently Asked Questions
+            </h1>
+            <p class="text-xl text-white/90 mb-4">
+                Find comprehensive answers to common questions about ConvertWiz tools, privacy, security, and technical specifications.
+            </p>
+            <div class="bg-white/20 backdrop-blur-md rounded-full px-6 py-3 text-white font-medium inline-block">
+                <i class="fas fa-calendar-alt mr-2"></i>Last updated: January 2025
+            </div>
         </section>
 
-        <!-- FAQ Categories -->
-        <section class="mb-20">
-            <div class="max-w-5xl mx-auto text-center mb-12">
-                <h2 class="text-3xl font-bold text-white mb-6">Browse by Category</h2>
-                <div class="w-16 h-0.5 bg-white/30 mx-auto mb-8"></faq-item">
-            </faq-item">
-            <div class="grid md:grid-cols-4 gapy-6 mb-16 max-w-4xl mx-auto">
-                <button onclick="showCategory('general')" class="faq-category-btn theme-button rounded-lg px-4 py-3 font-semibold transition-all" data-category="general">
-                    <i class="fas fa-info-circle mr-2"></i>General
-                </button>
-                <button onclick="showCategory('privacy')" class="faq-category-btn theme-button rounded-lg px-4 py-3 font-semibold transition-all" data-category="privacy">
-                    <i class="fas fa-shield-alt mr-2"></i>Privacy & Security
-                </button>
-                <button onclick="showCategory('technical')" class="faq-category-btn theme-button rounded-lg px-4 py-3 font-semibold transition-all" data-category="technical">
-                    <i class="fas fa-cogs mr-2"></i>Technical
-                </button>
-                <button onclick="showCategory('tools')" class="faq-category-btn theme-button rounded-lg px-4 py-3 font-semibold transition-all" data-category="tools">
-                    <i class="fas fa-tools mr-2"></i>Tool-Specific
-                </button>
-            </faq-item">
-        </section>
+        <!-- FAQ Content -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                
+                <!-- General Questions -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-info-circle text-purple-600 mr-3"></i>
+                        General Questions
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">Are ConvertWiz conversion tools completely free?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <p class="mb-3">Yes, all ConvertWiz conversion tools are completely free to use. We provide 18+ professional-grade conversion tools including JPG to PNG converter, currency converter, image compressor, word counter, QR code generator, and many more without any charges, registration requirements, or hidden fees.</p>
+                                <p>Our mission is to democratize access to high-quality digital conversion tools. We believe essential utilities should be available to everyone, regardless of technical expertise or financial resources.</p>
+                            </div>
+                        </div>
 
-        <!-- General FAQ -->
-        <section id="general-faq" class="faq-category mb-20">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold text-white mb-12 text-center">General Questions</h2>
-                <div class="space-y-10">
-                    <div class="faq-item">
-                        <button class="faq-toggle w-full text-left py-6 focus:outline-none transition-all hover:>
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-2xl font-semibold text-white pr-4">Are ConvertWiz conversion tools completely free?</h3>
-                                <i class="fas fa-chevron-down text-purple-300 text-xl transform transition-transform"></i>
-                            </faq-item">
-                        </button>
-                        <div class="faq-content mt-6 text-white/90 leading-relaxed text-lg hidden">
-                            <p>Yes, all ConvertWiz conversion tools are completely free to use. We provide 18+ professional-grade conversion tools including JPG to PNG converter, currency converter, image compressor, word counter, QR code generator, and many more without any charges, registration requirements, or hidden fees.</p>
-                            <p class="mt-4">Our mission is to democratize access to high-quality digital conversion tools. We believe essential utilities should be available to everyone, regardless of technical expertise or financial resources. This commitment ensures students, professionals, and businesses of all sizes can benefit from our conversion platform.</p>
-                        </faq-item">
-                        <div class="border-b border-white/10 mt-8"></faq-item">
-                    </faq-item">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">Do I need to create an account to use ConvertWiz?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <p class="mb-3">No account creation is required. All ConvertWiz tools are accessible immediately without registration, sign-up, or providing personal information. Simply visit our website and start converting your files instantly.</p>
+                                <p>This design choice prioritizes user privacy and convenience. We eliminate barriers to access while ensuring your conversion needs are met quickly and efficiently.</p>
+                            </div>
+                        </div>
 
-                    <div class="faq-item">
-                        <button class="faq-toggle w-full text-left py-6 focus:outline-none transition-all hover:>
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-2xl font-semibold text-white pr-4">Do I need to create an account to use ConvertWiz?</h3>
-                                <i class="fas fa-chevron-down text-purple-300 text-xl transform transition-transform"></i>
-                            </faq-item">
-                        </button>
-                        <div class="faq-content mt-6 text-white/90 leading-relaxed text-lg hidden">
-                            <p>No account creation is required. All ConvertWiz tools are accessible immediately without registration, sign-up, or providing personal information. Simply visit our website and start converting your files instantly.</p>
-                            <p class="mt-4">This design choice prioritizes user privacy and convenience. We eliminate barriers to access while ensuring your conversion needs are met quickly and efficiently. No passwords to remember, no verification emails, no user tracking – just direct access to professional conversion tools.</p>
-                        </faq-item">
-                        <div class="border-b border-white/10 mt-8"></faq-item">
-                    </faq-item">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">How many conversions can I perform per day?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <p class="mb-3">ConvertWiz offers unlimited conversions for all tools. There are no daily limits, no monthly restrictions, and no usage caps. Convert as many files as you need, whenever you need them.</p>
+                                <p>Our client-side processing architecture allows unlimited usage without server load concerns. Whether you're processing a single image or batch-converting hundreds of files, our tools maintain consistent performance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                    <div class="faq-item">
-                        <button class="faq-toggle w-full text-left py-6 focus:outline-none transition-all hover:>
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-2xl font-semibold text-white pr-4">How many conversions can I perform per day?</h3>
-                                <i class="fas fa-chevron-down text-purple-300 text-xl transform transition-transform"></i>
-                            </faq-item">
-                        </button>
-                        <div class="faq-content mt-6 text-white/90 leading-relaxed text-lg hidden">
-                            <p>ConvertWiz offers unlimited conversions for all tools. There are no daily limits, no monthly restrictions, and no usage caps. Convert as many files as you need, whenever you need them.</p>
-                            <p class="mt-4">Our client-side processing architecture allows unlimited usage without server load concerns. Whether you're processing a single image or batch-converting hundreds of files, our tools maintain consistent performance and availability.</p>
-                        </faq-item">
-                        <div class="border-b border-white/10 mt-8"></faq-item">
-                    </faq-item">
-            </faq-item">
-        </section>
+                <!-- Privacy & Security -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-shield-alt text-purple-600 mr-3"></i>
+                        Privacy & Security
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">Is my data safe when using ConvertWiz tools?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded mb-4">
+                                    <p class="text-green-800 font-medium">
+                                        <i class="fas fa-check-circle mr-2"></i>
+                                        100% Client-Side Processing - Your files never leave your device
+                                    </p>
+                                </div>
+                                <p class="mb-3">Absolutely. All file conversions happen directly in your browser using client-side processing. We never upload, store, or access your files on our servers. Your data remains completely private and secure on your device throughout the entire conversion process.</p>
+                                <p>This architecture ensures maximum privacy protection. Your files never leave your device, eliminating concerns about data breaches, unauthorized access, or compliance violations.</p>
+                            </div>
+                        </div>
 
-        <!-- Privacy & Security FAQ -->
-        <section id="privacy-faq" class="faq-category mb-16 hidden">
-            <h2 class="text-3xl font-bold text-white mb-8">Privacy & Security</h2>
-            <div class="space-y-6">
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Is my data safe when using ConvertWiz tools?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>Absolutely. All file conversions happen directly in your browser using client-side processing. We never upload, store, or access your files on our servers. Your data remains completely private and secure on your device throughout the entire conversion process.</p>
-                        <p class="mt-3">This architecture ensures maximum privacy protection. Your files never leave your device, eliminating concerns about data breaches, unauthorized access, or compliance violations. Whether processing personal photos or sensitive business documents, your information stays under your complete control.</p>
-                    </faq-item">
-                </faq-item">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">Do you collect any personal information?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <p class="mb-3">ConvertWiz collects minimal information necessary for website functionality and improvement. We use standard web analytics to understand usage patterns and optimize performance, but we do not collect personal identifiers, store conversion history, or track individual user behavior.</p>
+                                <p>Our privacy-first approach means no user profiles, no conversion logs, and no behavioral tracking across sessions. Any analytics data is aggregated and anonymized.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Do you collect any personal information?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>ConvertWiz collects minimal information necessary for website functionality and improvement. We use standard web analytics to understand usage patterns and optimize performance, but we do not collect personal identifiers, store conversion history, or track individual user behavior.</p>
-                        <p class="mt-3">Our privacy-first approach means no user profiles, no conversion logs, and no behavioral tracking across sessions. Any analytics data is aggregated and anonymized, focusing on general usage trends rather than individual user activities.</p>
-                    </faq-item">
-                </faq-item">
+                <!-- Technical Questions -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-cogs text-purple-600 mr-3"></i>
+                        Technical Questions
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">What file formats does ConvertWiz support?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">Image Formats</h4>
+                                        <p class="text-gray-700">JPG, PNG, WebP, GIF for conversion and compression</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">Currency Conversion</h4>
+                                        <p class="text-gray-700">150+ global currencies with real-time rates</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">Unit Conversions</h4>
+                                        <p class="text-gray-700">Distance, weight, height, temperature, land units</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">Text & Utility</h4>
+                                        <p class="text-gray-700">Text analysis, QR codes, color formats, percentages</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Is ConvertWiz GDPR compliant?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>Yes, ConvertWiz fully complies with GDPR (General Data Protection Regulation) requirements. Our client-side processing architecture inherently supports GDPR principles by ensuring data minimization, purpose limitation, and user control over personal information.</p>
-                        <p class="mt-3">Since we process files locally in your browser without server transmission, most GDPR concerns are eliminated by design. Our privacy policy details our minimal data collection practices and provides clear information about your rights under GDPR and other international privacy regulations.</p>
-                    </faq-item">
-                </faq-item">
-            </faq-item">
-        </section>
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">Are there any file size limits for conversions?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <p class="mb-3">ConvertWiz imposes reasonable file size limits to ensure optimal performance:</p>
+                                <ul class="space-y-2 text-gray-700 ml-6">
+                                    <li>• <strong>Images:</strong> Up to 10MB for conversion and compression</li>
+                                    <li>• <strong>Text Tools:</strong> Unlimited text input for word counter and analysis</li>
+                                    <li>• <strong>Other Utilities:</strong> Standard limits appropriate for each tool type</li>
+                                </ul>
+                                <p class="mt-3">These limits accommodate most common use cases while maintaining fast processing speeds in your browser.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-        <!-- Technical FAQ -->
-        <section id="technical-faq" class="faq-category mb-16 hidden">
-            <h2 class="text-3xl font-bold text-white mb-8">Technical Questions</h2>
-            <div class="space-y-6">
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">What file formats does ConvertWiz support?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>ConvertWiz supports a comprehensive range of formats across different categories:</p>
-                        <ul class="mt-3 space-y-2 list-disc list-inside">
-                            <li><strong>Image Formats:</strong> JPG, PNG, WebP with high-quality conversion algorithms</li>
-                            <li><strong>Currency Conversion:</strong> 150+ international currencies with real-time exchange rates</li>
-                            <li><strong>Unit Measurements:</strong> Metric and imperial systems for distance, weight, height, temperature</li>
-                            <li><strong>Text Processing:</strong> Word counting, character analysis, reading time estimation</li>
-                            <li><strong>Utilities:</strong> QR code generation, color format conversion, percentage calculations</li>
-                        </ul>
-                        <p class="mt-3">We continuously expand format support based on user feedback and industry trends. Our conversion algorithms are optimized for quality retention and processing speed across all supported formats.</p>
-                    </faq-item">
-                </faq-item">
+                <!-- Tool-Specific Questions -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-tools text-purple-600 mr-3"></i>
+                        Tool-Specific Questions
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">How accurate are the currency conversion rates?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <p class="mb-3">Our currency converter uses real-time exchange rates updated continuously throughout the day from reliable financial data providers. This ensures you get the most accurate and current conversion rates for 150+ global currencies.</p>
+                                <p>Rates are sourced from exchangerate.host API, which aggregates data from multiple financial institutions and central banks worldwide.</p>
+                            </div>
+                        </div>
 
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Are there any file size limits for conversions?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>ConvertWiz imposes reasonable file size limits to ensure optimal performance and user experience:</p>
-                        <ul class="mt-3 space-y-2 list-disc list-inside">
-                            <li><strong>Image Files:</strong> Up to 10MB for JPG, PNG, and WebP conversions</li>
-                            <li><strong>Text Analysis:</strong> Unlimited text length for word counter and text processing tools</li>
-                            <li><strong>Document Processing:</strong> Standard limits based on browser capabilities</li>
-                            <li><strong>Batch Operations:</strong> Multiple files supported within individual size constraints</li>
-                        </ul>
-                        <p class="mt-3">These limits accommodate most common use cases while maintaining fast processing speeds. For enterprise users requiring larger file processing, our technical team can provide guidance on batch processing strategies.</p>
-                    </faq-item">
-                </faq-item">
+                        <div class="border-b border-gray-200 pb-6">
+                            <button class="faq-toggle w-full text-left" onclick="toggleFaq(this)">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-800">Does image compression reduce quality?</h3>
+                                    <i class="fas fa-chevron-down text-purple-600 transform transition-transform"></i>
+                                </div>
+                            </button>
+                            <div class="faq-content mt-4 text-gray-700 hidden">
+                                <p class="mb-3">Our image compressor offers adjustable quality settings (1-100%) so you can control the balance between file size reduction and image quality. You can achieve up to 90% size reduction while maintaining excellent visual quality.</p>
+                                <p>The tool provides real-time preview and compression statistics, allowing you to find the perfect balance for your specific needs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Which browsers are supported?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>ConvertWiz is compatible with all modern web browsers that support current web standards:</p>
-                        <ul class="mt-3 space-y-2 list-disc list-inside">
-                            <li><strong>Desktop:</strong> Chrome 90+, Firefox 88+, Safari 14+, Edge 90+</li>
-                            <li><strong>Mobile:</strong> Chrome Mobile, Safari iOS, Samsung Internet, Firefox Mobile</li>
-                            <li><strong>Features Required:</strong> JavaScript, HTML5 Canvas, File API, Web Workers</li>
-                            <li><strong>Recommended:</strong> Latest browser versions for optimal performance and security</li>
-                        </ul>
-                        <p class="mt-3">Our tools are built using progressive enhancement principles, ensuring functionality across different browser capabilities while providing enhanced experiences on modern platforms.</p>
-                    </faq-item">
-                </faq-item">
-            </faq-item">
-        </section>
+                <!-- Contact -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-envelope text-purple-600 mr-3"></i>
+                        Still Have Questions?
+                    </h2>
+                    <p class="text-gray-700 mb-4">
+                        If you have any questions not covered in this FAQ, please don't hesitate to reach out to our support team. We're here to help!
+                    </p>
+                    <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded">
+                        <p class="text-purple-800">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Email us at: <a href="mailto:support@convertwiz.in" class="font-semibold underline">support@convertwiz.in</a>
+                        </p>
+                    </div>
+                </section>
 
-        <!-- Tool-Specific FAQ -->
-        <section id="tools-faq" class="faq-category mb-16 hidden">
-            <h2 class="text-3xl font-bold text-white mb-8">Tool-Specific Questions</h2>
-            <div class="space-y-6">
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">How accurate is the currency converter?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>Our currency converter uses real-time exchange rates from reliable financial data providers, updated multiple times daily. The conversion rates reflect current market conditions with accuracy suitable for general financial planning, travel budgeting, and educational purposes.</p>
-                        <p class="mt-3">For critical financial transactions, we recommend verifying rates with your bank or financial institution, as exchange rates fluctuate continuously and may include additional fees or margins when conducting actual currency exchanges.</p>
-                    </faq-item">
-                </faq-item">
-
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Does image conversion affect quality?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>ConvertWiz prioritizes quality retention in all image conversions. Our algorithms are designed to preserve maximum image quality while adapting to format-specific characteristics:</p>
-                        <ul class="mt-3 space-y-2 list-disc list-inside">
-                            <li><strong>JPG to PNG:</strong> Lossless conversion preserving all visual information</li>
-                            <li><strong>Image Compression:</strong> Adjustable quality settings from 1-100% for size optimization</li>
-                            <li><strong>Format Optimization:</strong> Smart compression based on image content and format capabilities</li>
-                            <li><strong>Metadata Preservation:</strong> Option to maintain EXIF data and color profiles</li>
-                        </ul>
-                        <p class="mt-3">For professional workflows requiring specific quality standards, we provide detailed control over compression settings and output parameters.</p>
-                    </faq-item">
-                </faq-item">
-
-                <div class="faq-item">
-                    <button class="faq-toggle w-full text-left py-6 focus:outline-none hover:bg-white/10 transition-all" onclick="toggleFaq(this)">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-white">Can I batch process multiple files?</h3>
-                            <i class="fas fa-chevron-down text-purple-300 transform transition-transform"></i>
-                        </faq-item">
-                    </button>
-                    <div class="faq-content mt-6 text-white/90 leading-relaxed hidden">
-                        <p>Yes, several ConvertWiz tools support batch processing for improved workflow efficiency:</p>
-                        <ul class="mt-3 space-y-2 list-disc list-inside">
-                            <li><strong>Image Converter:</strong> Upload and convert multiple images simultaneously</li>
-                            <li><strong>Image Compressor:</strong> Batch compression with individual quality settings</li>
-                            <li><strong>QR Code Generator:</strong> Generate multiple QR codes from text lists</li>
-                            <li><strong>Text Tools:</strong> Process multiple documents or text segments</li>
-                        </ul>
-                        <p class="mt-3">Batch processing maintains the same privacy and security standards as single-file operations, with all processing occurring locally in your browser without server uploads.</p>
-                    </faq-item">
-                </faq-item">
-            </faq-item">
-        </section>
-
-        <!-- Contact Support -->
-        <section class="text-center">
-            <div class="faq-item">
-                <h2 class="text-3xl font-bold text-white mb-4">Still Have Questions?</h2>
-                <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
-                    Can't find the answer you're looking for? Our expert support team is here to help with technical questions, feature requests, and detailed guidance.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a href="mailto:support@convertwiz.in" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:shadow-lg hover:scale-105 transition-all">
-                        <i class="fas fa-envelope mr-2"></i>Contact Support
+                <!-- Back to Home -->
+                <div class="text-center pt-6 border-t border-gray-200">
+                    <a href="index.html" class="inline-flex items-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all hover:shadow-lg">
+                        <i class="fas fa-home mr-2"></i>
+                        Return to ConvertWiz
                     </a>
-                    <a href="blog/index.html" class="inline-flex items-center px-6 py-3 bg-purple-100 text-purple-300 font-semibold rounded-lg hover:bg-purple-200 transition-all">
-                        <i class="fas fa-book mr-2"></i>Browse Guides
-                    </a>
-                </faq-item">
-            </faq-item">
-        </section>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="theme-footer mt-16">
+    <footer class="bg-white/10 backdrop-blur-md border-t border-white/20 mt-16">
         <div class="container mx-auto px-4 py-8">
-            <div class="text-center text-white/80">
-                <p>&copy; 2025 ConvertWiz. All rights reserved. | 
-                <a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a> | 
-                <a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a> | 
-                <a href="faq.html" class="hover:text-white transition-colors">FAQ</a> | 
-                <a href="mailto:support@convertwiz.in" class="hover:text-white transition-colors">Contact</a></p>
-            </faq-item">
-        </faq-item">
+            <div class="text-center">
+                <div class="flex flex-wrap justify-center items-center gap-6 mb-4">
+                    <a href="index.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    <a href="blog/index.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-blog mr-1"></i>Blog
+                    </a>
+                    <a href="about.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-info-circle mr-1"></i>About
+                    </a>
+                    <a href="faq.html" class="text-white font-semibold">
+                        <i class="fas fa-question-circle mr-1"></i>FAQ
+                    </a>
+                    <a href="privacy.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-shield-alt mr-1"></i>Privacy
+                    </a>
+                    <a href="terms.html" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-file-contract mr-1"></i>Terms
+                    </a>
+                    <a href="mailto:support@convertwiz.in" class="text-white/90 hover:text-white transition-colors">
+                        <i class="fas fa-envelope mr-1"></i>Contact
+                    </a>
+                </div>
+                <p class="text-white/80">
+                    © 2025 ConvertWiz. Your privacy-first conversion toolkit.
+                </p>
+                <p class="text-white/60 text-sm mt-2">
+                    Comprehensive FAQ support for all conversion tools
+                </p>
+            </div>
+        </div>
     </footer>
 
     <script>
-        function showCategory(category) {
-            // Hide all categories
-            document.querySelectorAll('.faq-category').forEach(cat => {
-                cat.classList.add('hidden');
-            });
-            
-            // Remove active state from all buttons
-            document.querySelectorAll('.faq-category-btn').forEach(btn => {
-                btn.classList.remove('bg-purple-600', 'text-white');
-                btn.classList.add('bg-white/90', 'text-white/90');
-            });
-            
-            // Show selected category
-            document.getElementById(category + '-faq').classList.remove('hidden');
-            
-            // Add active state to clicked button
-            const activeBtn = document.querySelector(`[data-category="${category}"]`);
-            activeBtn.classList.remove('bg-white/90', 'text-white/90');
-            activeBtn.classList.add('bg-purple-600', 'text-white');
-        }
-
         function toggleFaq(button) {
-            const content = button.parentElement.querySelector('.faq-content');
+            const content = button.nextElementSibling;
             const icon = button.querySelector('i');
             
             if (content.classList.contains('hidden')) {
                 content.classList.remove('hidden');
-                icon.classList.add('rotate-180');
+                icon.style.transform = 'rotate(180deg)';
+                button.classList.add('active');
             } else {
                 content.classList.add('hidden');
-                icon.classList.remove('rotate-180');
+                icon.style.transform = 'rotate(0deg)';
+                button.classList.remove('active');
             }
         }
 
-        // Initialize with general category active
-        document.addEventListener('DOMContentLoaded', function() {
-            showCategory('general');
-        });
+        function showCategory(category) {
+            // Hide all categories
+            const categories = document.querySelectorAll('.faq-category');
+            categories.forEach(cat => cat.classList.add('hidden'));
+            
+            // Show selected category
+            document.getElementById(category + '-faq').classList.remove('hidden');
+            
+            // Update button states
+            const buttons = document.querySelectorAll('.faq-category-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-white', 'text-purple-600');
+                btn.classList.add('bg-white/20', 'text-white');
+            });
+            
+            // Highlight active button
+            event.target.classList.remove('bg-white/20', 'text-white');
+            event.target.classList.add('bg-white', 'text-purple-600');
+        }
     </script>
+
+    <script src="cookie-consent.js"></script>
 </body>
 </html>
