@@ -1,2 +1,0 @@
-./index.html
-./backup_20250729_072616/index.html
