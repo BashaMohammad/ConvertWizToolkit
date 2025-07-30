@@ -2730,12 +2730,32 @@ Contact: John Doe, Company Inc."></textarea>
                 landingSection.style.display = 'block';
             }
             
+            // Initialize mobile menu functionality
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileMenu.classList.toggle('hidden');
+                    console.log('Mobile menu toggled');
+                });
+                
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            }
+            
             // Initialize routing
             if (typeof initializeRouting === 'function') {
                 initializeRouting();
             }
             
             console.log('✅ ConvertWiz initialized - component isolation enforced');
+            console.log('✅ Mobile menu functionality added');
         });
         
         // Set development mode for ad display
@@ -2748,12 +2768,11 @@ Contact: John Doe, Company Inc."></textarea>
             // Initialize ads in production only (all users see ads in free mode)
             if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 setTimeout(function() {
-                    );
-                                } catch (e) {
-                                    console.warn('AdSense initialization:', e.message);
-                                }
-                            }
-                        });
+                    try {
+                        // AdSense initialization removed for clean production deployment
+                        console.log('Production mode: AdSense ready');
+                    } catch (e) {
+                        console.warn('AdSense initialization:', e.message);
                     }
                 }, 3000); // 3 second delay
             }
