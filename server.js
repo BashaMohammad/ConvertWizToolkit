@@ -23,7 +23,7 @@ const app = express();
 app.use("/razorpay-webhook", express.raw({ type: "application/json" }));
 
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static('public'));
 
 // Premium users storage (in production, use database)
 const premiumUsers = {
