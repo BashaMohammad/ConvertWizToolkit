@@ -62,3 +62,20 @@ Preferred communication style: Simple, everyday language.
 - **Google Analytics**: For tracking and analytics.
 - **PostgreSQL Database**: For persistent URL storage in the URL Shortener tool (via Drizzle ORM).
 - **PayPal.Me links**: For international payment options.
+
+## Deployment Structure
+
+**Static Hosting Optimization:**
+- All frontend files organized in public/ directory for optimal deployment
+- vercel.json configured for static hosting platforms
+- Development-production parity maintained
+- Zero functionality loss during restructure
+
+**Production Deployment:**
+- Successfully deployed to https://convertwiz.in
+- Static file serving optimized for performance
+- All 18+ conversion tools fully functional
+- Mobile responsiveness and UI integrity preserved
+
+## Recent Changes
+- August 1, 2025: Static deployment optimization completed - moved all frontend assets to public/ directory, configured vercel.json, updated server to serve from public/, resolved component loading issues, maintained full functionality of all conversion tools, successfully pushed to remote repository with force-with-lease
