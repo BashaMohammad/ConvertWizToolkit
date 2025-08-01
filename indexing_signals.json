@@ -1,0 +1,83 @@
+{
+  "internal_linking_matrix": {
+    "homepage_outbound": [
+      {
+        "target": "/jpg-to-png",
+        "anchor": "Convert JPG to PNG",
+        "context": "image conversion"
+      },
+      {
+        "target": "/currency-converter",
+        "anchor": "Currency Converter",
+        "context": "financial tools"
+      },
+      {
+        "target": "/word-counter",
+        "anchor": "Word Counter",
+        "context": "text analysis"
+      },
+      {
+        "target": "/color-code-picker",
+        "anchor": "Color Picker",
+        "context": "design tools"
+      }
+    ],
+    "cross_tool_links": [
+      {
+        "from": "/jpg-to-png",
+        "to": "/image-compressor",
+        "anchor": "compress images"
+      },
+      {
+        "from": "/currency-converter",
+        "to": "/percentage-calculator",
+        "anchor": "calculate percentages"
+      },
+      {
+        "from": "/word-counter",
+        "to": "/text-to-speech",
+        "anchor": "text to speech"
+      },
+      {
+        "from": "/color-code-picker",
+        "to": "/dp-resizer",
+        "anchor": "resize images"
+      }
+    ],
+    "footer_links": [
+      {
+        "target": "/about",
+        "anchor": "About ConvertWiz"
+      },
+      {
+        "target": "/contact",
+        "anchor": "Contact Us"
+      },
+      {
+        "target": "/privacy",
+        "anchor": "Privacy Policy"
+      },
+      {
+        "target": "/terms",
+        "anchor": "Terms of Service"
+      }
+    ]
+  },
+  "content_freshness_indicators": {
+    "last_updated_timestamps": true,
+    "dynamic_content_sections": [
+      "featured-tools",
+      "recent-conversions",
+      "user-stats"
+    ],
+    "automated_content_updates": "Daily tool usage statistics",
+    "blog_integration": "Latest articles preview on homepage"
+  },
+  "technical_seo_signals": {
+    "fast_loading_pages": "< 2 seconds load time",
+    "mobile_optimization": "Perfect mobile experience",
+    "structured_data": "Comprehensive JSON-LD markup",
+    "canonical_urls": "Proper canonicalization",
+    "meta_optimization": "Unique meta tags for each page"
+  }
+}

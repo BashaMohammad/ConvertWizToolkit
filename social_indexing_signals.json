@@ -1,0 +1,49 @@
+{
+  "twitter_optimization": {
+    "tweet_schedule": [
+      {
+        "time": "09:00",
+        "content": "Tool spotlight with link"
+      },
+      {
+        "time": "13:00",
+        "content": "Tutorial or tip with page link"
+      },
+      {
+        "time": "17:00",
+        "content": "User testimonial with site link"
+      },
+      {
+        "time": "20:00",
+        "content": "Behind the scenes with homepage link"
+      }
+    ],
+    "hashtag_strategy": [
+      "#converter",
+      "#tools",
+      "#productivity",
+      "#free"
+    ],
+    "engagement_targets": [
+      "Design communities",
+      "Developer groups",
+      "Productivity enthusiasts"
+    ]
+  },
+  "linkedin_strategy": {
+    "article_publishing": "Weekly in-depth tool guides",
+    "company_page_updates": "Daily tool highlights",
+    "professional_networking": "Connect with industry professionals",
+    "group_participation": "Active in relevant professional groups"
+  },
+  "pinterest_optimization": {
+    "board_strategy": [
+      "Free Online Tools",
+      "Productivity Hacks",
+      "Design Resources"
+    ],
+    "pin_frequency": "5-10 daily pins with site links",
+    "seo_descriptions": "Keyword-rich pin descriptions",
+    "rich_pins": "Enable article and app rich pins"
+  }
+}

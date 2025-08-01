@@ -1,0 +1,35 @@
+{
+  "google_search_console_metrics": [
+    "Index coverage status",
+    "Crawl errors and issues",
+    "Sitemap submission status",
+    "Page indexing timeline",
+    "Search performance data"
+  ],
+  "bing_webmaster_metrics": [
+    "Index status tracking",
+    "Crawl information",
+    "Search keywords performance",
+    "Click-through rates"
+  ],
+  "automated_checks": {
+    "daily_site_ping": "Check all pages are accessible",
+    "sitemap_validation": "Ensure sitemap is error-free",
+    "robots_txt_check": "Verify robots.txt is properly configured",
+    "meta_tag_audit": "Confirm all pages have proper meta tags"
+  },
+  "indexing_verification": {
+    "site_search_queries": [
+      "site:convertwiz.in",
+      "site:convertwiz.in jpg to png",
+      "site:convertwiz.in currency converter",
+      "site:convertwiz.in word counter"
+    ],
+    "keyword_tracking": [
+      "convertwiz",
+      "online converter",
+      "jpg to png free",
+      "currency converter online"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "google_search_console_setup": {
+    "step_1": "Go to https://search.google.com/search-console/",
+    "step_2": "Add property: convertwiz.in",
+    "step_3": "Verify ownership using HTML meta tag method",
+    "step_4": "Submit sitemap: https://convertwiz.in/sitemap.xml",
+    "step_5": "Request indexing for priority URLs",
+    "verification_meta_tag": "<meta name=\"google-site-verification\" content=\"[YOUR-VERIFICATION-CODE]\">"
+  },
+  "bing_webmaster_setup": {
+    "step_1": "Go to https://www.bing.com/webmasters/",
+    "step_2": "Add site: convertwiz.in",
+    "step_3": "Verify using meta tag method",
+    "step_4": "Submit sitemap URL",
+    "step_5": "Enable crawl settings",
+    "verification_meta_tag": "<meta name=\"msvalidate.01\" content=\"[YOUR-BING-CODE]\">"
+  },
+  "priority_url_submission": [
+    "https://convertwiz.in/",
+    "https://convertwiz.in/jpg-to-png",
+    "https://convertwiz.in/currency-converter",
+    "https://convertwiz.in/word-counter",
+    "https://convertwiz.in/color-code-picker",
+    "https://convertwiz.in/land-unit-converter",
+    "https://convertwiz.in/dp-resizer",
+    "https://convertwiz.in/percentage-calculator"
+  ]
+}

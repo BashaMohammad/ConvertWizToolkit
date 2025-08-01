@@ -1,21 +1,82 @@
+# ConvertWiz Robots.txt - Optimized for Maximum Search Engine Visibility
+# Last Updated: 2025-08-01
+
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Sitemap Location (Primary)
 Sitemap: https://convertwiz.in/sitemap.xml
 
-# Block admin and backup directories
-Disallow: /admin/
-Disallow: /backup*/
-Disallow: /node_modules/
-Disallow: /*.json$
-Disallow: /*.py$
-Disallow: /*.js$
-Disallow: /*.md$
+# Priority Crawling for Major Search Engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
 
-# Allow search engines to crawl all tools and blog content
-Allow: /blog/
-Allow: /*.html$
-
-# Crawl delay for respectful crawling
+User-agent: Bingbot  
+Allow: /
 Crawl-delay: 1
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+Crawl-delay: 0
+
+User-agent: Twitterbot
+Allow: /
+Crawl-delay: 0
+
+User-agent: LinkedInBot
+Allow: /
+Crawl-delay: 1
+
+# Allow Important Static Resources
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.ico$
+Allow: /*.webp$
+Allow: /*.woff$
+Allow: /*.woff2$
+Allow: /*.ttf$
+
+# Block Resource-Heavy and Spam Bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MegaIndex
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# Block Admin and System Areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /logs/
+Disallow: /*.log$
+Disallow: /backup/
+Disallow: /test/
+
+# Host Information
+Host: https://convertwiz.in

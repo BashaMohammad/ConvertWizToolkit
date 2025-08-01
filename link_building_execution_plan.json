@@ -1,0 +1,44 @@
+{
+  "month_1_activities": {
+    "directory_submissions": [
+      "ProductHunt launch preparation",
+      "AlternativeTo listing creation",
+      "Capterra profile setup",
+      "G2 business listing"
+    ],
+    "resource_page_outreach": [
+      "Find 50 relevant resource pages",
+      "Create personalized outreach emails",
+      "Send 10 outreach emails per week",
+      "Follow up after 1 week"
+    ]
+  },
+  "month_2_activities": {
+    "guest_posting": [
+      "Identify 20 target blogs",
+      "Create pitch templates",
+      "Write 4 guest articles",
+      "Include natural backlinks"
+    ],
+    "community_engagement": [
+      "Active participation in Reddit communities",
+      "Quora expert answers with tool mentions",
+      "Stack Overflow helpful contributions",
+      "Design and productivity Discord groups"
+    ]
+  },
+  "month_3_activities": {
+    "digital_pr": [
+      "Press release for tool milestones",
+      "Industry survey creation and promotion",
+      "Expert roundup participation",
+      "Podcast guest appearances"
+    ],
+    "partnership_development": [
+      "Tool integration partnerships",
+      "Cross-promotion agreements",
+      "Educational institution outreach",
+      "Blogger collaboration programs"
+    ]
+  }
+}

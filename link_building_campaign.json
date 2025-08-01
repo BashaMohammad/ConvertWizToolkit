@@ -1,0 +1,52 @@
+{
+  "resource_page_outreach": {
+    "target_pages": [
+      "Free online tools directories",
+      "Productivity resource lists",
+      "Design tool collections",
+      "Educational resource pages",
+      "Developer tool compilations"
+    ],
+    "outreach_template": "Personalized, value-focused emails",
+    "follow_up_strategy": "2-3 follow-ups with additional value"
+  },
+  "guest_posting": {
+    "target_sites": [
+      "Productivity blogs",
+      "Design communities",
+      "Tech tutorials sites",
+      "Business tool reviews",
+      "Educational platforms"
+    ],
+    "content_angles": [
+      "Tool comparison articles",
+      "Productivity improvement guides",
+      "Industry trend analysis",
+      "Tutorial and how-to content"
+    ]
+  },
+  "digital_pr": {
+    "press_release_topics": [
+      "New tool launches",
+      "Milestone achievements",
+      "Industry surveys and data",
+      "Partnership announcements"
+    ],
+    "media_targets": [
+      "Tech news sites",
+      "Productivity publications",
+      "Design magazines",
+      "Business journals"
+    ]
+  },
+  "community_engagement": {
+    "forums_and_communities": [
+      "Reddit (r/productivity, r/design, r/webdev)",
+      "Stack Overflow contributions",
+      "Quora expert answers",
+      "Discord communities",
+      "Facebook groups"
+    ],
+    "engagement_strategy": "Helpful, non-promotional contributions"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "directory_submissions": [
+    "ProductHunt",
+    "AlternativeTo",
+    "Capterra",
+    "G2",
+    "TrustPilot",
+    "ToolFinder",
+    "FreewareFiles",
+    "SourceForge"
+  ],
+  "resource_pages": [
+    "Free online tools lists",
+    "Productivity resource pages",
+    "Developer tool collections",
+    "Educational resource directories"
+  ],
+  "community_engagement": [
+    "Reddit tool communities",
+    "Stack Overflow contributions",
+    "Quora expert answers",
+    "Discord developer communities",
+    "GitHub project contributions"
+  ],
+  "partnership_opportunities": [
+    "Tool integration partnerships",
+    "Educational institution partnerships",
+    "Blogger collaboration programs",
+    "Cross-promotion with complementary tools"
+  ]
+}

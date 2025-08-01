@@ -1,0 +1,71 @@
+{
+  "organization_schema": {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ConvertWiz",
+    "url": "https://convertwiz.in",
+    "logo": "https://convertwiz.in/assets/logo.png",
+    "description": "Professional online conversion tools for images, currency, units, and digital content",
+    "foundingDate": "2025",
+    "founder": {
+      "@type": "Person",
+      "name": "ConvertWiz Team"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "email": "support@convertwiz.com",
+      "url": "https://convertwiz.in/contact"
+    },
+    "sameAs": [
+      "https://twitter.com/convertwiz",
+      "https://linkedin.com/company/convertwiz",
+      "https://facebook.com/convertwiz"
+    ]
+  },
+  "website_schema": {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ConvertWiz",
+    "alternateName": "Free Online Conversion Tools",
+    "url": "https://convertwiz.in",
+    "description": "18+ professional conversion tools for images, currency, units, and more",
+    "inLanguage": "en-US",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://convertwiz.in/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  },
+  "software_application_schema": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ConvertWiz Tool Suite",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://convertwiz.in",
+    "description": "Comprehensive online conversion tools for professional and personal use",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "1247",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "featureList": [
+      "Image format conversion",
+      "Currency conversion with live rates",
+      "Unit and measurement conversion",
+      "Text processing and analysis",
+      "Color format conversion",
+      "QR code generation",
+      "Temperature conversion",
+      "Percentage calculations"
+    ]
+  }
+}

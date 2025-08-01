@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is ConvertWiz free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, ConvertWiz is completely free. All 18+ conversion tools are available without registration or payment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to create an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No account required. Simply visit any tool page and start converting immediately."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What file formats are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We support all major formats including JPG, PNG, PDF for images, and 150+ currencies for conversion."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data secure?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, all conversions happen locally in your browser when possible. No files are stored on our servers."
+      }
+    }
+  ]
+}

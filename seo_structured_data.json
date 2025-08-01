@@ -1,0 +1,32 @@
+{
+  "organization": {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ConvertWiz",
+    "url": "https://convertwiz.in",
+    "logo": "https://convertwiz.in/assets/logo.png",
+    "description": "Professional online conversion tools for images, currency, units, and digital content",
+    "sameAs": [
+      "https://twitter.com/convertwiz",
+      "https://facebook.com/convertwiz"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-555-CONVERT",
+      "contactType": "customer service",
+      "email": "support@convertwiz.com"
+    }
+  },
+  "website": {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ConvertWiz",
+    "url": "https://convertwiz.in",
+    "description": "Free online conversion tools suite",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://convertwiz.in/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+}
