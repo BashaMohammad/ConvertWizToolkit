@@ -51,7 +51,17 @@ function updateURLAndTrackPageview(sectionId) {
     'backlink-checker-section': '/backlink-checker',
     'meta-tag-generator-section': '/meta-tag-generator',
     'dpi-checker-section': '/dpi-checker',
-    'url-shortener-section': '/url-shortener'
+    'url-shortener-section': '/url-shortener',
+    // NEW UTILITY TOOLS
+    'bmi-calculator-section': '/bmi-calculator',
+    'text-case-converter-section': '/text-case-converter',
+    'png-to-jpg-section': '/png-to-jpg',
+    // NEW PDF TOOLS
+    'pdf-to-word-section': '/pdf-to-word',
+    'pdf-to-ppt-section': '/pdf-to-ppt', 
+    'pdf-to-excel-section': '/pdf-to-excel',
+    'pdf-split-section': '/pdf-split',
+    'pdf-merge-compress-section': '/pdf-merge-compress'
   };
   
   const newPath = sectionToPath[sectionId] || '/';
@@ -92,7 +102,26 @@ function getPageTitle(sectionId) {
     'weight-converter-section': 'Weight Converter - ConvertWiz',
     'height-converter-section': 'Height Converter - ConvertWiz',
     'ip-extractor-section': 'IP Address Extractor - ConvertWiz',
-    'qr-generator-section': 'QR Code Generator - ConvertWiz'
+    'qr-generator-section': 'QR Code Generator - ConvertWiz',
+    'percentage-calculator-section': 'Percentage Calculator - ConvertWiz',
+    'temperature-converter-section': 'Temperature Converter - ConvertWiz',
+    'color-converter-section': 'Color Converter - ConvertWiz',
+    'image-compressor-section': 'Image Compressor - ConvertWiz',
+    'text-to-speech-section': 'Text to Speech - ConvertWiz',
+    'backlink-checker-section': 'Backlink Checker - ConvertWiz',
+    'meta-tag-generator-section': 'Meta Tag Generator - ConvertWiz',
+    'dpi-checker-section': 'DPI Checker - ConvertWiz',
+    'url-shortener-section': 'URL Shortener - ConvertWiz',
+    // NEW UTILITY TOOLS
+    'bmi-calculator-section': 'BMI Calculator - ConvertWiz',
+    'text-case-converter-section': 'Text Case Converter - ConvertWiz',
+    'png-to-jpg-section': 'PNG to JPG Converter - ConvertWiz',
+    // NEW PDF TOOLS
+    'pdf-to-word-section': 'PDF to Word Converter - ConvertWiz',
+    'pdf-to-ppt-section': 'PDF to PowerPoint Converter - ConvertWiz',
+    'pdf-to-excel-section': 'PDF to Excel Converter - ConvertWiz',
+    'pdf-split-section': 'PDF Split Tool - ConvertWiz',
+    'pdf-merge-compress-section': 'PDF Merge & Compress - ConvertWiz'
   };
   
   return sectionTitles[sectionId] || 'ConvertWiz - Conversion Tools';
@@ -242,6 +271,51 @@ function initializeTool(sectionId) {
                             });
                         }
                     });
+                }
+                break;
+            // NEW UTILITY TOOLS
+            case 'bmi-calculator-section':
+                // BMI Calculator functionality is included in tools.js
+                if (typeof initializeBMICalculator !== 'undefined') {
+                    initializeBMICalculator();
+                }
+                break;
+            case 'text-case-converter-section':
+                // Text Case Converter functionality is included in tools.js
+                if (typeof initializeTextCaseConverter !== 'undefined') {
+                    initializeTextCaseConverter();
+                }
+                break;
+            case 'png-to-jpg-section':
+                // PNG to JPG Converter functionality is included in tools.js
+                if (typeof initializePNGtoJPGConverter !== 'undefined') {
+                    initializePNGtoJPGConverter();
+                }
+                break;
+            // NEW PDF TOOLS
+            case 'pdf-to-word-section':
+                if (typeof initializePdfToWordConverter !== 'undefined') {
+                    initializePdfToWordConverter();
+                }
+                break;
+            case 'pdf-to-ppt-section':
+                if (typeof initializePdfToPptConverter !== 'undefined') {
+                    initializePdfToPptConverter();
+                }
+                break;
+            case 'pdf-to-excel-section':
+                if (typeof initializePdfToExcelConverter !== 'undefined') {
+                    initializePdfToExcelConverter();
+                }
+                break;
+            case 'pdf-split-section':
+                if (typeof initializePdfSplitConverter !== 'undefined') {
+                    initializePdfSplitConverter();
+                }
+                break;
+            case 'pdf-merge-compress-section':
+                if (typeof initializePdfMergeConverter !== 'undefined') {
+                    initializePdfMergeConverter();
                 }
                 break;
         }

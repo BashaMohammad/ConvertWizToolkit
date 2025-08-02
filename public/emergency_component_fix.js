@@ -118,6 +118,21 @@ function showSectionById(sectionId) {
             'temperature-converter-section': '/temperature-converter',
             'color-converter-section': '/color-converter',
             'image-compressor-section': '/image-compressor',
+            'text-to-speech-section': '/text-to-speech',
+            'backlink-checker-section': '/backlink-checker',
+            'meta-tag-generator-section': '/meta-tag-generator',
+            'dpi-checker-section': '/dpi-checker',
+            'url-shortener-section': '/url-shortener',
+            // NEW UTILITY TOOLS
+            'bmi-calculator-section': '/bmi-calculator',
+            'text-case-converter-section': '/text-case-converter',
+            'png-to-jpg-section': '/png-to-jpg',
+            // NEW PDF TOOLS
+            'pdf-to-word-section': '/pdf-to-word',
+            'pdf-to-ppt-section': '/pdf-to-ppt',
+            'pdf-to-excel-section': '/pdf-to-excel',
+            'pdf-split-section': '/pdf-split',
+            'pdf-merge-compress-section': '/pdf-merge-compress',
             'landing-section': '/'
         };
         
@@ -221,6 +236,77 @@ function initializeComponentFunctionality(sectionId) {
             if (typeof ImageCompressor !== 'undefined') {
                 setTimeout(() => new ImageCompressor(), 100);
                 console.log('✅ INIT: Image Compressor initialized');
+            }
+            break;
+        case 'text-to-speech-section':
+            if (typeof TextToSpeech !== 'undefined') {
+                setTimeout(() => new TextToSpeech(), 100);
+                console.log('✅ INIT: Text to Speech initialized');
+            }
+            break;
+        case 'backlink-checker-section':
+            if (typeof BacklinkChecker !== 'undefined') {
+                setTimeout(() => new BacklinkChecker(), 100);
+                console.log('✅ INIT: Backlink Checker initialized');
+            }
+            break;
+        case 'meta-tag-generator-section':
+            if (typeof MetaTagGenerator !== 'undefined') {
+                setTimeout(() => new MetaTagGenerator(), 100);
+                console.log('✅ INIT: Meta Tag Generator initialized');
+            }
+            break;
+        case 'dpi-checker-section':
+            if (typeof DPIChecker !== 'undefined') {
+                setTimeout(() => new DPIChecker(), 100);
+                console.log('✅ INIT: DPI Checker initialized');
+            }
+            break;
+        case 'url-shortener-section':
+            if (typeof URLShortener !== 'undefined') {
+                setTimeout(() => new URLShortener(), 100);
+                console.log('✅ INIT: URL Shortener initialized');
+            }
+            break;
+        // NEW UTILITY TOOLS
+        case 'bmi-calculator-section':
+            console.log('✅ INIT: BMI Calculator - functionality included in tools.js');
+            break;
+        case 'text-case-converter-section':
+            console.log('✅ INIT: Text Case Converter - functionality included in tools.js');
+            break;
+        case 'png-to-jpg-section':
+            console.log('✅ INIT: PNG to JPG Converter - functionality included in tools.js');
+            break;
+        // NEW PDF TOOLS
+        case 'pdf-to-word-section':
+            if (typeof initializePdfToWordConverter !== 'undefined') {
+                setTimeout(() => initializePdfToWordConverter(), 100);
+                console.log('✅ INIT: PDF to Word Converter initialized');
+            }
+            break;
+        case 'pdf-to-ppt-section':
+            if (typeof initializePdfToPptConverter !== 'undefined') {
+                setTimeout(() => initializePdfToPptConverter(), 100);
+                console.log('✅ INIT: PDF to PowerPoint Converter initialized');
+            }
+            break;
+        case 'pdf-to-excel-section':
+            if (typeof initializePdfToExcelConverter !== 'undefined') {
+                setTimeout(() => initializePdfToExcelConverter(), 100);
+                console.log('✅ INIT: PDF to Excel Converter initialized');
+            }
+            break;
+        case 'pdf-split-section':
+            if (typeof initializePdfSplitConverter !== 'undefined') {
+                setTimeout(() => initializePdfSplitConverter(), 100);
+                console.log('✅ INIT: PDF Split Tool initialized');
+            }
+            break;
+        case 'pdf-merge-compress-section':
+            if (typeof initializePdfMergeConverter !== 'undefined') {
+                setTimeout(() => initializePdfMergeConverter(), 100);
+                console.log('✅ INIT: PDF Merge & Compress Tool initialized');
             }
             break;
         case 'ip-extractor-section':

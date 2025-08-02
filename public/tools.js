@@ -4259,3 +4259,372 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(pngSection, { attributes: true, attributeFilter: ['class'] });
     }
 });
+
+// ======================
+// PDF TOOLS FUNCTIONS
+// ======================
+
+// PDF to Word Converter
+function initializePdfToWordConverter() {
+    const uploadArea = document.getElementById('pdf-word-upload-area');
+    const fileInput = document.getElementById('pdf-word-input');
+    const browseBtn = document.getElementById('pdf-word-browse-btn');
+    
+    if (!uploadArea || !fileInput || !browseBtn) return;
+    
+    // Browse button functionality
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToWordFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToWordFiles(files);
+        }
+    });
+}
+
+function processPdfToWordFiles(files) {
+    const resultsContainer = document.getElementById('pdf-word-results');
+    const resultsList = document.getElementById('pdf-word-list');
+    
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    files.forEach((file, index) => {
+        displayPdfConversionResult(file, 'Word', 'pdf-word-list', 'blue', index);
+    });
+}
+
+// PDF to PowerPoint Converter
+function initializePdfToPptConverter() {
+    const uploadArea = document.getElementById('pdf-ppt-upload-area');
+    const fileInput = document.getElementById('pdf-ppt-input');
+    const browseBtn = document.getElementById('pdf-ppt-browse-btn');
+    
+    if (!uploadArea || !fileInput || !browseBtn) return;
+    
+    // Browse button functionality
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToPptFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToPptFiles(files);
+        }
+    });
+}
+
+function processPdfToPptFiles(files) {
+    const resultsContainer = document.getElementById('pdf-ppt-results');
+    const resultsList = document.getElementById('pdf-ppt-list');
+    
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    files.forEach((file, index) => {
+        displayPdfConversionResult(file, 'PowerPoint', 'pdf-ppt-list', 'orange', index);
+    });
+}
+
+// PDF to Excel Converter
+function initializePdfToExcelConverter() {
+    const uploadArea = document.getElementById('pdf-excel-upload-area');
+    const fileInput = document.getElementById('pdf-excel-input');
+    const browseBtn = document.getElementById('pdf-excel-browse-btn');
+    
+    if (!uploadArea || !fileInput || !browseBtn) return;
+    
+    // Browse button functionality
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-green-500', 'bg-green-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-green-500', 'bg-green-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-green-500', 'bg-green-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToExcelFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToExcelFiles(files);
+        }
+    });
+}
+
+function processPdfToExcelFiles(files) {
+    const resultsContainer = document.getElementById('pdf-excel-results');
+    const resultsList = document.getElementById('pdf-excel-list');
+    
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    files.forEach((file, index) => {
+        displayPdfConversionResult(file, 'Excel', 'pdf-excel-list', 'green', index);
+    });
+}
+
+// PDF Split Tool
+function initializePdfSplitConverter() {
+    const uploadArea = document.getElementById('pdf-split-upload-area');
+    const fileInput = document.getElementById('pdf-split-input');
+    const browseBtn = document.getElementById('pdf-split-browse-btn');
+    
+    if (!uploadArea || !fileInput || !browseBtn) return;
+    
+    // Browse button functionality
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-purple-500', 'bg-purple-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-purple-500', 'bg-purple-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-purple-500', 'bg-purple-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfSplitFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfSplitFiles(files);
+        }
+    });
+}
+
+function processPdfSplitFiles(files) {
+    const resultsContainer = document.getElementById('pdf-split-results');
+    const resultsList = document.getElementById('pdf-split-list');
+    
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    files.forEach((file, index) => {
+        displayPdfConversionResult(file, 'Split PDF', 'pdf-split-list', 'purple', index);
+    });
+}
+
+// PDF Merge & Compress Tool
+function initializePdfMergeConverter() {
+    const uploadArea = document.getElementById('pdf-merge-upload-area');
+    const fileInput = document.getElementById('pdf-merge-input');
+    const browseBtn = document.getElementById('pdf-merge-browse-btn');
+    
+    if (!uploadArea || !fileInput || !browseBtn) return;
+    
+    // Browse button functionality
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-teal-500', 'bg-teal-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-teal-500', 'bg-teal-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-teal-500', 'bg-teal-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfMergeFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfMergeFiles(files);
+        }
+    });
+}
+
+function processPdfMergeFiles(files) {
+    const resultsContainer = document.getElementById('pdf-merge-results');
+    const resultsList = document.getElementById('pdf-merge-list');
+    
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    files.forEach((file, index) => {
+        displayPdfConversionResult(file, 'Merged PDF', 'pdf-merge-list', 'teal', index);
+    });
+}
+
+// Generic PDF conversion result display
+function displayPdfConversionResult(file, conversionType, containerId, colorTheme, index) {
+    const resultsList = document.getElementById(containerId);
+    
+    const resultItem = document.createElement('div');
+    resultItem.className = 'bg-gray-50 border border-gray-200 rounded-lg p-4';
+    
+    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+    
+    resultItem.innerHTML = `
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <h5 class="font-semibold text-gray-800">${file.name}</h5>
+                <p class="text-sm text-gray-600">
+                    File size: ${fileSize} MB • Converting to ${conversionType}
+                </p>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="simulatePdfConversion('${conversionType}', '${file.name}')" class="bg-${colorTheme}-500 text-white px-3 py-1 rounded text-sm hover:bg-${colorTheme}-600">
+                    <i class="fas fa-download mr-1"></i>Convert & Download
+                </button>
+            </div>
+        </div>
+    `;
+    
+    resultsList.appendChild(resultItem);
+}
+
+function simulatePdfConversion(type, filename) {
+    alert(`PDF conversion simulation:\n\nConverting "${filename}" to ${type} format.\n\nNote: This is a demo interface. In a production environment, this would process the PDF file and provide a download link for the converted ${type} document.`);
+}
+
+// Initialize PDF converters when sections become active
+document.addEventListener('DOMContentLoaded', function() {
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                // Check each PDF section
+                const pdfSections = [
+                    { id: 'pdf-to-word-section', init: initializePdfToWordConverter },
+                    { id: 'pdf-to-ppt-section', init: initializePdfToPptConverter },
+                    { id: 'pdf-to-excel-section', init: initializePdfToExcelConverter },
+                    { id: 'pdf-split-section', init: initializePdfSplitConverter },
+                    { id: 'pdf-merge-compress-section', init: initializePdfMergeConverter }
+                ];
+                
+                pdfSections.forEach(section => {
+                    const sectionElement = document.getElementById(section.id);
+                    if (sectionElement && !sectionElement.classList.contains('hidden')) {
+                        section.init();
+                    }
+                });
+            }
+        });
+    });
+    
+    // Observe all PDF sections
+    const pdfSectionIds = [
+        'pdf-to-word-section', 'pdf-to-ppt-section', 'pdf-to-excel-section',
+        'pdf-split-section', 'pdf-merge-compress-section'
+    ];
+    
+    pdfSectionIds.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+            observer.observe(section, { attributes: true, attributeFilter: ['class'] });
+        }
+    });
+});
