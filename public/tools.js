@@ -3909,3 +3909,351 @@ class URLShortener {
 
     destroy() {}
 }
+
+// ======================
+// BMI CALCULATOR FUNCTIONS
+// ======================
+
+function calculateBMI() {
+    const height = parseFloat(document.getElementById('bmi-height').value);
+    const weight = parseFloat(document.getElementById('bmi-weight').value);
+    
+    if (!height || !weight || height <= 0 || weight <= 0) {
+        alert('Please enter valid height and weight values');
+        return;
+    }
+    
+    // Convert height from cm to meters and calculate BMI
+    const heightInMeters = height / 100;
+    const bmi = weight / (heightInMeters * heightInMeters);
+    
+    // Determine BMI category and recommendations
+    let category, recommendation, colorClass;
+    
+    if (bmi < 18.5) {
+        category = 'Underweight';
+        recommendation = 'Consider consulting with a healthcare provider about gaining weight in a healthy way.';
+        colorClass = 'text-blue-600';
+    } else if (bmi >= 18.5 && bmi < 25) {
+        category = 'Normal weight';
+        recommendation = 'Great! You have a healthy weight. Maintain it with a balanced diet and regular exercise.';
+        colorClass = 'text-green-600';
+    } else if (bmi >= 25 && bmi < 30) {
+        category = 'Overweight';
+        recommendation = 'Consider a balanced diet and regular exercise to reach a healthier weight.';
+        colorClass = 'text-yellow-600';
+    } else {
+        category = 'Obese';
+        recommendation = 'Consider consulting with a healthcare provider for personalized advice on weight management.';
+        colorClass = 'text-red-600';
+    }
+    
+    // Display results
+    document.getElementById('bmi-value').textContent = bmi.toFixed(1);
+    document.getElementById('bmi-category').textContent = category;
+    document.getElementById('bmi-category').className = `text-lg mb-3 font-bold ${colorClass}`;
+    document.getElementById('bmi-recommendation').textContent = recommendation;
+    document.getElementById('bmi-results').classList.remove('hidden');
+    
+    // Update result card color based on category
+    const resultCard = document.querySelector('#bmi-results .bg-green-50');
+    resultCard.className = `border rounded-lg p-6 ${
+        bmi < 18.5 ? 'bg-blue-50 border-blue-200' :
+        bmi >= 18.5 && bmi < 25 ? 'bg-green-50 border-green-200' :
+        bmi >= 25 && bmi < 30 ? 'bg-yellow-50 border-yellow-200' :
+        'bg-red-50 border-red-200'
+    }`;
+}
+
+// ======================
+// TEXT CASE CONVERTER FUNCTIONS
+// ======================
+
+function convertCase(caseType) {
+    const inputText = document.getElementById('case-input-text').value;
+    const outputElement = document.getElementById('case-output-text');
+    
+    if (!inputText.trim()) {
+        alert('Please enter some text to convert');
+        return;
+    }
+    
+    let convertedText = '';
+    
+    switch (caseType) {
+        case 'upper':
+            convertedText = inputText.toUpperCase();
+            break;
+        case 'lower':
+            convertedText = inputText.toLowerCase();
+            break;
+        case 'title':
+            convertedText = inputText.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+            break;
+        case 'sentence':
+            convertedText = inputText.toLowerCase().replace(/^\w/, char => char.toUpperCase())
+                .replace(/[.!?]\s*\w/g, match => match.toUpperCase());
+            break;
+        default:
+            convertedText = inputText;
+    }
+    
+    outputElement.value = convertedText;
+}
+
+function copyOutputText() {
+    const outputText = document.getElementById('case-output-text');
+    
+    if (!outputText.value.trim()) {
+        alert('No text to copy. Please convert some text first.');
+        return;
+    }
+    
+    outputText.select();
+    outputText.setSelectionRange(0, 99999); // For mobile devices
+    
+    try {
+        document.execCommand('copy');
+        
+        // Visual feedback
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+        button.classList.add('bg-green-500');
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('bg-green-500');
+        }, 2000);
+        
+    } catch (err) {
+        alert('Failed to copy text. Please manually select and copy the text.');
+    }
+}
+
+// ======================
+// PNG TO JPG CONVERTER FUNCTIONS
+// ======================
+
+let pngConvertedFiles = [];
+
+// Initialize PNG to JPG converter when the section loads
+function initializePngToJpgConverter() {
+    const uploadArea = document.getElementById('png-upload-area');
+    const fileInput = document.getElementById('png-input');
+    const browseBtn = document.getElementById('png-browse-btn');
+    const qualitySlider = document.getElementById('jpg-quality');
+    const qualityValue = document.getElementById('jpg-quality-value');
+    
+    // Quality slider functionality
+    qualitySlider.addEventListener('input', function() {
+        qualityValue.textContent = this.value;
+    });
+    
+    // Browse button functionality
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'image/png');
+        if (files.length > 0) {
+            processPngFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            processPngFiles(files);
+        }
+    });
+}
+
+function processPngFiles(files) {
+    const quality = parseInt(document.getElementById('jpg-quality').value) / 100;
+    const resultsContainer = document.getElementById('png-conversion-results');
+    const resultsList = document.getElementById('png-results-list');
+    
+    pngConvertedFiles = [];
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    files.forEach((file, index) => {
+        if (file.type !== 'image/png') {
+            console.log('Skipping non-PNG file:', file.name);
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // Fill white background (since JPG doesn't support transparency)
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the PNG image
+                ctx.drawImage(img, 0, 0);
+                
+                // Convert to JPG with specified quality
+                canvas.toBlob(function(blob) {
+                    const jpgFileName = file.name.replace(/\.png$/i, '.jpg');
+                    const jpgFile = new File([blob], jpgFileName, { type: 'image/jpeg' });
+                    
+                    pngConvertedFiles.push({
+                        original: file,
+                        converted: jpgFile,
+                        blob: blob,
+                        url: URL.createObjectURL(blob)
+                    });
+                    
+                    displayPngConversionResult(file, jpgFile, blob, index);
+                }, 'image/jpeg', quality);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function displayPngConversionResult(originalFile, convertedFile, blob, index) {
+    const resultsList = document.getElementById('png-results-list');
+    
+    const resultItem = document.createElement('div');
+    resultItem.className = 'bg-gray-50 border border-gray-200 rounded-lg p-4';
+    
+    const originalSize = (originalFile.size / 1024 / 1024).toFixed(2);
+    const convertedSize = (convertedFile.size / 1024 / 1024).toFixed(2);
+    const compressionRatio = ((1 - convertedFile.size / originalFile.size) * 100).toFixed(1);
+    
+    resultItem.innerHTML = `
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <h5 class="font-semibold text-gray-800">${originalFile.name}</h5>
+                <p class="text-sm text-gray-600">
+                    Original: ${originalSize} MB → Converted: ${convertedSize} MB 
+                    <span class="text-green-600">(${compressionRatio}% smaller)</span>
+                </p>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="previewJpgImage(${index})" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                    <i class="fas fa-eye mr-1"></i>Preview
+                </button>
+                <button onclick="downloadSingleJpg(${index})" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
+                    <i class="fas fa-download mr-1"></i>Download
+                </button>
+            </div>
+        </div>
+    `;
+    
+    resultsList.appendChild(resultItem);
+}
+
+function previewJpgImage(index) {
+    const file = pngConvertedFiles[index];
+    if (!file) return;
+    
+    // Create modal for image preview
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+    
+    modal.innerHTML = `
+        <div class="max-w-4xl max-h-full p-4">
+            <div class="bg-white rounded-lg p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">Preview: ${file.converted.name}</h3>
+                    <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <img src="${file.url}" alt="Preview" class="max-w-full max-h-96 mx-auto">
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+function downloadSingleJpg(index) {
+    const file = pngConvertedFiles[index];
+    if (!file) return;
+    
+    const link = document.createElement('a');
+    link.href = file.url;
+    link.download = file.converted.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Download all converted JPG files
+document.addEventListener('DOMContentLoaded', function() {
+    const downloadAllBtn = document.getElementById('download-all-jpg');
+    if (downloadAllBtn) {
+        downloadAllBtn.addEventListener('click', function() {
+            if (pngConvertedFiles.length === 0) {
+                alert('No files to download. Please convert some PNG files first.');
+                return;
+            }
+            
+            pngConvertedFiles.forEach((file, index) => {
+                setTimeout(() => {
+                    downloadSingleJpg(index);
+                }, index * 200); // Stagger downloads
+            });
+        });
+    }
+});
+
+// Initialize PNG to JPG converter when the section becomes active
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the converter when the section is shown
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const pngSection = document.getElementById('png-to-jpg-section');
+                if (pngSection && !pngSection.classList.contains('hidden')) {
+                    initializePngToJpgConverter();
+                }
+            }
+        });
+    });
+    
+    const pngSection = document.getElementById('png-to-jpg-section');
+    if (pngSection) {
+        observer.observe(pngSection, { attributes: true, attributeFilter: ['class'] });
+    }
+});

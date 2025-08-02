@@ -1,7 +1,7 @@
 # ConvertWiz - Multi-Tool Converter Suite
 
 ## Overview
-ConvertWiz is a comprehensive, full-stack SaaS application offering 13+ conversion tools through a professional single-page application. The platform provides diverse tools including image conversion, currency conversion, land unit conversion, Instagram profile picture resizing, percentage calculations, temperature conversions, color format conversions, image compression, IP address extraction, QR code generation, and text processing. It aims to be a go-to solution for various conversion needs, accessible via dedicated pages with smooth navigation and backend API integration.
+ConvertWiz is a comprehensive, full-stack SaaS application offering 21+ conversion tools through a professional single-page application. The platform provides diverse tools including image conversion, currency conversion, land unit conversion, Instagram profile picture resizing, percentage calculations, temperature conversions, color format conversions, image compression, IP address extraction, QR code generation, text processing, BMI calculations, text case conversion, and PNG to JPG conversion. It aims to be a go-to solution for various conversion needs, accessible via dedicated pages with smooth navigation and backend API integration.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
@@ -78,4 +78,5 @@ Preferred communication style: Simple, everyday language.
 - Mobile responsiveness and UI integrity preserved
 
 ## Recent Changes
+- August 2, 2025: Added three new tools to Utility Tools section - BMI Calculator for health assessments, Text Case Converter for text formatting (UPPERCASE, lowercase, Title Case, Sentence case), and PNG to JPG Converter with quality control and drag-drop functionality. All tools feature animated "NEW" badges and are fully functional with comprehensive JavaScript implementations.
 - August 1, 2025: Static deployment optimization completed - moved all frontend assets to public/ directory, configured vercel.json, updated server to serve from public/, resolved component loading issues, maintained full functionality of all conversion tools, successfully pushed to remote repository with force-with-lease
