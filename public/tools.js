@@ -3956,13 +3956,15 @@ function calculateBMI() {
     document.getElementById('bmi-results').classList.remove('hidden');
     
     // Update result card color based on category
-    const resultCard = document.querySelector('#bmi-results .bg-green-50');
-    resultCard.className = `border rounded-lg p-6 ${
-        bmi < 18.5 ? 'bg-blue-50 border-blue-200' :
-        bmi >= 18.5 && bmi < 25 ? 'bg-green-50 border-green-200' :
-        bmi >= 25 && bmi < 30 ? 'bg-yellow-50 border-yellow-200' :
-        'bg-red-50 border-red-200'
-    }`;
+    const resultCard = document.querySelector('#bmi-results div');
+    if (resultCard) {
+        resultCard.className = `border rounded-lg p-6 ${
+            bmi < 18.5 ? 'bg-blue-50 border-blue-200' :
+            bmi >= 18.5 && bmi < 25 ? 'bg-green-50 border-green-200' :
+            bmi >= 25 && bmi < 30 ? 'bg-yellow-50 border-yellow-200' :
+            'bg-red-50 border-red-200'
+        }`;
+    }
 }
 
 // ======================
