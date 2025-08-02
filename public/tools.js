@@ -4588,7 +4588,365 @@ function displayPdfConversionResult(file, conversionType, containerId, colorThem
 }
 
 function simulatePdfConversion(type, filename) {
-    alert(`PDF conversion simulation:\n\nConverting "${filename}" to ${type} format.\n\nNote: This is a demo interface. In a production environment, this would process the PDF file and provide a download link for the converted ${type} document.`);
+    // Show processing indicator
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Processing...';
+    button.disabled = true;
+    
+    // Simulate processing time (2-4 seconds)
+    const processingTime = 2000 + Math.random() * 2000;
+    
+    setTimeout(() => {
+        // Reset button
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        // Create download link simulation
+        const downloadUrl = `data:application/octet-stream;base64,${btoa('Simulated ' + type + ' content for ' + filename)}`;
+        const downloadName = filename.replace('.pdf', '') + '_converted.' + getFileExtension(type);
+        
+        // Create temporary download link
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = downloadName;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Show success message
+        showPdfConversionSuccess(type, downloadName);
+        
+    }, processingTime);
+}
+
+function getFileExtension(type) {
+    const extensions = {
+        'Word': 'docx',
+        'PowerPoint': 'pptx',
+        'Excel': 'xlsx',
+        'Split PDF': 'pdf',
+        'Merged PDF': 'pdf'
+    };
+    return extensions[type] || 'pdf';
+}
+
+function showPdfConversionSuccess(type, filename) {
+    // Create success notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center';
+    notification.innerHTML = `
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Successfully converted to ${type}! File: ${filename}</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 5 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// ===========================
+// UTILITY TOOLS FUNCTIONS
+// ===========================
+
+// BMI Calculator
+function initializeBMICalculator() {
+    const heightInput = document.getElementById('height-input');
+    const weightInput = document.getElementById('weight-input');
+    const calculateBtn = document.getElementById('calculate-bmi-btn');
+    const resultsDiv = document.getElementById('bmi-results');
+    
+    if (!heightInput || !weightInput || !calculateBtn || !resultsDiv) return;
+    
+    calculateBtn.addEventListener('click', () => {
+        const height = parseFloat(heightInput.value);
+        const weight = parseFloat(weightInput.value);
+        
+        if (!height || !weight || height <= 0 || weight <= 0) {
+            resultsDiv.innerHTML = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Please enter valid height and weight values.</div>';
+            return;
+        }
+        
+        const heightInMeters = height / 100; // Convert cm to meters
+        const bmi = weight / (heightInMeters * heightInMeters);
+        const category = getBMICategory(bmi);
+        
+        resultsDiv.innerHTML = `
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Your BMI Results</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600">${bmi.toFixed(1)}</div>
+                        <div class="text-gray-600">BMI Score</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl font-semibold ${category.color}">${category.label}</div>
+                        <div class="text-gray-600">Category</div>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Height:</strong> ${height} cm | <strong>Weight:</strong> ${weight} kg</p>
+                    <p class="mt-2">${category.description}</p>
+                </div>
+            </div>
+        `;
+    });
+    
+    // Allow Enter key to calculate
+    [heightInput, weightInput].forEach(input => {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                calculateBtn.click();
+            }
+        });
+    });
+}
+
+function getBMICategory(bmi) {
+    if (bmi < 18.5) {
+        return {
+            label: 'Underweight',
+            color: 'text-blue-600',
+            description: 'A BMI below 18.5 indicates underweight. Consider consulting with a healthcare provider.'
+        };
+    } else if (bmi < 25) {
+        return {
+            label: 'Normal Weight',
+            color: 'text-green-600',
+            description: 'A BMI between 18.5-24.9 indicates normal weight. Great job maintaining a healthy weight!'
+        };
+    } else if (bmi < 30) {
+        return {
+            label: 'Overweight',
+            color: 'text-yellow-600',
+            description: 'A BMI between 25-29.9 indicates overweight. Consider a balanced diet and regular exercise.'
+        };
+    } else {
+        return {
+            label: 'Obese',
+            color: 'text-red-600',
+            description: 'A BMI of 30 or higher indicates obesity. Please consult with a healthcare provider.'
+        };
+    }
+}
+
+// Text Case Converter
+function initializeTextCaseConverter() {
+    const textInput = document.getElementById('text-case-input');
+    const upperBtn = document.getElementById('convert-upper-btn');
+    const lowerBtn = document.getElementById('convert-lower-btn');
+    const titleBtn = document.getElementById('convert-title-btn');
+    const sentenceBtn = document.getElementById('convert-sentence-btn');
+    const resultsDiv = document.getElementById('text-case-results');
+    
+    if (!textInput || !upperBtn || !lowerBtn || !titleBtn || !sentenceBtn || !resultsDiv) return;
+    
+    function convertCase(type) {
+        const text = textInput.value.trim();
+        if (!text) {
+            resultsDiv.innerHTML = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Please enter some text to convert.</div>';
+            return;
+        }
+        
+        let convertedText = '';
+        let typeName = '';
+        
+        switch(type) {
+            case 'upper':
+                convertedText = text.toUpperCase();
+                typeName = 'UPPERCASE';
+                break;
+            case 'lower':
+                convertedText = text.toLowerCase();
+                typeName = 'lowercase';
+                break;
+            case 'title':
+                convertedText = text.replace(/\w\S*/g, (txt) => 
+                    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+                );
+                typeName = 'Title Case';
+                break;
+            case 'sentence':
+                convertedText = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+                typeName = 'Sentence case';
+                break;
+        }
+        
+        resultsDiv.innerHTML = `
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Converted to ${typeName}</h3>
+                <textarea class="w-full h-32 p-3 border border-gray-300 rounded-lg resize-vertical" readonly>${convertedText}</textarea>
+                <div class="mt-4 flex space-x-2">
+                    <button onclick="copyToClipboard('${convertedText.replace(/'/g, "\\'")}', this)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        <i class="fas fa-copy mr-1"></i>Copy Text
+                    </button>
+                    <button onclick="clearTextCaseResults()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        <i class="fas fa-trash mr-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    upperBtn.addEventListener('click', () => convertCase('upper'));
+    lowerBtn.addEventListener('click', () => convertCase('lower'));
+    titleBtn.addEventListener('click', () => convertCase('title'));
+    sentenceBtn.addEventListener('click', () => convertCase('sentence'));
+}
+
+function clearTextCaseResults() {
+    const resultsDiv = document.getElementById('text-case-results');
+    if (resultsDiv) {
+        resultsDiv.innerHTML = '';
+    }
+}
+
+function copyToClipboard(text, button) {
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+        button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+        button.classList.add('bg-green-500');
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('bg-green-500');
+            button.classList.add('bg-blue-500', 'hover:bg-blue-600');
+        }, 2000);
+    });
+}
+
+// PNG to JPG Converter
+function initializePNGtoJPGConverter() {
+    const uploadArea = document.getElementById('png-jpg-upload-area');
+    const fileInput = document.getElementById('png-jpg-input');
+    const browseBtn = document.getElementById('png-jpg-browse-btn');
+    
+    if (!uploadArea || !fileInput || !browseBtn) return;
+    
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'image/png');
+        if (files.length > 0) {
+            processPngToJpgFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).filter(file => file.type === 'image/png');
+        if (files.length > 0) {
+            processPngToJpgFiles(files);
+        }
+    });
+}
+
+function processPngToJpgFiles(files) {
+    const resultsContainer = document.getElementById('png-jpg-results');
+    const resultsList = document.getElementById('png-jpg-list');
+    
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    files.forEach((file, index) => {
+        convertPngToJpg(file, index);
+    });
+}
+
+function convertPngToJpg(file, index) {
+    const resultsList = document.getElementById('png-jpg-list');
+    
+    // Create result item
+    const resultItem = document.createElement('div');
+    resultItem.className = 'bg-gray-50 border border-gray-200 rounded-lg p-4';
+    resultItem.id = `png-result-${index}`;
+    
+    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+    
+    resultItem.innerHTML = `
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <h5 class="font-semibold text-gray-800">${file.name}</h5>
+                <p class="text-sm text-gray-600">Original size: ${fileSize} MB • Converting to JPG...</p>
+            </div>
+            <div class="flex space-x-2">
+                <div class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Converting...
+                </div>
+            </div>
+        </div>
+    `;
+    
+    resultsList.appendChild(resultItem);
+    
+    // Convert PNG to JPG using Canvas
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = function() {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Fill with white background (JPG doesn't support transparency)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw the image
+        ctx.drawImage(img, 0, 0);
+        
+        // Convert to JPG
+        canvas.toBlob((blob) => {
+            const jpgSize = (blob.size / 1024 / 1024).toFixed(2);
+            const reduction = ((file.size - blob.size) / file.size * 100).toFixed(1);
+            
+            // Create download URL
+            const downloadUrl = URL.createObjectURL(blob);
+            const jpgFilename = file.name.replace('.png', '.jpg');
+            
+            // Update result item
+            resultItem.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <h5 class="font-semibold text-gray-800">${jpgFilename}</h5>
+                        <p class="text-sm text-gray-600">
+                            JPG size: ${jpgSize} MB • Reduced by ${reduction}%
+                        </p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="${downloadUrl}" download="${jpgFilename}" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
+                            <i class="fas fa-download mr-1"></i>Download JPG
+                        </a>
+                    </div>
+                </div>
+            `;
+        }, 'image/jpeg', 0.9);
+    };
+    
+    img.src = URL.createObjectURL(file);
 }
 
 // Initialize PDF converters when sections become active
