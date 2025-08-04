@@ -162,51 +162,214 @@ function showSectionById(sectionId) {
 // Initialize component functionality based on section
 function initializeComponent(sectionId) {
     try {
+        console.log('🔧 INITIALIZING: Component functionality for =', sectionId);
+        
+        // Ensure tools.js is loaded
+        if (!window.toolsLoaded) {
+            console.warn('⚠️ INIT: tools.js not loaded yet, retrying...');
+            setTimeout(() => initializeComponent(sectionId), 100);
+            return;
+        }
+        
         switch(sectionId) {
             case 'jpg-to-png-section':
                 if (typeof initJPGtoPNG === 'function') {
                     initJPGtoPNG();
                     console.log('✅ INIT: JPG to PNG Converter initialized successfully');
+                } else {
+                    console.warn('⚠️ INIT: initJPGtoPNG function not found');
                 }
                 break;
+                
             case 'currency-converter-section':
                 if (typeof initCurrencyConverter === 'function') {
                     initCurrencyConverter();
                     console.log('✅ INIT: Currency Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initCurrencyConverter function not found');
                 }
                 break;
-            case 'image-compressor-section':
-                if (typeof initImageCompressor === 'function') {
-                    initImageCompressor();
-                    console.log('✅ INIT: Image Compressor initialized');
+                
+            case 'land-converter-section':
+                if (typeof initLandConverter === 'function') {
+                    initLandConverter();
+                    console.log('✅ INIT: Land Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initLandConverter function not found');
                 }
                 break;
-            case 'qr-generator-section':
-                if (typeof initQRGenerator === 'function') {
-                    initQRGenerator();
-                    console.log('✅ INIT: QR Generator initialized');
+                
+            case 'dp-resizer-section':
+                if (typeof initDPResizer === 'function') {
+                    initDPResizer();
+                    console.log('✅ INIT: DP Resizer initialized');
+                } else {
+                    console.warn('⚠️ INIT: initDPResizer function not found');
                 }
                 break;
+                
             case 'word-counter-section':
                 if (typeof initWordCounter === 'function') {
                     initWordCounter();
                     console.log('✅ INIT: Word Counter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initWordCounter function not found');
                 }
                 break;
+                
+            case 'distance-converter-section':
+                if (typeof initDistanceConverter === 'function') {
+                    initDistanceConverter();
+                    console.log('✅ INIT: Distance Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initDistanceConverter function not found');
+                }
+                break;
+                
+            case 'weight-converter-section':
+                if (typeof initWeightConverter === 'function') {
+                    initWeightConverter();
+                    console.log('✅ INIT: Weight Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initWeightConverter function not found');
+                }
+                break;
+                
+            case 'height-converter-section':
+                if (typeof initHeightConverter === 'function') {
+                    initHeightConverter();
+                    console.log('✅ INIT: Height Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initHeightConverter function not found');
+                }
+                break;
+                
+            case 'ip-extractor-section':
+                if (typeof initIPExtractor === 'function') {
+                    initIPExtractor();
+                    console.log('✅ INIT: IP Extractor initialized');
+                } else {
+                    console.warn('⚠️ INIT: initIPExtractor function not found');
+                }
+                break;
+                
+            case 'qr-generator-section':
+                if (typeof initQRGenerator === 'function') {
+                    initQRGenerator();
+                    console.log('✅ INIT: QR Generator initialized');
+                } else {
+                    console.warn('⚠️ INIT: initQRGenerator function not found');
+                }
+                break;
+                
+            case 'percentage-calculator-section':
+                if (typeof initPercentageCalculator === 'function') {
+                    initPercentageCalculator();
+                    console.log('✅ INIT: Percentage Calculator initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPercentageCalculator function not found');
+                }
+                break;
+                
+            case 'temperature-converter-section':
+                if (typeof initTemperatureConverter === 'function') {
+                    initTemperatureConverter();
+                    console.log('✅ INIT: Temperature Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initTemperatureConverter function not found');
+                }
+                break;
+                
+            case 'color-converter-section':
+                if (typeof initColorConverter === 'function') {
+                    initColorConverter();
+                    console.log('✅ INIT: Color Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initColorConverter function not found');
+                }
+                break;
+                
+            case 'image-compressor-section':
+                if (typeof initImageCompressor === 'function') {
+                    initImageCompressor();
+                    console.log('✅ INIT: Image Compressor initialized');
+                } else {
+                    console.warn('⚠️ INIT: initImageCompressor function not found');
+                }
+                break;
+                
             case 'text-to-speech-section':
                 if (typeof initTextToSpeech === 'function') {
                     initTextToSpeech();
                     console.log('✅ INIT: Text to Speech initialized');
+                } else {
+                    console.warn('⚠️ INIT: initTextToSpeech function not found');
                 }
                 break;
-            case 'landing-section':
-                console.log('ℹ️  INIT: No specific initialization needed for', sectionId);
+                
+            case 'url-shortener-section':
+                if (typeof initURLShortener === 'function') {
+                    initURLShortener();
+                    console.log('✅ INIT: URL Shortener initialized');
+                } else {
+                    console.warn('⚠️ INIT: initURLShortener function not found');
+                }
                 break;
+                
+            case 'backlink-checker-section':
+                if (typeof initBacklinkChecker === 'function') {
+                    initBacklinkChecker();
+                    console.log('✅ INIT: Backlink Checker initialized');
+                } else {
+                    console.warn('⚠️ INIT: initBacklinkChecker function not found');
+                }
+                break;
+                
+            case 'meta-tag-generator-section':
+                if (typeof initMetaTagGenerator === 'function') {
+                    initMetaTagGenerator();
+                    console.log('✅ INIT: Meta Tag Generator initialized');
+                } else {
+                    console.warn('⚠️ INIT: initMetaTagGenerator function not found');
+                }
+                break;
+                
+            case 'dpi-checker-section':
+                if (typeof initDPIChecker === 'function') {
+                    initDPIChecker();
+                    console.log('✅ INIT: DPI Checker initialized');
+                } else {
+                    console.warn('⚠️ INIT: initDPIChecker function not found');
+                }
+                break;
+                
+            case 'global-land-units-section':
+                if (typeof initGlobalLandUnits === 'function') {
+                    initGlobalLandUnits();
+                    console.log('✅ INIT: Global Land Units initialized');
+                } else {
+                    console.warn('⚠️ INIT: initGlobalLandUnits function not found');
+                }
+                break;
+                
+            case 'landing-section':
+                console.log('ℹ️ INIT: No specific initialization needed for', sectionId);
+                break;
+                
             default:
-                console.log('ℹ️  INIT: Default initialization for', sectionId);
+                console.log('ℹ️ INIT: Default initialization attempted for', sectionId);
+                // Try to initialize anyway if the function exists
+                var initFunctionName = 'init' + sectionId.split('-').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join('').replace('Section', '');
+                
+                if (typeof window[initFunctionName] === 'function') {
+                    window[initFunctionName]();
+                    console.log('✅ INIT: Dynamic initialization successful for', sectionId);
+                }
         }
     } catch (error) {
-        console.warn('⚠️  INIT: Error initializing', sectionId, ':', error.message);
+        console.error('❌ INIT: Error initializing', sectionId, ':', error.message);
     }
 }
 
