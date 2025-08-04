@@ -101,7 +101,7 @@ function showSectionById(sectionId) {
         console.log('🚨 EMERGENCY: SUCCESS - Section switched to =', sectionId);
         console.log('🚨 EMERGENCY: Target element found with content length =', target.innerHTML.length);
         
-        // COMPLETE URL mapping for all 26 tools - Updated for proper routing
+        // Production URL mapping - Only established tools for immediate deployment
         var pathMap = {
             'jpg-to-png-section': '/jpg-to-png',
             'currency-converter-section': '/currency-converter',
@@ -123,17 +123,26 @@ function showSectionById(sectionId) {
             'meta-tag-generator-section': '/meta-tag-generator',
             'dpi-checker-section': '/dpi-checker',
             'global-land-units-section': '/global-land-units',
-            // New PDF and Utility Tools (Saturday release)
-            'bmi-calculator-section': '/bmi-calculator',
-            'text-case-converter-section': '/text-case-converter',
-            'png-to-jpg-section': '/png-to-jpg',
-            'pdf-to-word-section': '/pdf-to-word',
-            'pdf-to-powerpoint-section': '/pdf-to-powerpoint',
-            'pdf-to-excel-section': '/pdf-to-excel',
-            'pdf-split-section': '/pdf-split',
-            'pdf-merge-section': '/pdf-merge',
             'landing-section': '/'
         };
+        
+        // Saturday components are handled separately and hidden from users
+        var saturdayComponents = [
+            'bmi-calculator-section', 'text-case-converter-section', 'png-to-jpg-section',
+            'pdf-to-word-section', 'pdf-to-powerpoint-section', 'pdf-to-excel-section',
+            'pdf-split-section', 'pdf-merge-section'
+        ];
+        
+        // Check if component is Saturday release and should be hidden
+        if (saturdayComponents.includes(sectionId)) {
+            var today = new Date();
+            var isSaturday = today.getDay() === 6;
+            if (!isSaturday) {
+                console.log('🔒 Saturday component blocked from user access:', sectionId);
+                showSectionById('landing-section');
+                return;
+            }
+        }
         
         var newPath = pathMap[sectionId] || '/';
         if (window.history && window.history.pushState) {

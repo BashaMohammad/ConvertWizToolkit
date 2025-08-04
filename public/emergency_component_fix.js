@@ -1,4 +1,4 @@
-// EMERGENCY COMPONENT FIX - Zero dependencies, pure vanilla JS
+// EMERGENCY COMPONENT FIX - Zero dependencies, pure vanilla JS with URL routing
 console.log('🚨 EMERGENCY FIX: Starting component system');
 
 // Simple function to show sections based on URL
@@ -54,6 +54,8 @@ if (document.readyState !== 'loading') {
     document.addEventListener('DOMContentLoaded', emergencyShowSection);
 }
 
+console.log('🚨 EMERGENCY FIX: System ready with navigation');
+
 // Add navigation button handlers
 document.addEventListener('click', function(e) {
     // Handle "Try Now" buttons and "Back to Home" buttons
@@ -78,7 +80,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Function to show section by ID
+// Function to show section by ID with proper URL update
 function showSectionById(sectionId) {
     console.log('🚨 EMERGENCY: Switching to section =', sectionId);
     
@@ -92,17 +94,14 @@ function showSectionById(sectionId) {
     // Show target section
     var target = document.getElementById(sectionId);
     if (target) {
-        target.style.display = 'block !important';
+        target.style.display = 'block';
         target.style.visibility = 'visible';
         target.style.opacity = '1';
         target.classList.add('active');
         console.log('🚨 EMERGENCY: SUCCESS - Section switched to =', sectionId);
         console.log('🚨 EMERGENCY: Target element found with content length =', target.innerHTML.length);
         
-        // Initialize component functionality based on section
-        initializeComponentFunctionality(sectionId);
-        
-        // Update URL to match component
+        // Production URL mapping - Only established tools for immediate deployment
         var pathMap = {
             'jpg-to-png-section': '/jpg-to-png',
             'currency-converter-section': '/currency-converter',
@@ -119,297 +118,107 @@ function showSectionById(sectionId) {
             'color-converter-section': '/color-converter',
             'image-compressor-section': '/image-compressor',
             'text-to-speech-section': '/text-to-speech',
+            'url-shortener-section': '/url-shortener',
             'backlink-checker-section': '/backlink-checker',
             'meta-tag-generator-section': '/meta-tag-generator',
             'dpi-checker-section': '/dpi-checker',
-            'url-shortener-section': '/url-shortener',
-            // NEW UTILITY TOOLS
-            'bmi-calculator-section': '/bmi-calculator',
-            'text-case-converter-section': '/text-case-converter',
-            'png-to-jpg-section': '/png-to-jpg',
-            // NEW PDF TOOLS
-            'pdf-to-word-section': '/pdf-to-word',
-            'pdf-to-ppt-section': '/pdf-to-ppt',
-            'pdf-to-excel-section': '/pdf-to-excel',
-            'pdf-split-section': '/pdf-split',
-            'pdf-merge-compress-section': '/pdf-merge-compress',
+            'global-land-units-section': '/global-land-units',
             'landing-section': '/'
         };
+        
+        // Saturday components are handled separately and hidden from users
+        var saturdayComponents = [
+            'bmi-calculator-section', 'text-case-converter-section', 'png-to-jpg-section',
+            'pdf-to-word-section', 'pdf-to-powerpoint-section', 'pdf-to-excel-section',
+            'pdf-split-section', 'pdf-merge-section'
+        ];
+        
+        // Check if component is Saturday release and should be hidden
+        if (saturdayComponents.includes(sectionId)) {
+            var today = new Date();
+            var isSaturday = today.getDay() === 6;
+            if (!isSaturday) {
+                console.log('🔒 Saturday component blocked from user access:', sectionId);
+                showSectionById('landing-section');
+                return;
+            }
+        }
         
         var newPath = pathMap[sectionId] || '/';
         if (window.history && window.history.pushState) {
             window.history.pushState({}, '', newPath);
+            console.log('🔗 URL updated to:', newPath);
         }
+        
+        // Initialize component functionality
+        console.log('🔧 INITIALIZING: Component functionality for =', sectionId);
+        initializeComponent(sectionId);
     } else {
-        console.log('🚨 EMERGENCY: FAILED - Section not found =', sectionId);
+        console.log('🚨 EMERGENCY: FAILED - Section not found, falling back to home');
+        showSectionById('landing-section');
     }
 }
 
-// Component initialization function
-function initializeComponentFunctionality(sectionId) {
-    console.log('🔧 INITIALIZING: Component functionality for =', sectionId);
-    
-    switch(sectionId) {
-        case 'jpg-to-png-section':
-            if (typeof JPGtoPNGConverter !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new JPGtoPNGConverter();
-                        console.log('✅ INIT: JPG to PNG Converter initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: JPG to PNG Converter failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: JPGtoPNGConverter class not found');
-            }
-            break;
-        case 'currency-converter-section':
-            if (typeof CurrencyConverter !== 'undefined') {
-                setTimeout(() => new CurrencyConverter(), 100);
-                console.log('✅ INIT: Currency Converter initialized');
-            }
-            break;
-        case 'land-converter-section':
-            if (typeof LandUnitConverter !== 'undefined') {
-                setTimeout(() => new LandUnitConverter(), 100);
-                console.log('✅ INIT: Land Unit Converter initialized');
-            }
-            break;
-        case 'dp-resizer-section':
-            if (typeof InstagramDPResizer !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new InstagramDPResizer();
-                        console.log('✅ INIT: DP Resizer initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: DP Resizer failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: InstagramDPResizer class not found');
-            }
-            break;
-        case 'word-counter-section':
-            if (typeof WordCounter !== 'undefined') {
-                setTimeout(() => new WordCounter(), 100);
-                console.log('✅ INIT: Word Counter initialized');
-            }
-            break;
-        case 'distance-converter-section':
-            if (typeof DistanceConverter !== 'undefined') {
-                setTimeout(() => new DistanceConverter(), 100);
-                console.log('✅ INIT: Distance Converter initialized');
-            }
-            break;
-        case 'weight-converter-section':
-            if (typeof WeightConverter !== 'undefined') {
-                setTimeout(() => new WeightConverter(), 100);
-                console.log('✅ INIT: Weight Converter initialized');
-            }
-            break;
-        case 'height-converter-section':
-            if (typeof HeightConverter !== 'undefined') {
-                setTimeout(() => new HeightConverter(), 100);
-                console.log('✅ INIT: Height Converter initialized');
-            }
-            break;
-        case 'color-converter-section':
-            if (typeof ColorConverter !== 'undefined') {
-                setTimeout(() => new ColorConverter(), 100);
-                console.log('✅ INIT: Color Converter initialized');
-            }
-            break;
-        case 'percentage-calculator-section':
-            if (typeof PercentageCalculator !== 'undefined') {
-                setTimeout(() => new PercentageCalculator(), 100);
-                console.log('✅ INIT: Percentage Calculator initialized');
-            }
-            break;
-        case 'temperature-converter-section':
-            if (typeof TemperatureConverter !== 'undefined') {
-                setTimeout(() => new TemperatureConverter(), 100);
-                console.log('✅ INIT: Temperature Converter initialized');
-            }
-            break;
-        case 'image-compressor-section':
-            if (typeof ImageCompressor !== 'undefined') {
-                setTimeout(() => new ImageCompressor(), 100);
-                console.log('✅ INIT: Image Compressor initialized');
-            }
-            break;
-        case 'text-to-speech-section':
-            if (typeof TextToSpeech !== 'undefined') {
-                setTimeout(() => new TextToSpeech(), 100);
-                console.log('✅ INIT: Text to Speech initialized');
-            }
-            break;
-        case 'backlink-checker-section':
-            if (typeof BacklinkChecker !== 'undefined') {
-                setTimeout(() => new BacklinkChecker(), 100);
-                console.log('✅ INIT: Backlink Checker initialized');
-            }
-            break;
-        case 'meta-tag-generator-section':
-            if (typeof MetaTagGenerator !== 'undefined') {
-                setTimeout(() => new MetaTagGenerator(), 100);
-                console.log('✅ INIT: Meta Tag Generator initialized');
-            }
-            break;
-        case 'dpi-checker-section':
-            if (typeof DPIChecker !== 'undefined') {
-                setTimeout(() => new DPIChecker(), 100);
-                console.log('✅ INIT: DPI Checker initialized');
-            }
-            break;
-        case 'url-shortener-section':
-            if (typeof URLShortener !== 'undefined') {
-                setTimeout(() => new URLShortener(), 100);
-                console.log('✅ INIT: URL Shortener initialized');
-            }
-            break;
-        // NEW UTILITY TOOLS
-        case 'bmi-calculator-section':
-            console.log('✅ INIT: BMI Calculator - functionality included in tools.js');
-            break;
-        case 'text-case-converter-section':
-            console.log('✅ INIT: Text Case Converter - functionality included in tools.js');
-            break;
-        case 'png-to-jpg-section':
-            console.log('✅ INIT: PNG to JPG Converter - functionality included in tools.js');
-            break;
-        // NEW PDF TOOLS
-        case 'pdf-to-word-section':
-            if (typeof initializePdfToWordConverter !== 'undefined') {
-                setTimeout(() => initializePdfToWordConverter(), 100);
-                console.log('✅ INIT: PDF to Word Converter initialized');
-            }
-            break;
-        case 'pdf-to-ppt-section':
-            if (typeof initializePdfToPptConverter !== 'undefined') {
-                setTimeout(() => initializePdfToPptConverter(), 100);
-                console.log('✅ INIT: PDF to PowerPoint Converter initialized');
-            }
-            break;
-        case 'pdf-to-excel-section':
-            if (typeof initializePdfToExcelConverter !== 'undefined') {
-                setTimeout(() => initializePdfToExcelConverter(), 100);
-                console.log('✅ INIT: PDF to Excel Converter initialized');
-            }
-            break;
-        case 'pdf-split-section':
-            if (typeof initializePdfSplitConverter !== 'undefined') {
-                setTimeout(() => initializePdfSplitConverter(), 100);
-                console.log('✅ INIT: PDF Split Tool initialized');
-            }
-            break;
-        case 'pdf-merge-compress-section':
-            if (typeof initializePdfMergeConverter !== 'undefined') {
-                setTimeout(() => initializePdfMergeConverter(), 100);
-                console.log('✅ INIT: PDF Merge & Compress Tool initialized');
-            }
-            break;
-        case 'ip-extractor-section':
-            if (typeof IPAddressExtractor !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new IPAddressExtractor();
-                        console.log('✅ INIT: IP Address Extractor initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: IP Address Extractor failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: IPAddressExtractor class not found');
-            }
-            break;
-        case 'qr-generator-section':
-            if (typeof QRCodeGenerator !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new QRCodeGenerator();
-                        console.log('✅ INIT: QR Code Generator initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: QR Code Generator failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: QRCodeGenerator class not found');
-            }
-            break;
-        case 'text-to-speech-section':
-            if (typeof TextToSpeechConverter !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new TextToSpeechConverter();
-                        console.log('✅ INIT: Text to Speech Converter initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: Text to Speech Converter failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: TextToSpeechConverter class not found');
-            }
-            break;
-        case 'dpi-checker-section':
-            if (typeof DPIChecker !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new DPIChecker();
-                        console.log('✅ INIT: DPI Checker initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: DPI Checker failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: DPIChecker class not found');
-            }
-            break;
-        case 'url-shortener-section':
-            if (typeof URLShortener !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new URLShortener();
-                        console.log('✅ INIT: URL Shortener initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: URL Shortener failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: URLShortener class not found');
-            }
-            break;
-        case 'meta-tag-generator-section':
-            if (typeof MetaTagGenerator !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new MetaTagGenerator();
-                        console.log('✅ INIT: Meta Tag Generator initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: Meta Tag Generator failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: MetaTagGenerator class not found');
-            }
-            break;
-        case 'backlink-checker-section':
-            if (typeof BacklinkChecker !== 'undefined') {
-                setTimeout(() => {
-                    try {
-                        new BacklinkChecker();
-                        console.log('✅ INIT: Backlink Checker initialized successfully');
-                    } catch (e) {
-                        console.error('❌ INIT ERROR: Backlink Checker failed:', e.message);
-                    }
-                }, 100);
-            } else {
-                console.error('❌ INIT: BacklinkChecker class not found');
-            }
-            break;
-        default:
-            console.log('ℹ️  INIT: No specific initialization needed for', sectionId);
+// Initialize component functionality based on section
+function initializeComponent(sectionId) {
+    try {
+        switch(sectionId) {
+            case 'jpg-to-png-section':
+                if (typeof initJPGtoPNG === 'function') {
+                    initJPGtoPNG();
+                    console.log('✅ INIT: JPG to PNG Converter initialized successfully');
+                }
+                break;
+            case 'currency-converter-section':
+                if (typeof initCurrencyConverter === 'function') {
+                    initCurrencyConverter();
+                    console.log('✅ INIT: Currency Converter initialized');
+                }
+                break;
+            case 'image-compressor-section':
+                if (typeof initImageCompressor === 'function') {
+                    initImageCompressor();
+                    console.log('✅ INIT: Image Compressor initialized');
+                }
+                break;
+            case 'qr-generator-section':
+                if (typeof initQRGenerator === 'function') {
+                    initQRGenerator();
+                    console.log('✅ INIT: QR Generator initialized');
+                }
+                break;
+            case 'word-counter-section':
+                if (typeof initWordCounter === 'function') {
+                    initWordCounter();
+                    console.log('✅ INIT: Word Counter initialized');
+                }
+                break;
+            case 'text-to-speech-section':
+                if (typeof initTextToSpeech === 'function') {
+                    initTextToSpeech();
+                    console.log('✅ INIT: Text to Speech initialized');
+                }
+                break;
+            case 'landing-section':
+                console.log('ℹ️  INIT: No specific initialization needed for', sectionId);
+                break;
+            default:
+                console.log('ℹ️  INIT: Default initialization for', sectionId);
+        }
+    } catch (error) {
+        console.warn('⚠️  INIT: Error initializing', sectionId, ':', error.message);
     }
 }
 
-console.log('🚨 EMERGENCY FIX: System ready with navigation');
+// Handle browser back/forward buttons
+window.addEventListener('popstate', function(event) {
+    console.log('🔄 BROWSER: Navigation event detected');
+    emergencyShowSection();
+});
+
+// Initialize routing on load
+function initializeRouting() {
+    emergencyShowSection();
+}
+
+console.log('📦 DEPLOYMENT SEPARATION: Old components ready for production, new components scheduled for Saturday');
