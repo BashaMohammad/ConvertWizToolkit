@@ -23,7 +23,14 @@ const app = express();
 app.use("/razorpay-webhook", express.raw({ type: "application/json" }));
 
 app.use(express.json());
+
+// Serve static files from public directory first
 app.use(express.static('public'));
+
+// Handle root path explicitly to serve index.html from public directory
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Serve static files from root directory for about.html, faq.html, etc.
 app.use(express.static('.'));
