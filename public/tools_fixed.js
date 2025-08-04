@@ -5053,8 +5053,8 @@ function initTextToSpeech() {
         if (window.textToSpeech) {
             window.textToSpeech = null;
         }
-        window.textToSpeech = new TextToSpeechConverter();
-        console.log('✅ Text to Speech Converter initialized');
+        window.textToSpeech = new TextToSpeech();
+        console.log('✅ Text to Speech initialized');
     } catch (error) {
         console.warn('⚠️ Text to Speech initialization error:', error.message);
     }
