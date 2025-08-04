@@ -56,14 +56,12 @@ function disableSaturdayCards() {
         ];
         
         if (saturdayKeywords.some(keyword => cardText.includes(keyword))) {
-            // Add disabled styling
-            card.style.opacity = '0.7';
-            card.style.filter = 'grayscale(30%)';
+            // Add disabled styling but keep fully visible (no opacity/grayscale changes)
             card.style.position = 'relative';
             
             // Disable the button
             const button = card.querySelector('button');
-            if (button) {
+            if (button && !button.disabled) {
                 button.disabled = true;
                 button.style.cursor = 'not-allowed';
                 button.setAttribute('title', 'Coming Soon - Feature Under Development');
@@ -76,12 +74,6 @@ function disableSaturdayCards() {
                     return false;
                 });
             }
-            
-            // Add "Coming Soon" badge
-            const badge = document.createElement('div');
-            badge.className = 'absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full font-semibold z-10';
-            badge.textContent = 'Coming Soon';
-            card.appendChild(badge);
             
             console.log(`🔒 DISABLED: Card for ${saturdayKeywords.find(k => cardText.includes(k))}`);
         }
