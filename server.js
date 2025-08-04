@@ -25,6 +25,9 @@ app.use("/razorpay-webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(express.static('public'));
 
+// Serve static files from root directory for about.html, faq.html, etc.
+app.use(express.static('.'));
+
 // Premium users storage (in production, use database)
 const premiumUsers = {
   'iqbalaiwork@gmail.com': true, // Manually granted premium access due to successful payment
