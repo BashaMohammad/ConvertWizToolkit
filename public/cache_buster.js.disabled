@@ -37,30 +37,9 @@ function forceHardRefresh() {
     }, 1000);
 }
 
-// Auto-execute on Saturday component detection
+// Manual cache clearing only - no automatic refresh to prevent loops
 document.addEventListener('DOMContentLoaded', function() {
-    const saturdayComponents = [
-        'bmi-calculator-section',
-        'text-case-converter-section', 
-        'png-to-jpg-section',
-        'pdf-to-word-section',
-        'pdf-to-excel-section',
-        'pdf-split-section'
-    ];
-    
-    let foundSaturdayComponents = 0;
-    saturdayComponents.forEach(id => {
-        if (document.getElementById(id)) {
-            foundSaturdayComponents++;
-        }
-    });
-    
-    if (foundSaturdayComponents > 0) {
-        console.log(`💥 CACHE BUSTER: Found ${foundSaturdayComponents} Saturday components - triggering cache clear`);
-        forceHardRefresh();
-    } else {
-        console.log('💥 CACHE BUSTER: No Saturday components detected - cache is clean');
-    }
+    console.log('💥 CACHE BUSTER: Ready for manual cache clearing if needed');
 });
 
 // Manual trigger function

@@ -78,72 +78,73 @@ function clearAllCaches() {
     console.log('✅ CACHE CLEARING: Complete');
 }
 
-// Physically remove Saturday components from DOM
-function removeSaturdayComponents() {
-    console.log('🔨 COMPONENT REMOVAL: Physically removing Saturday components');
+// Make Saturday components visible but disabled (user can see but not access)
+function disableSaturdayComponents() {
+    console.log('🔒 COMPONENT DISABLE: Making Saturday components visible but disabled');
     
     SATURDAY_BANNED_COMPONENTS.forEach(componentId => {
         const element = document.getElementById(componentId);
         if (element) {
-            // Remove from DOM completely
-            element.parentNode.removeChild(element);
-            console.log(`🗑️ REMOVED: ${componentId} deleted from DOM`);
+            // Keep visible but add disabled styling
+            element.style.opacity = '0.6';
+            element.style.pointerEvents = 'none';
+            element.style.filter = 'grayscale(50%)';
+            element.setAttribute('data-disabled', 'true');
+            console.log(`🔒 DISABLED: ${componentId} - visible but not accessible`);
         }
         
-        // Remove any navigation buttons
-        const navButtons = document.querySelectorAll(`[onclick*="${componentId}"], [data-section="${componentId}"]`);
+        // Disable navigation buttons but keep them visible
+        const navButtons = document.querySelectorAll(`[data-target="${componentId}"]`);
         navButtons.forEach(btn => {
-            btn.parentNode.removeChild(btn);
-            console.log(`🗑️ REMOVED: Navigation button for ${componentId}`);
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+            btn.style.filter = 'grayscale(50%)';
+            btn.setAttribute('title', 'Coming Soon - Feature Under Development');
+            console.log(`🔒 DISABLED: Navigation button for ${componentId}`);
         });
     });
     
-    console.log('✅ COMPONENT REMOVAL: All Saturday components physically removed');
+    console.log('✅ COMPONENT DISABLE: Saturday components visible but disabled');
 }
 
-// Remove Saturday component cards from homepage
-function removeSaturdayCards() {
-    console.log('🃏 CARD REMOVAL: Removing Saturday component cards from homepage');
+// Disable Saturday component cards but keep them visible
+function disableSaturdayCards() {
+    console.log('🔒 CARD DISABLE: Making Saturday component cards visible but disabled');
     
-    const cardSelectors = [
-        '.tool-card:has([data-section*="bmi-calculator"])',
-        '.tool-card:has([data-section*="text-case-converter"])', 
-        '.tool-card:has([data-section*="png-to-jpg"])',
-        '.tool-card:has([data-section*="pdf-to-word"])',
-        '.tool-card:has([data-section*="pdf-to-excel"])',
-        '.tool-card:has([data-section*="pdf-split"])',
-        // Also check for text content matches
-        '.tool-card:contains("BMI Calculator")',
-        '.tool-card:contains("Text Case Converter")',
-        '.tool-card:contains("PNG to JPG")',
-        '.tool-card:contains("PDF to Word")',
-        '.tool-card:contains("PDF to Excel")',
-        '.tool-card:contains("PDF Split")'
-    ];
-    
-    cardSelectors.forEach(selector => {
-        const cards = document.querySelectorAll(selector);
-        cards.forEach(card => {
-            if (card && card.parentNode) {
-                card.parentNode.removeChild(card);
-                console.log(`🗑️ REMOVED: Card with selector ${selector}`);
-            }
-        });
-    });
-    
-    // Alternative approach - scan all tool cards for Saturday content
+    // Scan all tool cards for Saturday content and disable them
     const allCards = document.querySelectorAll('.tool-card');
     allCards.forEach(card => {
         const cardText = card.textContent.toLowerCase();
         const saturdayKeywords = ['bmi calculator', 'text case', 'png to jpg', 'pdf to word', 'pdf to excel', 'pdf split', 'pdf merge'];
         
         if (saturdayKeywords.some(keyword => cardText.includes(keyword))) {
-            card.parentNode.removeChild(card);
-            console.log(`🗑️ REMOVED: Saturday card with text: ${cardText.substring(0, 50)}...`);
+            // Disable but keep visible
+            card.style.opacity = '0.6';
+            card.style.filter = 'grayscale(50%)';
+            card.style.cursor = 'not-allowed';
+            card.setAttribute('data-disabled', 'true');
+            
+            // Disable the button inside
+            const button = card.querySelector('button');
+            if (button) {
+                button.disabled = true;
+                button.style.cursor = 'not-allowed';
+                button.setAttribute('title', 'Coming Soon - Feature Under Development');
+            }
+            
+            // Add "Coming Soon" badge
+            const badge = document.createElement('div');
+            badge.className = 'absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full font-semibold';
+            badge.textContent = 'Coming Soon';
+            card.style.position = 'relative';
+            card.appendChild(badge);
+            
+            console.log(`🔒 DISABLED: Card with text: ${cardText.substring(0, 30)}...`);
         }
     });
     
-    console.log('✅ CARD REMOVAL: Saturday cards removed from homepage');
+    console.log('✅ CARD DISABLE: Saturday cards visible but disabled');
 }
 
 // Override component navigation to block Saturday components
@@ -155,10 +156,8 @@ function blockSaturdayNavigation() {
     window.showSection = function(sectionName) {
         if (SATURDAY_BANNED_COMPONENTS.includes(sectionName)) {
             console.log(`🚫 BLOCKED: Access to Saturday component ${sectionName}`);
-            // Redirect to homepage instead
-            if (originalShowSection) {
-                originalShowSection('landing-section');
-            }
+            // Show "Coming Soon" message instead of redirecting
+            alert('This feature is coming soon! We are currently working on this tool and it will be available shortly.');
             return false;
         }
         
@@ -195,11 +194,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Step 2: Wait for DOM to be fully loaded
     setTimeout(() => {
-        // Step 3: Remove Saturday components physically
-        removeSaturdayComponents();
+        // Step 3: Disable Saturday components (visible but not accessible)
+        disableSaturdayComponents();
         
-        // Step 4: Remove Saturday cards from homepage
-        removeSaturdayCards();
+        // Step 4: Disable Saturday cards from homepage  
+        disableSaturdayCards();
         
         // Step 5: Block navigation to Saturday components
         blockSaturdayNavigation();
@@ -214,8 +213,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Export for manual triggering
 window.enforceProductionLock = function() {
     clearAllCaches();
-    removeSaturdayComponents();
-    removeSaturdayCards();
+    disableSaturdayComponents();
+    disableSaturdayCards();
     blockSaturdayNavigation();
     console.log('🔒 PRODUCTION LOCK: Manually enforced');
 };
