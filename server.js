@@ -32,6 +32,23 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Simple SPA routing - serve index.html for all component routes
+const simpleRoutes = [
+  '/jpg-to-png', '/currency-converter', '/land-converter', '/dp-resizer',
+  '/word-counter', '/distance-converter', '/weight-converter', '/height-converter',
+  '/ip-extractor', '/qr-generator', '/percentage-calculator', '/temperature-converter',
+  '/color-converter', '/image-compressor', '/text-to-speech', '/url-shortener',
+  '/backlink-checker', '/meta-tag-generator', '/dpi-checker', '/global-land-units',
+  '/bmi-calculator', '/text-case-converter', '/png-to-jpg', '/pdf-to-word',
+  '/pdf-to-powerpoint', '/pdf-to-excel', '/pdf-split', '/pdf-merge'
+];
+
+simpleRoutes.forEach(route => {
+  app.get(route, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+});
+
 // Serve static files from root directory for about.html, faq.html, etc.
 app.use(express.static('.'));
 
@@ -923,55 +940,6 @@ app.get('/payment-failed.html', (req, res) => {
 });
 
 // ✅ SPA Wildcard Route - Catches all unknown paths and redirects to index.html
-// Component-specific route handling with proper activation
-const componentRoutes = {
-  '/jpg-to-png': 'jpg-to-png-section',
-  '/currency-converter': 'currency-converter-section',
-  '/land-converter': 'land-converter-section',
-  '/dp-resizer': 'dp-resizer-section',
-  '/word-counter': 'word-counter-section',
-  '/distance-converter': 'distance-converter-section',
-  '/weight-converter': 'weight-converter-section',
-  '/height-converter': 'height-converter-section',
-  '/ip-extractor': 'ip-extractor-section',
-  '/qr-generator': 'qr-generator-section',
-  '/percentage-calculator': 'percentage-calculator-section',
-  '/temperature-converter': 'temperature-converter-section',
-  '/color-converter': 'color-converter-section',
-  '/image-compressor': 'image-compressor-section',
-  '/text-to-speech': 'text-to-speech-section',
-  '/backlink-checker': 'backlink-checker-section',
-  '/meta-tag-generator': 'meta-tag-generator-section',
-  '/dpi-checker': 'dpi-checker-section',
-  '/url-shortener': 'url-shortener-section'
-};
-
-// Handle component routes with proper activation
-Object.keys(componentRoutes).forEach(route => {
-  app.get(route, (req, res) => {
-    const fs = require('fs');
-    const sectionId = componentRoutes[route];
-    
-    // Read the index.html file
-    fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, data) => {
-      if (err) {
-        res.status(500).send('Error reading file');
-        return;
-      }
-      
-      // Inject active class for the specific component
-      let modifiedHtml = data;
-      
-      // Add active class to the target section
-      modifiedHtml = modifiedHtml.replace(
-        `class="tool-section" id="${sectionId}"`,
-        `class="tool-section active" id="${sectionId}"`
-      );
-      
-      res.send(modifiedHtml);
-    });
-  });
-});
 
 // This fixes 404 errors on mobile/desktop when refreshing component pages
 // Must be the LAST route in server.js to ensure all known routes work first
