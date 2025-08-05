@@ -51,7 +51,7 @@ function disableSaturdayCards() {
     allCards.forEach(card => {
         const cardText = card.textContent.toLowerCase();
         const saturdayKeywords = [
-            'bmi calculator', 'text case', 'png to jpg', 
+            'bmi calculator', 
             'pdf to word', 'pdf to excel', 'pdf split', 'pdf merge'
         ];
         

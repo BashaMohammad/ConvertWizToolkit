@@ -4047,10 +4047,17 @@ function initializePngToJpgConverter() {
     const qualitySlider = document.getElementById('jpg-quality');
     const qualityValue = document.getElementById('jpg-quality-value');
     
+    if (!uploadArea || !fileInput || !browseBtn) {
+        console.error('PNG to JPG: Required elements not found');
+        return;
+    }
+    
     // Quality slider functionality
-    qualitySlider.addEventListener('input', function() {
-        qualityValue.textContent = this.value;
-    });
+    if (qualitySlider && qualityValue) {
+        qualitySlider.addEventListener('input', function() {
+            qualityValue.textContent = this.value;
+        });
+    }
     
     // Browse button functionality
     browseBtn.addEventListener('click', (e) => {
@@ -4075,6 +4082,8 @@ function initializePngToJpgConverter() {
         const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'image/png');
         if (files.length > 0) {
             processPngFiles(files);
+        } else {
+            alert('Please upload PNG files only.');
         }
     });
     
@@ -4084,17 +4093,27 @@ function initializePngToJpgConverter() {
     
     // File input change handler
     fileInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files);
+        const files = Array.from(e.target.files).filter(file => file.type === 'image/png');
         if (files.length > 0) {
             processPngFiles(files);
+        } else if (e.target.files.length > 0) {
+            alert('Please select PNG files only.');
         }
     });
+    
+    console.log('✅ PNG to JPG Converter initialized with full functionality');
 }
 
 function processPngFiles(files) {
-    const quality = parseInt(document.getElementById('jpg-quality').value) / 100;
+    const qualitySlider = document.getElementById('jpg-quality');
+    const quality = qualitySlider ? parseInt(qualitySlider.value) / 100 : 0.9;
     const resultsContainer = document.getElementById('png-conversion-results');
     const resultsList = document.getElementById('png-results-list');
+    
+    if (!resultsContainer || !resultsList) {
+        console.error('PNG conversion results elements not found');
+        return;
+    }
     
     pngConvertedFiles = [];
     resultsList.innerHTML = '';
@@ -4123,25 +4142,54 @@ function processPngFiles(files) {
                 // Draw the PNG image
                 ctx.drawImage(img, 0, 0);
                 
-                // Convert to JPG with specified quality
+                // Convert to JPG blob
                 canvas.toBlob(function(blob) {
-                    const jpgFileName = file.name.replace(/\.png$/i, '.jpg');
-                    const jpgFile = new File([blob], jpgFileName, { type: 'image/jpeg' });
-                    
-                    pngConvertedFiles.push({
-                        original: file,
-                        converted: jpgFile,
-                        blob: blob,
-                        url: URL.createObjectURL(blob)
-                    });
-                    
-                    displayPngConversionResult(file, jpgFile, blob, index);
+                    if (blob) {
+                        const jpgUrl = URL.createObjectURL(blob);
+                        const originalSize = (file.size / 1024).toFixed(1);
+                        const convertedSize = (blob.size / 1024).toFixed(1);
+                        const compression = ((file.size - blob.size) / file.size * 100).toFixed(1);
+                        
+                        // Create result item
+                        const resultDiv = document.createElement('div');
+                        resultDiv.className = 'bg-green-50 border border-green-200 rounded-lg p-4';
+                        resultDiv.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-semibold text-gray-800">${file.name.replace('.png', '.jpg')}</h5>
+                                    <p class="text-sm text-gray-600">
+                                        Original: ${originalSize} KB → Converted: ${convertedSize} KB
+                                        <span class="text-green-600">(${compression}% compressed)</span>
+                                    </p>
+                                </div>
+                                <button onclick="downloadConvertedFile('${jpgUrl}', '${file.name.replace('.png', '.jpg')}')" 
+                                        class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
+                                    <i class="fas fa-download mr-1"></i>Download
+                                </button>
+                            </div>
+                        `;
+                        resultsList.appendChild(resultDiv);
+                        
+                        // Store for bulk download
+                        pngConvertedFiles.push({
+                            url: jpgUrl,
+                            filename: file.name.replace('.png', '.jpg')
+                        });
+                    }
                 }, 'image/jpeg', quality);
             };
             img.src = e.target.result;
         };
-        reader.readAsDataURL(file);
-    });
+
+
+// Download function for converted files
+function downloadConvertedFile(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 function displayPngConversionResult(originalFile, convertedFile, blob, index) {
