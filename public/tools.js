@@ -4076,6 +4076,21 @@ function initializePngToJpgConverter() {
     const qualitySlider = document.getElementById('jpg-quality');
     const qualityValue = document.getElementById('jpg-quality-value');
     
+    // Clear any existing event listeners first
+    const newFileInput = fileInput.cloneNode(true);
+    fileInput.parentNode.replaceChild(newFileInput, fileInput);
+    
+    const newBrowseBtn = browseBtn.cloneNode(true);
+    browseBtn.parentNode.replaceChild(newBrowseBtn, browseBtn);
+    
+    const newUploadArea = uploadArea.cloneNode(true);
+    uploadArea.parentNode.replaceChild(newUploadArea, uploadArea);
+    
+    // Get fresh references after replacement
+    const freshFileInput = document.getElementById('png-input');
+    const freshBrowseBtn = document.getElementById('png-browse-btn');
+    const freshUploadArea = document.getElementById('png-upload-area');
+    
     // Quality slider functionality
     if (qualitySlider && qualityValue) {
         qualitySlider.addEventListener('input', function() {
@@ -4083,15 +4098,8 @@ function initializePngToJpgConverter() {
         });
     }
     
-    // Browse button functionality
-    browseBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('🔧 PNG to JPG: Browse button clicked');
-        fileInput.click();
-    });
-    
     // File input change handler - MOST IMPORTANT
-    fileInput.addEventListener('change', (e) => {
+    freshFileInput.addEventListener('change', (e) => {
         console.log('🔧 PNG to JPG: File input changed, files:', e.target.files.length);
         const files = Array.from(e.target.files).filter(file => {
             console.log('🔧 PNG to JPG: Checking file:', file.name, file.type);
@@ -4106,31 +4114,39 @@ function initializePngToJpgConverter() {
         }
     });
     
+    // Browse button functionality
+    freshBrowseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('🔧 PNG to JPG: Browse button clicked');
+        freshFileInput.click();
+    });
+    
+    // Upload area click functionality  
+    freshUploadArea.addEventListener('click', () => {
+        console.log('🔧 PNG to JPG: Upload area clicked');
+        freshFileInput.click();
+    });
+    
     // Drag and drop functionality
-    uploadArea.addEventListener('dragover', (e) => {
+    freshUploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
-        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
+        freshUploadArea.classList.add('border-orange-500', 'bg-orange-50');
     });
     
-    uploadArea.addEventListener('dragleave', (e) => {
+    freshUploadArea.addEventListener('dragleave', (e) => {
         e.preventDefault();
-        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        freshUploadArea.classList.remove('border-orange-500', 'bg-orange-50');
     });
     
-    uploadArea.addEventListener('drop', (e) => {
+    freshUploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
-        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        freshUploadArea.classList.remove('border-orange-500', 'bg-orange-50');
         const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'image/png');
         if (files.length > 0) {
             processPngFiles(files);
         } else {
             alert('Please upload PNG files only.');
         }
-    });
-    
-    uploadArea.addEventListener('click', () => {
-        console.log('🔧 PNG to JPG: Upload area clicked');
-        fileInput.click();
     });
     
     console.log('✅ PNG to JPG Converter initialized with full functionality');
