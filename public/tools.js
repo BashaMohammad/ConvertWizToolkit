@@ -4216,60 +4216,7 @@ function downloadConvertedFile(url, filename) {
     document.body.removeChild(a);
 }
 
-// PNG to JPG Converter initialization
-function initPngToJpg() {
-    console.log('🔧 INIT: PNG to JPG Converter starting...');
-    
-    const fileInput = document.getElementById('png-file-input');
-    const dropZone = document.getElementById('png-drop-zone');
-    const qualitySlider = document.getElementById('png-quality-slider');
-    const qualityValue = document.getElementById('png-quality-value');
-    const resultsList = document.getElementById('png-results-list');
-    
-    if (!fileInput || !dropZone || !qualitySlider || !qualityValue || !resultsList) {
-        console.warn('⚠️ PNG to JPG: Required elements not found');
-        return;
-    }
-    
-    // Quality slider handler
-    qualitySlider.addEventListener('input', function() {
-        qualityValue.textContent = this.value + '%';
-    });
-    
-    // File input handler
-    fileInput.addEventListener('change', function(e) {
-        const files = Array.from(e.target.files);
-        processPngFiles(files);
-    });
-    
-    // Drag and drop handlers
-    dropZone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('border-blue-500', 'bg-blue-50');
-    });
-    
-    dropZone.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.classList.remove('border-blue-500', 'bg-blue-50');
-    });
-    
-    dropZone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('border-blue-500', 'bg-blue-50');
-        
-        const files = Array.from(e.dataTransfer.files).filter(file => 
-            file.type === 'image/png'
-        );
-        
-        if (files.length > 0) {
-            processPngFiles(files);
-        } else {
-            alert('Please select PNG files only.');
-        }
-    });
-    
-    console.log('✅ PNG to JPG Converter initialized successfully');
-}
+
 
 // Text Case Converter initialization
 function initTextCaseConverter() {
