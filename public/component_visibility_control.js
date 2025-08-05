@@ -4,14 +4,16 @@
 console.log('🔒 Component Visibility Control - Hiding Saturday components from users');
 
 // Define Saturday release components that should be hidden
-const SATURDAY_COMPONENTS = [
+if (typeof SATURDAY_COMPONENTS === 'undefined') {
+    var SATURDAY_COMPONENTS = [
     'bmi-calculator-section',
     'pdf-to-word-section',
     'pdf-to-powerpoint-section',
     'pdf-to-excel-section',
     'pdf-split-section',
     'pdf-merge-section'
-];
+    ];
+}
 
 // Function to hide Saturday components from end users
 function hideSaturdayComponents() {

@@ -4150,21 +4150,43 @@ function processPngFiles(files) {
                         const convertedSize = (blob.size / 1024).toFixed(1);
                         const compression = ((file.size - blob.size) / file.size * 100).toFixed(1);
                         
-                        // Create result item
+                        // Create result item with side-by-side preview (similar to JPG to PNG)
                         const resultDiv = document.createElement('div');
-                        resultDiv.className = 'bg-green-50 border border-green-200 rounded-lg p-4';
+                        resultDiv.className = 'bg-white border border-gray-200 rounded-2xl p-6 shadow-lg';
                         resultDiv.innerHTML = `
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h5 class="font-semibold text-gray-800">${file.name.replace('.png', '.jpg')}</h5>
-                                    <p class="text-sm text-gray-600">
-                                        Original: ${originalSize} KB → Converted: ${convertedSize} KB
-                                        <span class="text-green-600">(${compression}% compressed)</span>
-                                    </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <!-- Original PNG -->
+                                <div class="text-center">
+                                    <h5 class="text-lg font-semibold text-gray-800 mb-3">Original PNG</h5>
+                                    <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 mb-3">
+                                        <img src="${e.target.result}" alt="Original PNG" class="max-w-full max-h-48 mx-auto rounded-lg shadow-sm">
+                                    </div>
+                                    <div class="text-sm text-gray-600 space-y-1">
+                                        <p><strong>Format:</strong> PNG</p>
+                                        <p><strong>Size:</strong> ${originalSize} KB</p>
+                                        <p><strong>Name:</strong> ${file.name}</p>
+                                    </div>
                                 </div>
+                                
+                                <!-- Converted JPG -->
+                                <div class="text-center">
+                                    <h5 class="text-lg font-semibold text-gray-800 mb-3">Converted JPG</h5>
+                                    <div class="bg-green-50 border-2 border-green-200 rounded-xl p-4 mb-3">
+                                        <img src="${jpgUrl}" alt="Converted JPG" class="max-w-full max-h-48 mx-auto rounded-lg shadow-sm">
+                                    </div>
+                                    <div class="text-sm text-gray-600 space-y-1">
+                                        <p><strong>Format:</strong> JPG</p>
+                                        <p><strong>Size:</strong> ${convertedSize} KB</p>
+                                        <p><strong>Name:</strong> ${file.name.replace('.png', '.jpg')}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Download Button -->
+                            <div class="text-center">
                                 <button onclick="downloadConvertedFile('${jpgUrl}', '${file.name.replace('.png', '.jpg')}')" 
-                                        class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
-                                    <i class="fas fa-download mr-1"></i>Download
+                                        class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:shadow-lg transition-all">
+                                    <i class="fas fa-download mr-2"></i>Download JPG
                                 </button>
                             </div>
                         `;
