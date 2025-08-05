@@ -4332,8 +4332,6 @@ function copyToClipboard(text, caseType) {
     });
 }
 
-}
-
 console.log('✅ Tools.js loaded and ready');
 
 function displayPngConversionResult(originalFile, convertedFile, blob, index) {
@@ -5419,3 +5417,5 @@ function initGlobalLandUnits() {
         console.warn('⚠️ Global Land Units initialization error:', error.message);
     }
 }
+
+console.log('✅ Tools.js loaded and ready');
