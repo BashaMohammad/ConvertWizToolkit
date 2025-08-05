@@ -276,13 +276,17 @@ function initializeTool(sectionId) {
             // NEW UTILITY TOOLS
             case 'bmi-calculator-section':
                 // BMI Calculator functionality is included in tools.js
-                if (typeof initializeBMICalculator !== 'undefined') {
+                if (typeof initBmiCalculator !== 'undefined') {
+                    initBmiCalculator();
+                } else if (typeof initializeBMICalculator !== 'undefined') {
                     initializeBMICalculator();
                 }
                 break;
             case 'text-case-converter-section':
                 // Text Case Converter functionality is included in tools.js
-                if (typeof initializeTextCaseConverter !== 'undefined') {
+                if (typeof initTextCaseConverter !== 'undefined') {
+                    initTextCaseConverter();
+                } else if (typeof initializeTextCaseConverter !== 'undefined') {
                     initializeTextCaseConverter();
                 }
                 break;

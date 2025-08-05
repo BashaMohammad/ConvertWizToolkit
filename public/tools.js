@@ -4368,6 +4368,33 @@ function copyToClipboard(text, caseType) {
     });
 }
 
+// Alternative copy function for text case converter
+function copyTextToClipboard(text, buttonElement) {
+    if (!text) {
+        alert('No text to copy.');
+        return;
+    }
+    
+    navigator.clipboard.writeText(text).then(() => {
+        // Show success feedback
+        if (buttonElement) {
+            const originalText = buttonElement.innerHTML;
+            buttonElement.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+            buttonElement.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+            buttonElement.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                buttonElement.innerHTML = originalText;
+                buttonElement.classList.remove('bg-green-500');
+                buttonElement.classList.add('bg-blue-500', 'hover:bg-blue-600');
+            }, 2000);
+        }
+    }).catch((error) => {
+        console.error('Copy failed:', error);
+        alert('Failed to copy text. Please try again.');
+    });
+}
+
 console.log('✅ Tools.js loaded and ready');
 
 function displayPngConversionResult(originalFile, convertedFile, blob, index) {
