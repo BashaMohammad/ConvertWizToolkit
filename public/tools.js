@@ -4332,6 +4332,10 @@ function copyToClipboard(text, caseType) {
     });
 }
 
+}
+
+console.log('✅ Tools.js loaded and ready');
+
 function displayPngConversionResult(originalFile, convertedFile, blob, index) {
     const resultsList = document.getElementById('png-results-list');
     
