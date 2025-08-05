@@ -4041,16 +4041,50 @@ let pngConvertedFiles = [];
 
 // Initialize PNG to JPG converter when the section loads
 function initializePngToJpgConverter() {
+    console.log('🔧 PNG to JPG: Starting initialization...');
+    
+    // Log all available PNG to JPG related elements
+    const elements = {
+        uploadArea: document.getElementById('png-upload-area'),
+        fileInput: document.getElementById('png-input'), 
+        browseBtn: document.getElementById('png-browse-btn'),
+        qualitySlider: document.getElementById('jpg-quality'),
+        qualityValue: document.getElementById('jpg-quality-value'),
+        resultsContainer: document.getElementById('png-conversion-results'),
+        resultsList: document.getElementById('png-results-list')
+    };
+    
+    console.log('🔧 PNG to JPG elements found:', {
+        uploadArea: !!elements.uploadArea,
+        fileInput: !!elements.fileInput,
+        browseBtn: !!elements.browseBtn,
+        qualitySlider: !!elements.qualitySlider,
+        qualityValue: !!elements.qualityValue,
+        resultsContainer: !!elements.resultsContainer,
+        resultsList: !!elements.resultsList
+    });
+    
+    if (!elements.uploadArea || !elements.fileInput || !elements.browseBtn) {
+        console.error('PNG to JPG: Required elements missing!');
+        return;
+    }
+    
+    // Remove any existing event listeners by cloning elements
+    const newFileInput = elements.fileInput.cloneNode(true);
+    elements.fileInput.parentNode.replaceChild(newFileInput, elements.fileInput);
+    
+    const newBrowseBtn = elements.browseBtn.cloneNode(true);
+    elements.browseBtn.parentNode.replaceChild(newBrowseBtn, elements.browseBtn);
+    
+    const newUploadArea = elements.uploadArea.cloneNode(true);
+    elements.uploadArea.parentNode.replaceChild(newUploadArea, elements.uploadArea);
+    
+    // Get fresh references
     const uploadArea = document.getElementById('png-upload-area');
     const fileInput = document.getElementById('png-input');
     const browseBtn = document.getElementById('png-browse-btn');
     const qualitySlider = document.getElementById('jpg-quality');
     const qualityValue = document.getElementById('jpg-quality-value');
-    
-    if (!uploadArea || !fileInput || !browseBtn) {
-        console.error('PNG to JPG: Required elements not found');
-        return;
-    }
     
     // Quality slider functionality
     if (qualitySlider && qualityValue) {
@@ -4062,7 +4096,24 @@ function initializePngToJpgConverter() {
     // Browse button functionality
     browseBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        console.log('🔧 PNG to JPG: Browse button clicked');
         fileInput.click();
+    });
+    
+    // File input change handler - MOST IMPORTANT
+    fileInput.addEventListener('change', (e) => {
+        console.log('🔧 PNG to JPG: File input changed, files:', e.target.files.length);
+        const files = Array.from(e.target.files).filter(file => {
+            console.log('🔧 PNG to JPG: Checking file:', file.name, file.type);
+            return file.type === 'image/png';
+        });
+        
+        if (files.length > 0) {
+            console.log('🔧 PNG to JPG: Processing', files.length, 'PNG files');
+            processPngFiles(files);
+        } else if (e.target.files.length > 0) {
+            alert('Please select PNG files only.');
+        }
     });
     
     // Drag and drop functionality
@@ -4088,17 +4139,8 @@ function initializePngToJpgConverter() {
     });
     
     uploadArea.addEventListener('click', () => {
+        console.log('🔧 PNG to JPG: Upload area clicked');
         fileInput.click();
-    });
-    
-    // File input change handler
-    fileInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files).filter(file => file.type === 'image/png');
-        if (files.length > 0) {
-            processPngFiles(files);
-        } else if (e.target.files.length > 0) {
-            alert('Please select PNG files only.');
-        }
     });
     
     console.log('✅ PNG to JPG Converter initialized with full functionality');
@@ -5386,6 +5428,16 @@ function initGlobalLandUnits() {
         console.log('✅ Global Land Units initialized');
     } catch (error) {
         console.warn('⚠️ Global Land Units initialization error:', error.message);
+    }
+}
+
+function initPngToJpg() {
+    try {
+        // Call the existing PNG to JPG initialization function
+        initializePngToJpgConverter();
+        console.log('✅ PNG to JPG Converter initialized');
+    } catch (error) {
+        console.warn('⚠️ PNG to JPG Converter initialization error:', error.message);
     }
 }
 
