@@ -1,0 +1,13 @@
+{
+  "name": "Get My IP Address",
+  "section": "get-my-ip-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.296611",
+  "dependencies": [],
+  "routes": [
+    "/get-my-ip",
+    "/tools/get-my-ip"
+  ]
+}

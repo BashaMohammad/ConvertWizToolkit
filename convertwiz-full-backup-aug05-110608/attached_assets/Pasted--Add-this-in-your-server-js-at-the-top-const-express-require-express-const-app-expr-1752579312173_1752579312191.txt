@@ -1,0 +1,61 @@
+// 🔧 Add this in your server.js (at the top)
+const express = require('express');
+const app = express();
+const crypto = require('crypto');
+
+// 🧠 Required if using Firebase
+// const admin = require('firebase-admin');
+// const db = admin.firestore();
+
+// ⚙️ Razorpay Webhook Secret (Same for Dev and Prod)
+const RAZORPAY_WEBHOOK_SECRET = "CWsecret2025@123";
+
+// ✳️ Add this just once at the top (to allow raw body for webhook)
+app.use("/razorpay-webhook", express.raw({ type: "application/json" }));
+
+// ✅ Webhook endpoint for both dev & prod
+app.post("/razorpay-webhook", (req, res) => {
+  const signature = req.headers["x-razorpay-signature"];
+
+  try {
+    const body = req.body;
+    const expectedSignature = crypto
+      .createHmac("sha256", RAZORPAY_WEBHOOK_SECRET)
+      .update(body)
+      .digest("hex");
+
+    if (expectedSignature === signature) {
+      const event = JSON.parse(body.toString());
+      console.log("✅ Razorpay Webhook Verified:", event.event);
+
+      if (event.event === "payment.captured") {
+        const payment = event.payload.payment.entity;
+        console.log("💰 Payment Captured:", payment);
+
+        // 🔒 Optional: Update Firestore or DB
+        /*
+        const userEmail = payment.email;
+        await db.collection('users').doc(userEmail).update({
+          subscriptionStatus: 'active',
+          paymentId: payment.id,
+          paidAt: new Date()
+        });
+        */
+
+        res.status(200).send("Webhook received and verified");
+      } else {
+        console.log("ℹ️ Event not handled:", event.event);
+        res.status(200).send("Event not handled");
+      }
+    } else {
+      console.warn("❌ Invalid webhook signature");
+      res.status(400).send("Invalid signature");
+    }
+  } catch (err) {
+    console.error("🚨 Error processing webhook:", err);
+    res.status(500).send("Internal server error");
+  }
+});
+
+// ✅ Keep this after all routes
+app.use(express.json()); // to parse other non-raw JSON routes

@@ -1,0 +1,13 @@
+{
+  "name": "Lorem Ipsum Generator",
+  "section": "lorem-ipsum-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.301094",
+  "dependencies": [],
+  "routes": [
+    "/lorem-ipsum",
+    "/tools/lorem-ipsum"
+  ]
+}

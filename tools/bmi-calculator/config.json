@@ -1,0 +1,13 @@
+{
+  "name": "BMI Calculator",
+  "section": "bmi-calculator-section",
+  "category": "utility-tools",
+  "saturday": true,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.309552",
+  "dependencies": [],
+  "routes": [
+    "/bmi-calculator",
+    "/tools/bmi-calculator"
+  ]
+}

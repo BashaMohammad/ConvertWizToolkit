@@ -1,0 +1,13 @@
+{
+  "name": "Text Case Converter",
+  "section": "text-case-converter-section",
+  "category": "utility-tools",
+  "saturday": true,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.310709",
+  "dependencies": [],
+  "routes": [
+    "/text-case-converter",
+    "/tools/text-case-converter"
+  ]
+}

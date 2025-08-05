@@ -1,0 +1,13 @@
+{
+  "name": "QR Code Generator",
+  "section": "qr-code-generator-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.298640",
+  "dependencies": [],
+  "routes": [
+    "/qr-code-generator",
+    "/tools/qr-code-generator"
+  ]
+}

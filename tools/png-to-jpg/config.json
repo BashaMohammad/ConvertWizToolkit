@@ -1,0 +1,13 @@
+{
+  "name": "PNG to JPG Converter",
+  "section": "png-to-jpg-section",
+  "category": "image-tools",
+  "saturday": true,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.275594",
+  "dependencies": [],
+  "routes": [
+    "/png-to-jpg",
+    "/tools/png-to-jpg"
+  ]
+}

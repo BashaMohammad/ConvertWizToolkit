@@ -1,0 +1,54 @@
+# 1. FIX FIREBASE AUTHENTICATION & SESSION
+- Validate and ensure the following Firebase configuration keys are correctly set in `firebase-config.js`:
+  - FIREBASE_API_KEY
+  - FIREBASE_AUTH_DOMAIN
+  - FIREBASE_PROJECT_ID
+  - FIREBASE_STORAGE_BUCKET
+  - FIREBASE_APP_ID
+  - FIREBASE_MESSAGING_SENDER_ID
+- Update `login.js` to:
+  - Use `signInWithEmailAndPassword` and provide clear error messages for invalid credentials.
+  - On successful login, save auth state in localStorage and redirect to `dashboard.html`.
+- Update `dashboard.js` to:
+  - Implement `onAuthStateChanged` listener to validate session and redirect unauthenticated users back to `login.html`.
+  - On logout, call `signOut` and clear localStorage/session tokens.
+- Add console logging for auth state changes for debugging.
+
+# 2. FIX DASHBOARD SCREEN SWITCHING
+- Repair menu event handlers in `dashboard.js`:
+  - Ensure correct section switching without breaking current UI layout.
+  - Add missing `querySelector` bindings for dashboard sections, admin panel, and any other tool pages.
+- Fix cases where sections remain hidden or UI breaks on navigation.
+
+# 3. UI ENHANCEMENTS (NO DESIGN CHANGE)
+- Ensure the gradient background remains consistent across login and dashboard pages.
+- Fix banner placeholders in the dashboard (ensure AdSense placeholders are not broken).
+- Improve mobile responsiveness:
+  - Adjust CSS for tool cards and banner alignment in `dashboard.css` (use media queries if necessary).
+- Do NOT alter colors, structure, or theme — only fix alignment.
+
+# 4. ADD AUTOMATED TEST CASES
+- Create `auth-tests.js` with the following automated checks:
+  - Test 1: Login with valid test credentials (email/password from env or test-config.js) → Expect dashboard.html redirect.
+  - Test 2: Login with invalid password → Expect error message displayed on login page.
+  - Test 3: Attempt direct access to dashboard.html without login → Expect redirect to login.html.
+  - Test 4: After login, refresh dashboard → Expect session persistence and no redirect.
+  - Test 5: Logout from dashboard → Expect redirect to login.html.
+
+# 5. TEST RUN
+- Add a test runner script in `package.json` as:
+  "scripts": {
+     "test-auth": "node auth-tests.js"
+  }
+- Execute `npm run test-auth` after all fixes to validate:
+  - All authentication flows.
+  - Dashboard screen access and transitions.
+  - UI element visibility checks.
+
+# 6. POST VALIDATION
+- Confirm console logs show no Firebase errors on login/dashboard pages.
+- Ensure that the dashboard screen is fully accessible after login and that navigation works without glitches.
+
+# 7. FINAL NOTE
+- Do not make any visual or functional changes to components unrelated to login/dashboard.
+- Prepare for the next phase: PayPal and Razorpay integration after this fix is validated.

@@ -1,0 +1,69 @@
+/* Tool-specific styling */
+.tool-container {
+    min-height: 100vh;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tool-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: #6b7280;
+    text-decoration: none;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.back-link:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.tool-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin: 0;
+}
+
+.tool-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+.loading i {
+    margin-right: 10px;
+    color: #3b82f6;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .tool-container {
+        padding: 10px;
+    }
+    
+    .tool-header h1 {
+        font-size: 2rem;
+    }
+    
+    .tool-content {
+        padding: 20px;
+    }
+}

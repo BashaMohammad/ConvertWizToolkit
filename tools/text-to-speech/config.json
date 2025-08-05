@@ -1,0 +1,13 @@
+{
+  "name": "Text to Speech",
+  "section": "text-to-speech-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.302755",
+  "dependencies": [],
+  "routes": [
+    "/text-to-speech",
+    "/tools/text-to-speech"
+  ]
+}

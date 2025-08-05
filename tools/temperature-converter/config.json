@@ -1,0 +1,13 @@
+{
+  "name": "Temperature Converter",
+  "section": "temperature-converter-section",
+  "category": "unit-converters",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.291902",
+  "dependencies": [],
+  "routes": [
+    "/temperature-converter",
+    "/tools/temperature-converter"
+  ]
+}

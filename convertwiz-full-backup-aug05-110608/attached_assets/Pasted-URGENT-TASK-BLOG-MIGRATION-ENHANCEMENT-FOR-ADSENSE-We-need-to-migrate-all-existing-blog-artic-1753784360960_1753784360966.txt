@@ -1,0 +1,67 @@
+URGENT TASK – BLOG MIGRATION & ENHANCEMENT FOR ADSENSE
+
+We need to migrate all existing blog articles from blog.convertwiz.in to the main site (convertwiz.in) under the path /blog/, while enhancing each blog with structured data, real author tone, and better formatting. Do not change or break the existing UI or gradients.
+
+### STEP 1: BACKUP
+- Create a full backup of convertwiz.in (HTML, CSS, JS) as `/backup_2025_07_30_main_site/`.
+- Commit with message: "Backup before blog migration."
+
+### STEP 2: CREATE BLOG STRUCTURE
+- Create a `/blog/` directory inside convertwiz.in.
+- Move all existing blog articles from blog.convertwiz.in into this new folder as individual HTML files.
+- Update the homepage and navigation menu to include a “Blog” link pointing to `/blog/index.html` (blog list page).
+
+### STEP 3: BLOG INDEX PAGE
+- Create `blog/index.html`:
+  - Display all blog posts as cards (title, 2-line excerpt, and thumbnail).
+  - Ensure it follows the current ConvertWiz gradient and responsive layout.
+
+### STEP 4: BLOG ENHANCEMENTS FOR EACH ARTICLE
+For each blog post:
+1. **Add Basic Introduction:**  
+   - A 2–3 line paragraph at the top introducing why this topic is useful.  
+   - Example: *“We often face challenges in quickly converting JPG images to PNG while maintaining quality. After using ConvertWiz extensively, here’s what we discovered…”*
+
+2. **Real Experience Section:**  
+   - Add a section titled **"Our Experience Using This Tool"**, with 4–5 lines of personal insights, e.g., “During our testing of ConvertWiz Image Compressor, we noticed that it reduces file sizes by 70% without losing quality.”
+
+3. **Formatting:**  
+   - Add **bullet points, numbered lists, call-out tips, and 1–2 tables** where relevant.
+   - Example Table:
+     ```
+     | Feature       | Benefit                        |
+     |---------------|--------------------------------|
+     | JPG to PNG    | Lossless conversion in 2s      |
+     | Compressor    | 70% smaller files with quality |
+     ```
+
+4. **Related Posts Section:**  
+   - At the end of each article, include **3 related posts** (randomly picked from the blog list).
+   - For desktop, add this on the right sidebar if possible.
+
+5. **Structured Data (JSON-LD):**  
+   - Add `Article` schema with:
+     - "author": "ConvertWiz Team"
+     - "headline", "image", "datePublished", "dateModified"
+     - "publisher": { "name": "ConvertWiz" }
+
+### STEP 5: INTERNAL LINKING
+- Link 2–3 blog posts within the content body (cross-linking for better SEO).
+- Add links from blog posts to relevant ConvertWiz tools (e.g., from image-related blogs to JPG-to-PNG).
+
+### STEP 6: TESTING & VALIDATION
+Run automated tests:
+1. **UI Test:** Ensure ConvertWiz UI and gradient are unchanged.
+2. **Routing Test:** `/blog/index.html` lists all blogs; individual blog pages open correctly.
+3. **SEO Test:** Each blog has:
+   - Unique title (50–60 chars)
+   - Meta description (120–150 chars)
+   - JSON-LD valid schema
+4. **Performance Test:** Page load under 2s.
+5. **Mobile Test:** Blog pages render correctly on mobile devices.
+
+### STEP 7: FINAL COMMIT
+- Commit all changes with message: "Blog migration & enhancements for AdSense readiness – July 30, 2025."
+- Confirm rollback option: `/backup_2025_07_30_main_site/` can restore all previous files.
+
+DO NOT alter or break existing ConvertWiz tool pages or UI.

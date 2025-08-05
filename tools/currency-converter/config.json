@@ -1,0 +1,13 @@
+{
+  "name": "Currency Converter",
+  "section": "currency-converter-section",
+  "category": "unit-converters",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.285772",
+  "dependencies": [],
+  "routes": [
+    "/currency-converter",
+    "/tools/currency-converter"
+  ]
+}

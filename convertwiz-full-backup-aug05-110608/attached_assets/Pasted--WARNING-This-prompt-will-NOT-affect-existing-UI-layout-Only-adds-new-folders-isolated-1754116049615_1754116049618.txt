@@ -1,0 +1,148 @@
+# 🚨 WARNING:
+# This prompt will NOT affect existing UI layout
+# ➤ Only adds new folders, isolated routing, and new cards
+# ➤ No shift in header/footer or page grid
+# ➤ PNG to JPG will be moved to "Image Tools" (correct category)
+
+# ✅ STEP 1: BACKUP PROJECT
+cp -r ~/workspace ~/convertwiz-backup-aug2025-batch2
+
+# ✅ STEP 2: CREATE FOLDERS FOR ALL 5 PDF TOOLS
+mkdir -p tools/pdf-to-word tools/pdf-to-ppt tools/pdf-to-excel tools/pdf-split tools/pdf-merge-compress
+
+touch tools/pdf-to-word/{index.html,script.js,style.css}
+touch tools/pdf-to-ppt/{index.html,script.js,style.css}
+touch tools/pdf-to-excel/{index.html,script.js,style.css}
+touch tools/pdf-split/{index.html,script.js,style.css}
+touch tools/pdf-merge-compress/{index.html,script.js,style.css}
+
+# ✅ STEP 3: ADD COMPONENTS TO PDF GROUP IN config/componentGroups.js
+
+{
+  id: "pdf-to-word",
+  title: "PDF to Word",
+  description: "Convert PDF files to editable Word documents.",
+  icon: "📄",
+  group: "PDF Tools",
+  path: "/tools/pdf-to-word",
+  isNew: true
+},
+{
+  id: "pdf-to-ppt",
+  title: "PDF to PPT",
+  description: "Convert PDF slides to editable PowerPoint format.",
+  icon: "📊",
+  group: "PDF Tools",
+  path: "/tools/pdf-to-ppt",
+  isNew: true
+},
+{
+  id: "pdf-to-excel",
+  title: "PDF to Excel",
+  description: "Extract tables from PDF to Excel format.",
+  icon: "📈",
+  group: "PDF Tools",
+  path: "/tools/pdf-to-excel",
+  isNew: true
+},
+{
+  id: "pdf-split",
+  title: "PDF Split",
+  description: "Split a PDF file by page range.",
+  icon: "✂️",
+  group: "PDF Tools",
+  path: "/tools/pdf-split",
+  isNew: true
+},
+{
+  id: "pdf-merge-compress",
+  title: "PDF Merge & Compress",
+  description: "Merge multiple PDFs and reduce file size.",
+  icon: "🧩",
+  group: "PDF Tools",
+  path: "/tools/pdf-merge-compress",
+  isNew: true
+}
+
+# ✅ STEP 4: CORRECT PNG to JPG GROUP (move to Image Tools)
+# In componentGroups.js:
+Find PNG to JPG entry and update:
+"group: 'Image Tools'"
+
+# ✅ STEP 5: ROUTING CONFIGURATION (router.js or route config)
+{
+  path: '/tools/pdf-to-word',
+  component: () => import('../tools/pdf-to-word/index.html')
+},
+{
+  path: '/tools/pdf-to-ppt',
+  component: () => import('../tools/pdf-to-ppt/index.html')
+},
+{
+  path: '/tools/pdf-to-excel',
+  component: () => import('../tools/pdf-to-excel/index.html')
+},
+{
+  path: '/tools/pdf-split',
+  component: () => import('../tools/pdf-split/index.html')
+},
+{
+  path: '/tools/pdf-merge-compress',
+  component: () => import('../tools/pdf-merge-compress/index.html')
+}
+
+# ✅ STEP 6: ADD HTML TEMPLATE FOR EACH TOOL (Placeholders)
+
+# Example: tools/pdf-to-word/index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PDF to Word</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tool-container">
+    <h1>PDF to Word</h1>
+    <input type="file" accept="application/pdf" id="pdfFile">
+    <button onclick="convertToWord()">Convert</button>
+    <div id="output"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+# ✅ STEP 7: “🆕 NEW” BADGE – Already added via Batch 1 logic
+# (Will automatically apply for all tools with isNew: true)
+
+# ✅ STEP 8: TEST CASE FILE
+Create /tests/test-batch2-tools.js:
+
+export const batch2ToolTests = [
+  {
+    name: "PDF to Word",
+    route: "/tools/pdf-to-word",
+    tests: ["Upload input exists", "Convert button functional", "Output rendered"]
+  },
+  {
+    name: "PDF to PPT",
+    route: "/tools/pdf-to-ppt",
+    tests: ["Upload + Preview available", "PPT Download initiated"]
+  },
+  {
+    name: "PDF to Excel",
+    route: "/tools/pdf-to-excel",
+    tests: ["Extracted tables preview", "Download as XLSX"]
+  },
+  {
+    name: "PDF Split",
+    route: "/tools/pdf-split",
+    tests: ["Range selector", "Download split PDF"]
+  },
+  {
+    name: "PDF Merge & Compress",
+    route: "/tools/pdf-merge-compress",
+    tests: ["Multiple file input", "Merged output + compression ratio shown"]
+  }
+]
+

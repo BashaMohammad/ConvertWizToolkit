@@ -1,0 +1,13 @@
+{
+  "name": "PDF Split Tool",
+  "section": "pdf-split-section",
+  "category": "pdf-tools",
+  "saturday": true,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.318730",
+  "dependencies": [],
+  "routes": [
+    "/pdf-split",
+    "/tools/pdf-split"
+  ]
+}

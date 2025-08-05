@@ -1,0 +1,13 @@
+{
+  "name": "Meta Tag Generator",
+  "section": "meta-tag-generator-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.306646",
+  "dependencies": [],
+  "routes": [
+    "/meta-tag-generator",
+    "/tools/meta-tag-generator"
+  ]
+}

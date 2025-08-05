@@ -23,78 +23,12 @@ const app = express();
 app.use("/razorpay-webhook", express.raw({ type: "application/json" }));
 
 app.use(express.json());
-
-// Serve static files from public directory first
-app.use(express.static('public'));
-
-// Integrate tool routes for isolated tool system
-const toolRoutes = require('./server/tool-routes');
-app.use(toolRoutes);
-
-// Handle root path explicitly to serve index.html from public directory
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Production routes - only established tools for immediate deployment
-const productionRoutes = [
-  '/jpg-to-png', '/currency-converter', '/land-converter', '/dp-resizer',
-  '/word-counter', '/distance-converter', '/weight-converter', '/height-converter',
-  '/ip-extractor', '/qr-generator', '/percentage-calculator', '/temperature-converter',
-  '/color-converter', '/image-compressor', '/text-to-speech', '/url-shortener',
-  '/backlink-checker', '/meta-tag-generator', '/dpi-checker', '/global-land-units'
-];
-
-// Saturday release routes - blocked until Saturday
-const saturdayRoutes = [
-  '/bmi-calculator', '/text-case-converter', '/png-to-jpg', '/pdf-to-word',
-  '/pdf-to-powerpoint', '/pdf-to-excel', '/pdf-split', '/pdf-merge'
-];
-
-// Handle production routes (always available)
-productionRoutes.forEach(route => {
-  app.get(route, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
-});
-
-// Handle Saturday routes with date check
-saturdayRoutes.forEach(route => {
-  app.get(route, (req, res) => {
-    const today = new Date();
-    const isSaturday = today.getDay() === 6; // Saturday = 6
-    
-    if (isSaturday) {
-      // Saturday - allow access
-      res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    } else {
-      // Not Saturday - redirect to home
-      res.redirect('/');
-    }
-  });
-});
-
-// Serve static files from root directory for about.html, faq.html, etc.
 app.use(express.static('.'));
 
 // Premium users storage (in production, use database)
 const premiumUsers = {
   'iqbalaiwork@gmail.com': true, // Manually granted premium access due to successful payment
   'iqbalbashasi@gmail.com': true // Grant premium for testing purposes
-};
-
-// Blog view tracking storage (in production, use database)
-const blogViews = {
-  'jpg-to-png-complete-guide.html': 287,
-  'image-compression-ultimate-guide.html': 201,
-  'real-time-currency-conversion-guide.html': 176,
-  'qr-code-marketing-business-guide.html': 189,
-  'text-to-speech-accessibility-guide.html': 157,
-  'url-shortening-social-media-strategy.html': 143,
-  'instagram-dp-resizer-guide.html': 89,
-  'word-counter-writing-guide.html': 76,
-  'dpi-checker-print-guide.html': 112,
-  'global-land-units-conversion-guide.html': 95
 };
 
 // Create Razorpay order endpoint with development mode check
@@ -617,38 +551,9 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     services: {
       firebase: !!db,
-      express: true,
-      blogViewTracking: true
+      express: true
     }
   });
-});
-
-// Blog view tracking endpoints
-app.get('/api/blog/views/:articleId', (req, res) => {
-  const { articleId } = req.params;
-  const views = blogViews[articleId] || Math.floor(Math.random() * 100) + 50; // Dynamic fallback
-  res.json({ views, articleId });
-});
-
-app.post('/api/blog/views/:articleId', (req, res) => {
-  const { articleId } = req.params;
-  
-  // Increment view count
-  if (!blogViews[articleId]) {
-    blogViews[articleId] = Math.floor(Math.random() * 100) + 50;
-  }
-  blogViews[articleId]++;
-  
-  res.json({ 
-    views: blogViews[articleId], 
-    articleId,
-    message: 'View count updated'
-  });
-});
-
-// Get all blog view counts
-app.get('/api/blog/views', (req, res) => {
-  res.json(blogViews);
 });
 
 // Authentication status check endpoint
@@ -965,6 +870,55 @@ app.get('/payment-failed.html', (req, res) => {
 });
 
 // ✅ SPA Wildcard Route - Catches all unknown paths and redirects to index.html
+// Component-specific route handling with proper activation
+const componentRoutes = {
+  '/jpg-to-png': 'jpg-to-png-section',
+  '/currency-converter': 'currency-converter-section',
+  '/land-converter': 'land-converter-section',
+  '/dp-resizer': 'dp-resizer-section',
+  '/word-counter': 'word-counter-section',
+  '/distance-converter': 'distance-converter-section',
+  '/weight-converter': 'weight-converter-section',
+  '/height-converter': 'height-converter-section',
+  '/ip-extractor': 'ip-extractor-section',
+  '/qr-generator': 'qr-generator-section',
+  '/percentage-calculator': 'percentage-calculator-section',
+  '/temperature-converter': 'temperature-converter-section',
+  '/color-converter': 'color-converter-section',
+  '/image-compressor': 'image-compressor-section',
+  '/text-to-speech': 'text-to-speech-section',
+  '/backlink-checker': 'backlink-checker-section',
+  '/meta-tag-generator': 'meta-tag-generator-section',
+  '/dpi-checker': 'dpi-checker-section',
+  '/url-shortener': 'url-shortener-section'
+};
+
+// Handle component routes with proper activation
+Object.keys(componentRoutes).forEach(route => {
+  app.get(route, (req, res) => {
+    const fs = require('fs');
+    const sectionId = componentRoutes[route];
+    
+    // Read the index.html file
+    fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, data) => {
+      if (err) {
+        res.status(500).send('Error reading file');
+        return;
+      }
+      
+      // Inject active class for the specific component
+      let modifiedHtml = data;
+      
+      // Add active class to the target section
+      modifiedHtml = modifiedHtml.replace(
+        `class="tool-section" id="${sectionId}"`,
+        `class="tool-section active" id="${sectionId}"`
+      );
+      
+      res.send(modifiedHtml);
+    });
+  });
+});
 
 // This fixes 404 errors on mobile/desktop when refreshing component pages
 // Must be the LAST route in server.js to ensure all known routes work first

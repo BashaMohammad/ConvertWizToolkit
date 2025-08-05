@@ -1,0 +1,13 @@
+{
+  "name": "Instagram DP Resizer",
+  "section": "instagram-dp-section",
+  "category": "image-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.278066",
+  "dependencies": [],
+  "routes": [
+    "/instagram-dp",
+    "/tools/instagram-dp"
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.321106",
+  "tools": {
+    "jpg-to-png": {
+      "title": "JPG to PNG Converter",
+      "section": "jpg-to-png-section",
+      "category": "image-tools"
+    },
+    "png-to-jpg": {
+      "title": "PNG to JPG Converter",
+      "section": "png-to-jpg-section",
+      "category": "image-tools"
+    },
+    "instagram-dp": {
+      "title": "Instagram DP Resizer",
+      "section": "instagram-dp-section",
+      "category": "image-tools"
+    },
+    "image-compressor": {
+      "title": "Image Compressor",
+      "section": "image-compressor-section",
+      "category": "image-tools"
+    },
+    "currency-converter": {
+      "title": "Currency Converter",
+      "section": "currency-converter-section",
+      "category": "unit-converters"
+    },
+    "land-unit-converter": {
+      "title": "Land Unit Converter",
+      "section": "land-unit-converter-section",
+      "category": "unit-converters"
+    },
+    "percentage-calculator": {
+      "title": "Percentage Calculator",
+      "section": "percentage-calculator-section",
+      "category": "utility-tools"
+    },
+    "temperature-converter": {
+      "title": "Temperature Converter",
+      "section": "temperature-converter-section",
+      "category": "unit-converters"
+    },
+    "color-format-converter": {
+      "title": "Color Format Converter",
+      "section": "color-format-converter-section",
+      "category": "utility-tools"
+    },
+    "get-my-ip": {
+      "title": "Get My IP Address",
+      "section": "get-my-ip-section",
+      "category": "utility-tools"
+    },
+    "qr-code-generator": {
+      "title": "QR Code Generator",
+      "section": "qr-code-generator-section",
+      "category": "utility-tools"
+    },
+    "lorem-ipsum": {
+      "title": "Lorem Ipsum Generator",
+      "section": "lorem-ipsum-section",
+      "category": "utility-tools"
+    },
+    "text-to-speech": {
+      "title": "Text to Speech",
+      "section": "text-to-speech-section",
+      "category": "utility-tools"
+    },
+    "backlink-checker": {
+      "title": "Backlink Checker",
+      "section": "backlink-checker-section",
+      "category": "utility-tools"
+    },
+    "meta-tag-generator": {
+      "title": "Meta Tag Generator",
+      "section": "meta-tag-generator-section",
+      "category": "utility-tools"
+    },
+    "dpi-checker": {
+      "title": "DPI Checker",
+      "section": "dpi-checker-section",
+      "category": "utility-tools"
+    },
+    "bmi-calculator": {
+      "title": "BMI Calculator",
+      "section": "bmi-calculator-section",
+      "category": "utility-tools",
+      "saturday": true
+    },
+    "text-case-converter": {
+      "title": "Text Case Converter",
+      "section": "text-case-converter-section",
+      "category": "utility-tools",
+      "saturday": true
+    },
+    "pdf-to-word": {
+      "title": "PDF to Word Converter",
+      "section": "pdf-to-word-section",
+      "category": "pdf-tools",
+      "saturday": true
+    },
+    "pdf-to-powerpoint": {
+      "title": "PDF to PowerPoint Converter",
+      "section": "pdf-to-powerpoint-section",
+      "category": "pdf-tools",
+      "saturday": true
+    },
+    "pdf-to-excel": {
+      "title": "PDF to Excel Converter",
+      "section": "pdf-to-excel-section",
+      "category": "pdf-tools",
+      "saturday": true
+    },
+    "pdf-split": {
+      "title": "PDF Split Tool",
+      "section": "pdf-split-section",
+      "category": "pdf-tools",
+      "saturday": true
+    },
+    "pdf-merge-compress": {
+      "title": "PDF Merge & Compress",
+      "section": "pdf-merge-compress-section",
+      "category": "pdf-tools",
+      "saturday": true
+    }
+  },
+  "categories": {
+    "image-tools": [
+      "jpg-to-png",
+      "png-to-jpg",
+      "instagram-dp",
+      "image-compressor"
+    ],
+    "unit-converters": [
+      "currency-converter",
+      "land-unit-converter",
+      "temperature-converter"
+    ],
+    "utility-tools": [
+      "percentage-calculator",
+      "color-format-converter",
+      "get-my-ip",
+      "qr-code-generator",
+      "lorem-ipsum",
+      "text-to-speech",
+      "backlink-checker",
+      "meta-tag-generator",
+      "dpi-checker",
+      "bmi-calculator",
+      "text-case-converter"
+    ],
+    "pdf-tools": [
+      "pdf-to-word",
+      "pdf-to-powerpoint",
+      "pdf-to-excel",
+      "pdf-split",
+      "pdf-merge-compress"
+    ]
+  }
+}

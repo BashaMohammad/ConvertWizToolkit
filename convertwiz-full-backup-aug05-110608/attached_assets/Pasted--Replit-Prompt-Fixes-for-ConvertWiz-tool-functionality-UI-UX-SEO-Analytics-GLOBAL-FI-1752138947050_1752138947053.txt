@@ -1,0 +1,78 @@
+// 🔧 Replit Prompt: Fixes for ConvertWiz tool functionality, UI/UX, SEO & Analytics
+
+/* GLOBAL FIX: Improve image compressor quality */
+// In image-compressor.js or server.js (backend route handling)
+const sharp = require("sharp");
+
+app.post("/compress", upload.single("image"), async (req, res) => {
+  try {
+    const compressedBuffer = await sharp(req.file.buffer)
+      .jpeg({ quality: 60 }) // You can experiment with this number (50–70)
+      .toBuffer();
+    res.set("Content-Type", "image/jpeg").send(compressedBuffer);
+  } catch (err) {
+    res.status(500).send("Compression Failed");
+  }
+});
+
+/* DP Resizer Gradient Fix */
+// In dp-resizer.js or script.js
+function applyGradientBackground(canvas, ctx, baseImage) {
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, "#ff7e5f");
+  gradient.addColorStop(1, "#feb47b");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+}
+
+/* Add TTS download (MP3) feature */
+// In text-to-speech.html + script.js
+const synth = window.speechSynthesis;
+function saveSpeechToFile(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  const audio = new Audio();
+  synth.speak(utter); // Optional: Real-time speaking
+  // Download isn't native to WebSpeech API — show alert + recommend screen record as temp workaround
+  alert("To save the audio, use screen record or a Pro version in future updates.");
+}
+
+/* Add Copy to Clipboard */
+// In url-shortener.html
+<button onclick="copyLink()">Copy Short URL</button>
+<script>
+  function copyLink() {
+    const shortUrl = document.getElementById("short-url").value;
+    navigator.clipboard.writeText(shortUrl);
+    alert("Copied to clipboard!");
+  }
+</script>
+
+/* Add lazy loading to images */
+// In all HTML tool pages
+<img src="/images/sample.png" loading="lazy" alt="ConvertWiz tool preview">
+
+/* Add alt tags for accessibility */
+<img src="icon.png" alt="Image Compressor Icon">
+
+/* GA4 Event Tracking */
+// Add to each tool button like "Compress", "Resize", etc.
+document.getElementById("compressBtn").addEventListener("click", () => {
+  gtag("event", "compress_trigger", { tool: "ImageCompressor" });
+});
+
+/* Minor mobile nav fix */
+// In main.css or nav.js
+@media screen and (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+  .nav-menu {
+    display: block !important;
+  }
+}
+
+// ✅ All fixes above cover functional, UI, SEO, and analytics aspects.
+// Please verify paths & element IDs in your current project before deploying.
+
+console.log("✅ Prompt applied: Functionality + UX + SEO + Analytics fixes for ConvertWiz");

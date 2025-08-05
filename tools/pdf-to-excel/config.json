@@ -1,0 +1,13 @@
+{
+  "name": "PDF to Excel Converter",
+  "section": "pdf-to-excel-section",
+  "category": "pdf-tools",
+  "saturday": true,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.316648",
+  "dependencies": [],
+  "routes": [
+    "/pdf-to-excel",
+    "/tools/pdf-to-excel"
+  ]
+}

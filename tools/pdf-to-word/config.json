@@ -1,0 +1,13 @@
+{
+  "name": "PDF to Word Converter",
+  "section": "pdf-to-word-section",
+  "category": "pdf-tools",
+  "saturday": true,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.311709",
+  "dependencies": [],
+  "routes": [
+    "/pdf-to-word",
+    "/tools/pdf-to-word"
+  ]
+}

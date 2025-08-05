@@ -1,0 +1,169 @@
+# ✅ STEP 1: BACKUP EXISTING PROJECT
+cp -r ~/workspace ~/convertwiz-backup-aug2025-batch1
+
+# ✅ STEP 2: CREATE/ENABLE COMPONENT ROUTES
+
+## 1. BMI Calculator
+mkdir -p tools/bmi-calculator
+touch tools/bmi-calculator/index.html tools/bmi-calculator/script.js tools/bmi-calculator/style.css
+
+## 2. Text Case Converter
+mkdir -p tools/text-case-converter
+touch tools/text-case-converter/index.html tools/text-case-converter/script.js tools/text-case-converter/style.css
+
+## 3. PNG to JPG Converter
+mkdir -p tools/png-to-jpg
+touch tools/png-to-jpg/index.html tools/png-to-jpg/script.js tools/png-to-jpg/style.css
+
+# ✅ STEP 3: UPDATE COMPONENT CONFIG
+
+# Add to componentGroups.js under "Utility Tools":
+{
+  id: "bmi-calculator",
+  title: "BMI Calculator",
+  description: "Calculate your Body Mass Index with height and weight.",
+  icon: "📏",
+  group: "Utility Tools",
+  path: "/tools/bmi-calculator",
+  isNew: true
+},
+{
+  id: "text-case-converter",
+  title: "Text Case Converter",
+  description: "Convert text to UPPERCASE, lowercase, Title Case & more.",
+  icon: "🔤",
+  group: "Utility Tools",
+  path: "/tools/text-case-converter",
+  isNew: true
+},
+{
+  id: "png-to-jpg",
+  title: "PNG to JPG Converter",
+  description: "Convert PNG images to JPG format easily.",
+  icon: "🖼️",
+  group: "Utility Tools",
+  path: "/tools/png-to-jpg",
+  isNew: true
+}
+
+# ✅ STEP 4: ADD "🆕 NEW" BADGE TO COMPONENT CARD UI
+
+# In components/ToolCard.vue or relevant card layout file:
+<div class="tool-card">
+  <div v-if="tool.isNew" class="tool-badge new">🆕 NEW</div>
+  <!-- existing tool content -->
+</div>
+
+# ✅ STEP 5: ADD CSS TO styles.css OR SHARED GLOBAL STYLE
+
+.tool-badge.new {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: #ff2d55;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(255, 45, 85, 0.8);
+  text-transform: uppercase;
+  animation: pulse-red 1.2s infinite;
+  z-index: 2;
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(255, 45, 85, 0.6);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(255, 45, 85, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(255, 45, 85, 0.6);
+  }
+}
+
+# ✅ STEP 6: SETUP BASIC HTML TEMPLATE FOR EACH TOOL
+
+# Example for tools/bmi-calculator/index.html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BMI Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="tool-container">
+    <h1>BMI Calculator</h1>
+    <label>Height (cm): <input type="number" id="height" /></label>
+    <label>Weight (kg): <input type="number" id="weight" /></label>
+    <button onclick="calculateBMI()">Calculate</button>
+    <div id="result"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+# script.js
+function calculateBMI() {
+  const h = parseFloat(document.getElementById("height").value) / 100;
+  const w = parseFloat(document.getElementById("weight").value);
+  if (!h || !w) {
+    alert("Please enter both values");
+    return;
+  }
+  const bmi = w / (h * h);
+  let status = "";
+  if (bmi < 18.5) status = "Underweight";
+  else if (bmi < 24.9) status = "Normal";
+  else if (bmi < 29.9) status = "Overweight";
+  else status = "Obese";
+  document.getElementById("result").innerText = `Your BMI is ${bmi.toFixed(2)} (${status})`;
+}
+
+# ✅ STEP 7: VALIDATE ROUTES AND UI
+
+# Add routing entries for new tools under routes.js (or router config):
+{
+  path: '/tools/bmi-calculator',
+  component: () => import('../tools/bmi-calculator/index.html')
+},
+{
+  path: '/tools/text-case-converter',
+  component: () => import('../tools/text-case-converter/index.html')
+},
+{
+  path: '/tools/png-to-jpg',
+  component: () => import('../tools/png-to-jpg/index.html')
+}
+
+# ✅ STEP 8: TEST CASE FILE (OPTIONAL BUT RECOMMENDED)
+Create /tests/test-batch1-tools.js:
+
+export const batch1ToolTests = [
+  {
+    name: "BMI Calculator",
+    route: "/tools/bmi-calculator",
+    tests: [
+      "Form fields visible",
+      "Calculate button works",
+      "Correct output shown for height 180, weight 75"
+    ]
+  },
+  {
+    name: "Text Case Converter",
+    route: "/tools/text-case-converter",
+    tests: ["Text area input", "Buttons for UPPERCASE, Title Case", "Outputs reflect correct case"]
+  },
+  {
+    name: "PNG to JPG",
+    route: "/tools/png-to-jpg",
+    tests: ["Upload works", "Download JPG is triggered", "Image preview shown"]
+  }
+];
+

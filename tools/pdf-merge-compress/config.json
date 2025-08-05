@@ -1,0 +1,13 @@
+{
+  "name": "PDF Merge & Compress",
+  "section": "pdf-merge-compress-section",
+  "category": "pdf-tools",
+  "saturday": true,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.320655",
+  "dependencies": [],
+  "routes": [
+    "/pdf-merge-compress",
+    "/tools/pdf-merge-compress"
+  ]
+}

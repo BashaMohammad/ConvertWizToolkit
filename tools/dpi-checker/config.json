@@ -1,0 +1,13 @@
+{
+  "name": "DPI Checker",
+  "section": "dpi-checker-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.308447",
+  "dependencies": [],
+  "routes": [
+    "/dpi-checker",
+    "/tools/dpi-checker"
+  ]
+}

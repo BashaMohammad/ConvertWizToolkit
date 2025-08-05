@@ -1,0 +1,111 @@
+# OBJECTIVE:
+Optimize convertwiz.in for SEO with content, meta tags, alt attributes, and internal links.
+Replit MUST NOT modify any UI components, gradients, or layouts.
+
+---
+
+# 1. SEO CONTENT UPDATES
+For each tool page (JPG to PNG, Image Compressor, Text-to-Speech, Currency Converter, Word Counter):
+
+- Add a 150–200 word SEO content block describing:
+  - Purpose of the tool.
+  - Why it’s useful.
+  - How to use it (step-by-step).
+- Insert 1–2 FAQs per page (as given below).
+- Ensure meta tags (<title>, <meta description>) are unique and match provided content.
+- Add internal links between tools under a small "Explore More Tools" section.
+
+---
+
+# 2. META TAGS & ALT TEXT
+- Add descriptive `<title>` and `<meta name="description">` for each page:
+  Example (JPG to PNG):
+    <title>JPG to PNG Converter – Free Online Tool | ConvertWiz</title>
+    <meta name="description" content="Convert JPG to PNG online for free. Fast, secure, and easy-to-use JPG to PNG converter by ConvertWiz.">
+- Add `alt` attributes to all `<img>` tags with descriptive text.
+- Insert `<link rel="canonical" href="https://www.convertwiz.in/{tool-page}" />`.
+
+---
+
+# 3. INTERNAL LINKING
+- Add a section like:
+  <p>Try our other tools: 
+    <a href="/image-compressor.html">Image Compressor</a>, 
+    <a href="/text-to-speech.html">Text-to-Speech</a>.
+  </p>
+- Ensure all links are functional and return HTTP 200.
+
+---
+
+# 4. TEST CASES (MUST PASS)
+Replit must perform these checks after applying the code:
+
+1. **SEO Content Validation**
+   - Each tool page contains a new `<section class="seo-content">` with 150–200 words.
+   - At least 1–2 FAQs are present with `<h3>` and `<p>` tags.
+
+2. **Meta Tag Validation**
+   - Each tool page has a unique `<title>` and `<meta description>` as per provided content.
+   - `<link rel="canonical">` is present.
+
+3. **Image Alt Validation**
+   - Every `<img>` tag on all tool pages includes a non-empty `alt` attribute.
+
+4. **Internal Link Test**
+   - All internal links return HTTP 200 status.
+
+5. **Performance**
+   - Page load speed remains <2s (use Lighthouse/Google test).
+
+6. **UI Integrity**
+   - Verify that gradients, fonts, and layouts remain unchanged.
+   - If any CSS or UI component differs, revert and rebuild.
+
+---
+
+# 5. FAILURE HANDLING
+- If ANY of the above test cases fail:
+  - Replit must auto-correct the failed test component.
+  - Re-run all test cases until all pass.
+  - Provide a test report showing passed/failed status.
+
+---
+
+# 6. FAQs TO ADD PER PAGE
+- **JPG to PNG Converter:**  
+  Q: Is this converter free?  
+  A: Yes, 100% free with no registration needed.  
+  Q: Can I use it on mobile?  
+  A: Yes, all ConvertWiz tools are mobile-friendly.
+
+- **Image Compressor:**  
+  Q: Will compression affect image quality?  
+  A: No, we use lossless compression.  
+  Q: What formats are supported?  
+  A: JPG, PNG, and WEBP.
+
+- **Text-to-Speech:**  
+  Q: Is the TTS tool free?  
+  A: Yes, it’s completely free.  
+  Q: Can I download the audio?  
+  A: Yes, audio can be downloaded instantly.
+
+- **Currency Converter:**  
+  Q: Are the rates live?  
+  A: Yes, rates are updated every few minutes.  
+  Q: Can I use it for invoices?  
+  A: Yes, it’s accurate for professional use.
+
+- **Word Counter:**  
+  Q: Does it count characters with spaces?  
+  A: Yes, both with and without spaces.  
+  Q: Is this tool free?  
+  A: Yes, the word counter is 100% free.
+
+---
+
+# 7. IMPORTANT RULES
+- DO NOT modify UI, gradients, or existing layouts.
+- Only content, meta, alt attributes, and links are to be updated.
+- Ensure all changes are mobile responsive and lightweight.
+- Provide a final test result summary with: PASS/FAIL for each test case.

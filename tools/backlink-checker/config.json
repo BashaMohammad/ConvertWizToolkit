@@ -1,0 +1,13 @@
+{
+  "name": "Backlink Checker",
+  "section": "backlink-checker-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.304401",
+  "dependencies": [],
+  "routes": [
+    "/backlink-checker",
+    "/tools/backlink-checker"
+  ]
+}

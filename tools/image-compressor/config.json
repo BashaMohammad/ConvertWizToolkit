@@ -1,0 +1,13 @@
+{
+  "name": "Image Compressor",
+  "section": "image-compressor-section",
+  "category": "image-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.282252",
+  "dependencies": [],
+  "routes": [
+    "/image-compressor",
+    "/tools/image-compressor"
+  ]
+}

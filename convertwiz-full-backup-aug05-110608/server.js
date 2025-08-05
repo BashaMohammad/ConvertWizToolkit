@@ -27,10 +27,6 @@ app.use(express.json());
 // Serve static files from public directory first
 app.use(express.static('public'));
 
-// Integrate tool routes for isolated tool system
-const toolRoutes = require('./server/tool-routes');
-app.use(toolRoutes);
-
 // Handle root path explicitly to serve index.html from public directory
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

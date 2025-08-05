@@ -1,0 +1,65 @@
+# 🔒 SAFETY FIRST – BACKUP BEFORE UPDATING ANY CODE
+cp -r ~/workspace/tools/png-to-jpg ~/workspace/tools/_backup_png-to-jpg_aug
+cp -r ~/workspace/tools/text-case-converter ~/workspace/tools/_backup_text-case_aug
+
+# ✅ ENABLE LOGIC FOR PNG to JPG CONVERTER
+# Location: tools/png-to-jpg/script.js
+
+echo 'document.getElementById("upload").addEventListener("change", function () {
+  const file = this.files[0];
+  if (!file || file.type !== "image/png") {
+    alert("Please upload a valid PNG image.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const img = new Image();
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const jpgData = canvas.toDataURL("image/jpeg", 0.9);
+
+      const a = document.createElement("a");
+      a.href = jpgData;
+      a.download = "converted.jpg";
+      a.click();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+});' > tools/png-to-jpg/script.js
+
+# ✅ ENABLE LOGIC FOR TEXT CASE CONVERTER
+# Location: tools/text-case-converter/script.js
+
+echo 'function toUpper() {
+  const input = document.getElementById("text-input").value;
+  document.getElementById("result").value = input.toUpperCase();
+}
+
+function toLower() {
+  const input = document.getElementById("text-input").value;
+  document.getElementById("result").value = input.toLowerCase();
+}
+
+function toTitleCase() {
+  const input = document.getElementById("text-input").value.toLowerCase();
+  const result = input.replace(/\b\w/g, l => l.toUpperCase());
+  document.getElementById("result").value = result;
+}
+
+function toSentenceCase() {
+  const input = document.getElementById("text-input").value.toLowerCase();
+  const result = input.replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
+  document.getElementById("result").value = result;
+}
+
+function clearText() {
+  document.getElementById("text-input").value = "";
+  document.getElementById("result").value = "";
+}' > tools/text-case-converter/script.js
+

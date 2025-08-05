@@ -1,0 +1,60 @@
+# === AEO + GA4 AI Traffic Setup ===
+
+# 1️⃣ Add FAQ & Schema to Tool Pages
+cat << 'EOF' >> server.js
+// Insert at bottom of each tool page render
+const faqs = [
+  { question: "How does the Backlink Checker work?", answer: "Our tool fetches top referring domains and expired links within seconds." },
+  { question: "Is it free to use?", answer: "Yes, every tool on ConvertWiz is 100% free with no signup required." },
+];
+const faqJsonLd = {
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity": faqs.map(f=>({ "@type":"Question","name":f.question,"acceptedAnswer":{ "@type":"Answer","text":f.answer } }))
+};
+res.write(`<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>`);
+for(const f of faqs){
+  res.write(`<h2>${f.question}</h2><p>${f.answer}</p>`);
+}
+EOF
+
+# 2️⃣ GA4 Custom Channel Group Setup via API
+# (Note: Requires GA4 Admin API credentials)
+cat << 'EOF' > setup_ga4_channel.py
+# Python script to configure GA4 channel group: "AI Referrals"
+from google.analytics.admin import AnalyticsAdminServiceClient
+client = AnalyticsAdminServiceClient()
+parent = "properties/YOUR_GA4_PROPERTY_ID"
+client.create_user_link(
+  parent=parent,
+  user_link={
+    "directives":[],
+    "channel_group": {
+      "display_name": "AI Referrals",
+      "default_channel_group": [],
+      "channel_rules": [
+        {
+          "channel_name": "AI Referral",
+          "rule": {
+            "programmatic_rules": [
+              {
+                "string_filter": {
+                  "value": "chat.openai.com,perplexity.ai,gemini.google.com,chatgpt.com",
+                  "match_type": "MATCH_TYPE_CONTAINS"
+                },
+                "dimension_name": "sessionSource"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+)
+print("✅ GA4 AI Referral channel group set up")
+EOF
+
+# 3️⃣ GA4 Exploration Dashboard Snippet for AI Traffic
+# Refer user to Looker copy link (I'll email or push next)
+
+echo "✅ FAQ+Schema added to tool pages; Python GA4 setup created."

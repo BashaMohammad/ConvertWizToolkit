@@ -1,0 +1,13 @@
+{
+  "name": "Percentage Calculator",
+  "section": "percentage-calculator-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.289100",
+  "dependencies": [],
+  "routes": [
+    "/percentage-calculator",
+    "/tools/percentage-calculator"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Land Unit Converter",
+  "section": "land-unit-converter-section",
+  "category": "unit-converters",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.287518",
+  "dependencies": [],
+  "routes": [
+    "/land-unit-converter",
+    "/tools/land-unit-converter"
+  ]
+}

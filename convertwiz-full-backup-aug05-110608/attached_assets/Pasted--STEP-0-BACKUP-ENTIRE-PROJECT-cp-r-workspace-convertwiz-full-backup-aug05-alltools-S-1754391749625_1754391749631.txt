@@ -1,0 +1,79 @@
+# 🚨 STEP 0: BACKUP ENTIRE PROJECT
+cp -r ~/workspace ~/convertwiz-full-backup-aug05-alltools
+
+# STEP 1: BACKUP EXISTING TOOL FOLDERS
+for tool in $(ls tools); do
+  cp -r ~/workspace/tools/$tool ~/workspace/tools/_backup_${tool}_aug05
+done
+
+# STEP 2: CREATE STANDARDIZED STRUCTURE
+# Template HTML
+echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>[[TOOL_TITLE]]</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="tool-container">
+    <h1>[[TOOL_TITLE]]</h1>
+    <!-- Tool-specific content here -->
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>' > tools/_template.html
+
+# Template Style (Scoped)
+echo '.tool-container {
+  padding: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tool-container h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.tool-container input,
+.tool-container button {
+  padding: 8px;
+  margin: 5px 0;
+  width: 100%;
+  max-width: 400px;
+}' > tools/_template-style.css
+
+# STEP 3: APPLY TEMPLATE TO EXISTING TOOLS (Example for JPG to PNG)
+sed "s/\[\[TOOL_TITLE\]\]/JPG to PNG Converter/g" tools/_template.html > tools/jpg-to-png/index.html
+cp tools/_template-style.css tools/jpg-to-png/style.css
+
+# STEP 4: WRAP EXISTING JS IN IIFE (Scope Isolation)
+# Example for JPG to PNG
+echo '(function() {
+  document.addEventListener("DOMContentLoaded", function() {
+    // Existing JPG to PNG logic
+  });
+})();' > tools/jpg-to-png/script.js
+
+# STEP 5: REPEAT FOR ALL EXISTING TOOLS
+# For each tool in tools/, apply template and wrap JS
+
+# STEP 6: TEST CASE CREATION FOR ALL TOOLS
+mkdir -p tests
+for tool in $(ls tools | grep -v '_backup'); do
+  echo "export const test_${tool//-/_} = {
+    name: \"$tool\",
+    path: \"/tools/$tool\",
+    tests: [
+      'Load UI container',
+      'Check primary input/output',
+      'Validate main function triggers without error'
+    ]
+  };" > tests/test-${tool}.js
+done
+
+# Create Combined Test Runner
+echo 'import fs from "fs";
+const testFiles = fs.readdirSync("./tests").filter(f => f.startsWith("test-"));
+console.log("Running test suite for:", testFiles);' > tests/run-tests.js

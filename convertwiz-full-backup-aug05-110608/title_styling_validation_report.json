@@ -1,0 +1,54 @@
+{
+  "status": "ALL_PASSED",
+  "pages_checked": 9,
+  "pages_passed": 9,
+  "pages_failed": 0,
+  "validation_details": {
+    "index.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "about.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "faq.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "blog/index.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "blog/jpg-to-png-complete-guide.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "blog/instagram-dp-resizer-guide.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "blog/word-counter-writing-guide.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "blog/dpi-checker-print-guide.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    },
+    "blog/global-land-units-conversion-guide.html": {
+      "status": "PASSED",
+      "found_elements": 6,
+      "missing_elements": []
+    }
+  },
+  "errors": []
+}

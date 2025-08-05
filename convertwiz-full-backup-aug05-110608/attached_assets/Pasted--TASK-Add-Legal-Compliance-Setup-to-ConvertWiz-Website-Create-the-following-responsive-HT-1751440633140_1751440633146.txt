@@ -1,0 +1,72 @@
+🔧 TASK: Add Legal & Compliance Setup to ConvertWiz Website
+
+📄 Create the following responsive HTML pages (mobile-friendly):
+1. **privacy.html** – ConvertWiz Privacy Policy
+2. **terms.html** – ConvertWiz Terms of Use
+3. **disclaimer.html** – Disclaimers for tool accuracy & limitations
+4. **credits.html** – Attribution page (for APIs/libraries if needed)
+
+🔗 In the **footer of every page**, add clean links:
+- Privacy Policy
+- Terms of Use
+- Disclaimer
+- Credits
+
+🎯 Requirements for Each Page:
+
+---
+
+📄 **privacy.html**
+Title: Privacy Policy | ConvertWiz
+
+Sections:
+- Intro: "We respect your privacy..."
+- What data we collect: "ConvertWiz does not store any user data. All conversions happen in your browser."
+- Cookies: "We may use cookies for future analytics and monetization (e.g., Google AdSense)."
+- No tracking, no registration required
+- Contact: "support@convertwiz.com"
+
+---
+
+📜 **terms.html**
+Title: Terms of Use | ConvertWiz
+
+Sections:
+- Acceptance of Terms
+- Free Tools Usage: "Use tools at your own risk"
+- Intellectual Property: “ConvertWiz brand and tools are protected”
+- No Liability: "We’re not liable for any loss caused by usage"
+- Age Limit: "Must be 13+ to use the service"
+
+---
+
+⚠️ **disclaimer.html**
+Title: Disclaimer | ConvertWiz
+
+Content:
+"ConvertWiz provides tools for general productivity purposes. While we strive for accuracy, we do not guarantee 100% precision for every conversion or utility result. Always verify critical data manually. No warranties are expressed or implied."
+
+---
+
+🧾 **credits.html**
+Title: Credits & Attribution | ConvertWiz
+
+Add placeholder credits:
+- Icon library: [FontAwesome](https://fontawesome.com)
+- Currency API: exchangerate-api (if used)
+- Frameworks: Bootstrap / Tailwind (if applicable)
+
+---
+
+✅ Footer Design:
+- Add below “Why Choose ConvertWiz?” section
+- Use clean horizontal layout or stack for mobile
+- Align center with smaller font size
+- Style: light gray links on transparent background
+
+---
+
+📬 Final Note:
+Keep the pages lightweight. Make sure they’re accessible from all tools/pages.
+
+This setup will help ConvertWiz meet basic legal compliance and prepare for future AdSense or subscription rollout.

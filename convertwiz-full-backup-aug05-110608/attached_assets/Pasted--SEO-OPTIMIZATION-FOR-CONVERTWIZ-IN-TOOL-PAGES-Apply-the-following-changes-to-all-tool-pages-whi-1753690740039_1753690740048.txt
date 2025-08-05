@@ -1,0 +1,134 @@
+# SEO OPTIMIZATION FOR CONVERTWIZ.IN TOOL PAGES
+
+Apply the following changes to all tool pages while ensuring the UI remains unchanged.
+
+---
+
+# 1. JPG TO PNG CONVERTER PAGE
+- Add this SEO content block at the bottom of the tool area:
+  <section class="seo-content">
+    <h2>About JPG to PNG Converter</h2>
+    <p>ConvertWiz's JPG to PNG Converter is a fast and free online tool designed to convert JPEG images into PNG format with just a few clicks. Whether you need transparent backgrounds or better image quality, our converter ensures that your files remain crisp and clear. There is no need to install any software—simply upload your image, convert it instantly, and download your PNG file. This tool is perfect for students, designers, and professionals who require quick conversions for web use or personal projects.</p>
+  </section>
+
+- FAQs to add below the content block:
+  <h2>FAQs</h2>
+  <h3>Q: Is this converter free to use?</h3>
+  <p>Yes, our JPG to PNG converter is 100% free and requires no registration.</p>
+  <h3>Q: Can I convert images on mobile?</h3>
+  <p>Yes, ConvertWiz tools are fully mobile-friendly.</p>
+
+- Meta Tags:
+  <title>JPG to PNG Converter – Free Online Tool | ConvertWiz</title>
+  <meta name="description" content="Convert JPG to PNG online for free. Fast, secure, and easy-to-use JPG to PNG converter by ConvertWiz.">
+  <meta name="keywords" content="JPG to PNG, free image converter, online PNG tool">
+
+- Add descriptive `alt` attributes for all images: e.g., `alt="ConvertWiz JPG to PNG converter interface"`
+
+- Add an internal link section:
+  <p>Try our other tools: <a href="/image-compressor.html">Image Compressor</a>, <a href="/text-to-speech.html">Text to Speech</a>.</p>
+
+---
+
+# 2. IMAGE COMPRESSOR PAGE
+- SEO Content:
+  <section class="seo-content">
+    <h2>About Image Compressor</h2>
+    <p>With ConvertWiz’s Image Compressor, you can reduce image file sizes while maintaining high quality. This free tool is ideal for optimizing photos for websites, social media, and email attachments. Large image files can slow down your website or take up unnecessary storage, but with our smart compression algorithm, you can achieve up to 70% size reduction in seconds. The process is simple—upload, compress, and download your optimized image instantly.</p>
+  </section>
+
+- FAQs:
+  <h3>Q: Will compression affect quality?</h3>
+  <p>No, our tool uses lossless compression to maintain the image's original quality.</p>
+  <h3>Q: What formats are supported?</h3>
+  <p>We support JPG, PNG, and WEBP formats.</p>
+
+- Meta Tags:
+  <title>Free Image Compressor – Optimize Images Online | ConvertWiz</title>
+  <meta name="description" content="Compress images online for free without losing quality. Fast and easy image compression with ConvertWiz.">
+
+- Internal Links:
+  <p>Explore our <a href="/jpg-to-png.html">JPG to PNG Converter</a> or <a href="/word-counter.html">Word Counter</a>.</p>
+
+---
+
+# 3. TEXT-TO-SPEECH PAGE
+- SEO Content:
+  <section class="seo-content">
+    <h2>About Text-to-Speech</h2>
+    <p>ConvertWiz’s Text-to-Speech (TTS) tool allows you to convert written text into natural-sounding speech instantly. Whether you need voiceovers for videos, audiobooks, or just want to listen to articles on the go, our TTS tool is fast, reliable, and easy to use. Choose from multiple voice styles and accents to get the perfect output for your needs.</p>
+  </section>
+
+- FAQs:
+  <h3>Q: Is this tool free?</h3>
+  <p>Yes, the TTS tool is completely free.</p>
+  <h3>Q: Can I download the generated audio?</h3>
+  <p>Yes, the audio file can be downloaded with a single click.</p>
+
+- Meta Tags:
+  <title>Text-to-Speech Online – Free Voice Generator | ConvertWiz</title>
+  <meta name="description" content="Convert text to speech online for free. Choose natural voices and download audio instantly with ConvertWiz TTS.">
+
+- Internal Links:
+  <p>Try our <a href="/image-compressor.html">Image Compressor</a> or <a href="/currency-converter.html">Currency Converter</a>.</p>
+
+---
+
+# 4. CURRENCY CONVERTER PAGE
+- SEO Content:
+  <section class="seo-content">
+    <h2>About Currency Converter</h2>
+    <p>The ConvertWiz Currency Converter offers real-time exchange rates for over 150 currencies. Whether you are traveling or dealing with international transactions, our tool provides quick and accurate conversions. Rates are updated every few minutes from trusted financial sources.</p>
+  </section>
+
+- FAQs:
+  <h3>Q: Are the currency rates live?</h3>
+  <p>Yes, rates are updated frequently for accuracy.</p>
+  <h3>Q: Can I use this for invoices?</h3>
+  <p>Yes, our tool is reliable for personal and business use.</p>
+
+- Meta Tags:
+  <title>Currency Converter – Live Exchange Rates | ConvertWiz</title>
+  <meta name="description" content="Check real-time currency exchange rates online with ConvertWiz. Fast and accurate currency converter tool.">
+
+- Internal Links:
+  <p>Also try our <a href="/word-counter.html">Word Counter</a> or <a href="/jpg-to-png.html">JPG to PNG Converter</a>.</p>
+
+---
+
+# 5. WORD COUNTER PAGE
+- SEO Content:
+  <section class="seo-content">
+    <h2>About Word Counter</h2>
+    <p>Our Word Counter tool helps you track the number of words and characters in your content. Ideal for writers, students, and marketers, this tool ensures your content meets length requirements for SEO, social media, or assignments.</p>
+  </section>
+
+- FAQs:
+  <h3>Q: Does it count spaces?</h3>
+  <p>Yes, it can count characters with and without spaces.</p>
+  <h3>Q: Is this tool free?</h3>
+  <p>Yes, the word counter is free to use without any limitations.</p>
+
+- Meta Tags:
+  <title>Word Counter Online – Free Character & Word Count Tool | ConvertWiz</title>
+  <meta name="description" content="Count words and characters online with ConvertWiz's free Word Counter tool. Perfect for writers, students, and marketers.">
+
+- Internal Links:
+  <p>Check out our <a href="/text-to-speech.html">Text-to-Speech Tool</a> or <a href="/image-compressor.html">Image Compressor</a>.</p>
+
+---
+
+# 6. VALIDATION TEST CASES
+1. Confirm 150–200 words of SEO content appear under each tool.
+2. Check 1–2 FAQs are visible below the content.
+3. Inspect meta tags for uniqueness.
+4. Confirm all internal links return 200 status.
+5. Validate image alt attributes.
+6. Test page load speed (<2s).
+7. Ensure no UI or layout changes.
+
+---
+
+# 7. IMPORTANT
+- DO NOT modify gradients, layouts, or visual styles.
+- Only content, meta tags, alt attributes, and internal linking are to be updated.

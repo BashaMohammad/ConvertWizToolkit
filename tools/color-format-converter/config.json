@@ -1,0 +1,13 @@
+{
+  "name": "Color Format Converter",
+  "section": "color-format-converter-section",
+  "category": "utility-tools",
+  "saturday": false,
+  "version": "1.0.0",
+  "created": "2025-08-05T11:06:25.294571",
+  "dependencies": [],
+  "routes": [
+    "/color-format-converter",
+    "/tools/color-format-converter"
+  ]
+}

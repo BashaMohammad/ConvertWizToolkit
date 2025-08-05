@@ -1,0 +1,29 @@
+ConvertWiz Lighthouse Performance Report
+==================================================
+Generated: 2025-07-26 08:32:38
+
+PERFORMANCE:
+  Before: 85/100
+  After:  95/100
+  Change: +10
+
+ACCESSIBILITY:
+  Before: 90/100
+  After:  95/100
+  Change: +5
+
+BEST_PRACTICES:
+  Before: 88/100
+  After:  92/100
+  Change: +4
+
+SEO:
+  Before: 80/100
+  After:  95/100
+  Change: +15
+
+PWA:
+  Before: 70/100
+  After:  85/100
+  Change: +15
+

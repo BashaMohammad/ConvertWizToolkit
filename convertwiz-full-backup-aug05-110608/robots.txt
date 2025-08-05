@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://convertwiz.in/sitemap.xml
+
+# Block admin and backup directories
+Disallow: /admin/
+Disallow: /backup*/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /*.py$
+Disallow: /*.js$
+Disallow: /*.md$
+
+# Allow search engines to crawl all tools and blog content
+Allow: /blog/
+Allow: /*.html$
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
