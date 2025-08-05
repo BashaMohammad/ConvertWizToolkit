@@ -123,12 +123,14 @@ function showSectionById(sectionId) {
             'meta-tag-generator-section': '/meta-tag-generator',
             'dpi-checker-section': '/dpi-checker',
             'global-land-units-section': '/global-land-units',
+            'png-to-jpg-section': '/png-to-jpg',
+            'text-case-converter-section': '/text-case-converter',
             'landing-section': '/'
         };
         
         // Saturday components are handled separately and hidden from users
         var saturdayComponents = [
-            'bmi-calculator-section', 'text-case-converter-section', 'png-to-jpg-section',
+            'bmi-calculator-section',
             'pdf-to-word-section', 'pdf-to-powerpoint-section', 'pdf-to-excel-section',
             'pdf-split-section', 'pdf-merge-section'
         ];
@@ -349,6 +351,24 @@ function initializeComponent(sectionId) {
                     console.log('✅ INIT: Global Land Units initialized');
                 } else {
                     console.warn('⚠️ INIT: initGlobalLandUnits function not found');
+                }
+                break;
+                
+            case 'png-to-jpg-section':
+                if (typeof initPngToJpg === 'function') {
+                    initPngToJpg();
+                    console.log('✅ INIT: PNG to JPG Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPngToJpg function not found');
+                }
+                break;
+                
+            case 'text-case-converter-section':
+                if (typeof initTextCaseConverter === 'function') {
+                    initTextCaseConverter();
+                    console.log('✅ INIT: Text Case Converter initialized');
+                } else {
+                    console.warn('⚠️ INIT: initTextCaseConverter function not found');
                 }
                 break;
                 
