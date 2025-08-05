@@ -2,13 +2,14 @@
 function initPngToJpg() {
     console.log('🔧 INIT: PNG to JPG Converter starting...');
     
-    const fileInput = document.getElementById('png-file-input');
-    const dropZone = document.getElementById('png-drop-zone');
-    const qualitySlider = document.getElementById('png-quality-slider');
-    const qualityValue = document.getElementById('png-quality-value');
+    const fileInput = document.getElementById('png-input');
+    const dropZone = document.getElementById('png-upload-area');
+    const browseBtn = document.getElementById('png-browse-btn');
+    const qualitySlider = document.getElementById('jpg-quality');
+    const qualityValue = document.getElementById('jpg-quality-value');
     const resultsList = document.getElementById('png-results-list');
     
-    if (!fileInput || !dropZone || !qualitySlider || !qualityValue || !resultsList) {
+    if (!fileInput || !dropZone || !browseBtn || !qualitySlider || !qualityValue || !resultsList) {
         console.warn('⚠️ PNG to JPG: Required elements not found');
         return;
     }
@@ -16,6 +17,11 @@ function initPngToJpg() {
     // Quality slider handler
     qualitySlider.addEventListener('input', function() {
         qualityValue.textContent = this.value + '%';
+    });
+    
+    // Browse button handler
+    browseBtn.addEventListener('click', function() {
+        fileInput.click();
     });
     
     // File input handler
@@ -57,20 +63,22 @@ function initPngToJpg() {
 function initTextCaseConverter() {
     console.log('🔧 INIT: Text Case Converter starting...');
     
-    const textInput = document.getElementById('text-case-input');
-    const resultsDiv = document.getElementById('text-case-results');
+    const textInput = document.getElementById('case-input-text');
+    const outputText = document.getElementById('case-output-text');
     
-    if (!textInput || !resultsDiv) {
+    if (!textInput || !outputText) {
         console.warn('⚠️ Text Case: Required elements not found');
         return;
     }
     
+    // Clear output initially
+    outputText.value = '';
+    
     // Auto-convert on input
     textInput.addEventListener('input', function() {
-        if (this.value.trim()) {
-            convertAllCases(this.value);
-        } else {
-            resultsDiv.innerHTML = '';
+        // Clear output when input is empty
+        if (!this.value.trim()) {
+            outputText.value = '';
         }
     });
     
@@ -109,29 +117,62 @@ function convertAllCases(text) {
 
 // Convert specific case (for individual buttons)
 function convertCase(caseType) {
-    const textInput = document.getElementById('text-case-input');
+    const textInput = document.getElementById('case-input-text');
+    const outputText = document.getElementById('case-output-text');
+    
     if (!textInput || !textInput.value.trim()) {
         alert('Please enter some text first.');
         return;
     }
     
-    convertAllCases(textInput.value);
+    const inputText = textInput.value;
+    let convertedText = '';
+    
+    switch(caseType) {
+        case 'upper':
+            convertedText = inputText.toUpperCase();
+            break;
+        case 'lower':
+            convertedText = inputText.toLowerCase();
+            break;
+        case 'title':
+            convertedText = inputText.replace(/\w\S*/g, (txt) => 
+                txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+            );
+            break;
+        case 'sentence':
+            convertedText = inputText.charAt(0).toUpperCase() + inputText.slice(1).toLowerCase();
+            break;
+        default:
+            convertedText = inputText;
+    }
+    
+    if (outputText) {
+        outputText.value = convertedText;
+    }
 }
 
-// Copy to clipboard function
-function copyToClipboard(text, caseType) {
-    navigator.clipboard.writeText(text).then(() => {
+// Copy output text to clipboard
+function copyOutputText() {
+    const outputText = document.getElementById('case-output-text');
+    
+    if (!outputText || !outputText.value.trim()) {
+        alert('No text to copy. Please convert some text first.');
+        return;
+    }
+    
+    navigator.clipboard.writeText(outputText.value).then(() => {
         // Show success feedback
         const button = event.target.closest('button');
         const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
-        button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+        button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
         button.classList.add('bg-green-500');
         
         setTimeout(() => {
             button.innerHTML = originalText;
             button.classList.remove('bg-green-500');
-            button.classList.add('bg-blue-500', 'hover:bg-blue-600');
+            button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
         }, 2000);
     }).catch(() => {
         alert('Failed to copy text. Please try again.');
@@ -141,13 +182,19 @@ function copyToClipboard(text, caseType) {
 // Process PNG files for conversion
 function processPngFiles(files) {
     const resultsList = document.getElementById('png-results-list');
-    const qualitySlider = document.getElementById('png-quality-slider');
+    const qualitySlider = document.getElementById('jpg-quality');
+    const resultsSection = document.getElementById('png-conversion-results');
     
     if (!resultsList) return;
     
-    const quality = qualitySlider ? qualitySlider.value / 100 : 0.8;
+    const quality = qualitySlider ? qualitySlider.value / 100 : 0.9;
     
     resultsList.innerHTML = '';
+    
+    // Show results section
+    if (resultsSection) {
+        resultsSection.classList.remove('hidden');
+    }
     
     files.forEach((file, index) => {
         if (file.type !== 'image/png') {
