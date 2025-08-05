@@ -4180,7 +4180,9 @@ function processPngFiles(files) {
             };
             img.src = e.target.result;
         };
-
+        reader.readAsDataURL(file);
+    });
+}
 
 // Download function for converted files
 function downloadConvertedFile(url, filename) {
@@ -5419,3 +5421,4 @@ function initGlobalLandUnits() {
 }
 
 console.log('✅ Tools.js loaded and ready');
+console.log("✅ Tools.js loaded and ready");

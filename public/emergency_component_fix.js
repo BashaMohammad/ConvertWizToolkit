@@ -355,20 +355,20 @@ function initializeComponent(sectionId) {
                 break;
                 
             case 'png-to-jpg-section':
-                if (typeof initPngToJpg === 'function') {
-                    initPngToJpg();
+                if (typeof initSaturdayPngToJpg === 'function') {
+                    initSaturdayPngToJpg();
                     console.log('✅ INIT: PNG to JPG Converter initialized');
                 } else {
-                    console.warn('⚠️ INIT: initPngToJpg function not found');
+                    console.warn('⚠️ INIT: initSaturdayPngToJpg function not found');
                 }
                 break;
                 
             case 'text-case-converter-section':
-                if (typeof initTextCaseConverter === 'function') {
-                    initTextCaseConverter();
+                if (typeof initSaturdayTextCaseConverter === 'function') {
+                    initSaturdayTextCaseConverter();
                     console.log('✅ INIT: Text Case Converter initialized');
                 } else {
-                    console.warn('⚠️ INIT: initTextCaseConverter function not found');
+                    console.warn('⚠️ INIT: initSaturdayTextCaseConverter function not found');
                 }
                 break;
                 

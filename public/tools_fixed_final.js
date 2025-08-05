@@ -1,5 +1,5 @@
-// PNG to JPG Converter initialization
-function initPngToJpg() {
+// PNG to JPG Converter initialization (Saturday Component)
+function initSaturdayPngToJpg() {
     console.log('🔧 INIT: PNG to JPG Converter starting...');
     
     const fileInput = document.getElementById('png-input');
@@ -59,8 +59,8 @@ function initPngToJpg() {
     console.log('✅ PNG to JPG Converter initialized successfully');
 }
 
-// Text Case Converter initialization
-function initTextCaseConverter() {
+// Text Case Converter initialization (Saturday Component)
+function initSaturdayTextCaseConverter() {
     console.log('🔧 INIT: Text Case Converter starting...');
     
     const textInput = document.getElementById('case-input-text');
