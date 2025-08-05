@@ -6,8 +6,6 @@ console.log('🔒 CLEAN PRODUCTION LOCK: Starting Saturday component disabling')
 // Saturday components to disable (visible but not accessible)
 const SATURDAY_COMPONENTS = [
     'bmi-calculator-section',
-    'text-case-converter-section', 
-    'png-to-jpg-section',
     'pdf-to-word-section',
     'pdf-to-excel-section',
     'pdf-split-section',
