@@ -4342,20 +4342,28 @@ function convertCase(caseType) {
 
 // Copy to clipboard function
 function copyToClipboard(text, caseType) {
+    if (!text) {
+        alert('No text to copy.');
+        return;
+    }
+    
     navigator.clipboard.writeText(text).then(() => {
         // Show success feedback
         const button = event.target.closest('button');
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
-        button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
-        button.classList.add('bg-green-500');
-        
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.classList.remove('bg-green-500');
-            button.classList.add('bg-blue-500', 'hover:bg-blue-600');
-        }, 2000);
-    }).catch(() => {
+        if (button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+            button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+            button.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-500');
+                button.classList.add('bg-blue-500', 'hover:bg-blue-600');
+            }, 2000);
+        }
+    }).catch((error) => {
+        console.error('Copy failed:', error);
         alert('Failed to copy text. Please try again.');
     });
 }
@@ -5447,13 +5455,98 @@ function initGlobalLandUnits() {
 }
 
 function initPngToJpg() {
-    try {
-        // Call the existing PNG to JPG initialization function
-        initializePngToJpgConverter();
-        console.log('✅ PNG to JPG Converter initialized');
-    } catch (error) {
-        console.warn('⚠️ PNG to JPG Converter initialization error:', error.message);
+    console.log('🚫 PNG to JPG Converter temporarily disabled for maintenance');
+    // Converter temporarily disabled - will be re-enabled after fixes
+}
+
+// BMI Calculator initialization
+function initBmiCalculator() {
+    console.log('🔧 INIT: BMI Calculator starting...');
+    
+    const heightInput = document.getElementById('bmi-height');
+    const weightInput = document.getElementById('bmi-weight');
+    const calculateBtn = document.getElementById('bmi-calculate-btn');
+    const resultsDiv = document.getElementById('bmi-results');
+    const unitToggle = document.getElementById('bmi-unit-toggle');
+    
+    if (!heightInput || !weightInput || !calculateBtn || !resultsDiv) {
+        console.warn('⚠️ BMI Calculator: Required elements not found');
+        return;
     }
+    
+    // Auto-calculate on input change
+    function calculateBMI() {
+        const height = parseFloat(heightInput.value);
+        const weight = parseFloat(weightInput.value);
+        
+        if (!height || !weight || height <= 0 || weight <= 0) {
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        
+        // Calculate BMI
+        const bmi = weight / (height * height);
+        
+        // Determine category and color
+        let category, color, recommendation;
+        if (bmi < 18.5) {
+            category = 'Underweight';
+            color = 'text-blue-600';
+            recommendation = 'Consider consulting a healthcare provider for healthy weight gain strategies.';
+        } else if (bmi < 25) {
+            category = 'Normal weight';
+            color = 'text-green-600';
+            recommendation = 'Great! Maintain your healthy lifestyle with balanced diet and regular exercise.';
+        } else if (bmi < 30) {
+            category = 'Overweight';
+            color = 'text-yellow-600';
+            recommendation = 'Consider adopting a healthier diet and increasing physical activity.';
+        } else {
+            category = 'Obese';
+            color = 'text-red-600';
+            recommendation = 'Consider consulting a healthcare provider for personalized advice.';
+        }
+        
+        resultsDiv.innerHTML = `
+            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+                <div class="text-center mb-6">
+                    <div class="text-4xl font-bold text-gray-800 mb-2">${bmi.toFixed(1)}</div>
+                    <div class="text-lg ${color} font-semibold">${category}</div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center text-sm">
+                    <div class="p-3 rounded-lg ${bmi < 18.5 ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-blue-600">Underweight</div>
+                        <div class="text-gray-600">&lt; 18.5</div>
+                    </div>
+                    <div class="p-3 rounded-lg ${bmi >= 18.5 && bmi < 25 ? 'bg-green-100 border-2 border-green-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-green-600">Normal</div>
+                        <div class="text-gray-600">18.5 - 24.9</div>
+                    </div>
+                    <div class="p-3 rounded-lg ${bmi >= 25 && bmi < 30 ? 'bg-yellow-100 border-2 border-yellow-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-yellow-600">Overweight</div>
+                        <div class="text-gray-600">25 - 29.9</div>
+                    </div>
+                    <div class="p-3 rounded-lg ${bmi >= 30 ? 'bg-red-100 border-2 border-red-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-red-600">Obese</div>
+                        <div class="text-gray-600">&gt;= 30</div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h5 class="font-semibold text-gray-800 mb-2">Recommendation:</h5>
+                    <p class="text-gray-700 text-sm">${recommendation}</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Event listeners
+    heightInput.addEventListener('input', calculateBMI);
+    weightInput.addEventListener('input', calculateBMI);
+    calculateBtn.addEventListener('click', calculateBMI);
+    
+    console.log('✅ BMI Calculator initialized successfully');
 }
 
 console.log('✅ Tools.js loaded and ready');

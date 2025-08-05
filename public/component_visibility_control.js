@@ -6,7 +6,7 @@ console.log('🔒 Component Visibility Control - Hiding Saturday components from
 // Define Saturday release components that should be hidden
 if (typeof SATURDAY_COMPONENTS === 'undefined') {
     var SATURDAY_COMPONENTS = [
-    'bmi-calculator-section',
+    // 'bmi-calculator-section', // Enabled for testing
     'pdf-to-word-section',
     'pdf-to-powerpoint-section',
     'pdf-to-excel-section',
