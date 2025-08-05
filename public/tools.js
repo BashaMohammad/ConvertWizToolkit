@@ -4069,20 +4069,10 @@ function initializePngToJpgConverter() {
         return;
     }
     
-    // Remove any existing event listeners by cloning elements
-    const newFileInput = elements.fileInput.cloneNode(true);
-    elements.fileInput.parentNode.replaceChild(newFileInput, elements.fileInput);
-    
-    const newBrowseBtn = elements.browseBtn.cloneNode(true);
-    elements.browseBtn.parentNode.replaceChild(newBrowseBtn, elements.browseBtn);
-    
-    const newUploadArea = elements.uploadArea.cloneNode(true);
-    elements.uploadArea.parentNode.replaceChild(newUploadArea, elements.uploadArea);
-    
-    // Get fresh references
-    const uploadArea = document.getElementById('png-upload-area');
-    const fileInput = document.getElementById('png-input');
-    const browseBtn = document.getElementById('png-browse-btn');
+    // Get direct references (no cloning to avoid duplicate dialogs)
+    const uploadArea = elements.uploadArea;
+    const fileInput = elements.fileInput;
+    const browseBtn = elements.browseBtn;
     const qualitySlider = document.getElementById('jpg-quality');
     const qualityValue = document.getElementById('jpg-quality-value');
     
@@ -4189,11 +4179,13 @@ function processPngFiles(files) {
                 // Convert to JPG blob
                 canvas.toBlob(function(blob) {
                     if (blob) {
+                        console.log('🔧 PNG to JPG: Blob created, size:', blob.size);
                         const jpgUrl = URL.createObjectURL(blob);
                         const originalSize = (file.size / 1024).toFixed(1);
                         const convertedSize = (blob.size / 1024).toFixed(1);
                         const compression = ((file.size - blob.size) / file.size * 100).toFixed(1);
                         
+                        console.log('🔧 PNG to JPG: Creating result display');
                         // Create result item with side-by-side preview (similar to JPG to PNG)
                         const resultDiv = document.createElement('div');
                         resultDiv.className = 'bg-white border border-gray-200 rounded-2xl p-6 shadow-lg';
@@ -4234,6 +4226,7 @@ function processPngFiles(files) {
                                 </button>
                             </div>
                         `;
+                        console.log('🔧 PNG to JPG: Appending result to list');
                         resultsList.appendChild(resultDiv);
                         
                         // Store for bulk download
@@ -4241,6 +4234,10 @@ function processPngFiles(files) {
                             url: jpgUrl,
                             filename: file.name.replace('.png', '.jpg')
                         });
+                        
+                        console.log('✅ PNG to JPG: Result displayed successfully');
+                    } else {
+                        console.error('❌ PNG to JPG: Failed to create blob');
                     }
                 }, 'image/jpeg', quality);
             };
