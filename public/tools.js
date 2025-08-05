@@ -4147,6 +4147,7 @@ function initializePngToJpgConverter() {
 }
 
 function processPngFiles(files) {
+    console.log('🔧 PNG to JPG: Processing files...', files.length);
     const qualitySlider = document.getElementById('jpg-quality');
     const quality = qualitySlider ? parseInt(qualitySlider.value) / 100 : 0.9;
     const resultsContainer = document.getElementById('png-conversion-results');
@@ -4167,6 +4168,7 @@ function processPngFiles(files) {
             return;
         }
         
+        console.log('🔧 PNG to JPG: Converting file:', file.name);
         const reader = new FileReader();
         reader.onload = function(e) {
             const img = new Image();
