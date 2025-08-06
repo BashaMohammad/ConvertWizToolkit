@@ -56,6 +56,8 @@ function updateURLAndTrackPageview(sectionId) {
     'bmi-calculator-section': '/bmi-calculator',
     'text-case-converter-section': '/text-case-converter',
     'png-to-jpg-section': '/png-to-jpg',
+    'wifi-scanner-section': '/wifi-scanner',
+    'signal-strength-section': '/signal-strength',
     // NEW PDF TOOLS
     'pdf-to-word-section': '/pdf-to-word',
     'pdf-to-ppt-section': '/pdf-to-ppt', 
@@ -116,6 +118,8 @@ function getPageTitle(sectionId) {
     'bmi-calculator-section': 'BMI Calculator - ConvertWiz',
     'text-case-converter-section': 'Text Case Converter - ConvertWiz',
     'png-to-jpg-section': 'PNG to JPG Converter - ConvertWiz',
+    'wifi-scanner-section': 'WiFi Scanner - ConvertWiz',
+    'signal-strength-section': 'Signal Strength Meter - ConvertWiz',
     // NEW PDF TOOLS
     'pdf-to-word-section': 'PDF to Word Converter - ConvertWiz',
     'pdf-to-ppt-section': 'PDF to PowerPoint Converter - ConvertWiz',
@@ -294,6 +298,18 @@ function initializeTool(sectionId) {
                 // PNG to JPG Converter functionality is included in tools.js
                 if (typeof initializePNGtoJPGConverter !== 'undefined') {
                     initializePNGtoJPGConverter();
+                }
+                break;
+            case 'wifi-scanner-section':
+                // WiFi Scanner functionality
+                if (typeof initWifiScanner !== 'undefined') {
+                    initWifiScanner();
+                }
+                break;
+            case 'signal-strength-section':
+                // Signal Strength functionality
+                if (typeof initSignalStrength !== 'undefined') {
+                    initSignalStrength();
                 }
                 break;
             // NEW PDF TOOLS

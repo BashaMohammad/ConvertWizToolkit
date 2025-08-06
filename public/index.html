@@ -523,19 +523,16 @@
                             </div>
                         </div>
 
-                        <!-- Signal Strength Meter - Coming Soon -->
-                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group opacity-75 relative">
-                            <div class="absolute top-3 right-3">
-                                <i class="fas fa-lock text-gray-400 text-sm"></i>
-                            </div>
+                        <!-- Signal Strength Meter -->
+                        <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                             <div class="text-center">
                                 <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-signal text-white text-2xl"></i>
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-800 mb-2">Signal Strength</h4>
                                 <p class="text-gray-600 text-sm mb-4">Check WiFi and network signal quality</p>
-                                <button class="w-full bg-gray-400 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
-                                    Coming Soon
+                                <button data-target="signal-strength-section" class="inline-block w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                    Try Now
                                 </button>
                             </div>
                         </div>
@@ -667,19 +664,16 @@
                                 </div>
                             </div>
 
-                            <!-- WiFi Scanner - Coming Soon -->
-                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group opacity-75 relative">
-                                <div class="absolute top-3 right-3">
-                                    <i class="fas fa-lock text-gray-400 text-sm"></i>
-                                </div>
+                            <!-- WiFi Scanner -->
+                            <div class="tool-card bg-white rounded-xl shadow-xl p-6 hover:scale-105 transition-all duration-300 group">
                                 <div class="text-center">
                                     <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                         <i class="fas fa-wifi text-white text-2xl"></i>
                                     </div>
                                     <h4 class="text-lg font-bold text-gray-800 mb-2">WiFi Scanner</h4>
                                     <p class="text-gray-600 text-sm mb-4">Scan and analyze nearby WiFi networks</p>
-                                    <button class="w-full bg-gray-400 text-white py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed">
-                                        Coming Soon
+                                    <button data-target="wifi-scanner-section" class="inline-block w-full bg-gradient-to-r from-cyan-500 to-purple-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer">
+                                        Try Now
                                     </button>
                                 </div>
                             </div>
@@ -3383,6 +3377,64 @@ Contact: John Doe, Company Inc."></textarea>
             </div>
         </div>
     </footer>
+
+    <!-- WiFi Scanner Section -->
+    <div class="tool-section" id="wifi-scanner-section">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">📶 WiFi Scanner</h2>
+            
+            <div class="bg-gradient-to-r from-cyan-50 to-purple-50 rounded-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Network Information</h3>
+                <div id="wifi-scanner-results" class="space-y-4">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div>
+                        <span class="ml-3 text-gray-600">Scanning network...</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <button id="wifi-refresh-btn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-sync-alt mr-2"></i>Refresh Scan
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button class="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300" onclick="showSection('landing-section')">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Tools
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signal Strength Section -->
+    <div class="tool-section" id="signal-strength-section">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">📡 Signal Strength Meter</h2>
+            
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Connection Analysis</h3>
+                <div id="signal-strength-results" class="space-y-4">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+                        <span class="ml-3 text-gray-600">Analyzing signal...</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <button id="signal-refresh-btn" class="bg-gradient-to-r from-green-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-sync-alt mr-2"></i>Test Again
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button class="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300" onclick="showSection('landing-section')">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Tools
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <script src="tools.js"></script>

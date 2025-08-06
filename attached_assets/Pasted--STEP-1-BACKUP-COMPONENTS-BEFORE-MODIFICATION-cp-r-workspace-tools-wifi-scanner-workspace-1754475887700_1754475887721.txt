@@ -1,0 +1,149 @@
+# 🚨 STEP 1: BACKUP COMPONENTS BEFORE MODIFICATION
+cp -r ~/workspace/tools/wifi-scanner ~/workspace/tools/_backup_wifi-scanner_aug06
+cp -r ~/workspace/tools/signal-scanner ~/workspace/tools/_backup_signal-scanner_aug06
+
+# ✅ STEP 2: UPDATE COMPONENT CONFIG TO ENABLE "TRY NOW" BUTTON
+# File: components/config/componentGroups.js
+# Find entries for wifi-scanner and signal-scanner and update as follows:
+
+{
+  id: "wifi-scanner",
+  title: "WiFi Scanner",
+  description: "View your network type and data saver settings.",
+  icon: "📶",
+  group: "Utility Tools",
+  path: "/tools/wifi-scanner",
+  isNew: true  // This enables 🔴 NEW badge
+},
+
+{
+  id: "signal-scanner",
+  title: "Signal Strength",
+  description: "Estimate your network signal strength and bandwidth.",
+  icon: "📡",
+  group: "Utility Tools",
+  path: "/tools/signal-scanner",
+  isNew: true
+}
+
+# ✅ STEP 3: ADD HTML FOR WIFI SCANNER
+# File: tools/wifi-scanner/index.html
+echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WiFi Scanner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="tool-container">
+    <h1>WiFi Scanner</h1>
+    <p id="wifi-info">Loading WiFi info...</p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>' > tools/wifi-scanner/index.html
+
+# ✅ STEP 4: ADD LOGIC FOR WIFI SCANNER
+# File: tools/wifi-scanner/script.js
+echo '(function() {
+  document.addEventListener("DOMContentLoaded", function() {
+    const output = document.getElementById("wifi-info");
+
+    if ("connection" in navigator) {
+      const type = navigator.connection.effectiveType;
+      const saveData = navigator.connection.saveData;
+
+      output.innerHTML = `
+        <p><strong>Network Type:</strong> ${type.toUpperCase()}</p>
+        <p><strong>Data Saver Mode:</strong> ${saveData ? "Enabled" : "Disabled"}</p>
+        <p>📡 Browser-reported info. May vary across devices.</p>
+      `;
+    } else {
+      output.innerHTML = `
+        <p>❗ Your browser does not support WiFi scanning APIs.</p>
+        <p>Try using Chrome on Android for best results.</p>
+      `;
+    }
+  });
+})();' > tools/wifi-scanner/script.js
+
+# ✅ STEP 5: ADD STYLES FOR WIFI SCANNER
+# File: tools/wifi-scanner/style.css
+echo '.tool-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.tool-container p {
+  margin: 10px 0;
+  font-size: 16px;
+}' > tools/wifi-scanner/style.css
+
+# ✅ STEP 6: ADD HTML FOR SIGNAL STRENGTH
+# File: tools/signal-scanner/index.html
+echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signal Strength</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="tool-container">
+    <h1>Signal Strength</h1>
+    <p id="signal-strength">Detecting signal...</p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>' > tools/signal-scanner/index.html
+
+# ✅ STEP 7: ADD LOGIC FOR SIGNAL STRENGTH
+# File: tools/signal-scanner/script.js
+echo '(function() {
+  document.addEventListener("DOMContentLoaded", function() {
+    const output = document.getElementById("signal-strength");
+
+    if (navigator.connection && navigator.connection.downlink) {
+      const downlink = navigator.connection.downlink;
+      const type = navigator.connection.effectiveType;
+      const rtt = navigator.connection.rtt;
+
+      output.innerHTML = `
+        <p><strong>Connection Type:</strong> ${type.toUpperCase()}</p>
+        <p><strong>Estimated Bandwidth:</strong> ${downlink} Mbps</p>
+        <p><strong>Estimated Latency:</strong> ${rtt} ms</p>
+        <p>📶 Signal info based on browser access. Accuracy may vary.</p>
+      `;
+    } else {
+      output.innerHTML = `
+        <p>❗ Signal data not supported in your browser.</p>
+        <p>Try using Chrome or Edge on Android.</p>
+      `;
+    }
+  });
+})();' > tools/signal-scanner/script.js
+
+# ✅ STEP 8: ADD STYLES FOR SIGNAL STRENGTH
+# File: tools/signal-scanner/style.css
+echo '.tool-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.tool-container p {
+  margin: 10px 0;
+  font-size: 16px;
+}' > tools/signal-scanner/style.css
+
+# ✅ STEP 9: UPDATE ROUTES TO OPEN ON "TRY NOW"
+# File: router.js or main route config
+# Ensure these are added (do NOT remove others)
+{
+  path: '/tools/wifi-scanner',
+  component: () => import('../tools/wifi-scanner/index.html')
+},
+{
+  path: '/tools/signal-scanner',
+  component: () => import('../tools/signal-scanner/index.html')
+}

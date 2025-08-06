@@ -5576,5 +5576,225 @@ function initBmiCalculator() {
     console.log('✅ BMI Calculator initialized successfully');
 }
 
+// WiFi Scanner initialization
+function initWifiScanner() {
+    console.log('🔧 INIT: WiFi Scanner starting...');
+    
+    const resultsDiv = document.getElementById('wifi-scanner-results');
+    const refreshBtn = document.getElementById('wifi-refresh-btn');
+    
+    if (!resultsDiv) {
+        console.warn('⚠️ WiFi Scanner: Required elements not found');
+        return;
+    }
+    
+    function scanWifiInfo() {
+        if ("connection" in navigator && navigator.connection) {
+            const connection = navigator.connection;
+            const effectiveType = connection.effectiveType || 'unknown';
+            const saveData = connection.saveData;
+            const downlink = connection.downlink || 'unknown';
+            const rtt = connection.rtt || 'unknown';
+            
+            resultsDiv.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-wifi text-cyan-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Network Type</h4>
+                        </div>
+                        <p class="text-2xl font-bold text-cyan-600">${effectiveType.toUpperCase()}</p>
+                        <p class="text-sm text-gray-600 mt-1">Connection speed classification</p>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-database text-purple-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Data Saver</h4>
+                        </div>
+                        <p class="text-2xl font-bold ${saveData ? 'text-green-600' : 'text-gray-600'}">${saveData ? 'ENABLED' : 'DISABLED'}</p>
+                        <p class="text-sm text-gray-600 mt-1">Bandwidth optimization</p>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-tachometer-alt text-blue-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Bandwidth</h4>
+                        </div>
+                        <p class="text-2xl font-bold text-blue-600">${downlink === 'unknown' ? 'N/A' : downlink + ' Mbps'}</p>
+                        <p class="text-sm text-gray-600 mt-1">Estimated speed</p>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-clock text-orange-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Latency</h4>
+                        </div>
+                        <p class="text-2xl font-bold text-orange-600">${rtt === 'unknown' ? 'N/A' : rtt + ' ms'}</p>
+                        <p class="text-sm text-gray-600 mt-1">Round trip time</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h5 class="font-semibold text-blue-800 mb-1">Network Information</h5>
+                            <p class="text-blue-700 text-sm">
+                                This data is provided by your browser's Network Information API. 
+                                Results may vary based on your device and browser support.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultsDiv.innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Network API Not Supported</h4>
+                    <p class="text-gray-600 mb-4">Your browser doesn't support the Network Information API.</p>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left">
+                        <h5 class="font-semibold text-yellow-800 mb-2">Supported Browsers:</h5>
+                        <ul class="text-yellow-700 text-sm space-y-1">
+                            <li>• Chrome on Android</li>
+                            <li>• Samsung Internet</li>
+                            <li>• Opera on Android</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Initial scan
+    scanWifiInfo();
+    
+    // Refresh button
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', scanWifiInfo);
+    }
+    
+    console.log('✅ WiFi Scanner initialized successfully');
+}
+
+// Signal Strength initialization
+function initSignalStrength() {
+    console.log('🔧 INIT: Signal Strength starting...');
+    
+    const resultsDiv = document.getElementById('signal-strength-results');
+    const refreshBtn = document.getElementById('signal-refresh-btn');
+    
+    if (!resultsDiv) {
+        console.warn('⚠️ Signal Strength: Required elements not found');
+        return;
+    }
+    
+    function testSignalStrength() {
+        if ("connection" in navigator && navigator.connection) {
+            const connection = navigator.connection;
+            const downlink = connection.downlink;
+            const effectiveType = connection.effectiveType || 'unknown';
+            const rtt = connection.rtt;
+            
+            // Calculate signal quality based on metrics
+            let signalQuality = 'Unknown';
+            let qualityColor = 'text-gray-600';
+            let qualityIcon = 'fas fa-question-circle';
+            
+            if (downlink && rtt) {
+                if (downlink >= 5 && rtt <= 100) {
+                    signalQuality = 'Excellent';
+                    qualityColor = 'text-green-600';
+                    qualityIcon = 'fas fa-signal';
+                } else if (downlink >= 1.5 && rtt <= 300) {
+                    signalQuality = 'Good';
+                    qualityColor = 'text-blue-600';
+                    qualityIcon = 'fas fa-signal';
+                } else if (downlink >= 0.5 && rtt <= 500) {
+                    signalQuality = 'Fair';
+                    qualityColor = 'text-yellow-600';
+                    qualityIcon = 'fas fa-signal';
+                } else {
+                    signalQuality = 'Poor';
+                    qualityColor = 'text-red-600';
+                    qualityIcon = 'fas fa-signal';
+                }
+            }
+            
+            resultsDiv.innerHTML = `
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-green-100 to-blue-100 rounded-full mb-4">
+                        <i class="${qualityIcon} ${qualityColor} text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold ${qualityColor}">${signalQuality}</h3>
+                    <p class="text-gray-600">Overall Signal Quality</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 text-center">
+                        <i class="fas fa-download text-green-500 text-2xl mb-3"></i>
+                        <h4 class="font-semibold text-gray-800 mb-2">Download Speed</h4>
+                        <p class="text-xl font-bold text-green-600">${downlink || 'N/A'} ${downlink ? 'Mbps' : ''}</p>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 text-center">
+                        <i class="fas fa-network-wired text-blue-500 text-2xl mb-3"></i>
+                        <h4 class="font-semibold text-gray-800 mb-2">Connection Type</h4>
+                        <p class="text-xl font-bold text-blue-600">${effectiveType.toUpperCase()}</p>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 text-center">
+                        <i class="fas fa-stopwatch text-orange-500 text-2xl mb-3"></i>
+                        <h4 class="font-semibold text-gray-800 mb-2">Latency</h4>
+                        <p class="text-xl font-bold text-orange-600">${rtt || 'N/A'} ${rtt ? 'ms' : ''}</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <h5 class="font-semibold text-gray-800 mb-3">Signal Analysis</h5>
+                    <div class="space-y-2 text-sm">
+                        ${downlink >= 5 ? 
+                            '<div class="flex items-center text-green-700"><i class="fas fa-check-circle mr-2"></i>Fast download speeds detected</div>' : 
+                            '<div class="flex items-center text-yellow-700"><i class="fas fa-exclamation-triangle mr-2"></i>Moderate download speeds</div>'
+                        }
+                        ${rtt <= 100 ? 
+                            '<div class="flex items-center text-green-700"><i class="fas fa-check-circle mr-2"></i>Low latency connection</div>' : 
+                            '<div class="flex items-center text-yellow-700"><i class="fas fa-exclamation-triangle mr-2"></i>Higher latency detected</div>'
+                        }
+                        <div class="flex items-center text-blue-700"><i class="fas fa-info-circle mr-2"></i>Connection type: ${effectiveType.toUpperCase()}</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultsDiv.innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Signal Testing Not Available</h4>
+                    <p class="text-gray-600 mb-4">Your browser doesn't support network signal analysis.</p>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left">
+                        <h5 class="font-semibold text-yellow-800 mb-2">Try These Browsers:</h5>
+                        <ul class="text-yellow-700 text-sm space-y-1">
+                            <li>• Chrome on Android</li>
+                            <li>• Samsung Internet</li>
+                            <li>• Opera Mobile</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Initial test
+    testSignalStrength();
+    
+    // Refresh button
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', testSignalStrength);
+    }
+    
+    console.log('✅ Signal Strength initialized successfully');
+}
+
 console.log('✅ Tools.js loaded and ready');
 console.log("✅ Tools.js loaded and ready");

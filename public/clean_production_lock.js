@@ -4,7 +4,7 @@
 console.log('🔒 CLEAN PRODUCTION LOCK: Starting Saturday component disabling');
 
 // Saturday components to disable (visible but not accessible)
-const SATURDAY_COMPONENTS = [
+const CLEAN_SATURDAY_COMPONENTS = [
     'bmi-calculator-section',
     'pdf-to-word-section',
     'pdf-to-excel-section',
@@ -16,7 +16,7 @@ const SATURDAY_COMPONENTS = [
 function disableSaturdayComponents() {
     console.log('🔒 DISABLING: Saturday components - visible but not accessible');
     
-    SATURDAY_COMPONENTS.forEach(componentId => {
+    CLEAN_SATURDAY_COMPONENTS.forEach(componentId => {
         const element = document.getElementById(componentId);
         if (element) {
             // Add disabled styling but keep visible
@@ -86,7 +86,7 @@ function blockSaturdayNavigation() {
     if (window.showSection) {
         const originalShowSection = window.showSection;
         window.showSection = function(sectionName) {
-            if (SATURDAY_COMPONENTS.includes(sectionName)) {
+            if (CLEAN_SATURDAY_COMPONENTS.includes(sectionName)) {
                 console.log(`🚫 BLOCKED: Access to ${sectionName}`);
                 alert('🚧 This feature is coming soon!\n\nWe are currently working on this tool and it will be available shortly.');
                 return false;
@@ -100,7 +100,7 @@ function blockSaturdayNavigation() {
         const target = e.target.closest('[data-target]');
         if (target) {
             const sectionName = target.getAttribute('data-target');
-            if (SATURDAY_COMPONENTS.includes(sectionName)) {
+            if (CLEAN_SATURDAY_COMPONENTS.includes(sectionName)) {
                 e.preventDefault();
                 e.stopPropagation();
                 alert('🚧 This feature is coming soon!\n\nWe are currently working on this tool and it will be available shortly.');
