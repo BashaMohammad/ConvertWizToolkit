@@ -5591,6 +5591,7 @@ function initWifiScanner() {
     console.log('✅ WiFi Scanner: Elements found, proceeding with scan');
     
     async function scanWifiInfo() {
+        console.log('🔧 WiFi Scanner: Starting scan...');
         resultsDiv.innerHTML = `
             <div class="flex items-center justify-center py-8">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div>
@@ -5599,11 +5600,17 @@ function initWifiScanner() {
         `;
 
         try {
+            console.log('🔧 WiFi Scanner: Fetching IP...');
             // Get public IP
-            const ip = await fetch("https://api.ipify.org?format=json")
-                .then(res => res.json())
-                .then(d => d.ip)
-                .catch(() => "Unavailable");
+            let ip = "Unavailable";
+            try {
+                const ipResponse = await fetch("https://api.ipify.org?format=json");
+                const ipData = await ipResponse.json();
+                ip = ipData.ip;
+                console.log('✅ WiFi Scanner: IP fetched:', ip);
+            } catch (ipError) {
+                console.warn('⚠️ WiFi Scanner: IP fetch failed:', ipError);
+            }
 
             // Get connection info
             const connection = navigator.connection || {};
@@ -5612,9 +5619,14 @@ function initWifiScanner() {
             const downlink = connection.downlink || "Unknown";
             const rtt = connection.rtt || "Unknown";
 
+            console.log('🔧 WiFi Scanner: Testing latency...');
             // Test latency to Google
             const latencyStart = performance.now();
-            await fetch("https://www.google.com", { mode: "no-cors" }).catch(() => {});
+            try {
+                await fetch("https://www.google.com", { mode: "no-cors" });
+            } catch (latencyError) {
+                console.warn('⚠️ WiFi Scanner: Latency test failed:', latencyError);
+            }
             const latency = Math.round(performance.now() - latencyStart);
 
             resultsDiv.innerHTML = `
@@ -5687,27 +5699,34 @@ function initWifiScanner() {
                 </div>
             `;
 
+            console.log('✅ WiFi Scanner: Main data complete, starting speed test...');
             // Test download speed
             simulateDownloadSpeed();
 
         } catch (error) {
+            console.error('❌ WiFi Scanner: Scan failed:', error);
             resultsDiv.innerHTML = `
                 <div class="text-center py-8">
                     <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>
                     <h4 class="text-xl font-semibold text-gray-800 mb-2">Scan Failed</h4>
                     <p class="text-gray-600">Unable to gather network information. Please check your connection and try again.</p>
+                    <div class="mt-4 text-sm text-gray-500">Error: ${error.message}</div>
                 </div>
             `;
         }
     }
 
     function simulateDownloadSpeed() {
+        console.log('🔧 WiFi Scanner: Starting speed test...');
         const start = new Date().getTime();
+        
         fetch("https://via.placeholder.com/300x300.png", { cache: "no-store" })
             .then(() => {
                 const duration = new Date().getTime() - start;
                 const bitsLoaded = 300 * 300 * 24;
                 const speedMbps = (bitsLoaded / duration / 1000).toFixed(2);
+                
+                console.log('✅ WiFi Scanner: Speed test complete:', speedMbps, 'Mbps');
                 
                 const speedTestDiv = document.createElement('div');
                 speedTestDiv.className = 'mt-4 bg-green-50 border border-green-200 rounded-lg p-4';
@@ -5723,7 +5742,8 @@ function initWifiScanner() {
                 `;
                 resultsDiv.appendChild(speedTestDiv);
             })
-            .catch(() => {
+            .catch((error) => {
+                console.warn('⚠️ WiFi Scanner: Speed test failed:', error);
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'mt-4 bg-red-50 border border-red-200 rounded-lg p-4';
                 errorDiv.innerHTML = `
@@ -5765,6 +5785,7 @@ function initSignalStrength() {
     console.log('✅ Signal Strength: Elements found, proceeding with test');
     
     function testSignalStrength() {
+        console.log('🔧 Signal Strength: Starting analysis...');
         resultsDiv.innerHTML = `
             <div class="flex items-center justify-center py-8">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
@@ -5772,16 +5793,21 @@ function initSignalStrength() {
             </div>
         `;
 
-        if (!navigator.onLine) {
-            resultsDiv.innerHTML = `
-                <div class="text-center py-8">
-                    <i class="fas fa-wifi-slash text-red-500 text-4xl mb-4"></i>
-                    <h4 class="text-xl font-semibold text-gray-800 mb-2">You are currently offline</h4>
-                    <p class="text-gray-600">Please check your internet connection and try again.</p>
-                </div>
-            `;
-            return;
-        }
+        // Add a small delay to ensure the loading animation is visible
+        setTimeout(() => {
+            if (!navigator.onLine) {
+                console.log('❌ Signal Strength: Device offline');
+                resultsDiv.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-wifi-slash text-red-500 text-4xl mb-4"></i>
+                        <h4 class="text-xl font-semibold text-gray-800 mb-2">You are currently offline</h4>
+                        <p class="text-gray-600">Please check your internet connection and try again.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            console.log('✅ Signal Strength: Device online, analyzing...');
 
         const conn = navigator.connection || {};
         const downlink = conn.downlink || 0;
@@ -5879,28 +5905,31 @@ function initSignalStrength() {
             </div>
         `;
 
-        // Add battery information if available
-        if (navigator.getBattery) {
-            navigator.getBattery().then(battery => {
-                const batteryLevel = (battery.level * 100).toFixed(0);
-                const chargingStatus = battery.charging ? "🔌 Charging" : "🔋";
-                const batteryDiv = document.getElementById('battery-info');
-                if (batteryDiv) {
-                    batteryDiv.innerHTML = `
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-center mb-3">
-                                <i class="fas fa-battery-${battery.level > 0.75 ? 'full' : battery.level > 0.5 ? 'three-quarters' : battery.level > 0.25 ? 'half' : 'quarter'} text-purple-500 text-xl mr-3"></i>
-                                <h4 class="font-semibold text-gray-800">Battery Status</h4>
+            // Add battery information if available
+            if (navigator.getBattery) {
+                console.log('🔧 Signal Strength: Checking battery...');
+                navigator.getBattery().then(battery => {
+                    const batteryLevel = (battery.level * 100).toFixed(0);
+                    const chargingStatus = battery.charging ? "🔌 Charging" : "🔋";
+                    const batteryDiv = document.getElementById('battery-info');
+                    if (batteryDiv) {
+                        console.log('✅ Signal Strength: Battery info added');
+                        batteryDiv.innerHTML = `
+                            <div class="bg-white border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-battery-${battery.level > 0.75 ? 'full' : battery.level > 0.5 ? 'three-quarters' : battery.level > 0.25 ? 'half' : 'quarter'} text-purple-500 text-xl mr-3"></i>
+                                    <h4 class="font-semibold text-gray-800">Battery Status</h4>
+                                </div>
+                                <p class="text-2xl font-bold text-purple-600">${batteryLevel}% ${chargingStatus}</p>
+                                <p class="text-sm text-gray-600 mt-1">Device power level</p>
                             </div>
-                            <p class="text-2xl font-bold text-purple-600">${batteryLevel}% ${chargingStatus}</p>
-                            <p class="text-sm text-gray-600 mt-1">Device power level</p>
-                        </div>
-                    `;
-                }
-            }).catch(() => {
-                // Battery API not supported, no worries
-            });
-        }
+                        `;
+                    }
+                }).catch((error) => {
+                    console.warn('⚠️ Signal Strength: Battery API not supported:', error);
+                });
+            }
+        }, 500); // 500ms delay
     }
     
     // Initial test
