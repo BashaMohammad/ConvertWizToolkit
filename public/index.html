@@ -3327,8 +3327,8 @@ Contact: John Doe, Company Inc."></textarea>
     </div>
 
     <!-- WiFi Scanner Section -->
-    <div class="tool-section" id="wifi-scanner-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 2rem 1rem;">
-        <!-- Back to Home Button - Top Position -->
+    <div class="tool-section" id="wifi-scanner-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <!-- Back to Home Button - Top Left -->
         <div class="fixed top-4 left-4 z-50">
             <button onclick="window.emergencyShowSection ? emergencyShowSection('landing-section') : (window.showSection && showSection('landing-section'))" 
                     class="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-all duration-300 flex items-center space-x-2 border border-white/30">
@@ -3337,37 +3337,52 @@ Contact: John Doe, Company Inc."></textarea>
             </button>
         </div>
 
-        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">📶 WiFi Scanner</h2>
-            
-            <div class="bg-gradient-to-r from-cyan-50 to-purple-50 rounded-lg p-6 mb-8">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Network Information</h3>
-                <div id="wifi-scanner-results" class="space-y-4">
-                    <div class="flex items-center justify-center py-8">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div>
-                        <span class="ml-3 text-gray-600">Scanning network...</span>
+        <!-- Header Section -->
+        <main class="min-h-screen pt-16">
+            <!-- Hero Section -->
+            <section class="text-center py-16 px-4">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    📶 WiFi Scanner
+                </h2>
+                <p class="text-xl text-white/90 mb-4">
+                    Scan and analyze your WiFi network information
+                </p>
+            </section>
+
+            <!-- Converter Card -->
+            <div class="max-w-4xl mx-auto px-4 pb-16">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-wifi text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Network Scanner</h3>
+                        <p class="text-gray-600">Analyze your current network connection and WiFi details</p>
                     </div>
-                </div>
-                
-                <div class="mt-6">
-                    <button id="wifi-refresh-btn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
-                        <i class="fas fa-sync-alt mr-2"></i>Refresh Scan
-                    </button>
-                </div>
+                    
+                    <div class="bg-gradient-to-r from-cyan-50 to-purple-50 rounded-lg p-6 mb-8">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Network Information</h3>
+                        <div id="wifi-scanner-results" class="space-y-4">
+                            <div class="flex items-center justify-center py-8">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div>
+                                <span class="ml-3 text-gray-600">Scanning network...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <button id="wifi-refresh-btn" class="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
+                                <i class="fas fa-sync-alt mr-2"></i>Refresh Scan
+                            </button>
+                        </div>
+                    </div>
+                </section>
             </div>
-            
-            <div class="text-center">
-                <button onclick="window.emergencyShowSection ? emergencyShowSection('landing-section') : (window.showSection && showSection('landing-section'))" 
-                        class="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Tools
-                </button>
-            </div>
-        </div>
+        </main>
     </div>
 
     <!-- Signal Strength Section -->
-    <div class="tool-section" id="signal-strength-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 2rem 1rem;">
-        <!-- Back to Home Button - Top Position -->
+    <div class="tool-section" id="signal-strength-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <!-- Back to Home Button - Top Left -->
         <div class="fixed top-4 left-4 z-50">
             <button onclick="window.emergencyShowSection ? emergencyShowSection('landing-section') : (window.showSection && showSection('landing-section'))" 
                     class="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-all duration-300 flex items-center space-x-2 border border-white/30">
@@ -3376,32 +3391,47 @@ Contact: John Doe, Company Inc."></textarea>
             </button>
         </div>
 
-        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">📡 Signal Strength Meter</h2>
-            
-            <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Connection Analysis</h3>
-                <div id="signal-strength-results" class="space-y-4">
-                    <div class="flex items-center justify-center py-8">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
-                        <span class="ml-3 text-gray-600">Analyzing signal...</span>
+        <!-- Header Section -->
+        <main class="min-h-screen pt-16">
+            <!-- Hero Section -->
+            <section class="text-center py-16 px-4">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    📡 Signal Strength Meter
+                </h2>
+                <p class="text-xl text-white/90 mb-4">
+                    Test and analyze your network connection quality
+                </p>
+            </section>
+
+            <!-- Converter Card -->
+            <div class="max-w-4xl mx-auto px-4 pb-16">
+                <section class="converter-card bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-signal text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Connection Analyzer</h3>
+                        <p class="text-gray-600">Monitor your network signal strength and connection quality</p>
                     </div>
-                </div>
-                
-                <div class="mt-6">
-                    <button id="signal-refresh-btn" class="bg-gradient-to-r from-green-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
-                        <i class="fas fa-sync-alt mr-2"></i>Test Again
-                    </button>
-                </div>
+                    
+                    <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Connection Analysis</h3>
+                        <div id="signal-strength-results" class="space-y-4">
+                            <div class="flex items-center justify-center py-8">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+                                <span class="ml-3 text-gray-600">Analyzing signal...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <button id="signal-refresh-btn" class="bg-gradient-to-r from-green-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300">
+                                <i class="fas fa-sync-alt mr-2"></i>Test Again
+                            </button>
+                        </div>
+                    </div>
+                </section>
             </div>
-            
-            <div class="text-center">
-                <button onclick="window.emergencyShowSection ? emergencyShowSection('landing-section') : (window.showSection && showSection('landing-section'))" 
-                        class="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Tools
-                </button>
-            </div>
-        </div>
+        </main>
     </div>
 
     <!-- Footer -->
