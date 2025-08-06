@@ -5946,5 +5946,584 @@ function initSignalStrength() {
     console.log('✅ Signal Strength initialized successfully');
 }
 
+// PNG to JPG Converter (Template-based)
+class PNGtoJPGConverter {
+    constructor() {
+        this.dailyLimit = 999; // Unlimited in free mode
+        this.currentFiles = [];
+        this.processedCount = 0;
+        this.skippedCount = 0;
+        
+        this.initElements();
+        this.initEventListeners();
+        this.setupDragAndDrop();
+    }
+    
+    initElements() {
+        // UI Elements - using template structure from JPG to PNG
+        this.uploadArea = document.getElementById('png-upload-area');
+        this.fileInput = document.getElementById('png-input');
+        this.browseBtn = document.getElementById('png-browse-btn');
+        this.qualitySlider = document.getElementById('jpg-quality');
+        this.qualityValue = document.getElementById('quality-value');
+        
+        // Section Elements
+        this.progressSection = document.getElementById('png-progress-section');
+        this.resultsContainer = document.getElementById('png-results-container');
+        this.resultsList = document.getElementById('png-results-list');
+        
+        // Progress Elements
+        this.progressBar = document.getElementById('png-progress-bar');
+        this.progressText = document.getElementById('png-progress-text');
+        
+        // Button Elements
+        this.convertAnotherBtn = document.getElementById('png-convert-another');
+    }
+    
+    initEventListeners() {
+        if (!this.fileInput) return;
+        
+        // File input events
+        this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+        this.browseBtn?.addEventListener('click', () => this.fileInput.click());
+        
+        // Quality slider
+        if (this.qualitySlider && this.qualityValue) {
+            this.qualitySlider.addEventListener('input', (e) => {
+                this.qualityValue.textContent = e.target.value + '%';
+            });
+        }
+        
+        // Button events
+        this.convertAnotherBtn?.addEventListener('click', () => this.resetConverter());
+    }
+    
+    setupDragAndDrop() {
+        if (!this.uploadArea) return;
+        
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, this.preventDefaults, false);
+            document.body.addEventListener(eventName, this.preventDefaults, false);
+        });
+        
+        // Highlight drop area when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, () => this.highlight(), false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            this.uploadArea.addEventListener(eventName, () => this.unhighlight(), false);
+        });
+        
+        // Handle dropped files
+        this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+    }
+    
+    preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    highlight() {
+        this.uploadArea.classList.add('dragover');
+    }
+    
+    unhighlight() {
+        this.uploadArea.classList.remove('dragover');
+    }
+    
+    handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = Array.from(dt.files);
+        
+        if (files.length > 0) {
+            this.handleFiles(files);
+        }
+    }
+    
+    handleFileSelect(e) {
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            this.handleFiles(files);
+        }
+    }
+    
+    async handleFiles(files) {
+        // Filter valid PNG files
+        const validFiles = files.filter(file => this.validateFile(file, false));
+        
+        if (validFiles.length === 0) {
+            this.showNotification('No valid PNG files found. Please select PNG files.', 'error');
+            return;
+        }
+        
+        this.currentFiles = validFiles;
+        this.startBulkConversion();
+    }
+    
+    validateFile(file, showError = true) {
+        // Check file type for PNG
+        if (!file.type.match('image/png')) {
+            if (showError) {
+                this.showNotification('Please select a PNG file.', 'error');
+            }
+            return false;
+        }
+        
+        // Check file size (10MB limit)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+            if (showError) {
+                this.showNotification('File size must be less than 10MB.', 'error');
+            }
+            return false;
+        }
+        
+        return true;
+    }
+    
+    async startBulkConversion() {
+        // Hide upload area and show progress
+        this.uploadArea.parentElement.style.display = 'none';
+        this.progressSection.classList.remove('hidden');
+        
+        // Clear previous results
+        this.resultsList.innerHTML = '';
+        this.processedCount = 0;
+        
+        // Process each file
+        for (let i = 0; i < this.currentFiles.length; i++) {
+            const file = this.currentFiles[i];
+            
+            // Update progress for current file
+            this.updateBulkProgress(i + 1, this.currentFiles.length, file.name);
+            
+            // Convert the file
+            await this.convertSingleFile(file, i);
+            this.processedCount++;
+        }
+        
+        // Show completion message and results
+        this.showBulkResults();
+    }
+    
+    updateBulkProgress(current, total, fileName) {
+        const percentage = (current / total) * 100;
+        this.progressBar.style.width = `${percentage}%`;
+        this.progressText.textContent = `Converting ${current} of ${total}: ${fileName}`;
+    }
+    
+    async convertSingleFile(file, index) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas dimensions
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    
+                    // Enable high-quality rendering
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    
+                    // Draw image
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Get quality setting
+                    const quality = this.qualitySlider ? (this.qualitySlider.value / 100) : 0.9;
+                    
+                    // Convert to JPG
+                    canvas.toBlob((blob) => {
+                        // Create result card for this conversion
+                        this.createResultCard(file, e.target.result, blob, index);
+                        resolve();
+                    }, 'image/jpeg', quality);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    createResultCard(originalFile, originalDataUrl, convertedBlob, index) {
+        const resultCard = document.createElement('div');
+        resultCard.className = 'converter-card bg-white rounded-2xl shadow-2xl p-6 fade-in';
+        
+        const convertedUrl = URL.createObjectURL(convertedBlob);
+        const fileName = originalFile.name.replace(/\.png$/i, '.jpg');
+        
+        resultCard.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Original -->
+                <div class="text-center">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">Original PNG</h4>
+                    <div class="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <img src="${originalDataUrl}" class="max-w-full h-48 object-contain mx-auto rounded-lg">
+                        <div class="mt-3 text-sm text-gray-600">
+                            <p>Format: <span class="font-medium">PNG</span></p>
+                            <p>Size: <span class="font-medium">${this.formatFileSize(originalFile.size)}</span></p>
+                            <p>Name: <span class="font-medium">${originalFile.name}</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Converted -->
+                <div class="text-center">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">Converted JPG</h4>
+                    <div class="border-2 border-emerald-200 rounded-lg p-4 bg-emerald-50">
+                        <img src="${convertedUrl}" class="max-w-full h-48 object-contain mx-auto rounded-lg">
+                        <div class="mt-3 text-sm text-gray-600">
+                            <p>Format: <span class="font-medium text-emerald-600">JPG</span></p>
+                            <p>Size: <span class="font-medium">${this.formatFileSize(convertedBlob.size)}</span></p>
+                            <p>Name: <span class="font-medium">${fileName}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Download Button -->
+            <div class="text-center mt-6">
+                <button class="download-btn bg-gradient-to-r from-emerald-500 to-green-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105" data-blob-url="${convertedUrl}" data-filename="${fileName}">
+                    <i class="fas fa-download mr-2"></i>Download JPG
+                </button>
+            </div>
+        `;
+        
+        // Add download event listener
+        const downloadBtn = resultCard.querySelector('.download-btn');
+        downloadBtn.addEventListener('click', () => {
+            this.downloadFile(convertedUrl, fileName);
+        });
+        
+        // Append to results list
+        this.resultsList.appendChild(resultCard);
+    }
+    
+    showBulkResults() {
+        this.progressSection.classList.add('hidden');
+        this.resultsContainer.classList.remove('hidden');
+        
+        // Show summary message
+        const summaryText = `Successfully converted ${this.processedCount} PNG file${this.processedCount !== 1 ? 's' : ''} to JPG format!`;
+        this.showNotification(summaryText, 'success');
+    }
+    
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    downloadFile(url, filename) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        this.showNotification('Download started!', 'success');
+    }
+    
+    resetConverter() {
+        // Reset the converter state
+        this.currentFiles = [];
+        this.processedCount = 0;
+        this.skippedCount = 0;
+        
+        // Show upload area again
+        this.uploadArea.parentElement.style.display = 'block';
+        this.progressSection.classList.add('hidden');
+        this.resultsContainer.classList.add('hidden');
+        
+        // Reset file input
+        if (this.fileInput) {
+            this.fileInput.value = '';
+        }
+        
+        // Clear results
+        this.resultsList.innerHTML = '';
+        
+        // Reset progress
+        this.progressBar.style.width = '0%';
+        this.progressText.textContent = '';
+        
+        this.showNotification('Converter reset successfully!', 'success');
+    }
+    
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 transition-all duration-300 transform translate-x-full`;
+        
+        switch (type) {
+            case 'success':
+                notification.classList.add('bg-emerald-500');
+                break;
+            case 'error':
+                notification.classList.add('bg-red-500');
+                break;
+            case 'warning':
+                notification.classList.add('bg-yellow-500');
+                break;
+            default:
+                notification.classList.add('bg-cyan-500');
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    destroy() {
+        this.currentFiles = [];
+        this.processedCount = 0;
+        this.skippedCount = 0;
+    }
+}
+
+// BMI Calculator (Template-based)
+class BMICalculator {
+    constructor() {
+        this.initElements();
+        this.initEventListeners();
+    }
+    
+    initElements() {
+        this.heightInput = document.getElementById('bmi-height');
+        this.weightInput = document.getElementById('bmi-weight');
+        this.calculateBtn = document.getElementById('calculate-bmi');
+        this.resultsContainer = document.getElementById('bmi-results-container');
+        this.resultsList = document.getElementById('bmi-results-list');
+    }
+    
+    initEventListeners() {
+        if (!this.heightInput || !this.weightInput) return;
+        
+        // Input events for real-time calculation
+        this.heightInput.addEventListener('input', () => this.calculateBMI());
+        this.weightInput.addEventListener('input', () => this.calculateBMI());
+        
+        // Button click event
+        this.calculateBtn?.addEventListener('click', () => this.calculateBMI());
+        
+        // Enter key support
+        this.heightInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.calculateBMI();
+        });
+        this.weightInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.calculateBMI();
+        });
+    }
+    
+    calculateBMI() {
+        const height = parseFloat(this.heightInput.value);
+        const weight = parseFloat(this.weightInput.value);
+        
+        // Clear previous results if inputs are empty
+        if (!height || !weight) {
+            this.resultsContainer.classList.add('hidden');
+            return;
+        }
+        
+        // Validate inputs
+        if (height <= 0 || weight <= 0) {
+            this.showNotification('Please enter valid height and weight values', 'error');
+            return;
+        }
+        
+        if (height > 300 || weight > 1000) {
+            this.showNotification('Please enter realistic height and weight values', 'warning');
+            return;
+        }
+        
+        // Convert height from cm to meters
+        const heightInMeters = height / 100;
+        
+        // Calculate BMI
+        const bmi = weight / (heightInMeters * heightInMeters);
+        
+        // Determine BMI category and recommendations
+        const { category, color, recommendation } = this.getBMICategory(bmi);
+        
+        // Display results
+        this.displayResults(height, weight, bmi, category, color, recommendation);
+    }
+    
+    getBMICategory(bmi) {
+        if (bmi < 18.5) {
+            return {
+                category: 'Underweight',
+                color: 'text-blue-600',
+                recommendation: 'Consider consulting with a healthcare provider about healthy weight gain strategies. Focus on nutrient-dense foods and strength training.'
+            };
+        } else if (bmi >= 18.5 && bmi < 25) {
+            return {
+                category: 'Normal weight',
+                color: 'text-green-600',
+                recommendation: 'Great! You have a healthy weight. Maintain your current lifestyle with regular exercise and a balanced diet.'
+            };
+        } else if (bmi >= 25 && bmi < 30) {
+            return {
+                category: 'Overweight',
+                color: 'text-yellow-600',
+                recommendation: 'Consider a balanced approach to weight management with regular physical activity and a healthy diet. Consult a healthcare provider for personalized advice.'
+            };
+        } else {
+            return {
+                category: 'Obese',
+                color: 'text-red-600',
+                recommendation: 'It\'s recommended to consult with a healthcare provider for a comprehensive weight management plan that includes diet, exercise, and possibly medical support.'
+            };
+        }
+    }
+    
+    displayResults(height, weight, bmi, category, color, recommendation) {
+        // Show results container
+        this.resultsContainer.classList.remove('hidden');
+        
+        // Create results card
+        const resultCard = document.createElement('div');
+        resultCard.className = 'converter-card bg-white rounded-2xl shadow-2xl p-6 fade-in';
+        
+        resultCard.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Input Summary -->
+                <div class="text-center">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">Your Inputs</h4>
+                    <div class="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-sm text-gray-600">Height</p>
+                                <p class="text-xl font-bold text-gray-800">${height} cm</p>
+                                <p class="text-sm text-gray-500">${(height / 100).toFixed(2)} meters</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Weight</p>
+                                <p class="text-xl font-bold text-gray-800">${weight} kg</p>
+                                <p class="text-sm text-gray-500">${(weight * 2.20462).toFixed(1)} lbs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- BMI Result -->
+                <div class="text-center">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">BMI Result</h4>
+                    <div class="border-2 border-emerald-200 rounded-lg p-4 bg-emerald-50">
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-sm text-gray-600">Body Mass Index</p>
+                                <p class="text-3xl font-bold text-emerald-600">${bmi.toFixed(1)}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Category</p>
+                                <p class="text-xl font-bold ${color}">${category}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BMI Categories Reference -->
+            <div class="mt-6">
+                <h5 class="text-lg font-semibold text-gray-800 mb-4">BMI Categories</h5>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="p-3 rounded-lg ${bmi < 18.5 ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-blue-600">Underweight</div>
+                        <div class="text-gray-600">&lt; 18.5</div>
+                    </div>
+                    <div class="p-3 rounded-lg ${bmi >= 18.5 && bmi < 25 ? 'bg-green-100 border-2 border-green-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-green-600">Normal</div>
+                        <div class="text-gray-600">18.5 - 24.9</div>
+                    </div>
+                    <div class="p-3 rounded-lg ${bmi >= 25 && bmi < 30 ? 'bg-yellow-100 border-2 border-yellow-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-yellow-600">Overweight</div>
+                        <div class="text-gray-600">25 - 29.9</div>
+                    </div>
+                    <div class="p-3 rounded-lg ${bmi >= 30 ? 'bg-red-100 border-2 border-red-500' : 'bg-gray-50'}">
+                        <div class="font-semibold text-red-600">Obese</div>
+                        <div class="text-gray-600">&gt;= 30</div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mt-4">
+                    <h5 class="font-semibold text-gray-800 mb-2">Recommendation:</h5>
+                    <p class="text-gray-700 text-sm">${recommendation}</p>
+                </div>
+            </div>
+        `;
+        
+        // Clear previous results and add new one
+        this.resultsList.innerHTML = '';
+        this.resultsList.appendChild(resultCard);
+        
+        // Show success notification
+        this.showNotification(`BMI calculated: ${bmi.toFixed(1)} (${category})`, 'success');
+    }
+    
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 transition-all duration-300 transform translate-x-full`;
+        
+        switch (type) {
+            case 'success':
+                notification.classList.add('bg-emerald-500');
+                break;
+            case 'error':
+                notification.classList.add('bg-red-500');
+                break;
+            case 'warning':
+                notification.classList.add('bg-yellow-500');
+                break;
+            default:
+                notification.classList.add('bg-cyan-500');
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    destroy() {
+        // Clean up
+    }
+}
+
 console.log('✅ Tools.js loaded and ready');
 console.log("✅ Tools.js loaded and ready");

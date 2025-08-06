@@ -1,0 +1,248 @@
+# 🚨 STEP 1: BACKUP COMPONENTS
+cp -r ~/workspace/tools/png-to-jpg ~/workspace/tools/_backup_png-to-jpg-final_aug06
+cp -r ~/workspace/tools/bmi-calculator ~/workspace/tools/_backup_bmi-final_aug06
+
+# ✅ STEP 2: PNG TO JPG HTML
+echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PNG to JPG Converter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tool-container">
+    <h2>Conversion Results</h2>
+    <p>Your converted images are ready for download</p>
+
+    <div class="preview-wrapper">
+      <div class="preview-box">
+        <h3>Original PNG</h3>
+        <img id="original-img" src="" alt="Original PNG" />
+        <p><strong>Format:</strong> PNG</p>
+        <p id="png-size"></p>
+        <p id="png-name"></p>
+      </div>
+
+      <div class="preview-box converted">
+        <h3>Converted JPG</h3>
+        <img id="converted-img" src="" alt="Converted JPG" />
+        <p><strong>Format:</strong> JPG</p>
+        <p id="jpg-size"></p>
+        <p id="jpg-name"></p>
+      </div>
+    </div>
+
+    <input type="file" id="upload" accept="image/png" />
+    <button id="downloadBtn" disabled>⬇️ Download JPG</button>
+    <button id="resetBtn">+ Convert More Files</button>
+
+    <div class="disclaimer">
+      <p><strong>Disclaimer:</strong> This tool is for informational purposes only. ConvertWiz does not guarantee accuracy for official/legal use.</p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>' > tools/png-to-jpg/index.html
+
+# ✅ PNG TO JPG SCRIPT
+echo '(function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    const upload = document.getElementById("upload");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let jpgData = "";
+
+    upload.addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file || file.type !== "image/png") {
+        alert("Please upload a valid PNG image.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          jpgData = canvas.toDataURL("image/jpeg", 0.9);
+
+          document.getElementById("original-img").src = e.target.result;
+          document.getElementById("converted-img").src = jpgData;
+
+          document.getElementById("png-size").innerText = "Size: " + (file.size / 1024 / 1024).toFixed(2) + " MB";
+          document.getElementById("jpg-size").innerText = "Size: ~" + (jpgData.length * 0.75 / 1024 / 1024).toFixed(2) + " MB";
+
+          document.getElementById("png-name").innerText = "Name: " + file.name;
+          document.getElementById("jpg-name").innerText = "Name: " + file.name.replace(/\.png$/i, ".jpg");
+
+          downloadBtn.disabled = false;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    downloadBtn.addEventListener("click", function () {
+      const a = document.createElement("a");
+      a.href = jpgData;
+      a.download = "converted.jpg";
+      a.click();
+    });
+
+    resetBtn.addEventListener("click", function () {
+      location.reload();
+    });
+  });
+})();' > tools/png-to-jpg/script.js
+
+# ✅ PNG TO JPG STYLE
+echo '.tool-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(to bottom right, #e2b2fd, #d6bbf7);
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.preview-wrapper {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.preview-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 42%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+.preview-box.converted {
+  background: #eafdee;
+  border: 2px solid #b6f3c9;
+}
+
+.preview-box img {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+button {
+  margin: 10px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#downloadBtn {
+  background-color: #00c853;
+  color: white;
+}
+
+#resetBtn {
+  background-color: #ae47f3;
+  color: white;
+}
+
+.disclaimer {
+  margin-top: 30px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}' > tools/png-to-jpg/style.css
+
+# ✅ STEP 3: BMI CALCULATOR WITH FORMATTED OUTPUT
+echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BMI Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="tool-container">
+    <h2>Body Mass Index (BMI) Calculator</h2>
+    <p>Enter your height and weight to calculate your BMI</p>
+
+    <input type="number" id="height" placeholder="Height in cm" />
+    <input type="number" id="weight" placeholder="Weight in kg" />
+    <button onclick="calculateBMI()">Calculate</button>
+
+    <div class="preview-wrapper">
+      <div class="preview-box">
+        <h3>Your Inputs</h3>
+        <p id="input-height"></p>
+        <p id="input-weight"></p>
+      </div>
+      <div class="preview-box converted">
+        <h3>Result</h3>
+        <p id="bmi-value"></p>
+        <p id="bmi-status"></p>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <p><strong>Disclaimer:</strong> This tool is for health guidance only and not a substitute for professional advice.</p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>' > tools/bmi-calculator/index.html
+
+# ✅ BMI SCRIPT
+echo 'function calculateBMI() {
+  const h = parseFloat(document.getElementById("height").value) / 100;
+  const w = parseFloat(document.getElementById("weight").value);
+  const bmiValue = document.getElementById("bmi-value");
+  const bmiStatus = document.getElementById("bmi-status");
+
+  if (!h || !w || h <= 0 || w <= 0) {
+    bmiValue.innerText = "❗ Enter valid height and weight.";
+    bmiStatus.innerText = "";
+    return;
+  }
+
+  const bmi = w / (h * h);
+  let status = "";
+  let color = "";
+
+  if (bmi < 18.5) {
+    status = "Underweight";
+    color = "orange";
+  } else if (bmi < 24.9) {
+    status = "Normal";
+    color = "green";
+  } else if (bmi < 29.9) {
+    status = "Overweight";
+    color = "orange";
+  } else {
+    status = "Obese";
+    color = "red";
+  }
+
+  document.getElementById("input-height").innerText = "Height: " + (h * 100).toFixed(0) + " cm";
+  document.getElementById("input-weight").innerText = "Weight: " + w.toFixed(1) + " kg";
+
+  bmiValue.innerHTML = `BMI: <strong>${bmi.toFixed(1)}</strong>`;
+  bmiStatus.innerHTML = `Status: <span style="color:${color}; font-weight:bold">${status}</span>`;
+}' > tools/bmi-calculator/script.js
+
+# ✅ BMI STYLE (reuses the same layout)
+cp tools/png-to-jpg/style.css tools/bmi-calculator/style.css

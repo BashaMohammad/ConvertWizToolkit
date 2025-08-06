@@ -279,8 +279,10 @@ function initializeTool(sectionId) {
                 break;
             // NEW UTILITY TOOLS
             case 'bmi-calculator-section':
-                // BMI Calculator functionality is included in tools.js
-                if (typeof initBmiCalculator !== 'undefined') {
+                // BMI Calculator functionality using new class
+                if (typeof BMICalculator !== 'undefined') {
+                    window.bmiCalculator = new BMICalculator();
+                } else if (typeof initBmiCalculator !== 'undefined') {
                     initBmiCalculator();
                 } else if (typeof initializeBMICalculator !== 'undefined') {
                     initializeBMICalculator();
@@ -295,8 +297,10 @@ function initializeTool(sectionId) {
                 }
                 break;
             case 'png-to-jpg-section':
-                // PNG to JPG Converter functionality is included in tools.js
-                if (typeof initializePNGtoJPGConverter !== 'undefined') {
+                // PNG to JPG Converter functionality using new class
+                if (typeof PNGtoJPGConverter !== 'undefined') {
+                    window.pngToJpgConverter = new PNGtoJPGConverter();
+                } else if (typeof initializePNGtoJPGConverter !== 'undefined') {
                     initializePNGtoJPGConverter();
                 }
                 break;
