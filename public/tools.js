@@ -5588,49 +5588,86 @@ function initWifiScanner() {
         return;
     }
     
-    function scanWifiInfo() {
-        if ("connection" in navigator && navigator.connection) {
-            const connection = navigator.connection;
-            const effectiveType = connection.effectiveType || 'unknown';
-            const saveData = connection.saveData;
-            const downlink = connection.downlink || 'unknown';
-            const rtt = connection.rtt || 'unknown';
-            
+    async function scanWifiInfo() {
+        resultsDiv.innerHTML = `
+            <div class="flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500"></div>
+                <span class="ml-3 text-gray-600">Loading WiFi details...</span>
+            </div>
+        `;
+
+        try {
+            // Get public IP
+            const ip = await fetch("https://api.ipify.org?format=json")
+                .then(res => res.json())
+                .then(d => d.ip)
+                .catch(() => "Unavailable");
+
+            // Get connection info
+            const connection = navigator.connection || {};
+            const type = connection.effectiveType || "Unknown";
+            const saveData = connection.saveData ? "Enabled" : "Disabled";
+            const downlink = connection.downlink || "Unknown";
+            const rtt = connection.rtt || "Unknown";
+
+            // Test latency to Google
+            const latencyStart = performance.now();
+            await fetch("https://www.google.com", { mode: "no-cors" }).catch(() => {});
+            const latency = Math.round(performance.now() - latencyStart);
+
             resultsDiv.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-globe text-blue-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Public IP</h4>
+                        </div>
+                        <p class="text-2xl font-bold text-blue-600">${ip}</p>
+                        <p class="text-sm text-gray-600 mt-1">Your external IP address</p>
+                    </div>
+                    
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
                         <div class="flex items-center mb-3">
                             <i class="fas fa-wifi text-cyan-500 text-xl mr-3"></i>
                             <h4 class="font-semibold text-gray-800">Network Type</h4>
                         </div>
-                        <p class="text-2xl font-bold text-cyan-600">${effectiveType.toUpperCase()}</p>
+                        <p class="text-2xl font-bold text-cyan-600">${type.toUpperCase()}</p>
                         <p class="text-sm text-gray-600 mt-1">Connection speed classification</p>
                     </div>
                     
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
                         <div class="flex items-center mb-3">
                             <i class="fas fa-database text-purple-500 text-xl mr-3"></i>
-                            <h4 class="font-semibold text-gray-800">Data Saver</h4>
+                            <h4 class="font-semibold text-gray-800">Data Saver Mode</h4>
                         </div>
-                        <p class="text-2xl font-bold ${saveData ? 'text-green-600' : 'text-gray-600'}">${saveData ? 'ENABLED' : 'DISABLED'}</p>
+                        <p class="text-2xl font-bold ${saveData === 'Enabled' ? 'text-green-600' : 'text-gray-600'}">${saveData}</p>
                         <p class="text-sm text-gray-600 mt-1">Bandwidth optimization</p>
                     </div>
                     
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
                         <div class="flex items-center mb-3">
-                            <i class="fas fa-tachometer-alt text-blue-500 text-xl mr-3"></i>
-                            <h4 class="font-semibold text-gray-800">Bandwidth</h4>
+                            <i class="fas fa-clock text-orange-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Latency to Google</h4>
                         </div>
-                        <p class="text-2xl font-bold text-blue-600">${downlink === 'unknown' ? 'N/A' : downlink + ' Mbps'}</p>
-                        <p class="text-sm text-gray-600 mt-1">Estimated speed</p>
+                        <p class="text-2xl font-bold text-orange-600">${latency} ms</p>
+                        <p class="text-sm text-gray-600 mt-1">Real-time ping test</p>
                     </div>
                     
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
                         <div class="flex items-center mb-3">
-                            <i class="fas fa-clock text-orange-500 text-xl mr-3"></i>
-                            <h4 class="font-semibold text-gray-800">Latency</h4>
+                            <i class="fas fa-tachometer-alt text-green-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Estimated Bandwidth</h4>
                         </div>
-                        <p class="text-2xl font-bold text-orange-600">${rtt === 'unknown' ? 'N/A' : rtt + ' ms'}</p>
+                        <p class="text-2xl font-bold text-green-600">${downlink === 'Unknown' ? 'N/A' : downlink + ' Mbps'}</p>
+                        <p class="text-sm text-gray-600 mt-1">Browser reported speed</p>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-stopwatch text-red-500 text-xl mr-3"></i>
+                            <h4 class="font-semibold text-gray-800">Network RTT</h4>
+                        </div>
+                        <p class="text-2xl font-bold text-red-600">${rtt === 'Unknown' ? 'N/A' : rtt + ' ms'}</p>
                         <p class="text-sm text-gray-600 mt-1">Round trip time</p>
                     </div>
                 </div>
@@ -5639,32 +5676,65 @@ function initWifiScanner() {
                     <div class="flex items-start">
                         <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
                         <div>
-                            <h5 class="font-semibold text-blue-800 mb-1">Network Information</h5>
+                            <h5 class="font-semibold text-blue-800 mb-1">Advanced WiFi Analysis</h5>
                             <p class="text-blue-700 text-sm">
-                                This data is provided by your browser's Network Information API. 
-                                Results may vary based on your device and browser support.
+                                Complete network scan including public IP detection, real-time latency testing, and connection analysis.
                             </p>
                         </div>
                     </div>
                 </div>
             `;
-        } else {
+
+            // Test download speed
+            simulateDownloadSpeed();
+
+        } catch (error) {
             resultsDiv.innerHTML = `
                 <div class="text-center py-8">
                     <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>
-                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Network API Not Supported</h4>
-                    <p class="text-gray-600 mb-4">Your browser doesn't support the Network Information API.</p>
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left">
-                        <h5 class="font-semibold text-yellow-800 mb-2">Supported Browsers:</h5>
-                        <ul class="text-yellow-700 text-sm space-y-1">
-                            <li>• Chrome on Android</li>
-                            <li>• Samsung Internet</li>
-                            <li>• Opera on Android</li>
-                        </ul>
-                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Scan Failed</h4>
+                    <p class="text-gray-600">Unable to gather network information. Please check your connection and try again.</p>
                 </div>
             `;
         }
+    }
+
+    function simulateDownloadSpeed() {
+        const start = new Date().getTime();
+        fetch("https://via.placeholder.com/300x300.png", { cache: "no-store" })
+            .then(() => {
+                const duration = new Date().getTime() - start;
+                const bitsLoaded = 300 * 300 * 24;
+                const speedMbps = (bitsLoaded / duration / 1000).toFixed(2);
+                
+                const speedTestDiv = document.createElement('div');
+                speedTestDiv.className = 'mt-4 bg-green-50 border border-green-200 rounded-lg p-4';
+                speedTestDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-download text-green-500 text-xl mr-3"></i>
+                        <div>
+                            <h5 class="font-semibold text-green-800">Download Speed Test</h5>
+                            <p class="text-green-700"><strong>Measured Speed:</strong> ${speedMbps} Mbps</p>
+                            <p class="text-sm text-green-600">Based on 300KB image download test</p>
+                        </div>
+                    </div>
+                `;
+                resultsDiv.appendChild(speedTestDiv);
+            })
+            .catch(() => {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'mt-4 bg-red-50 border border-red-200 rounded-lg p-4';
+                errorDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                        <div>
+                            <h5 class="font-semibold text-red-800">Speed Test Failed</h5>
+                            <p class="text-red-700">Unable to perform download speed test</p>
+                        </div>
+                    </div>
+                `;
+                resultsDiv.appendChild(errorDiv);
+            });
     }
     
     // Initial scan
@@ -5691,81 +5761,142 @@ function initSignalStrength() {
     }
     
     function testSignalStrength() {
-        if ("connection" in navigator && navigator.connection) {
-            const connection = navigator.connection;
-            const downlink = connection.downlink;
-            const effectiveType = connection.effectiveType || 'unknown';
-            const rtt = connection.rtt;
-            
-            // Calculate signal quality based on metrics
-            let signalQuality = 'Unknown';
-            let qualityColor = 'text-gray-600';
-            let qualityIcon = 'fas fa-question-circle';
-            
-            if (downlink && rtt) {
-                if (downlink >= 5 && rtt <= 100) {
-                    signalQuality = 'Excellent';
-                    qualityColor = 'text-green-600';
-                    qualityIcon = 'fas fa-signal';
-                } else if (downlink >= 1.5 && rtt <= 300) {
-                    signalQuality = 'Good';
-                    qualityColor = 'text-blue-600';
-                    qualityIcon = 'fas fa-signal';
-                } else if (downlink >= 0.5 && rtt <= 500) {
-                    signalQuality = 'Fair';
-                    qualityColor = 'text-yellow-600';
-                    qualityIcon = 'fas fa-signal';
-                } else {
-                    signalQuality = 'Poor';
-                    qualityColor = 'text-red-600';
-                    qualityIcon = 'fas fa-signal';
-                }
-            }
-            
+        resultsDiv.innerHTML = `
+            <div class="flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+                <span class="ml-3 text-gray-600">Analyzing signal...</span>
+            </div>
+        `;
+
+        if (!navigator.onLine) {
             resultsDiv.innerHTML = `
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-green-100 to-blue-100 rounded-full mb-4">
-                        <i class="${qualityIcon} ${qualityColor} text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold ${qualityColor}">${signalQuality}</h3>
-                    <p class="text-gray-600">Overall Signal Quality</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                        <i class="fas fa-download text-green-500 text-2xl mb-3"></i>
-                        <h4 class="font-semibold text-gray-800 mb-2">Download Speed</h4>
-                        <p class="text-xl font-bold text-green-600">${downlink || 'N/A'} ${downlink ? 'Mbps' : ''}</p>
-                    </div>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                        <i class="fas fa-network-wired text-blue-500 text-2xl mb-3"></i>
-                        <h4 class="font-semibold text-gray-800 mb-2">Connection Type</h4>
-                        <p class="text-xl font-bold text-blue-600">${effectiveType.toUpperCase()}</p>
-                    </div>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                        <i class="fas fa-stopwatch text-orange-500 text-2xl mb-3"></i>
-                        <h4 class="font-semibold text-gray-800 mb-2">Latency</h4>
-                        <p class="text-xl font-bold text-orange-600">${rtt || 'N/A'} ${rtt ? 'ms' : ''}</p>
-                    </div>
-                </div>
-                
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <h5 class="font-semibold text-gray-800 mb-3">Signal Analysis</h5>
-                    <div class="space-y-2 text-sm">
-                        ${downlink >= 5 ? 
-                            '<div class="flex items-center text-green-700"><i class="fas fa-check-circle mr-2"></i>Fast download speeds detected</div>' : 
-                            '<div class="flex items-center text-yellow-700"><i class="fas fa-exclamation-triangle mr-2"></i>Moderate download speeds</div>'
-                        }
-                        ${rtt <= 100 ? 
-                            '<div class="flex items-center text-green-700"><i class="fas fa-check-circle mr-2"></i>Low latency connection</div>' : 
-                            '<div class="flex items-center text-yellow-700"><i class="fas fa-exclamation-triangle mr-2"></i>Higher latency detected</div>'
-                        }
-                        <div class="flex items-center text-blue-700"><i class="fas fa-info-circle mr-2"></i>Connection type: ${effectiveType.toUpperCase()}</div>
-                    </div>
+                <div class="text-center py-8">
+                    <i class="fas fa-wifi-slash text-red-500 text-4xl mb-4"></i>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">You are currently offline</h4>
+                    <p class="text-gray-600">Please check your internet connection and try again.</p>
                 </div>
             `;
+            return;
+        }
+
+        const conn = navigator.connection || {};
+        const downlink = conn.downlink || 0;
+        const rtt = conn.rtt || "Unknown";
+        const type = conn.effectiveType || "Unknown";
+
+        // Generate signal bars based on downlink speed
+        let bars = "📶".repeat(Math.min(Math.ceil(downlink), 5));
+        if (!bars) bars = "🚫 No signal";
+
+        // Calculate signal quality based on metrics
+        let signalQuality = 'Unknown';
+        let qualityColor = 'text-gray-600';
+        let qualityIcon = 'fas fa-question-circle';
+        
+        if (downlink && rtt !== "Unknown") {
+            if (downlink >= 5 && rtt <= 100) {
+                signalQuality = 'Excellent';
+                qualityColor = 'text-green-600';
+                qualityIcon = 'fas fa-signal';
+            } else if (downlink >= 1.5 && rtt <= 300) {
+                signalQuality = 'Good';
+                qualityColor = 'text-blue-600';
+                qualityIcon = 'fas fa-signal';
+            } else if (downlink >= 0.5 && rtt <= 500) {
+                signalQuality = 'Fair';
+                qualityColor = 'text-yellow-600';
+                qualityIcon = 'fas fa-signal';
+            } else {
+                signalQuality = 'Poor';
+                qualityColor = 'text-red-600';
+                qualityIcon = 'fas fa-signal';
+            }
+        }
+            
+            resultsDiv.innerHTML = `
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-green-100 to-blue-100 rounded-full mb-4">
+                    <i class="${qualityIcon} ${qualityColor} text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold ${qualityColor}">${signalQuality}</h3>
+                <p class="text-gray-600">Overall Signal Quality</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-signal text-green-500 text-xl mr-3"></i>
+                        <h4 class="font-semibold text-gray-800">Signal Bars</h4>
+                    </div>
+                    <p class="text-2xl font-bold text-green-600">${bars}</p>
+                    <p class="text-sm text-gray-600 mt-1">Visual signal indicator</p>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-network-wired text-blue-500 text-xl mr-3"></i>
+                        <h4 class="font-semibold text-gray-800">Connection Type</h4>
+                    </div>
+                    <p class="text-2xl font-bold text-blue-600">${type.toUpperCase()}</p>
+                    <p class="text-sm text-gray-600 mt-1">Network technology</p>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-download text-green-500 text-xl mr-3"></i>
+                        <h4 class="font-semibold text-gray-800">Estimated Bandwidth</h4>
+                    </div>
+                    <p class="text-2xl font-bold text-green-600">${downlink} Mbps</p>
+                    <p class="text-sm text-gray-600 mt-1">Download speed estimate</p>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-stopwatch text-orange-500 text-xl mr-3"></i>
+                        <h4 class="font-semibold text-gray-800">Latency</h4>
+                    </div>
+                    <p class="text-2xl font-bold text-orange-600">${rtt} ms</p>
+                    <p class="text-sm text-gray-600 mt-1">Response time</p>
+                </div>
+            </div>
+            
+            <div id="battery-info" class="mb-6"></div>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                    <div>
+                        <h5 class="font-semibold text-blue-800 mb-1">Enhanced Signal Analysis</h5>
+                        <p class="text-blue-700 text-sm">
+                            Real-time signal strength monitoring with battery status and connection quality metrics.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add battery information if available
+        if (navigator.getBattery) {
+            navigator.getBattery().then(battery => {
+                const batteryLevel = (battery.level * 100).toFixed(0);
+                const chargingStatus = battery.charging ? "🔌 Charging" : "🔋";
+                const batteryDiv = document.getElementById('battery-info');
+                if (batteryDiv) {
+                    batteryDiv.innerHTML = `
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-battery-${battery.level > 0.75 ? 'full' : battery.level > 0.5 ? 'three-quarters' : battery.level > 0.25 ? 'half' : 'quarter'} text-purple-500 text-xl mr-3"></i>
+                                <h4 class="font-semibold text-gray-800">Battery Status</h4>
+                            </div>
+                            <p class="text-2xl font-bold text-purple-600">${batteryLevel}% ${chargingStatus}</p>
+                            <p class="text-sm text-gray-600 mt-1">Device power level</p>
+                        </div>
+                    `;
+                }
+            }).catch(() => {
+                // Battery API not supported, no worries
+            });
+        }
         } else {
             resultsDiv.innerHTML = `
                 <div class="text-center py-8">
@@ -5792,6 +5923,12 @@ function initSignalStrength() {
     if (refreshBtn) {
         refreshBtn.addEventListener('click', testSignalStrength);
     }
+
+    // Auto-refresh every 10 seconds
+    setInterval(testSignalStrength, 10000);
+
+    // Auto-refresh every 10 seconds
+    setInterval(testSignalStrength, 10000);
     
     console.log('✅ Signal Strength initialized successfully');
 }

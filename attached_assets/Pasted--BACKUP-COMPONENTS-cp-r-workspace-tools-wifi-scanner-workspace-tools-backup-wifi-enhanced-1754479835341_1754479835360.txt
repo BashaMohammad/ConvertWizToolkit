@@ -1,0 +1,134 @@
+# 🚨 BACKUP COMPONENTS
+cp -r ~/workspace/tools/wifi-scanner ~/workspace/tools/_backup_wifi-enhanced_aug06
+cp -r ~/workspace/tools/signal-scanner ~/workspace/tools/_backup_signal-enhanced_aug06
+
+# ✅ ENHANCE WIFI SCANNER – tools/wifi-scanner/script.js
+echo '(function () {
+  async function loadWifiInfo() {
+    const output = document.getElementById("wifi-info");
+    output.innerHTML = "<p>Loading WiFi details...</p>";
+
+    const ip = await fetch("https://api.ipify.org?format=json").then(res => res.json()).then(d => d.ip).catch(() => "Unavailable");
+    const connection = navigator.connection || {};
+    const type = connection.effectiveType || "Unknown";
+    const saveData = connection.saveData ? "Enabled" : "Disabled";
+
+    const latencyStart = performance.now();
+    await fetch("https://www.google.com", { mode: "no-cors" }).catch(() => {});
+    const latency = Math.round(performance.now() - latencyStart);
+
+    output.innerHTML = `
+      <p><strong>Public IP:</strong> ${ip}</p>
+      <p><strong>Network Type:</strong> ${type.toUpperCase()}</p>
+      <p><strong>Data Saver Mode:</strong> ${saveData}</p>
+      <p><strong>Latency to Google:</strong> ${latency} ms</p>
+    `;
+
+    simulateDownloadSpeed();
+  }
+
+  function simulateDownloadSpeed() {
+    const start = new Date().getTime();
+    fetch("https://via.placeholder.com/300x300.png", { cache: "no-store" })
+      .then(() => {
+        const duration = new Date().getTime() - start;
+        const bitsLoaded = 300 * 300 * 24;
+        const speedMbps = (bitsLoaded / duration / 1000).toFixed(2);
+        document.getElementById("wifi-info").innerHTML += `<p><strong>Approx. Download Speed:</strong> ${speedMbps} Mbps</p>`;
+      }).catch(() => {
+        document.getElementById("wifi-info").innerHTML += `<p>Speed test failed.</p>`;
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", loadWifiInfo);
+})();' > tools/wifi-scanner/script.js
+
+# ✅ ENHANCE SIGNAL STRENGTH – tools/signal-scanner/script.js
+echo '(function () {
+  function updateSignalInfo() {
+    const output = document.getElementById("signal-strength");
+
+    if (!navigator.onLine) {
+      output.innerHTML = "<p>🚫 You are currently offline.</p>";
+      return;
+    }
+
+    const conn = navigator.connection || {};
+    const downlink = conn.downlink || 0;
+    const rtt = conn.rtt || "Unknown";
+    const type = conn.effectiveType || "Unknown";
+
+    let bars = "📶".repeat(Math.min(Math.ceil(downlink), 5));
+    if (!bars) bars = "🚫 No signal";
+
+    output.innerHTML = `
+      <p><strong>Signal Bars:</strong> ${bars}</p>
+      <p><strong>Connection Type:</strong> ${type.toUpperCase()}</p>
+      <p><strong>Estimated Bandwidth:</strong> ${downlink} Mbps</p>
+      <p><strong>Latency:</strong> ${rtt} ms</p>
+    `;
+
+    if (navigator.getBattery) {
+      navigator.getBattery().then(battery => {
+        output.innerHTML += `
+          <p><strong>Battery:</strong> ${(battery.level * 100).toFixed(0)}% ${battery.charging ? "🔌 Charging" : "🔋"}</p>
+        `;
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    updateSignalInfo();
+    setInterval(updateSignalInfo, 10000);
+  });
+})();' > tools/signal-scanner/script.js
+
+# ✅ ADD CONTACT PAGE
+mkdir -p tools/contact
+echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us - ConvertWiz</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="tool-container">
+    <h1>Contact Us</h1>
+    <p>Have questions or need support? Reach out below.</p>
+    <form action="mailto:support@convertwiz.in" method="POST" enctype="text/plain">
+      <label>Name:</label><br />
+      <input type="text" name="name" required /><br />
+      <label>Email:</label><br />
+      <input type="email" name="email" required /><br />
+      <label>Message:</label><br />
+      <textarea name="message" rows="5" required></textarea><br />
+      <button type="submit">Send Message</button>
+    </form>
+    <p>You can also reach us at <strong>support@convertwiz.in</strong></p>
+  </div>
+</body>
+</html>' > tools/contact/index.html
+
+echo '.tool-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+
+.tool-container input,
+.tool-container textarea,
+.tool-container button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  font-size: 16px;
+}' > tools/contact/style.css
+
+# ✅ ADD ROUTE FOR CONTACT PAGE
+# File: router.js or route config
+{
+  path: '/tools/contact',
+  component: () => import('../tools/contact/index.html')
+}
