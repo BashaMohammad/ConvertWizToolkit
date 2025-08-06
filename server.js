@@ -42,7 +42,8 @@ const productionRoutes = [
   '/word-counter', '/distance-converter', '/weight-converter', '/height-converter',
   '/ip-extractor', '/qr-generator', '/percentage-calculator', '/temperature-converter',
   '/color-converter', '/image-compressor', '/text-to-speech', '/url-shortener',
-  '/backlink-checker', '/meta-tag-generator', '/dpi-checker', '/global-land-units'
+  '/backlink-checker', '/meta-tag-generator', '/dpi-checker', '/global-land-units',
+  '/wifi-scanner', '/signal-strength'
 ];
 
 // Saturday release routes - blocked until Saturday

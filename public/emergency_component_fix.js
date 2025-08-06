@@ -125,6 +125,8 @@ function showSectionById(sectionId) {
             'global-land-units-section': '/global-land-units',
             'png-to-jpg-section': '/png-to-jpg',
             'text-case-converter-section': '/text-case-converter',
+            'wifi-scanner-section': '/wifi-scanner',
+            'signal-strength-section': '/signal-strength',
             'landing-section': '/'
         };
         
