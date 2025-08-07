@@ -5,7 +5,6 @@ console.log('🔒 CLEAN PRODUCTION LOCK: Starting Saturday component disabling')
 
 // Saturday components to disable (visible but not accessible)
 const CLEAN_SATURDAY_COMPONENTS = [
-    'bmi-calculator-section',
     'pdf-to-word-section',
     'pdf-to-excel-section',
     'pdf-split-section',
@@ -49,7 +48,6 @@ function disableSaturdayCards() {
     allCards.forEach(card => {
         const cardText = card.textContent.toLowerCase();
         const saturdayKeywords = [
-            'bmi calculator', 
             'pdf to word', 'pdf to excel', 'pdf split', 'pdf merge'
         ];
         

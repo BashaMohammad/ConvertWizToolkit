@@ -1,32 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF to Word Converter - ConvertWiz</title>
-    <meta name="description" content="Free PDF to Word Converter tool by ConvertWiz">
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="bg-gray-50">
-    <div class="tool-container">
-        <header class="tool-header">
-            <a href="/" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to ConvertWiz
-            </a>
-            <h1>PDF to Word Converter</h1>
-        </header>
-        
-        <div class="tool-content" id="tool-content">
-            <!-- Tool-specific content will be loaded here -->
-            <div class="loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                Loading PDF to Word Converter...
-            </div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>
+<html><head><title>PDF to Word</title><link rel="stylesheet" href="style.css" /></head>
+<body><div class="tool-container">
+<h2>PDF to Word</h2><input type="file" id="upload" accept=".pdf" />
+<button id="convertBtn">Convert & Download DOCX</button>
+<div class="preview-output" id="result"></div></div>
+<script src="script.js"></script></body></html>
