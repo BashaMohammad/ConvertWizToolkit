@@ -4006,30 +4006,62 @@ function convertCase(caseType) {
 function copyOutputText() {
     const outputText = document.getElementById('case-output-text');
     
-    if (!outputText.value.trim()) {
+    if (!outputText || !outputText.value.trim()) {
         alert('No text to copy. Please convert some text first.');
         return;
     }
     
-    outputText.select();
-    outputText.setSelectionRange(0, 99999); // For mobile devices
+    const textToCopy = outputText.value;
     
-    try {
-        document.execCommand('copy');
-        
-        // Visual feedback
-        const button = event.target;
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
-        button.classList.add('bg-green-500');
-        
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.classList.remove('bg-green-500');
-        }, 2000);
-        
-    } catch (err) {
-        alert('Failed to copy text. Please manually select and copy the text.');
+    // Use modern Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            // Visual feedback
+            const button = event.target;
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+                button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                button.classList.add('bg-green-500');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-500');
+                    button.classList.add('bg-blue-500', 'hover:bg-blue-600');
+                }, 2000);
+            }
+        }).catch((error) => {
+            console.error('Clipboard API failed:', error);
+            // Fallback to legacy method
+            fallbackCopyText();
+        });
+    } else {
+        // Fallback for older browsers
+        fallbackCopyText();
+    }
+    
+    function fallbackCopyText() {
+        try {
+            outputText.select();
+            outputText.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const button = event.target;
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+                button.classList.add('bg-green-500');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-500');
+                }, 2000);
+            }
+        } catch (err) {
+            console.error('Copy failed:', err);
+            alert('Failed to copy text. Please manually select and copy the text.');
+        }
     }
 }
 

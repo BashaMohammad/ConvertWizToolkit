@@ -25,10 +25,10 @@ const DEPLOYMENT_PHASES = {
         'backlink-checker-section',
         'meta-tag-generator-section',
         'dpi-checker-section',
-        'global-land-units-section'
+        'global-land-units-section',
+        'bmi-calculator-section'
     ],
     SATURDAY_RELEASE: [
-        'bmi-calculator-section',
         'text-case-converter-section', 
         'png-to-jpg-section',
         'pdf-to-word-section',
