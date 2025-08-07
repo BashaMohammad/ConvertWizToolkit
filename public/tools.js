@@ -4157,7 +4157,15 @@ function initPDFToWord() {
             target: e.target,
             filesLength: e.target.files ? e.target.files.length : 0
         });
-        handlePDFWordFileSelect(e);
+        
+        // Call the enhanced processPdfToWordFiles function
+        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            console.log('🔧 PDF to Word: Calling processPdfToWordFiles with files:', files);
+            processPdfToWordFiles(files);
+        } else {
+            console.log('❌ PDF to Word: No valid PDF files found');
+        }
     });
     
     // Additional test - trigger file input directly
