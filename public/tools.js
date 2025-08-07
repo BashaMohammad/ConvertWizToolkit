@@ -4310,22 +4310,6 @@ async function convertPDFToWord() {
         showNotification('Conversion failed. Please try again.', 'error');
     }
 }
-                        <i class="fas fa-file-word text-blue-600 text-2xl mr-3"></i>
-                        <div>
-                            <p class="font-semibold text-gray-800">${filename}</p>
-                            <p class="text-sm text-gray-600">Word Document</p>
-                        </div>
-                    </div>
-                    <button onclick="downloadFile('${url}', '${filename}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
-                        <i class="fas fa-download mr-2"></i>Download
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        showNotification('PDF converted to Word successfully!', 'success');
-    }, 2000);
-}
 
 // PDF to PowerPoint Converter
 function initPDFToPowerPoint() {
