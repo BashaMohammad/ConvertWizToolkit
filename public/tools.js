@@ -5244,15 +5244,40 @@ function initializePdfToWordConverter() {
 }
 
 function processPdfToWordFiles(files) {
-    const resultsContainer = document.getElementById('pdf-word-results');
-    const resultsList = document.getElementById('pdf-word-list');
+    const file = files[0];
     
-    resultsList.innerHTML = '';
-    resultsContainer.classList.remove('hidden');
+    console.log('🔧 PDF to Word: Processing file selection', file.name, file.type);
     
-    files.forEach((file, index) => {
-        displayPdfConversionResult(file, 'Word', 'pdf-word-list', 'blue', index);
+    // Validate PDF file
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        showNotification('Please select a valid PDF file', 'error');
+        console.log('❌ PDF to Word: Invalid file type:', file.type);
+        return;
+    }
+    
+    // Display file info
+    const fileName = document.getElementById('pdf-word-file-name');
+    const fileSize = document.getElementById('pdf-word-file-size');
+    const fileInfo = document.getElementById('pdf-word-file-info');
+    const convertBtn = document.getElementById('pdf-word-convert-btn');
+    
+    console.log('🔧 PDF to Word: UI elements check:', {
+        fileName: !!fileName,
+        fileSize: !!fileSize,
+        fileInfo: !!fileInfo,
+        convertBtn: !!convertBtn
     });
+    
+    if (fileName) fileName.textContent = file.name;
+    if (fileSize) fileSize.textContent = formatFileSize(file.size);
+    if (fileInfo) fileInfo.classList.remove('hidden');
+    if (convertBtn) {
+        convertBtn.disabled = false;
+        console.log('🔧 PDF to Word: Convert button enabled');
+    }
+    
+    showNotification('PDF file loaded successfully!', 'success');
+    console.log('✅ PDF to Word: File info displayed, convert button enabled');
 }
 
 // PDF to PowerPoint Converter
