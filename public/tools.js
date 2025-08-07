@@ -4131,13 +4131,38 @@ function initPDFToWord() {
     // Browse button click
     browseBtn.addEventListener('click', (e) => {
         console.log('🔧 PDF to Word: Browse button clicked');
-        uploadInput.click();
+        console.log('🔧 PDF to Word: File input element:', uploadInput);
+        console.log('🔧 PDF to Word: File input properties:', {
+            type: uploadInput.type,
+            accept: uploadInput.accept,
+            multiple: uploadInput.multiple,
+            disabled: uploadInput.disabled,
+            style: uploadInput.style.display
+        });
+        
+        // Force trigger file dialog
+        try {
+            uploadInput.click();
+            console.log('🔧 PDF to Word: File input clicked successfully');
+        } catch (error) {
+            console.error('🔧 PDF to Word: Error clicking file input:', error);
+        }
     });
     
     // File input change
     uploadInput.addEventListener('change', (e) => {
         console.log('🔧 PDF to Word: File input changed', e.target.files);
+        console.log('🔧 PDF to Word: Event details:', {
+            type: e.type,
+            target: e.target,
+            filesLength: e.target.files ? e.target.files.length : 0
+        });
         handlePDFWordFileSelect(e);
+    });
+    
+    // Additional test - trigger file input directly
+    uploadInput.addEventListener('click', (e) => {
+        console.log('🔧 PDF to Word: File input directly clicked');
     });
     
     // Convert button click
