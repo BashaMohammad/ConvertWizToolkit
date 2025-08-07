@@ -125,6 +125,7 @@ function showSectionById(sectionId) {
             'global-land-units-section': '/global-land-units',
             'png-to-jpg-section': '/png-to-jpg',
             'text-case-converter-section': '/text-case-converter',
+            'bmi-calculator-section': '/bmi-calculator',
             'wifi-scanner-section': '/wifi-scanner',
             'signal-strength-section': '/signal-strength',
             'landing-section': '/'
@@ -132,7 +133,6 @@ function showSectionById(sectionId) {
         
         // Saturday components are handled separately and hidden from users
         var saturdayComponents = [
-            'bmi-calculator-section',
             'pdf-to-word-section', 'pdf-to-powerpoint-section', 'pdf-to-excel-section',
             'pdf-split-section', 'pdf-merge-section'
         ];
@@ -371,6 +371,15 @@ function initializeComponent(sectionId) {
                     console.log('✅ INIT: Text Case Converter initialized');
                 } else {
                     console.warn('⚠️ INIT: initSaturdayTextCaseConverter function not found');
+                }
+                break;
+                
+            case 'bmi-calculator-section':
+                if (typeof initBMICalculator === 'function') {
+                    initBMICalculator();
+                    console.log('✅ INIT: BMI Calculator initialized');
+                } else {
+                    console.warn('⚠️ INIT: initBMICalculator function not found');
                 }
                 break;
                 
