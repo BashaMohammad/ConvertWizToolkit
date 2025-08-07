@@ -389,6 +389,51 @@ function initializeComponent(sectionId) {
                 }
                 break;
                 
+            case 'pdf-to-word-section':
+                if (typeof initPDFToWord === 'function') {
+                    initPDFToWord();
+                    console.log('✅ INIT: PDF to Word initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPDFToWord function not found');
+                }
+                break;
+                
+            case 'pdf-to-powerpoint-section':
+                if (typeof initPDFToPowerPoint === 'function') {
+                    initPDFToPowerPoint();
+                    console.log('✅ INIT: PDF to PowerPoint initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPDFToPowerPoint function not found');
+                }
+                break;
+                
+            case 'pdf-to-excel-section':
+                if (typeof initPDFToExcel === 'function') {
+                    initPDFToExcel();
+                    console.log('✅ INIT: PDF to Excel initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPDFToExcel function not found');
+                }
+                break;
+                
+            case 'pdf-split-section':
+                if (typeof initPDFSplit === 'function') {
+                    initPDFSplit();
+                    console.log('✅ INIT: PDF Split initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPDFSplit function not found');
+                }
+                break;
+                
+            case 'pdf-merge-section':
+                if (typeof initPDFMerge === 'function') {
+                    initPDFMerge();
+                    console.log('✅ INIT: PDF Merge initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPDFMerge function not found');
+                }
+                break;
+                
             case 'landing-section':
                 console.log('ℹ️ INIT: No specific initialization needed for', sectionId);
                 break;

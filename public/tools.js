@@ -4004,15 +4004,10 @@ function convertCase(caseType) {
 }
 
 function copyOutputText(event) {
-    // Ensure we have event object
-    if (!event) {
-        console.warn('No event object passed to copyOutputText');
-    }
-    
     const outputText = document.getElementById('case-output-text');
     
     if (!outputText || !outputText.value.trim()) {
-        alert('No text to copy. Please convert some text first.');
+        showNotification('No text to copy. Please convert some text first.', 'error');
         return;
     }
     
@@ -4021,55 +4016,89 @@ function copyOutputText(event) {
     // Use modern Clipboard API
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(textToCopy).then(() => {
-            // Visual feedback
-            const button = event ? event.target : document.querySelector('[onclick*="copyOutputText"]');
-            if (button) {
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
-                button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
-                button.classList.add('bg-green-500');
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.classList.remove('bg-green-500');
-                    button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
-                }, 2000);
-            }
-            console.log('Text copied successfully:', textToCopy);
+            showSuccessNotification();
+            updateButtonVisual(event);
         }).catch((error) => {
             console.error('Clipboard API failed:', error);
-            // Fallback to legacy method
             fallbackCopyText(event);
         });
     } else {
-        // Fallback for older browsers
         fallbackCopyText(event);
     }
     
     function fallbackCopyText(evt) {
         try {
             outputText.select();
-            outputText.setSelectionRange(0, 99999); // For mobile devices
+            outputText.setSelectionRange(0, 99999);
             document.execCommand('copy');
-            
-            // Visual feedback
-            const button = evt ? evt.target : document.querySelector('[onclick*="copyOutputText"]');
-            if (button) {
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
-                button.classList.add('bg-green-500');
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.classList.remove('bg-green-500');
-                }, 2000);
-            }
-            console.log('Text copied via fallback method:', textToCopy);
+            showSuccessNotification();
+            updateButtonVisual(evt);
         } catch (err) {
             console.error('Copy failed:', err);
-            alert('Failed to copy text. Please manually select and copy the text.');
+            showNotification('Failed to copy text. Please manually select and copy the text.', 'error');
         }
     }
+    
+    function showSuccessNotification() {
+        showNotification('Text copied to clipboard successfully!', 'success');
+    }
+    
+    function updateButtonVisual(evt) {
+        const button = evt ? evt.target : document.querySelector('[onclick*="copyOutputText"]');
+        if (button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+            button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
+            button.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-500');
+                button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
+            }, 2000);
+        }
+    }
+}
+
+// Notification system for better user feedback
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.copy-notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `copy-notification fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-semibold shadow-lg z-50 transition-all duration-300 transform translate-x-full`;
+    
+    // Set color based on type
+    if (type === 'success') {
+        notification.classList.add('bg-green-500');
+        notification.innerHTML = `<i class="fas fa-check mr-2"></i>${message}`;
+    } else if (type === 'error') {
+        notification.classList.add('bg-red-500');
+        notification.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i>${message}`;
+    } else {
+        notification.classList.add('bg-blue-500');
+        notification.innerHTML = `<i class="fas fa-info-circle mr-2"></i>${message}`;
+    }
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 100);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // ======================
