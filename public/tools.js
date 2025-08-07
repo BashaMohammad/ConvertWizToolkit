@@ -4115,39 +4115,93 @@ function initPDFToWord() {
     const uploadArea = document.getElementById('pdf-word-upload-area');
     const resultsContainer = document.getElementById('pdf-word-results');
     
+    console.log('🔧 PDF to Word elements check:', {
+        uploadInput: !!uploadInput,
+        browseBtn: !!browseBtn,
+        convertBtn: !!convertBtn,
+        uploadArea: !!uploadArea,
+        resultsContainer: !!resultsContainer
+    });
+    
     if (!uploadInput || !browseBtn || !convertBtn || !uploadArea) {
         console.error('PDF to Word: Required elements missing!');
         return;
     }
     
     // Browse button click
-    browseBtn.addEventListener('click', () => uploadInput.click());
+    browseBtn.addEventListener('click', (e) => {
+        console.log('🔧 PDF to Word: Browse button clicked');
+        uploadInput.click();
+    });
     
     // File input change
-    uploadInput.addEventListener('change', handlePDFWordFileSelect);
+    uploadInput.addEventListener('change', (e) => {
+        console.log('🔧 PDF to Word: File input changed', e.target.files);
+        handlePDFWordFileSelect(e);
+    });
     
     // Convert button click
-    convertBtn.addEventListener('click', convertPDFToWord);
+    convertBtn.addEventListener('click', (e) => {
+        console.log('🔧 PDF to Word: Convert button clicked');
+        convertPDFToWord();
+    });
     
-    // Drag and drop
-    setupDragAndDrop(uploadArea, handlePDFWordFileSelect);
+    // Drag and drop setup
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-blue-500', 'bg-blue-50');
+    });
     
-    console.log('✅ PDF to Word initialized successfully');
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+        console.log('🔧 PDF to Word: Files dropped', e.dataTransfer.files);
+        handlePDFWordFileSelect(e);
+    });
+    
+    console.log('✅ PDF to Word initialized successfully with debug logging');
 }
 
 function handlePDFWordFileSelect(event) {
+    console.log('🔧 PDF to Word: handlePDFWordFileSelect called', event);
     const files = event.target.files || event.dataTransfer.files;
+    console.log('🔧 PDF to Word: Files detected', files);
+    
     if (files && files.length > 0) {
         const file = files[0];
+        console.log('🔧 PDF to Word: Processing file', file.name, file.type);
+        
         if (file.type === 'application/pdf') {
-            document.getElementById('pdf-word-file-name').textContent = file.name;
-            document.getElementById('pdf-word-file-size').textContent = formatFileSize(file.size);
-            document.getElementById('pdf-word-file-info').classList.remove('hidden');
-            document.getElementById('pdf-word-convert-btn').disabled = false;
+            const fileName = document.getElementById('pdf-word-file-name');
+            const fileSize = document.getElementById('pdf-word-file-size');
+            const fileInfo = document.getElementById('pdf-word-file-info');
+            const convertBtn = document.getElementById('pdf-word-convert-btn');
+            
+            console.log('🔧 PDF to Word: UI elements check:', {
+                fileName: !!fileName,
+                fileSize: !!fileSize,
+                fileInfo: !!fileInfo,
+                convertBtn: !!convertBtn
+            });
+            
+            if (fileName) fileName.textContent = file.name;
+            if (fileSize) fileSize.textContent = formatFileSize(file.size);
+            if (fileInfo) fileInfo.classList.remove('hidden');
+            if (convertBtn) convertBtn.disabled = false;
+            
             showNotification('PDF file loaded successfully!', 'success');
+            console.log('✅ PDF to Word: File loaded successfully');
         } else {
             showNotification('Please select a valid PDF file', 'error');
+            console.log('❌ PDF to Word: Invalid file type');
         }
+    } else {
+        console.log('❌ PDF to Word: No files detected');
     }
 }
 
