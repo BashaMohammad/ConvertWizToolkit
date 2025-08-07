@@ -4003,7 +4003,12 @@ function convertCase(caseType) {
     outputElement.value = convertedText;
 }
 
-function copyOutputText() {
+function copyOutputText(event) {
+    // Ensure we have event object
+    if (!event) {
+        console.warn('No event object passed to copyOutputText');
+    }
+    
     const outputText = document.getElementById('case-output-text');
     
     if (!outputText || !outputText.value.trim()) {
@@ -4017,37 +4022,38 @@ function copyOutputText() {
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(textToCopy).then(() => {
             // Visual feedback
-            const button = event.target;
+            const button = event ? event.target : document.querySelector('[onclick*="copyOutputText"]');
             if (button) {
                 const originalText = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
-                button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
                 button.classList.add('bg-green-500');
                 
                 setTimeout(() => {
                     button.innerHTML = originalText;
                     button.classList.remove('bg-green-500');
-                    button.classList.add('bg-blue-500', 'hover:bg-blue-600');
+                    button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
                 }, 2000);
             }
+            console.log('Text copied successfully:', textToCopy);
         }).catch((error) => {
             console.error('Clipboard API failed:', error);
             // Fallback to legacy method
-            fallbackCopyText();
+            fallbackCopyText(event);
         });
     } else {
         // Fallback for older browsers
-        fallbackCopyText();
+        fallbackCopyText(event);
     }
     
-    function fallbackCopyText() {
+    function fallbackCopyText(evt) {
         try {
             outputText.select();
             outputText.setSelectionRange(0, 99999); // For mobile devices
             document.execCommand('copy');
             
             // Visual feedback
-            const button = event.target;
+            const button = evt ? evt.target : document.querySelector('[onclick*="copyOutputText"]');
             if (button) {
                 const originalText = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
@@ -4058,6 +4064,7 @@ function copyOutputText() {
                     button.classList.remove('bg-green-500');
                 }, 2000);
             }
+            console.log('Text copied via fallback method:', textToCopy);
         } catch (err) {
             console.error('Copy failed:', err);
             alert('Failed to copy text. Please manually select and copy the text.');

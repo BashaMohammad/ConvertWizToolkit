@@ -126,15 +126,21 @@ function showSectionById(sectionId) {
             'png-to-jpg-section': '/png-to-jpg',
             'text-case-converter-section': '/text-case-converter',
             'bmi-calculator-section': '/bmi-calculator',
+            'pdf-to-word-section': '/pdf-to-word',
+            'pdf-to-powerpoint-section': '/pdf-to-powerpoint',
+            'pdf-to-excel-section': '/pdf-to-excel',
+            'pdf-split-section': '/pdf-split',
+            'pdf-merge-section': '/pdf-merge',
             'wifi-scanner-section': '/wifi-scanner',
             'signal-strength-section': '/signal-strength',
             'landing-section': '/'
         };
         
         // Saturday components are handled separately and hidden from users
+        // TEMPORARILY DISABLED FOR PDF TOOLS TESTING
         var saturdayComponents = [
-            'pdf-to-word-section', 'pdf-to-powerpoint-section', 'pdf-to-excel-section',
-            'pdf-split-section', 'pdf-merge-section'
+            // 'pdf-to-word-section', 'pdf-to-powerpoint-section', 'pdf-to-excel-section',
+            // 'pdf-split-section', 'pdf-merge-section'
         ];
         
         // Check if component is Saturday release and should be hidden

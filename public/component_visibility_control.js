@@ -7,11 +7,11 @@ console.log('🔒 Component Visibility Control - Hiding Saturday components from
 if (typeof SATURDAY_COMPONENTS === 'undefined') {
     var SATURDAY_COMPONENTS = [
     // 'bmi-calculator-section', // Enabled for testing
-    'pdf-to-word-section',
-    'pdf-to-powerpoint-section',
-    'pdf-to-excel-section',
-    'pdf-split-section',
-    'pdf-merge-section'
+    // 'pdf-to-word-section',      // Enabled for testing
+    // 'pdf-to-powerpoint-section', // Enabled for testing
+    // 'pdf-to-excel-section',     // Enabled for testing
+    // 'pdf-split-section',        // Enabled for testing
+    // 'pdf-merge-section'         // Enabled for testing
     ];
 }
 
