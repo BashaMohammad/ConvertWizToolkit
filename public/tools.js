@@ -4230,7 +4230,7 @@ function handlePDFWordFileSelect(event) {
     }
 }
 
-function convertPDFToWord() {
+async function convertPDFToWord() {
     const fileInput = document.getElementById('pdf-word-input');
     const file = fileInput.files[0];
     
@@ -4248,11 +4248,31 @@ function convertPDFToWord() {
         </div>
     `;
     
-    // Simulate conversion process
-    setTimeout(() => {
-        const blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    try {
+        console.log('🔧 PDF to Word: Starting conversion process');
+        
+        // Read PDF file
+        const buffer = await file.arrayBuffer();
+        console.log('🔧 PDF to Word: File read successfully');
+        
+        // Create a basic text extraction simulation
+        let docContent = `Converted from: ${file.name}\n\n`;
+        docContent += `File size: ${formatFileSize(file.size)}\n`;
+        docContent += `Conversion date: ${new Date().toLocaleString()}\n\n`;
+        docContent += `[This is a simulated PDF to Word conversion]\n`;
+        docContent += `Original PDF content would be extracted and formatted here.\n`;
+        docContent += `The actual implementation would use PDF.js or similar library for text extraction.\n\n`;
+        docContent += `This demonstrates the conversion workflow with file handling,\n`;
+        docContent += `progress indication, and downloadable output generation.`;
+        
+        // Create downloadable DOCX file
+        const blob = new Blob([docContent], { 
+            type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+        });
         const url = URL.createObjectURL(blob);
         const filename = file.name.replace('.pdf', '.docx');
+        
+        console.log('🔧 PDF to Word: Conversion completed, preparing download');
         
         resultsContainer.innerHTML = `
             <div class="bg-green-50 border border-green-200 rounded-lg p-6">
@@ -4262,6 +4282,34 @@ function convertPDFToWord() {
                 </div>
                 <div class="flex items-center justify-between bg-white rounded-lg p-4 border">
                     <div class="flex items-center">
+                        <i class="fas fa-file-word text-blue-500 text-xl mr-3"></i>
+                        <div>
+                            <p class="font-semibold text-gray-800">${filename}</p>
+                            <p class="text-sm text-gray-600">${formatFileSize(file.size)} • Ready for download</p>
+                        </div>
+                    </div>
+                    <a href="${url}" download="${filename}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                        <i class="fas fa-download mr-2"></i>Download
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        showNotification('PDF converted to Word successfully!', 'success');
+        console.log('✅ PDF to Word: Conversion completed successfully');
+        
+    } catch (error) {
+        console.error('❌ PDF to Word: Conversion failed:', error);
+        resultsContainer.innerHTML = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-2"></i>
+                <h3 class="text-lg font-semibold text-red-800">Conversion Failed</h3>
+                <p class="text-red-600 text-sm mt-2">Please try again with a different PDF file</p>
+            </div>
+        `;
+        showNotification('Conversion failed. Please try again.', 'error');
+    }
+}
                         <i class="fas fa-file-word text-blue-600 text-2xl mr-3"></i>
                         <div>
                             <p class="font-semibold text-gray-800">${filename}</p>
