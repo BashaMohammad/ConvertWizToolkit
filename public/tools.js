@@ -4142,6 +4142,7 @@ function handlePDFWordFileSelect(event) {
         if (file.type === 'application/pdf') {
             document.getElementById('pdf-word-file-name').textContent = file.name;
             document.getElementById('pdf-word-file-size').textContent = formatFileSize(file.size);
+            document.getElementById('pdf-word-file-info').classList.remove('hidden');
             document.getElementById('pdf-word-convert-btn').disabled = false;
             showNotification('PDF file loaded successfully!', 'success');
         } else {
@@ -4203,10 +4204,10 @@ function convertPDFToWord() {
 function initPDFToPowerPoint() {
     console.log('🔧 PDF to PowerPoint: Starting initialization...');
     
-    const uploadInput = document.getElementById('pdf-ppt-input');
-    const browseBtn = document.getElementById('pdf-ppt-browse-btn');
-    const convertBtn = document.getElementById('pdf-ppt-convert-btn');
-    const uploadArea = document.getElementById('pdf-ppt-upload-area');
+    const uploadInput = document.getElementById('pdf-powerpoint-input');
+    const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
+    const convertBtn = document.getElementById('pdf-powerpoint-convert-btn');
+    const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
     
     if (!uploadInput || !browseBtn || !convertBtn || !uploadArea) {
         console.error('PDF to PowerPoint: Required elements missing!');
@@ -4214,21 +4215,22 @@ function initPDFToPowerPoint() {
     }
     
     browseBtn.addEventListener('click', () => uploadInput.click());
-    uploadInput.addEventListener('change', handlePDFPPTFileSelect);
+    uploadInput.addEventListener('change', handlePDFPowerpointFileSelect);
     convertBtn.addEventListener('click', convertPDFToPowerPoint);
-    setupDragAndDrop(uploadArea, handlePDFPPTFileSelect);
+    setupDragAndDrop(uploadArea, handlePDFPowerpointFileSelect);
     
     console.log('✅ PDF to PowerPoint initialized successfully');
 }
 
-function handlePDFPPTFileSelect(event) {
+function handlePDFPowerpointFileSelect(event) {
     const files = event.target.files || event.dataTransfer.files;
     if (files && files.length > 0) {
         const file = files[0];
         if (file.type === 'application/pdf') {
-            document.getElementById('pdf-ppt-file-name').textContent = file.name;
-            document.getElementById('pdf-ppt-file-size').textContent = formatFileSize(file.size);
-            document.getElementById('pdf-ppt-convert-btn').disabled = false;
+            document.getElementById('pdf-powerpoint-file-name').textContent = file.name;
+            document.getElementById('pdf-powerpoint-file-size').textContent = formatFileSize(file.size);
+            document.getElementById('pdf-powerpoint-file-info').classList.remove('hidden');
+            document.getElementById('pdf-powerpoint-convert-btn').disabled = false;
             showNotification('PDF file loaded successfully!', 'success');
         } else {
             showNotification('Please select a valid PDF file', 'error');
@@ -4237,7 +4239,7 @@ function handlePDFPPTFileSelect(event) {
 }
 
 function convertPDFToPowerPoint() {
-    const fileInput = document.getElementById('pdf-ppt-input');
+    const fileInput = document.getElementById('pdf-powerpoint-input');
     const file = fileInput.files[0];
     
     if (!file) {
@@ -4245,7 +4247,7 @@ function convertPDFToPowerPoint() {
         return;
     }
     
-    const resultsContainer = document.getElementById('pdf-ppt-results');
+    const resultsContainer = document.getElementById('pdf-powerpoint-results');
     resultsContainer.innerHTML = `
         <div class="bg-orange-50 border border-orange-200 rounded-lg p-6 text-center">
             <div class="animate-spin w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -4313,6 +4315,7 @@ function handlePDFExcelFileSelect(event) {
         if (file.type === 'application/pdf') {
             document.getElementById('pdf-excel-file-name').textContent = file.name;
             document.getElementById('pdf-excel-file-size').textContent = formatFileSize(file.size);
+            document.getElementById('pdf-excel-file-info').classList.remove('hidden');
             document.getElementById('pdf-excel-convert-btn').disabled = false;
             showNotification('PDF file loaded successfully!', 'success');
         } else {
@@ -4398,6 +4401,7 @@ function handlePDFSplitFileSelect(event) {
         if (file.type === 'application/pdf') {
             document.getElementById('pdf-split-file-name').textContent = file.name;
             document.getElementById('pdf-split-file-size').textContent = formatFileSize(file.size);
+            document.getElementById('pdf-split-file-info').classList.remove('hidden');
             document.getElementById('pdf-split-btn').disabled = false;
             showNotification('PDF file loaded successfully!', 'success');
         } else {
@@ -4506,6 +4510,7 @@ function handlePDFMergeFileSelect(event) {
             }
         }
         
+        document.getElementById('pdf-merge-file-info').classList.remove('hidden');
         document.getElementById('pdf-merge-btn').disabled = false;
         showNotification(`${files.length} PDF files loaded successfully!`, 'success');
     }

@@ -3042,15 +3042,28 @@ Contact: John Doe, Company Inc."></textarea>
                         </div>
                     </div>
                     
-                    <div class="text-center text-sm text-gray-500 mb-6">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        PDF to Word conversion requires backend processing. This is a demo interface.
+                    <!-- File Info Display -->
+                    <div id="pdf-word-file-info" class="hidden bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 text-xl mr-3"></i>
+                                <div>
+                                    <p class="font-semibold" id="pdf-word-file-name">File name</p>
+                                    <p class="text-sm text-gray-600" id="pdf-word-file-size">File size</p>
+                                </div>
+                            </div>
+                            <button id="pdf-word-convert-btn" disabled class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Convert to Word
+                            </button>
+                        </div>
                     </div>
                     
-                    <div id="pdf-word-results" class="hidden">
-                        <h4 class="text-lg font-bold text-gray-800 mb-4">Conversion Results</h4>
-                        <div id="pdf-word-list" class="space-y-4"></div>
+                    <div class="text-center text-sm text-gray-500 mb-6">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        PDF to Word conversion with format preservation and editable output
                     </div>
+                    
+                    <div id="pdf-word-results"></div>
                 </section>
             </div>
         </main>
@@ -3104,15 +3117,28 @@ Contact: John Doe, Company Inc."></textarea>
                         </div>
                     </div>
                     
-                    <div class="text-center text-sm text-gray-500 mb-6">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        PDF to PowerPoint conversion requires backend processing. This is a demo interface.
+                    <!-- File Info Display -->
+                    <div id="pdf-ppt-file-info" class="hidden bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 text-xl mr-3"></i>
+                                <div>
+                                    <p class="font-semibold" id="pdf-ppt-file-name">File name</p>
+                                    <p class="text-sm text-gray-600" id="pdf-ppt-file-size">File size</p>
+                                </div>
+                            </div>
+                            <button id="pdf-ppt-convert-btn" disabled class="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Convert to PowerPoint
+                            </button>
+                        </div>
                     </div>
                     
-                    <div id="pdf-ppt-results" class="hidden">
-                        <h4 class="text-lg font-bold text-gray-800 mb-4">Conversion Results</h4>
-                        <div id="pdf-ppt-list" class="space-y-4"></div>
+                    <div class="text-center text-sm text-gray-500 mb-6">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        PDF to PowerPoint conversion with slide extraction and editing capabilities
                     </div>
+                    
+                    <div id="pdf-ppt-results"></div>
                 </section>
             </div>
         </main>
@@ -3166,15 +3192,28 @@ Contact: John Doe, Company Inc."></textarea>
                         </div>
                     </div>
                     
-                    <div class="text-center text-sm text-gray-500 mb-6">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        PDF to Excel conversion requires backend processing. This is a demo interface.
+                    <!-- File Info Display -->
+                    <div id="pdf-excel-file-info" class="hidden bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 text-xl mr-3"></i>
+                                <div>
+                                    <p class="font-semibold" id="pdf-excel-file-name">File name</p>
+                                    <p class="text-sm text-gray-600" id="pdf-excel-file-size">File size</p>
+                                </div>
+                            </div>
+                            <button id="pdf-excel-convert-btn" disabled class="bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Extract to Excel
+                            </button>
+                        </div>
                     </div>
                     
-                    <div id="pdf-excel-results" class="hidden">
-                        <h4 class="text-lg font-bold text-gray-800 mb-4">Conversion Results</h4>
-                        <div id="pdf-excel-list" class="space-y-4"></div>
+                    <div class="text-center text-sm text-gray-500 mb-6">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        PDF table extraction to Excel format with data preservation
                     </div>
+                    
+                    <div id="pdf-excel-results"></div>
                 </section>
             </div>
         </main>
@@ -3228,34 +3267,43 @@ Contact: John Doe, Company Inc."></textarea>
                         </div>
                     </div>
                     
-                    <!-- Split Options -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Page</label>
-                            <input type="number" id="split-start-page" placeholder="1" min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <!-- File Info Display -->
+                    <div id="pdf-split-file-info" class="hidden bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 text-xl mr-3"></i>
+                                <div>
+                                    <p class="font-semibold" id="pdf-split-file-name">File name</p>
+                                    <p class="text-sm text-gray-600" id="pdf-split-file-size">File size</p>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">End Page</label>
-                            <input type="number" id="split-end-page" placeholder="10" min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+
+                    <!-- Split Options -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Page Range (e.g., 1-5, 3-8)</label>
+                        <input type="text" id="pdf-split-range" placeholder="1-5" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <div class="mt-4 text-center">
+                            <button id="pdf-split-btn" disabled class="bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Split PDF
+                            </button>
                         </div>
                     </div>
                     
                     <div class="text-center text-sm text-gray-500 mb-6">
                         <i class="fas fa-info-circle mr-1"></i>
-                        PDF splitting requires backend processing. This is a demo interface.
+                        PDF splitting with page range selection and custom naming
                     </div>
                     
-                    <div id="pdf-split-results" class="hidden">
-                        <h4 class="text-lg font-bold text-gray-800 mb-4">Split Results</h4>
-                        <div id="pdf-split-list" class="space-y-4"></div>
-                    </div>
+                    <div id="pdf-split-results"></div>
                 </section>
             </div>
         </main>
     </div>
 
     <!-- PDF MERGE & COMPRESS SECTION -->
-    <div class="tool-section" id="pdf-merge-compress-section">
+    <div class="tool-section" id="pdf-merge-section">
         <main class="container mx-auto px-4 py-8">
             <!-- Back Navigation -->
             <div class="mb-6">
