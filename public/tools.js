@@ -4105,8 +4105,15 @@ function showNotification(message, type = 'info') {
 // PDF TOOLS FUNCTIONS
 // ======================
 
-// PDF to Word Converter - Clean Single Implementation
+// PDF to Word Converter - Single Clean Implementation
 function initPDFToWord() {
+    // Prevent double initialization
+    if (window.pdfToWordInitialized) {
+        console.log('🔧 PDF to Word: Already initialized, skipping...');
+        return;
+    }
+    window.pdfToWordInitialized = true;
+    
     console.log('🔧 PDF to Word: Starting initialization...');
     
     const pdfInput = document.getElementById('pdf-word-input');
@@ -4116,36 +4123,13 @@ function initPDFToWord() {
     const fileDetails = document.getElementById('pdf-word-file-info');
     const resultsContainer = document.getElementById('pdf-word-results');
     
-    console.log('🔧 PDF to Word elements check:', {
-        pdfInput: !!pdfInput,
-        browseBtn: !!browseBtn,
-        convertBtn: !!convertBtn,
-        uploadArea: !!uploadArea,
-        fileDetails: !!fileDetails,
-        resultsContainer: !!resultsContainer
-    });
-    
     if (!pdfInput || !browseBtn || !convertBtn) {
         console.error('PDF to Word: Required elements missing!');
+        window.pdfToWordInitialized = false;
         return;
     }
     
     let selectedFile = null;
-    
-    // Check if there's already a file selected (to preserve state)
-    if (pdfInput.files && pdfInput.files[0]) {
-        selectedFile = pdfInput.files[0];
-        console.log('🔧 PDF to Word: Found existing file:', selectedFile.name);
-        
-        // Update UI to show existing file
-        const fileName = document.getElementById('pdf-word-file-name');
-        const fileSize = document.getElementById('pdf-word-file-size');
-        
-        if (fileName) fileName.textContent = selectedFile.name;
-        if (fileSize) fileSize.textContent = `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`;
-        if (fileDetails) fileDetails.style.display = 'block';
-        convertBtn.disabled = false;
-    }
     
     // Browse button functionality
     browseBtn.addEventListener('click', (e) => {
@@ -4282,67 +4266,11 @@ function initPDFToWord() {
     console.log('✅ PDF to Word initialized successfully');
 }
 
-function handlePDFWordFileSelect(event) {
-    console.log('🔧 PDF to Word: handlePDFWordFileSelect called', event);
-    const files = event.target.files || event.dataTransfer.files;
-    console.log('🔧 PDF to Word: Files detected', files);
-    
-    if (files && files.length > 0) {
-        const file = files[0];
-        console.log('🔧 PDF to Word: Processing file', file.name, file.type);
-        
-        if (file.type === 'application/pdf') {
-            const fileName = document.getElementById('pdf-word-file-name');
-            const fileSize = document.getElementById('pdf-word-file-size');
-            const fileInfo = document.getElementById('pdf-word-file-info');
-            const convertBtn = document.getElementById('pdf-word-convert-btn');
-            
-            console.log('🔧 PDF to Word: UI elements check:', {
-                fileName: !!fileName,
-                fileSize: !!fileSize,
-                fileInfo: !!fileInfo,
-                convertBtn: !!convertBtn
-            });
-            
-            if (fileName) fileName.textContent = file.name;
-            if (fileSize) fileSize.textContent = formatFileSize(file.size);
-            if (fileInfo) fileInfo.classList.remove('hidden');
-            if (convertBtn) convertBtn.disabled = false;
-            
-            showNotification('PDF file loaded successfully!', 'success');
-            console.log('✅ PDF to Word: File loaded successfully');
-        } else {
-            showNotification('Please select a valid PDF file', 'error');
-            console.log('❌ PDF to Word: Invalid file type');
-        }
-    } else {
-        console.log('❌ PDF to Word: No files detected');
-    }
-}
 
 
 
-// PDF to PowerPoint Converter
-function initPDFToPowerPoint() {
-    console.log('🔧 PDF to PowerPoint: Starting initialization...');
-    
-    const uploadInput = document.getElementById('pdf-powerpoint-input');
-    const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
-    const convertBtn = document.getElementById('pdf-powerpoint-convert-btn');
-    const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
-    
-    if (!uploadInput || !browseBtn || !convertBtn || !uploadArea) {
-        console.error('PDF to PowerPoint: Required elements missing!');
-        return;
-    }
-    
-    browseBtn.addEventListener('click', () => uploadInput.click());
-    uploadInput.addEventListener('change', handlePDFPowerpointFileSelect);
-    convertBtn.addEventListener('click', convertPDFToPowerPoint);
-    setupDragAndDrop(uploadArea, handlePDFPowerpointFileSelect);
-    
-    console.log('✅ PDF to PowerPoint initialized successfully');
-}
+
+
 
 function handlePDFPowerpointFileSelect(event) {
     const files = event.target.files || event.dataTransfer.files;
@@ -5210,123 +5138,9 @@ document.addEventListener('DOMContentLoaded', function() {
 // PDF to Word Converter
 
 
-// PDF to PowerPoint Converter
-function initializePdfToPptConverter() {
-    const uploadArea = document.getElementById('pdf-ppt-upload-area');
-    const fileInput = document.getElementById('pdf-ppt-input');
-    const browseBtn = document.getElementById('pdf-ppt-browse-btn');
-    
-    if (!uploadArea || !fileInput || !browseBtn) return;
-    
-    // Browse button functionality
-    browseBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        fileInput.click();
-    });
-    
-    // Drag and drop functionality
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
-    });
-    
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
-    });
-    
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
-        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            processPdfToPptFiles(files);
-        }
-    });
-    
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-    
-    // File input change handler
-    fileInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            processPdfToPptFiles(files);
-        }
-    });
-}
 
-function processPdfToPptFiles(files) {
-    const resultsContainer = document.getElementById('pdf-ppt-results');
-    const resultsList = document.getElementById('pdf-ppt-list');
-    
-    resultsList.innerHTML = '';
-    resultsContainer.classList.remove('hidden');
-    
-    files.forEach((file, index) => {
-        displayPdfConversionResult(file, 'PowerPoint', 'pdf-ppt-list', 'orange', index);
-    });
-}
 
-// PDF to Excel Converter
-function initializePdfToExcelConverter() {
-    const uploadArea = document.getElementById('pdf-excel-upload-area');
-    const fileInput = document.getElementById('pdf-excel-input');
-    const browseBtn = document.getElementById('pdf-excel-browse-btn');
-    
-    if (!uploadArea || !fileInput || !browseBtn) return;
-    
-    // Browse button functionality
-    browseBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        fileInput.click();
-    });
-    
-    // Drag and drop functionality
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('border-green-500', 'bg-green-50');
-    });
-    
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-green-500', 'bg-green-50');
-    });
-    
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-green-500', 'bg-green-50');
-        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            processPdfToExcelFiles(files);
-        }
-    });
-    
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-    
-    // File input change handler
-    fileInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            processPdfToExcelFiles(files);
-        }
-    });
-}
 
-function processPdfToExcelFiles(files) {
-    const resultsContainer = document.getElementById('pdf-excel-results');
-    const resultsList = document.getElementById('pdf-excel-list');
-    
-    resultsList.innerHTML = '';
-    resultsContainer.classList.remove('hidden');
-    
-    files.forEach((file, index) => {
-        displayPdfConversionResult(file, 'Excel', 'pdf-excel-list', 'green', index);
-    });
-}
 
 // PDF Split Tool
 function initializePdfSplitConverter() {
@@ -5836,43 +5650,7 @@ function convertPngToJpg(file, index) {
     img.src = URL.createObjectURL(file);
 }
 
-// Initialize PDF converters when sections become active
-document.addEventListener('DOMContentLoaded', function() {
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                // Check each PDF section
-                const pdfSections = [
-                    { id: 'pdf-to-word-section', init: initPDFToWord },
-                    { id: 'pdf-to-ppt-section', init: initializePdfToPptConverter },
-                    { id: 'pdf-to-excel-section', init: initializePdfToExcelConverter },
-                    { id: 'pdf-split-section', init: initializePdfSplitConverter },
-                    { id: 'pdf-merge-compress-section', init: initializePdfMergeConverter }
-                ];
-                
-                pdfSections.forEach(section => {
-                    const sectionElement = document.getElementById(section.id);
-                    if (sectionElement && !sectionElement.classList.contains('hidden')) {
-                        section.init();
-                    }
-                });
-            }
-        });
-    });
-    
-    // Observe all PDF sections
-    const pdfSectionIds = [
-        'pdf-to-word-section', 'pdf-to-ppt-section', 'pdf-to-excel-section',
-        'pdf-split-section', 'pdf-merge-compress-section'
-    ];
-    
-    pdfSectionIds.forEach(id => {
-        const section = document.getElementById(id);
-        if (section) {
-            observer.observe(section, { attributes: true, attributeFilter: ['class'] });
-        }
-    });
-});
+
 
 // Global initialization functions for component system
 function initJPGtoPNG() {
