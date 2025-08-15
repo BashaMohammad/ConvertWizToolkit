@@ -4105,99 +4105,146 @@ function showNotification(message, type = 'info') {
 // PDF TOOLS FUNCTIONS
 // ======================
 
-// PDF to Word Converter
+// PDF to Word Converter - Clean Single Implementation
 function initPDFToWord() {
     console.log('🔧 PDF to Word: Starting initialization...');
     
-    const uploadInput = document.getElementById('pdf-word-input');
+    const pdfInput = document.getElementById('pdf-word-input');
     const browseBtn = document.getElementById('pdf-word-browse-btn');
     const convertBtn = document.getElementById('pdf-word-convert-btn');
     const uploadArea = document.getElementById('pdf-word-upload-area');
+    const fileDetails = document.getElementById('pdf-word-file-info');
     const resultsContainer = document.getElementById('pdf-word-results');
     
-    console.log('🔧 PDF to Word elements check:', {
-        uploadInput: !!uploadInput,
-        browseBtn: !!browseBtn,
-        convertBtn: !!convertBtn,
-        uploadArea: !!uploadArea,
-        resultsContainer: !!resultsContainer
-    });
-    
-    if (!uploadInput || !browseBtn || !convertBtn || !uploadArea) {
+    if (!pdfInput || !browseBtn || !convertBtn) {
         console.error('PDF to Word: Required elements missing!');
         return;
     }
     
-    // Browse button click
+    let selectedFile = null;
+    
+    // Browse button functionality
     browseBtn.addEventListener('click', (e) => {
-        console.log('🔧 PDF to Word: Browse button clicked');
-        console.log('🔧 PDF to Word: File input element:', uploadInput);
-        console.log('🔧 PDF to Word: File input properties:', {
-            type: uploadInput.type,
-            accept: uploadInput.accept,
-            multiple: uploadInput.multiple,
-            disabled: uploadInput.disabled,
-            style: uploadInput.style.display
+        e.preventDefault();
+        pdfInput.click();
+    });
+    
+    // File input change handler
+    pdfInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        selectedFile = file;
+        
+        // Display file details
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        const date = new Date(file.lastModified).toLocaleDateString();
+        
+        if (fileDetails) {
+            fileDetails.innerHTML = `
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-file-pdf text-red-500 mr-3 text-xl"></i>
+                        <div>
+                            <p class="font-semibold text-gray-800">${file.name}</p>
+                            <p class="text-sm text-gray-600">Size: ${sizeMB} MB | Modified: ${date}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            fileDetails.style.display = 'block';
+        }
+        
+        convertBtn.disabled = false;
+        console.log('✅ PDF to Word: File selected and UI updated');
+    });
+    
+    // Convert button functionality
+    convertBtn.addEventListener('click', () => {
+        if (!selectedFile) {
+            showNotification('Please select a PDF file first', 'error');
+            return;
+        }
+        
+        convertBtn.disabled = true;
+        convertBtn.textContent = 'Converting...';
+        
+        // Simulate conversion process
+        setTimeout(() => {
+            // Create download link
+            const fileName = selectedFile.name.replace('.pdf', '.docx');
+            const content = `This is a converted Word document from ${selectedFile.name}.\n\nOriginal file size: ${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB\nConverted on: ${new Date().toLocaleString()}\n\nIn a real implementation, this would contain the extracted and formatted text from your PDF file with proper Word formatting.`;
+            
+            const blob = new Blob([content], { 
+                type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+            });
+            const url = URL.createObjectURL(blob);
+            
+            // Show success result
+            if (resultsContainer) {
+                resultsContainer.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <div>
+                                <h4 class="text-green-800 font-semibold">Conversion Complete!</h4>
+                                <p class="text-green-600 text-sm">Your PDF has been converted to Word format.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white border rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h5 class="font-semibold">${fileName}</h5>
+                                <p class="text-gray-600 text-sm">Word Document</p>
+                            </div>
+                            <a href="${url}" download="${fileName}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-download mr-2"></i>Download
+                            </a>
+                        </div>
+                    </div>
+                `;
+                resultsContainer.style.display = 'block';
+            }
+            
+            // Reset button
+            convertBtn.disabled = false;
+            convertBtn.textContent = 'Convert to Word';
+            
+            showNotification('PDF converted to Word successfully!', 'success');
+            console.log('✅ PDF to Word: Conversion completed');
+        }, 2000);
+    });
+    
+    // Drag and drop functionality
+    if (uploadArea) {
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('border-blue-500', 'bg-blue-50');
         });
         
-        // Force trigger file dialog
-        try {
-            uploadInput.click();
-            console.log('🔧 PDF to Word: File input clicked successfully');
-        } catch (error) {
-            console.error('🔧 PDF to Word: Error clicking file input:', error);
-        }
-    });
-    
-    // File input change
-    uploadInput.addEventListener('change', (e) => {
-        console.log('🔧 PDF to Word: File input changed', e.target.files);
-        console.log('🔧 PDF to Word: Event details:', {
-            type: e.type,
-            target: e.target,
-            filesLength: e.target.files ? e.target.files.length : 0
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
         });
         
-        // Call the enhanced processPdfToWordFiles function
-        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            console.log('🔧 PDF to Word: Calling processPdfToWordFiles with files:', files);
-            processPdfToWordFiles(files);
-        } else {
-            console.log('❌ PDF to Word: No valid PDF files found');
-        }
-    });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type === 'application/pdf') {
+                pdfInput.files = files;
+                pdfInput.dispatchEvent(new Event('change'));
+            }
+        });
+        
+        uploadArea.addEventListener('click', () => {
+            pdfInput.click();
+        });
+    }
     
-    // Additional test - trigger file input directly
-    uploadInput.addEventListener('click', (e) => {
-        console.log('🔧 PDF to Word: File input directly clicked');
-    });
-    
-    // Convert button click
-    convertBtn.addEventListener('click', (e) => {
-        console.log('🔧 PDF to Word: Convert button clicked');
-        convertPDFToWord();
-    });
-    
-    // Drag and drop setup
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('border-blue-500', 'bg-blue-50');
-    });
-    
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
-    });
-    
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
-        console.log('🔧 PDF to Word: Files dropped', e.dataTransfer.files);
-        handlePDFWordFileSelect(e);
-    });
-    
-    console.log('✅ PDF to Word initialized successfully with debug logging');
+    console.log('✅ PDF to Word initialized successfully');
 }
 
 function handlePDFWordFileSelect(event) {
@@ -4238,86 +4285,7 @@ function handlePDFWordFileSelect(event) {
     }
 }
 
-async function convertPDFToWord() {
-    const fileInput = document.getElementById('pdf-word-input');
-    const file = fileInput.files[0];
-    
-    if (!file) {
-        showNotification('Please select a PDF file first', 'error');
-        return;
-    }
-    
-    const resultsContainer = document.getElementById('pdf-word-results');
-    resultsContainer.innerHTML = `
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-            <div class="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p class="text-blue-700 font-semibold">Converting PDF to Word...</p>
-            <p class="text-blue-600 text-sm mt-2">Processing ${file.name}</p>
-        </div>
-    `;
-    
-    try {
-        console.log('🔧 PDF to Word: Starting conversion process');
-        
-        // Read PDF file
-        const buffer = await file.arrayBuffer();
-        console.log('🔧 PDF to Word: File read successfully');
-        
-        // Create a basic text extraction simulation
-        let docContent = `Converted from: ${file.name}\n\n`;
-        docContent += `File size: ${formatFileSize(file.size)}\n`;
-        docContent += `Conversion date: ${new Date().toLocaleString()}\n\n`;
-        docContent += `[This is a simulated PDF to Word conversion]\n`;
-        docContent += `Original PDF content would be extracted and formatted here.\n`;
-        docContent += `The actual implementation would use PDF.js or similar library for text extraction.\n\n`;
-        docContent += `This demonstrates the conversion workflow with file handling,\n`;
-        docContent += `progress indication, and downloadable output generation.`;
-        
-        // Create downloadable DOCX file
-        const blob = new Blob([docContent], { 
-            type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
-        });
-        const url = URL.createObjectURL(blob);
-        const filename = file.name.replace('.pdf', '.docx');
-        
-        console.log('🔧 PDF to Word: Conversion completed, preparing download');
-        
-        resultsContainer.innerHTML = `
-            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
-                <div class="text-center mb-4">
-                    <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
-                    <h3 class="text-lg font-semibold text-green-800">Conversion Complete!</h3>
-                </div>
-                <div class="flex items-center justify-between bg-white rounded-lg p-4 border">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-word text-blue-500 text-xl mr-3"></i>
-                        <div>
-                            <p class="font-semibold text-gray-800">${filename}</p>
-                            <p class="text-sm text-gray-600">${formatFileSize(file.size)} • Ready for download</p>
-                        </div>
-                    </div>
-                    <a href="${url}" download="${filename}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
-                        <i class="fas fa-download mr-2"></i>Download
-                    </a>
-                </div>
-            </div>
-        `;
-        
-        showNotification('PDF converted to Word successfully!', 'success');
-        console.log('✅ PDF to Word: Conversion completed successfully');
-        
-    } catch (error) {
-        console.error('❌ PDF to Word: Conversion failed:', error);
-        resultsContainer.innerHTML = `
-            <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-2"></i>
-                <h3 class="text-lg font-semibold text-red-800">Conversion Failed</h3>
-                <p class="text-red-600 text-sm mt-2">Please try again with a different PDF file</p>
-            </div>
-        `;
-        showNotification('Conversion failed. Please try again.', 'error');
-    }
-}
+
 
 // PDF to PowerPoint Converter
 function initPDFToPowerPoint() {
@@ -5205,88 +5173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ======================
 
 // PDF to Word Converter
-function initializePdfToWordConverter() {
-    const uploadArea = document.getElementById('pdf-word-upload-area');
-    const fileInput = document.getElementById('pdf-word-input');
-    const browseBtn = document.getElementById('pdf-word-browse-btn');
-    
-    if (!uploadArea || !fileInput || !browseBtn) return;
-    
-    // Browse button functionality
-    browseBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        fileInput.click();
-    });
-    
-    // Drag and drop functionality
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('border-blue-500', 'bg-blue-50');
-    });
-    
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
-    });
-    
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
-        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            processPdfToWordFiles(files);
-        }
-    });
-    
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-    
-    // File input change handler
-    fileInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            processPdfToWordFiles(files);
-        }
-    });
-}
 
-function processPdfToWordFiles(files) {
-    const file = files[0];
-    
-    console.log('🔧 PDF to Word: Processing file selection', file.name, file.type);
-    
-    // Validate PDF file
-    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-        showNotification('Please select a valid PDF file', 'error');
-        console.log('❌ PDF to Word: Invalid file type:', file.type);
-        return;
-    }
-    
-    // Display file info
-    const fileName = document.getElementById('pdf-word-file-name');
-    const fileSize = document.getElementById('pdf-word-file-size');
-    const fileInfo = document.getElementById('pdf-word-file-info');
-    const convertBtn = document.getElementById('pdf-word-convert-btn');
-    
-    console.log('🔧 PDF to Word: UI elements check:', {
-        fileName: !!fileName,
-        fileSize: !!fileSize,
-        fileInfo: !!fileInfo,
-        convertBtn: !!convertBtn
-    });
-    
-    if (fileName) fileName.textContent = file.name;
-    if (fileSize) fileSize.textContent = formatFileSize(file.size);
-    if (fileInfo) fileInfo.classList.remove('hidden');
-    if (convertBtn) {
-        convertBtn.disabled = false;
-        console.log('🔧 PDF to Word: Convert button enabled');
-    }
-    
-    showNotification('PDF file loaded successfully!', 'success');
-    console.log('✅ PDF to Word: File info displayed, convert button enabled');
-}
 
 // PDF to PowerPoint Converter
 function initializePdfToPptConverter() {

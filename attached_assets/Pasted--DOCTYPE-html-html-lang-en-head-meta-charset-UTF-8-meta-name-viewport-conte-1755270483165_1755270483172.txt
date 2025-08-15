@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF to Word Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f5;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: auto;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    input[type="file"] {
+      margin-bottom: 15px;
+    }
+    .file-info {
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+    }
+    #downloadLink {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📄 PDF to Word Converter</h2>
+    <input type="file" id="pdfInput" accept="application/pdf" />
+    <div class="file-info" id="fileDetails"></div>
+    <button id="convertBtn" disabled>Convert to Word</button>
+    <a id="downloadLink" href="#" download="converted.docx">Download Word File</a>
+  </div>
+
+  <script>
+    const pdfInput = document.getElementById("pdfInput");
+    const convertBtn = document.getElementById("convertBtn");
+    const fileDetails = document.getElementById("fileDetails");
+    const downloadLink = document.getElementById("downloadLink");
+
+    let pdfText = "";
+
+    pdfInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      const date = new Date(file.lastModified).toLocaleDateString();
+      fileDetails.innerHTML = `
+        <strong>File:</strong> ${file.name}<br>
+        <strong>Size:</strong> ${sizeMB} MB<br>
+        <strong>Last Modified:</strong> ${date}
+      `;
+
+      convertBtn.disabled = false;
+    });
+
+    convertBtn.addEventListener("click", async () => {
+      const file = pdfInput.files[0];
+      if (!file) return;
+
+      convertBtn.disabled = true;
+      convertBtn.textContent = "Converting...";
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const typedArray = new Uint8Array(reader.result);
+        window.PDFLib.PDFDocument.load(typedArray)
+          .then((pdfDoc) => {
+            const pages = pdfDoc.getPages();
+            let text = "";
+            pages.forEach((page, index) => {
+              const content = page.getTextContent?.();
+              if (content) {
+                content.items?.forEach(item => text += item.str + " ");
+              }
+            });
+
+            // Simulate .docx by creating plain text
+            const docBlob = new Blob([text || "PDF text extraction failed."], {
+              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+
+            downloadLink.href = URL.createObjectURL(docBlob);
+            downloadLink.style.display = "inline-block";
+            convertBtn.textContent = "Convert to Word";
+          })
+          .catch(err => {
+            alert("❌ Error parsing PDF. Try a different file.");
+            convertBtn.disabled = false;
+            convertBtn.textContent = "Convert to Word";
+          });
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  </script>
+
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</body>
+</html>
