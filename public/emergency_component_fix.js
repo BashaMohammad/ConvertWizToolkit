@@ -390,11 +390,11 @@ function initializeComponent(sectionId) {
                 break;
                 
             case 'pdf-to-word-section':
-                if (typeof initPDFToWord === 'function') {
-                    initPDFToWord();
+                if (typeof initializePdfToWordConverter === 'function') {
+                    initializePdfToWordConverter();
                     console.log('✅ INIT: PDF to Word initialized');
                 } else {
-                    console.warn('⚠️ INIT: initPDFToWord function not found');
+                    console.warn('⚠️ INIT: initializePdfToWordConverter function not found');
                 }
                 break;
                 break;
