@@ -390,9 +390,12 @@ function initializeComponent(sectionId) {
                 break;
                 
             case 'pdf-to-word-section':
-                // PDF to Word initialization is handled in tools.js with duplicate prevention
-                console.log('✅ INIT: PDF to Word handled by tools.js');
-                break;
+                if (typeof initPDFToWord === 'function') {
+                    initPDFToWord();
+                    console.log('✅ INIT: PDF to Word initialized');
+                } else {
+                    console.warn('⚠️ INIT: initPDFToWord function not found');
+                }
                 break;
                 
             case 'pdf-to-powerpoint-section':

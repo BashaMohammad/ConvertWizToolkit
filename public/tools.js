@@ -4107,10 +4107,10 @@ function showNotification(message, type = 'info') {
 
 // PDF to Word Converter - Single Clean Implementation
 function initPDFToWord() {
-    // Prevent double initialization
+    // Reset any previous initialization state when called explicitly
     if (window.pdfToWordInitialized) {
-        console.log('🔧 PDF to Word: Already initialized, skipping...');
-        return;
+        console.log('🔧 PDF to Word: Resetting previous initialization...');
+        window.pdfToWordInitialized = false;
     }
     window.pdfToWordInitialized = true;
     
