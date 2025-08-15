@@ -5808,7 +5808,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                 // Check each PDF section
                 const pdfSections = [
-                    { id: 'pdf-to-word-section', init: initializePdfToWordConverter },
+                    { id: 'pdf-to-word-section', init: initPDFToWord },
                     { id: 'pdf-to-ppt-section', init: initializePdfToPptConverter },
                     { id: 'pdf-to-excel-section', init: initializePdfToExcelConverter },
                     { id: 'pdf-split-section', init: initializePdfSplitConverter },
