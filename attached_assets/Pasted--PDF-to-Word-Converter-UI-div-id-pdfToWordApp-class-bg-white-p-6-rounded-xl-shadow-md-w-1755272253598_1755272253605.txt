@@ -1,0 +1,85 @@
+<!-- PDF to Word Converter UI -->
+<div id="pdfToWordApp" class="bg-white p-6 rounded-xl shadow-md w-full max-w-xl mx-auto text-center">
+  <h2 class="text-2xl font-semibold mb-4">PDF to Word Converter</h2>
+  <input type="file" id="pdfInput" accept=".pdf" class="mb-4 w-full" />
+  
+  <div id="fileDetails" class="text-sm text-gray-600 mb-4 hidden">
+    <p><strong>Name:</strong> <span id="fileName"></span></p>
+    <p><strong>Size:</strong> <span id="fileSize"></span></p>
+    <p><strong>Date:</strong> <span id="fileDate"></span></p>
+  </div>
+  
+  <button onclick="handlePdfToWord()" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-xl">
+    Convert to Word
+  </button>
+
+  <div id="conversionStatus" class="mt-4 text-sm text-green-700 font-medium hidden">
+    ✅ File converted. Your download should begin shortly.
+  </div>
+</div>
+
+<!-- Scripts -->
+<script type="module">
+  import { PDFDocument } from 'https://cdn.skypack.dev/pdf-lib';
+  import { Document, Packer, Paragraph } from 'https://cdn.skypack.dev/docx';
+
+  // Format File Size
+  function formatSize(bytes) {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  }
+
+  // Format Date
+  function formatDate(ts) {
+    const d = new Date(ts);
+    return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+  }
+
+  // Show File Details
+  function showFileDetails(file) {
+    document.getElementById('fileName').innerText = file.name;
+    document.getElementById('fileSize').innerText = formatSize(file.size);
+    document.getElementById('fileDate').innerText = formatDate(file.lastModified);
+    document.getElementById('fileDetails').classList.remove('hidden');
+  }
+
+  // PDF to Word Converter
+  async function convertPdfToWord(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const pages = pdfDoc.getPages();
+
+    let fullText = "";
+    for (let i = 0; i < pages.length; i++) {
+      const textContent = await pages[i].getTextContent();
+      const pageText = textContent.items.map((item) => item.str).join(' ');
+      fullText += pageText + "\n\n";
+    }
+
+    const paragraphs = fullText.split('\n').map(line => new Paragraph(line));
+    const doc = new Document({ sections: [{ children: paragraphs }] });
+    const blob = await Packer.toBlob(doc);
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name.replace('.pdf', '.docx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    document.getElementById("conversionStatus").classList.remove("hidden");
+  }
+
+  // Handler
+  window.handlePdfToWord = async function () {
+    const fileInput = document.getElementById("pdfInput");
+    const file = fileInput.files[0];
+    if (!file || !file.name.endsWith(".pdf")) {
+      alert("Please select a valid PDF file.");
+      return;
+    }
+    showFileDetails(file);
+    await convertPdfToWord(file);
+  }
+</script>
