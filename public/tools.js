@@ -4116,12 +4116,36 @@ function initPDFToWord() {
     const fileDetails = document.getElementById('pdf-word-file-info');
     const resultsContainer = document.getElementById('pdf-word-results');
     
+    console.log('🔧 PDF to Word elements check:', {
+        pdfInput: !!pdfInput,
+        browseBtn: !!browseBtn,
+        convertBtn: !!convertBtn,
+        uploadArea: !!uploadArea,
+        fileDetails: !!fileDetails,
+        resultsContainer: !!resultsContainer
+    });
+    
     if (!pdfInput || !browseBtn || !convertBtn) {
         console.error('PDF to Word: Required elements missing!');
         return;
     }
     
     let selectedFile = null;
+    
+    // Check if there's already a file selected (to preserve state)
+    if (pdfInput.files && pdfInput.files[0]) {
+        selectedFile = pdfInput.files[0];
+        console.log('🔧 PDF to Word: Found existing file:', selectedFile.name);
+        
+        // Update UI to show existing file
+        const fileName = document.getElementById('pdf-word-file-name');
+        const fileSize = document.getElementById('pdf-word-file-size');
+        
+        if (fileName) fileName.textContent = selectedFile.name;
+        if (fileSize) fileSize.textContent = `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`;
+        if (fileDetails) fileDetails.style.display = 'block';
+        convertBtn.disabled = false;
+    }
     
     // Browse button functionality
     browseBtn.addEventListener('click', (e) => {
@@ -4134,28 +4158,30 @@ function initPDFToWord() {
         const file = e.target.files[0];
         if (!file) return;
         
+        // Validate PDF file
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+            showNotification('Please select a valid PDF file', 'error');
+            return;
+        }
+        
         selectedFile = file;
         
-        // Display file details
-        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-        const date = new Date(file.lastModified).toLocaleDateString();
+        // Update file details using existing elements
+        const fileName = document.getElementById('pdf-word-file-name');
+        const fileSize = document.getElementById('pdf-word-file-size');
         
+        if (fileName) fileName.textContent = file.name;
+        if (fileSize) fileSize.textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+        
+        // Show file details container
         if (fileDetails) {
-            fileDetails.innerHTML = `
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-pdf text-red-500 mr-3 text-xl"></i>
-                        <div>
-                            <p class="font-semibold text-gray-800">${file.name}</p>
-                            <p class="text-sm text-gray-600">Size: ${sizeMB} MB | Modified: ${date}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
             fileDetails.style.display = 'block';
         }
         
+        // Enable convert button
         convertBtn.disabled = false;
+        
+        showNotification('PDF file loaded successfully!', 'success');
         console.log('✅ PDF to Word: File selected and UI updated');
     });
     
@@ -4233,9 +4259,18 @@ function initPDFToWord() {
             uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
             
             const files = e.dataTransfer.files;
-            if (files.length > 0 && files[0].type === 'application/pdf') {
-                pdfInput.files = files;
-                pdfInput.dispatchEvent(new Event('change'));
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                    // Manually set the file and trigger change
+                    Object.defineProperty(pdfInput, 'files', {
+                        value: files,
+                        writable: false
+                    });
+                    pdfInput.dispatchEvent(new Event('change', { bubbles: true }));
+                } else {
+                    showNotification('Please drop a valid PDF file', 'error');
+                }
             }
         });
         
