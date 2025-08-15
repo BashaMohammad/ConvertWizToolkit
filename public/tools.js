@@ -4183,11 +4183,30 @@ function initPDFToWord() {
         setTimeout(() => {
             // Create download link
             const fileName = selectedFile.name.replace('.pdf', '.docx');
-            const content = `This is a converted Word document from ${selectedFile.name}.\n\nOriginal file size: ${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB\nConverted on: ${new Date().toLocaleString()}\n\nIn a real implementation, this would contain the extracted and formatted text from your PDF file with proper Word formatting.`;
             
-            const blob = new Blob([content], { 
-                type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+            // Create a proper RTF document that Word can read
+            const rtfContent = `{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 Times New Roman;}}
+\\f0\\fs24 \\b PDF to Word Conversion Report\\b0\\par
+\\par
+\\b Source File:\\b0 ${selectedFile.name}\\par
+\\b Original Size:\\b0 ${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB\\par
+\\b Converted On:\\b0 ${new Date().toLocaleString()}\\par
+\\par
+\\b Conversion Summary:\\b0\\par
+Your PDF file has been successfully processed. In a real implementation, this document would contain the extracted and formatted text from your PDF file with proper Word formatting, including:\\par
+\\par
+• Preserved fonts and styling\\par
+• Maintained paragraph structure\\par
+• Converted images and tables\\par
+• Proper page layout\\par
+\\par
+\\b Note:\\b0 This is a demonstration of the PDF to Word conversion feature. For actual PDF text extraction, advanced OCR and document parsing libraries would be integrated.\\par
+}`;
+            
+            const blob = new Blob([rtfContent], { 
+                type: 'application/rtf' 
             });
+            const rtfFileName = selectedFile.name.replace('.pdf', '.rtf');
             const url = URL.createObjectURL(blob);
             
             // Show success result
@@ -4205,11 +4224,11 @@ function initPDFToWord() {
                     <div class="bg-white border rounded-lg p-4">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h5 class="font-semibold">${fileName}</h5>
-                                <p class="text-gray-600 text-sm">Word Document</p>
+                                <h5 class="font-semibold">${rtfFileName}</h5>
+                                <p class="text-gray-600 text-sm">Rich Text Format (opens in Word)</p>
                             </div>
-                            <a href="${url}" download="${fileName}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                <i class="fas fa-download mr-2"></i>Download
+                            <a href="${url}" download="${rtfFileName}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-download mr-2"></i>Download RTF
                             </a>
                         </div>
                     </div>
