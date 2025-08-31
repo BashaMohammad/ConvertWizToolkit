@@ -152,7 +152,7 @@ function convertCase(caseType) {
     }
 }
 
-// Copy output text to clipboard (silent operation)
+// Copy output text to clipboard (silent operation with button feedback)
 function copyOutputText() {
     const outputText = document.getElementById('case-output-text');
     
@@ -160,21 +160,34 @@ function copyOutputText() {
         return; // Silent return - no error message
     }
     
+    const button = event.target.closest('button');
+    if (!button) return;
+    
+    // Prevent multiple clicks by disabling button temporarily
+    if (button.disabled) return;
+    button.disabled = true;
+    
+    const originalText = button.innerHTML;
+    const originalClasses = button.className;
+    
+    // Show copying state immediately
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Copying...';
+    button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
+    button.classList.add('bg-gray-400', 'cursor-not-allowed');
+    
     navigator.clipboard.writeText(outputText.value).then(() => {
-        // Show visual success feedback only
-        const button = event.target.closest('button');
-        if (button) {
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
-            button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
-            button.classList.add('bg-green-500');
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.classList.remove('bg-green-500');
-                button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
-            }, 2000);
-        }
+        // Show success state
+        button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+        button.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        button.classList.add('bg-green-500');
+        
+        // Reset button after 7 seconds with smooth transition
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.className = originalClasses;
+            button.disabled = false;
+        }, 7000);
+        
     }).catch(() => {
         // Silent fallback - try older method
         try {
@@ -185,22 +198,27 @@ function copyOutputText() {
             document.execCommand('copy');
             document.body.removeChild(textArea);
             
-            // Still show visual success feedback
-            const button = event.target.closest('button');
-            if (button) {
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
-                button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
-                button.classList.add('bg-green-500');
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.classList.remove('bg-green-500');
-                    button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
-                }, 2000);
-            }
+            // Show success state for fallback
+            button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+            button.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            button.classList.add('bg-green-500');
+            
+            // Reset button after 7 seconds
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.className = originalClasses;
+                button.disabled = false;
+            }, 7000);
+            
         } catch (fallbackError) {
             console.log('Copy operation completed'); // Silent logging only
+            
+            // Reset button even if copy failed
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.className = originalClasses;
+                button.disabled = false;
+            }, 3000);
         }
     });
 }

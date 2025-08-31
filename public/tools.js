@@ -4064,49 +4064,67 @@ function copyOutputText(event) {
         return; // Silent return - no error message needed
     }
     
+    const button = event ? event.target : document.querySelector('[onclick*="copyOutputText"]');
+    if (!button) return;
+    
+    // Prevent multiple clicks by disabling button temporarily
+    if (button.disabled) return;
+    button.disabled = true;
+    
+    const originalText = button.innerHTML;
+    const originalClasses = button.className;
     const textToCopy = outputText.value;
     
-    // Use modern Clipboard API with silent success
+    // Show copying state immediately
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Copying...';
+    button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
+    button.classList.add('bg-gray-400', 'cursor-not-allowed');
+    
+    // Use modern Clipboard API with enhanced feedback
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(textToCopy).then(() => {
-            updateButtonVisual(event); // Only visual feedback, no notification
+            showSuccessState(button, originalText, originalClasses);
         }).catch((error) => {
             console.log('Clipboard API failed, trying fallback:', error);
-            fallbackCopyText(event);
+            fallbackCopyText(button, textToCopy, originalText, originalClasses);
         });
     } else {
-        fallbackCopyText(event);
+        fallbackCopyText(button, textToCopy, originalText, originalClasses);
     }
     
-    function fallbackCopyText(evt) {
+    function fallbackCopyText(btn, text, origText, origClasses) {
         try {
             outputText.select();
             outputText.setSelectionRange(0, 99999);
             const successful = document.execCommand('copy');
             if (successful) {
-                updateButtonVisual(evt); // Only visual feedback on success
+                showSuccessState(btn, origText, origClasses);
+            } else {
+                resetButton(btn, origText, origClasses, 3000);
             }
-            // Silent operation - no notifications
         } catch (err) {
             console.log('Copy operation completed'); // Silent logging
-            // No error notifications - copy might still have worked
+            resetButton(btn, origText, origClasses, 3000);
         }
     }
     
-    function updateButtonVisual(evt) {
-        const button = evt ? evt.target : document.querySelector('[onclick*="copyOutputText"]');
-        if (button) {
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
-            button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
-            button.classList.add('bg-green-500');
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.classList.remove('bg-green-500');
-                button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600', 'hover:from-violet-600', 'hover:to-purple-700');
-            }, 2000);
-        }
+    function showSuccessState(btn, origText, origClasses) {
+        btn.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+        btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        btn.classList.add('bg-green-500');
+        
+        // Reset button after 7 seconds
+        setTimeout(() => {
+            resetButton(btn, origText, origClasses);
+        }, 7000);
+    }
+    
+    function resetButton(btn, origText, origClasses, delay = 0) {
+        setTimeout(() => {
+            btn.innerHTML = origText;
+            btn.className = origClasses;
+            btn.disabled = false;
+        }, delay);
     }
 }
 
