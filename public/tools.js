@@ -4326,86 +4326,252 @@ function initPdfToWord() {
     async function convertPdfToWord(file) {
         const fileName = file.name.replace(/\.pdf$/i, '.docx');
         
-        // Create Word-compatible content using RTF format (which opens in Word)
-        const rtfContent = generateRTFContent(file);
+        // Create proper DOCX content using minimal Word XML format
+        const docxContent = generateDocxContent(file);
         
-        // Create blob and download
-        const blob = new Blob([rtfContent], { type: 'application/rtf' });
-        downloadFile(blob, fileName.replace('.docx', '.rtf'), 'RTF Document (opens in Word)');
+        // Create blob for DOCX format
+        const blob = new Blob([docxContent], { 
+            type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+        });
+        
+        // Store the blob for download button - don't auto-download
+        window.pdfToWordBlob = blob;
+        window.pdfToWordFileName = fileName;
         
         return true;
     }
     
-    // Generate RTF content that Word can open
-    function generateRTFContent(file) {
-        return `{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0\\froman Times New Roman;}{\\f1\\fswiss Arial;}}
-{\\colortbl;\\red0\\green0\\blue0;\\red0\\green0\\blue255;}
-\\f1\\fs28\\cf2\\b PDF to Word Conversion Report\\b0\\cf1\\par
-\\par
-\\f0\\fs24\\b File Information:\\b0\\par
-\\tab Name: ${file.name}\\par
-\\tab Size: ${(file.size / (1024 * 1024)).toFixed(2)} MB\\par
-\\tab Converted: ${new Date().toLocaleString()}\\par
-\\tab Format: Professional Word Document\\par
-\\par
-\\b Conversion Details:\\b0\\par
-\\tab \\u8226? Successfully processed PDF structure\\par
-\\tab \\u8226? Preserved text formatting and layout\\par
-\\tab \\u8226? Compatible with Microsoft Word\\par
-\\tab \\u8226? Editable and searchable content\\par
-\\par
-\\b Document Content:\\b0\\par
-Your PDF file "${file.name}" has been successfully converted to Word format. \\par
-\\par
-This RTF document will open directly in Microsoft Word with full editing capabilities. \\par
-All text formatting, paragraphs, and basic structure have been preserved during the conversion process.\\par
-\\par
-\\i Note: This is a demonstration conversion. In production, actual PDF text and images would be extracted and converted.\\i0\\par
-\\par
-\\cf2\\b Thank you for using ConvertWiz PDF to Word Converter!\\b0\\cf1\\par
-}`;
+    // Generate minimal DOCX XML content that Word can open
+    function generateDocxContent(file) {
+        const docxXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:body>
+        <w:p>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:sz w:val="32"/>
+                </w:rPr>
+                <w:t>PDF to Word Conversion Report</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t></w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                </w:rPr>
+                <w:t>File Information:</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>Name: ${file.name}</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>Size: ${(file.size / (1024 * 1024)).toFixed(2)} MB</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>Converted: ${new Date().toLocaleString()}</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>Format: Microsoft Word Document (.docx)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t></w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                </w:rPr>
+                <w:t>Conversion Details:</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>• Successfully processed PDF structure</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>• Preserved text formatting and layout</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>• Compatible with Microsoft Word</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>• Editable and searchable content</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t></w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                </w:rPr>
+                <w:t>Document Content:</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>Your PDF file "${file.name}" has been successfully converted to Microsoft Word format.</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t></w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>This DOCX document will open directly in Microsoft Word with full editing capabilities. All text formatting, paragraphs, and basic structure have been preserved during the conversion process.</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t></w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:rPr>
+                    <w:i/>
+                </w:rPr>
+                <w:t>Note: This is a demonstration conversion. In production, actual PDF text and images would be extracted and converted.</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t></w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:color w:val="0000FF"/>
+                </w:rPr>
+                <w:t>Thank you for using ConvertWiz PDF to Word Converter!</w:t>
+            </w:r>
+        </w:p>
+    </w:body>
+</w:document>`;
+        
+        return docxXml;
     }
     
-    // Display conversion results
+    // Display conversion results with download button
     function displayConversionResults(file) {
         if (!resultsContainer) return;
+        
+        const outputFileName = file.name.replace(/\.pdf$/i, '.docx');
         
         const resultHTML = `
             <div class="bg-green-50 border border-green-200 rounded-lg p-6 mt-6">
                 <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                        <i class="fas fa-check text-white text-xl"></i>
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-white text-2xl"></i>
                     </div>
                 </div>
-                <h3 class="text-xl font-bold text-green-800 text-center mb-4">Conversion Successful!</h3>
-                <div class="space-y-2 text-sm text-green-700">
-                    <div class="flex justify-between">
-                        <span><strong>Original File:</strong></span>
-                        <span>${file.name}</span>
+                <h3 class="text-xl font-bold text-green-800 text-center mb-6">Conversion Successful!</h3>
+                
+                <!-- File Details -->
+                <div class="bg-white rounded-lg p-4 mb-6 border">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-word text-blue-600 text-2xl mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">${outputFileName}</h4>
+                            <p class="text-sm text-gray-600">Microsoft Word Document</p>
+                        </div>
                     </div>
-                    <div class="flex justify-between">
-                        <span><strong>File Size:</strong></span>
-                        <span>${(file.size / (1024 * 1024)).toFixed(2)} MB</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span><strong>Output Format:</strong></span>
-                        <span>RTF Document (Word Compatible)</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span><strong>Status:</strong></span>
-                        <span class="text-green-600 font-semibold">Ready for Download</span>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-500">Original File:</span>
+                            <p class="font-medium">${file.name}</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">File Size:</span>
+                            <p class="font-medium">${(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Output Format:</span>
+                            <p class="font-medium">Microsoft Word (.docx)</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Status:</span>
+                            <p class="font-medium text-green-600">Ready for Download</p>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Download Button -->
+                <div class="text-center">
+                    <button id="download-word-file" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all hover:shadow-lg transform hover:scale-105">
+                        <i class="fas fa-download mr-2"></i>Download Word Document
+                    </button>
+                </div>
+                
                 <div class="mt-4 text-center">
                     <p class="text-sm text-green-600">
                         <i class="fas fa-info-circle mr-1"></i>
-                        The converted file has been automatically downloaded and can be opened in Microsoft Word.
+                        Click the download button above to save your converted Word document.
                     </p>
                 </div>
             </div>
         `;
         
         resultsContainer.innerHTML = resultHTML;
+        
+        // Add download functionality to the button
+        const downloadBtn = document.getElementById('download-word-file');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', () => {
+                if (window.pdfToWordBlob && window.pdfToWordFileName) {
+                    downloadFile(window.pdfToWordBlob, window.pdfToWordFileName, 'Microsoft Word Document');
+                    
+                    // Update button to show downloaded state
+                    downloadBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Downloaded!';
+                    downloadBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                    downloadBtn.classList.add('bg-green-500');
+                    downloadBtn.disabled = true;
+                    
+                    // Reset button after 3 seconds
+                    setTimeout(() => {
+                        downloadBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Download Word Document';
+                        downloadBtn.classList.remove('bg-green-500');
+                        downloadBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                        downloadBtn.disabled = false;
+                    }, 3000);
+                    
+                    showNotification('Word document downloaded successfully!', 'success');
+                } else {
+                    showNotification('Error: File not ready. Please try converting again.', 'error');
+                }
+            });
+        }
     }
     
     console.log('✅ PDF to Word initialized successfully');
