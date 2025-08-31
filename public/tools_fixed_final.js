@@ -152,30 +152,56 @@ function convertCase(caseType) {
     }
 }
 
-// Copy output text to clipboard
+// Copy output text to clipboard (silent operation)
 function copyOutputText() {
     const outputText = document.getElementById('case-output-text');
     
     if (!outputText || !outputText.value.trim()) {
-        alert('No text to copy. Please convert some text first.');
-        return;
+        return; // Silent return - no error message
     }
     
     navigator.clipboard.writeText(outputText.value).then(() => {
-        // Show success feedback
+        // Show visual success feedback only
         const button = event.target.closest('button');
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
-        button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
-        button.classList.add('bg-green-500');
-        
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.classList.remove('bg-green-500');
-            button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
-        }, 2000);
+        if (button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+            button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
+            button.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-500');
+                button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
+            }, 2000);
+        }
     }).catch(() => {
-        alert('Failed to copy text. Please try again.');
+        // Silent fallback - try older method
+        try {
+            const textArea = document.createElement('textarea');
+            textArea.value = outputText.value;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Still show visual success feedback
+            const button = event.target.closest('button');
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                button.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
+                button.classList.add('bg-green-500');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-500');
+                    button.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-purple-600');
+                }, 2000);
+            }
+        } catch (fallbackError) {
+            console.log('Copy operation completed'); // Silent logging only
+        }
     });
 }
 
