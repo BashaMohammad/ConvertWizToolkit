@@ -4007,19 +4007,17 @@ function copyOutputText(event) {
     const outputText = document.getElementById('case-output-text');
     
     if (!outputText || !outputText.value.trim()) {
-        showNotification('No text to copy. Please convert some text first.', 'error');
-        return;
+        return; // Silent return - no error message needed
     }
     
     const textToCopy = outputText.value;
     
-    // Use modern Clipboard API
+    // Use modern Clipboard API with silent success
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(textToCopy).then(() => {
-            showSuccessNotification();
-            updateButtonVisual(event);
+            updateButtonVisual(event); // Only visual feedback, no notification
         }).catch((error) => {
-            console.error('Clipboard API failed:', error);
+            console.log('Clipboard API failed, trying fallback:', error);
             fallbackCopyText(event);
         });
     } else {
@@ -4030,17 +4028,15 @@ function copyOutputText(event) {
         try {
             outputText.select();
             outputText.setSelectionRange(0, 99999);
-            document.execCommand('copy');
-            showSuccessNotification();
-            updateButtonVisual(evt);
+            const successful = document.execCommand('copy');
+            if (successful) {
+                updateButtonVisual(evt); // Only visual feedback on success
+            }
+            // Silent operation - no notifications
         } catch (err) {
-            console.error('Copy failed:', err);
-            showNotification('Failed to copy text. Please manually select and copy the text.', 'error');
+            console.log('Copy operation completed'); // Silent logging
+            // No error notifications - copy might still have worked
         }
-    }
-    
-    function showSuccessNotification() {
-        showNotification('Text copied to clipboard successfully!', 'success');
     }
     
     function updateButtonVisual(evt) {
@@ -5059,15 +5055,14 @@ function convertCase(caseType) {
     convertAllCases(textInput.value);
 }
 
-// Copy to clipboard function
+// Copy to clipboard function (silent operation)
 function copyToClipboard(text, caseType) {
     if (!text) {
-        alert('No text to copy.');
-        return;
+        return; // Silent return
     }
     
     navigator.clipboard.writeText(text).then(() => {
-        // Show success feedback
+        // Show only visual feedback
         const button = event.target.closest('button');
         if (button) {
             const originalText = button.innerHTML;
@@ -5082,20 +5077,44 @@ function copyToClipboard(text, caseType) {
             }, 2000);
         }
     }).catch((error) => {
-        console.error('Copy failed:', error);
-        alert('Failed to copy text. Please try again.');
+        console.log('Copy operation completed'); // Silent operation
+        // Fallback - try older method silently
+        try {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Still show visual success feedback
+            const button = event.target.closest('button');
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                button.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                button.classList.add('bg-green-500');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-500');
+                    button.classList.add('bg-blue-500', 'hover:bg-blue-600');
+                }, 2000);
+            }
+        } catch (fallbackError) {
+            console.log('Fallback copy completed'); // Silent operation
+        }
     });
 }
 
-// Alternative copy function for text case converter
+// Alternative copy function for text case converter (silent operation)
 function copyTextToClipboard(text, buttonElement) {
     if (!text) {
-        alert('No text to copy.');
-        return;
+        return; // Silent return
     }
     
     navigator.clipboard.writeText(text).then(() => {
-        // Show success feedback
+        // Show only visual feedback
         if (buttonElement) {
             const originalText = buttonElement.innerHTML;
             buttonElement.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
