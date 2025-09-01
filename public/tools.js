@@ -4338,37 +4338,51 @@ function initPdfToWord() {
     
     // Generate a valid DOCX file using JSZip
     async function generateValidDocxFile(file) {
-        // Use JSZip library to create proper DOCX structure
-        const JSZip = window.JSZip || await loadJSZip();
-        const zip = new JSZip();
-        
-        // Add required DOCX structure
-        // 1. [Content_Types].xml
-        zip.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        try {
+            // Use JSZip library to create proper DOCX structure
+            const JSZip = window.JSZip || await loadJSZip();
+            const zip = new JSZip();
+            
+            // Add required DOCX structure
+            // 1. [Content_Types].xml
+            zip.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
 <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
 <Default Extension="xml" ContentType="application/xml"/>
 <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
 </Types>`);
-        
-        // 2. _rels/.rels
-        zip.folder("_rels").file(".rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+            
+            // 2. _rels/.rels
+            zip.folder("_rels").file(".rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
 </Relationships>`);
-        
-        // 3. word/_rels/document.xml.rels
-        zip.folder("word").folder("_rels").file("document.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+            
+            // 3. word/_rels/document.xml.rels
+            zip.folder("word").folder("_rels").file("document.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 </Relationships>`);
-        
-        // 4. word/document.xml (main content)
-        const documentXml = generateWordDocumentXml(file);
-        zip.folder("word").file("document.xml", documentXml);
-        
-        // Generate the DOCX file
-        const docxBlob = await zip.generateAsync({type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
-        return docxBlob;
+            
+            // 4. word/document.xml (main content)
+            const documentXml = generateWordDocumentXml(file);
+            zip.folder("word").file("document.xml", documentXml);
+            
+            // Generate the DOCX file with proper settings
+            const docxBlob = await zip.generateAsync({
+                type: "blob", 
+                mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                compression: "DEFLATE",
+                compressionOptions: {
+                    level: 6
+                }
+            });
+            
+            console.log('Generated DOCX blob size:', docxBlob.size);
+            return docxBlob;
+        } catch (error) {
+            console.error('Error generating DOCX:', error);
+            throw error;
+        }
     }
     
     // Load JSZip library dynamically
@@ -4581,24 +4595,32 @@ function initPdfToWord() {
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => {
                 if (window.pdfToWordBlob && window.pdfToWordFileName) {
-                    downloadFile(window.pdfToWordBlob, window.pdfToWordFileName, 'Microsoft Word Document');
+                    console.log('Attempting download:', window.pdfToWordFileName, 'Size:', window.pdfToWordBlob.size);
                     
-                    // Update button to show downloaded state
-                    downloadBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Downloaded!';
-                    downloadBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                    downloadBtn.classList.add('bg-green-500');
-                    downloadBtn.disabled = true;
+                    const success = downloadFile(window.pdfToWordBlob, window.pdfToWordFileName, 'Microsoft Word Document');
                     
-                    // Reset button after 3 seconds
-                    setTimeout(() => {
-                        downloadBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Download Word Document';
-                        downloadBtn.classList.remove('bg-green-500');
-                        downloadBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                        downloadBtn.disabled = false;
-                    }, 3000);
-                    
-                    showNotification('Word document downloaded successfully!', 'success');
+                    if (success) {
+                        // Update button to show downloaded state
+                        downloadBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Downloaded!';
+                        downloadBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                        downloadBtn.classList.add('bg-green-500');
+                        downloadBtn.disabled = true;
+                        
+                        // Reset button after 5 seconds
+                        setTimeout(() => {
+                            downloadBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Download Word Document';
+                            downloadBtn.classList.remove('bg-green-500');
+                            downloadBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                            downloadBtn.disabled = false;
+                        }, 5000);
+                        
+                        showNotification('Word document downloaded successfully!', 'success');
+                    }
                 } else {
+                    console.error('Download data missing:', {
+                        blob: window.pdfToWordBlob,
+                        fileName: window.pdfToWordFileName
+                    });
                     showNotification('Error: File not ready. Please try converting again.', 'error');
                 }
             });
@@ -4608,17 +4630,40 @@ function initPdfToWord() {
     console.log('✅ PDF to Word initialized successfully');
 }
 
-// Helper function for file downloads
+// Helper function for file downloads with better error handling
 function downloadFile(blob, fileName, description) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+        // Verify blob is valid
+        if (!blob || blob.size === 0) {
+            showNotification('Error: File is empty or invalid', 'error');
+            return false;
+        }
+        
+        // Create download URL
+        const url = URL.createObjectURL(blob);
+        
+        // Create download link
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.style.display = 'none';
+        
+        // Add to DOM, click, and clean up
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up after a delay to ensure download starts
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 1000);
+        
+        return true;
+    } catch (error) {
+        console.error('Download error:', error);
+        showNotification('Download failed: ' + error.message, 'error');
+        return false;
+    }
 }
 
 
