@@ -42,7 +42,7 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
 
     const pdfPath = req.file.path;
     const originalName = req.file.originalname.replace(/\.pdf$/i, '');
-    const outputDocx = `${originalName}.docx`;
+    const outputDocx = `converted_${originalName}.docx`;
     const outputPath = path.join(downloadsDir, outputDocx);
 
     console.log(`Converting PDF: ${req.file.originalname} -> ${outputDocx}`);
