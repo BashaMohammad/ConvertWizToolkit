@@ -300,4 +300,246 @@ function downloadConvertedFile(url, filename) {
     document.body.removeChild(a);
 }
 
+// PDF to PowerPoint Converter
+function initializePdfToPptConverter() {
+    console.log('🔧 PDF to PowerPoint: Starting initialization...');
+    
+    const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
+    const fileInput = document.getElementById('pdf-powerpoint-input');
+    const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
+    
+    if (!uploadArea || !fileInput || !browseBtn) {
+        console.warn('⚠️ PDF to PowerPoint: Required elements not found');
+        return;
+    }
+    
+    // Browse button functionality
+    browseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToPowerpointFiles(files);
+        }
+    });
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        if (files.length > 0) {
+            processPdfToPowerpointFiles(files);
+        }
+    });
+    
+    console.log('✅ PDF to PowerPoint initialized successfully');
+}
+
+function processPdfToPowerpointFiles(files) {
+    const resultsContainer = document.getElementById('pdf-powerpoint-results');
+    let resultsList = document.getElementById('pdf-powerpoint-list');
+    
+    // Create results list if it doesn't exist
+    if (!resultsList) {
+        resultsContainer.innerHTML = `
+            <h4 class="text-xl font-bold text-gray-800 mb-6 text-center">Ready for Conversion</h4>
+            <div id="pdf-powerpoint-list" class="space-y-4"></div>
+        `;
+        resultsList = document.getElementById('pdf-powerpoint-list');
+    }
+    
+    resultsList.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+    
+    // Store files globally for conversion function
+    window.currentPdfFiles = files;
+    
+    files.forEach((file, index) => {
+        displayRealPdfConversionResult(file, 'PowerPoint', 'pdf-powerpoint-list', 'orange', index);
+    });
+}
+
+// Enhanced display function for real conversions
+function displayRealPdfConversionResult(file, conversionType, containerId, colorTheme, index) {
+    const resultsList = document.getElementById(containerId);
+    
+    const resultItem = document.createElement('div');
+    resultItem.className = 'bg-gray-50 border border-gray-200 rounded-lg p-4';
+    
+    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+    
+    resultItem.innerHTML = `
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <h5 class="font-semibold text-gray-800">${file.name}</h5>
+                <p class="text-sm text-gray-600">
+                    File size: ${fileSize} MB • Ready to convert to ${conversionType}
+                </p>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="realPdfConversion('${conversionType}', this, ${index})" class="bg-${colorTheme}-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-${colorTheme}-600 font-semibold transition-colors">
+                    <i class="fas fa-download mr-1"></i>Convert & Download
+                </button>
+            </div>
+        </div>
+    `;
+    
+    resultsList.appendChild(resultItem);
+}
+
+// Real PDF conversion function that connects to backend API
+function realPdfConversion(type, buttonElement, fileIndex) {
+    // Get the file from global storage
+    const files = window.currentPdfFiles || [];
+    const file = files[fileIndex];
+    
+    if (!file) {
+        console.error('File not found for conversion');
+        return;
+    }
+    
+    convertPdfToRealFormat(file, type, buttonElement);
+}
+
+// Enhanced PDF conversion with real backend API
+function convertPdfToRealFormat(file, conversionType, buttonElement) {
+    const formData = new FormData();
+    formData.append('pdf', file);
+    
+    // Set button to processing state
+    const originalText = buttonElement.innerHTML;
+    buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Converting...';
+    buttonElement.disabled = true;
+    
+    // Determine API endpoint based on conversion type
+    let apiEndpoint;
+    let fileExtension;
+    
+    switch(conversionType) {
+        case 'Word':
+            apiEndpoint = '/api/pdf-to-word';
+            fileExtension = '.docx';
+            break;
+        case 'PowerPoint':
+            apiEndpoint = '/api/pdf-to-powerpoint';
+            fileExtension = '.pptx';
+            break;
+        case 'Excel':
+            apiEndpoint = '/api/pdf-to-excel';
+            fileExtension = '.xlsx';
+            break;
+        default:
+            console.error('Unknown conversion type:', conversionType);
+            buttonElement.innerHTML = originalText;
+            buttonElement.disabled = false;
+            return;
+    }
+    
+    // Send to backend API
+    fetch(apiEndpoint, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Get filename from Content-Disposition header or create one
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let downloadFilename = `converted_${file.name.replace('.pdf', '')}${fileExtension}`;
+        
+        if (contentDisposition) {
+            const match = contentDisposition.match(/filename="?([^"]+)"?/);
+            if (match) {
+                downloadFilename = match[1];
+            }
+        }
+        
+        return response.blob().then(blob => ({ blob, filename: downloadFilename }));
+    })
+    .then(({ blob, filename }) => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        
+        // Show success notification
+        showRealPdfConversionSuccess(conversionType, filename);
+        
+        // Reset button
+        buttonElement.innerHTML = originalText;
+        buttonElement.disabled = false;
+    })
+    .catch(error => {
+        console.error('Conversion failed:', error);
+        
+        // Show error notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center';
+        notification.innerHTML = `
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            Conversion failed. Please try again.
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 5000);
+        
+        // Reset button
+        buttonElement.innerHTML = originalText;
+        buttonElement.disabled = false;
+    });
+}
+
+function showRealPdfConversionSuccess(type, filename) {
+    // Create success notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center';
+    notification.innerHTML = `
+        <i class="fas fa-check-circle mr-2"></i>
+        ${filename} converted successfully!
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
 console.log('✅ Component functions loaded and ready');

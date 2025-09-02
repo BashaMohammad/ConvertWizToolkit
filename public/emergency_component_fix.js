@@ -415,7 +415,6 @@ function initializeComponent(sectionId) {
                     console.warn('⚠️ INIT: initPDFToExcel function not found');
                 }
                 break;
-                break;
                 
             case 'pdf-split-section':
                 if (typeof initPDFSplit === 'function') {
@@ -424,7 +423,6 @@ function initializeComponent(sectionId) {
                 } else {
                     console.warn('⚠️ INIT: initPDFSplit function not found');
                 }
-                break;
                 break;
                 
             case 'pdf-merge-section':
@@ -435,14 +433,6 @@ function initializeComponent(sectionId) {
                     console.warn('⚠️ INIT: initPDFMerge function not found');
                 }
                 break;
-                
-            case 'pdf-to-powerpoint-section':
-                if (typeof initializePdfToPptConverter === 'function') {
-                    initializePdfToPptConverter();
-                    console.log('✅ INIT: PDF to PowerPoint initialized');
-                } else {
-                    console.warn('⚠️ INIT: initializePdfToPptConverter function not found');
-                }
                 break;
                 break;
                 

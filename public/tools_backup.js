@@ -4325,9 +4325,9 @@ function processPdfToWordFiles(files) {
 
 // PDF to PowerPoint Converter
 function initializePdfToPptConverter() {
-    const uploadArea = document.getElementById('pdf-ppt-upload-area');
-    const fileInput = document.getElementById('pdf-ppt-input');
-    const browseBtn = document.getElementById('pdf-ppt-browse-btn');
+    const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
+    const fileInput = document.getElementById('pdf-powerpoint-input');
+    const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
     
     if (!uploadArea || !fileInput || !browseBtn) return;
     
@@ -4353,7 +4353,7 @@ function initializePdfToPptConverter() {
         uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
         const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
         if (files.length > 0) {
-            processPdfToPptFiles(files);
+            processPdfToPowerpointFiles(files);
         }
     });
     
@@ -4365,20 +4365,20 @@ function initializePdfToPptConverter() {
     fileInput.addEventListener('change', (e) => {
         const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
         if (files.length > 0) {
-            processPdfToPptFiles(files);
+            processPdfToPowerpointFiles(files);
         }
     });
 }
 
-function processPdfToPptFiles(files) {
-    const resultsContainer = document.getElementById('pdf-ppt-results');
-    const resultsList = document.getElementById('pdf-ppt-list');
+function processPdfToPowerpointFiles(files) {
+    const resultsContainer = document.getElementById('pdf-powerpoint-results');
+    const resultsList = document.getElementById('pdf-powerpoint-list');
     
     resultsList.innerHTML = '';
     resultsContainer.classList.remove('hidden');
     
     files.forEach((file, index) => {
-        displayPdfConversionResult(file, 'PowerPoint', 'pdf-ppt-list', 'orange', index);
+        displayPdfConversionResult(file, 'PowerPoint', 'pdf-powerpoint-list', 'orange', index);
     });
 }
 
@@ -4957,7 +4957,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Check each PDF section
                 const pdfSections = [
                     { id: 'pdf-to-word-section', init: initializePdfToWordConverter },
-                    { id: 'pdf-to-ppt-section', init: initializePdfToPptConverter },
+                    { id: 'pdf-to-powerpoint-section', init: initializePdfToPptConverter },
                     { id: 'pdf-to-excel-section', init: initializePdfToExcelConverter },
                     { id: 'pdf-split-section', init: initializePdfSplitConverter },
                     { id: 'pdf-merge-compress-section', init: initializePdfMergeConverter }
@@ -4975,7 +4975,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Observe all PDF sections
     const pdfSectionIds = [
-        'pdf-to-word-section', 'pdf-to-ppt-section', 'pdf-to-excel-section',
+        'pdf-to-word-section', 'pdf-to-powerpoint-section', 'pdf-to-excel-section',
         'pdf-split-section', 'pdf-merge-compress-section'
     ];
     
