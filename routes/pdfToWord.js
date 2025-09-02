@@ -95,7 +95,7 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
       console.log('Python pdf2docx conversion successful, file created at:', outputPath);
 
       // Get file stats
-      const stats = fs.statSync(finalOutputPath);
+      const stats = fs.statSync(outputPath);
       
       // Return success response with download info
       res.json({
@@ -109,7 +109,7 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
 
       // Schedule file cleanup after 1 hour
       setTimeout(() => {
-        fs.unlink(finalOutputPath, (cleanupErr) => {
+        fs.unlink(outputPath, (cleanupErr) => {
           if (cleanupErr) console.warn('Failed to cleanup converted file:', cleanupErr);
           else console.log('Cleaned up converted file:', outputDocx);
         });

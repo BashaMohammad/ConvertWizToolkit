@@ -19,7 +19,7 @@ def convert_pdf_to_word(input_path, output_path):
         cv = Converter(input_path)
         
         # Convert PDF to DOCX
-        cv.convert(output_path, start=0, end=None)
+        cv.convert(output_path, start=0)
         cv.close()
         
         duration = round(time.time() - start_time, 2)

@@ -2,7 +2,7 @@ modules = ["nodejs-20", "python-3.11", "postgresql-16", "python3"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["freetype", "glibcLocales", "imagemagickBig", "libreoffice", "openjdk", "pandoc", "xcodebuild", "zlib"]
+packages = ["freetype", "glibcLocales", "imagemagickBig", "libreoffice", "openjdk", "pandoc", "xcodebuild", "zlib", "glib", "gtk3", "libdrm", "mesa", "libxkbcommon", "at-spi2-atk"]
 
 [workflows]
 runButton = "Project"
