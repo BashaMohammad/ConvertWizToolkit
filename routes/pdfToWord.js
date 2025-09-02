@@ -47,13 +47,14 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
 
     console.log(`Converting PDF: ${req.file.originalname} -> ${outputDocx}`);
 
-    // Use Pandoc to convert PDF to Word (more reliable than LibreOffice in this environment)
-    const command = `pandoc "${pdfPath}" -o "${outputPath}"`;
+    // Use Pandoc to convert PDF to Word with proper text extraction
+    const command = `pandoc "${pdfPath}" --from pdf --to docx -o "${outputPath}"`;
     
     console.log('Executing pandoc command:', command);
     console.log('Expected output file:', outputPath);
+    console.log('Input file size:', fs.statSync(pdfPath).size, 'bytes');
     
-    exec(command, (err, stdout, stderr) => {
+    exec(command, { timeout: 30000 }, (err, stdout, stderr) => {
       console.log('Pandoc stdout:', stdout);
       console.log('Pandoc stderr:', stderr);
       
@@ -65,9 +66,19 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
       if (err) {
         console.error('Pandoc conversion error:', err);
         console.error('Pandoc stderr:', stderr);
+        
+        let errorMessage = 'PDF conversion failed';
+        if (err.killed && err.signal === 'SIGTERM') {
+          errorMessage = 'PDF conversion timed out. The PDF may be too complex or corrupted.';
+        } else if (stderr) {
+          errorMessage += '. Pandoc error: ' + stderr;
+        } else {
+          errorMessage += '. Error: ' + err.message;
+        }
+        
         return res.status(500).json({
           success: false,
-          message: 'PDF conversion failed. Pandoc error: ' + (stderr || err.message)
+          message: errorMessage
         });
       }
 
