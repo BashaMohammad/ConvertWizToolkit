@@ -27,9 +27,16 @@ app.use(express.json());
 // Serve static files from public directory first
 app.use(express.static('public'));
 
+// Serve downloads directory for converted files
+app.use('/downloads', express.static(path.join(__dirname, 'downloads')));
+
 // Integrate tool routes for isolated tool system
 const toolRoutes = require('./server/tool-routes');
 app.use(toolRoutes);
+
+// PDF to Word conversion route
+const pdfToWordRouter = require('./routes/pdfToWord');
+app.use('/api/pdf-to-word', pdfToWordRouter);
 
 // Handle root path explicitly to serve index.html from public directory
 app.get('/', (req, res) => {

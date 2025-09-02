@@ -4322,18 +4322,37 @@ function initPdfToWord() {
         }
     });
     
-    // PDF to Word conversion function
+    // PDF to Word conversion function using backend API
     async function convertPdfToWord(file) {
-        const fileName = file.name.replace(/\.pdf$/i, '.docx');
-        
-        // Create proper DOCX file using ZIP structure
-        const docxBlob = await generateValidDocxFile(file);
-        
-        // Store the blob for download button - don't auto-download
-        window.pdfToWordBlob = docxBlob;
-        window.pdfToWordFileName = fileName;
-        
-        return true;
+        try {
+            const formData = new FormData();
+            formData.append('pdfFile', file);
+            
+            console.log('Uploading PDF to backend for conversion:', file.name);
+            
+            const response = await fetch('/api/pdf-to-word', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Store download info for the download button
+                window.pdfToWordDownloadLink = result.downloadLink;
+                window.pdfToWordFileName = result.fileName;
+                window.pdfToWordInfo = result;
+                
+                console.log('PDF conversion successful:', result);
+                return true;
+            } else {
+                throw new Error(result.message || 'Conversion failed');
+            }
+        } catch (error) {
+            console.error('PDF to Word conversion error:', error);
+            showNotification('Conversion failed: ' + error.message, 'error');
+            return false;
+        }
     }
     
     // Generate a valid DOCX file using JSZip
@@ -4555,7 +4574,9 @@ function initPdfToWord() {
     function displayConversionResults(file) {
         if (!resultsContainer) return;
         
-        const outputFileName = file.name.replace(/\.pdf$/i, '.docx');
+        const info = window.pdfToWordInfo || {};
+        const outputFileName = info.fileName || file.name.replace(/\.pdf$/i, '.docx');
+        const fileSize = info.fileSizeMB || (file.size / (1024 * 1024)).toFixed(2);
         
         const resultHTML = `
             <div class="bg-green-50 border border-green-200 rounded-lg p-6 mt-6">
@@ -4579,15 +4600,15 @@ function initPdfToWord() {
                     <div class="grid grid-cols-2 gap-4 text-sm">
                         <div>
                             <span class="text-gray-500">Original File:</span>
-                            <p class="font-medium">${file.name}</p>
+                            <p class="font-medium">${info.originalFile || file.name}</p>
                         </div>
                         <div>
                             <span class="text-gray-500">File Size:</span>
-                            <p class="font-medium">${(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                            <p class="font-medium">${fileSize} MB</p>
                         </div>
                         <div>
                             <span class="text-gray-500">Output Format:</span>
-                            <p class="font-medium">Microsoft Word (.docx)</p>
+                            <p class="font-medium">${info.outputFormat || 'Microsoft Word (.docx)'}</p>
                         </div>
                         <div>
                             <span class="text-gray-500">Status:</span>
@@ -4606,7 +4627,7 @@ function initPdfToWord() {
                 <div class="mt-4 text-center">
                     <p class="text-sm text-green-600">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Click the download button above to save your converted Word document.
+                        Your PDF has been converted using LibreOffice. Click the download button above to save your Word document.
                     </p>
                 </div>
             </div>
@@ -4618,31 +4639,36 @@ function initPdfToWord() {
         const downloadBtn = document.getElementById('download-word-file');
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => {
-                if (window.pdfToWordBlob && window.pdfToWordFileName) {
-                    console.log('Attempting download:', window.pdfToWordFileName, 'Size:', window.pdfToWordBlob.size);
+                if (window.pdfToWordDownloadLink && window.pdfToWordFileName) {
+                    console.log('Downloading file from:', window.pdfToWordDownloadLink);
                     
-                    const success = downloadFile(window.pdfToWordBlob, window.pdfToWordFileName, 'Microsoft Word Document');
+                    // Create download link and trigger download
+                    const a = document.createElement('a');
+                    a.href = window.pdfToWordDownloadLink;
+                    a.download = window.pdfToWordFileName;
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
                     
-                    if (success) {
-                        // Update button to show downloaded state
-                        downloadBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Downloaded!';
-                        downloadBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                        downloadBtn.classList.add('bg-green-500');
-                        downloadBtn.disabled = true;
-                        
-                        // Reset button after 5 seconds
-                        setTimeout(() => {
-                            downloadBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Download Word Document';
-                            downloadBtn.classList.remove('bg-green-500');
-                            downloadBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                            downloadBtn.disabled = false;
-                        }, 5000);
-                        
-                        showNotification('Word document downloaded successfully!', 'success');
-                    }
+                    // Update button to show downloaded state
+                    downloadBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Downloaded!';
+                    downloadBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                    downloadBtn.classList.add('bg-green-500');
+                    downloadBtn.disabled = true;
+                    
+                    // Reset button after 5 seconds
+                    setTimeout(() => {
+                        downloadBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Download Word Document';
+                        downloadBtn.classList.remove('bg-green-500');
+                        downloadBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                        downloadBtn.disabled = false;
+                    }, 5000);
+                    
+                    showNotification('Word document downloaded successfully!', 'success');
                 } else {
                     console.error('Download data missing:', {
-                        blob: window.pdfToWordBlob,
+                        downloadLink: window.pdfToWordDownloadLink,
                         fileName: window.pdfToWordFileName
                     });
                     showNotification('Error: File not ready. Please try converting again.', 'error');
