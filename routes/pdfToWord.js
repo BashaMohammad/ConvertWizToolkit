@@ -47,16 +47,16 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
 
     console.log(`Converting PDF: ${req.file.originalname} -> ${outputDocx}`);
 
-    // Use Pandoc to convert PDF to Word with proper text extraction
-    const command = `pandoc "${pdfPath}" --from pdf --to docx -o "${outputPath}"`;
+    // Use Python pdf2docx for PDF to Word conversion
+    const command = `python3 pdf_converter.py "${pdfPath}" "${outputPath}"`;
     
-    console.log('Executing pandoc command:', command);
+    console.log('Executing Python pdf2docx command:', command);
     console.log('Expected output file:', outputPath);
     console.log('Input file size:', fs.statSync(pdfPath).size, 'bytes');
     
-    exec(command, { timeout: 30000 }, (err, stdout, stderr) => {
-      console.log('Pandoc stdout:', stdout);
-      console.log('Pandoc stderr:', stderr);
+    exec(command, { timeout: 60000 }, (err, stdout, stderr) => {
+      console.log('Python pdf2docx stdout:', stdout);
+      console.log('Python pdf2docx stderr:', stderr);
       
       // Clean up uploaded file
       fs.unlink(pdfPath, (unlinkErr) => {
@@ -64,14 +64,14 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
       });
 
       if (err) {
-        console.error('Pandoc conversion error:', err);
-        console.error('Pandoc stderr:', stderr);
+        console.error('Python pdf2docx conversion error:', err);
+        console.error('Python pdf2docx stderr:', stderr);
         
         let errorMessage = 'PDF conversion failed';
         if (err.killed && err.signal === 'SIGTERM') {
           errorMessage = 'PDF conversion timed out. The PDF may be too complex or corrupted.';
         } else if (stderr) {
-          errorMessage += '. Pandoc error: ' + stderr;
+          errorMessage += '. Python error: ' + stderr;
         } else {
           errorMessage += '. Error: ' + err.message;
         }
@@ -92,7 +92,7 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
         });
       }
 
-      console.log('Pandoc conversion successful, file created at:', outputPath);
+      console.log('Python pdf2docx conversion successful, file created at:', outputPath);
 
       // Get file stats
       const stats = fs.statSync(finalOutputPath);

@@ -9,5 +9,7 @@ dependencies = [
     "google-analytics-admin>=0.24.1",
     "lxml>=6.0.0",
     "markdown>=3.8.2",
+    "pdf2docx>=0.5.8",
+    "reportlab>=4.4.3",
     "requests>=2.32.4",
 ]
