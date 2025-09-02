@@ -399,11 +399,11 @@ function initializeComponent(sectionId) {
                 break;
                 
             case 'pdf-to-powerpoint-section':
-                if (typeof initPDFToPowerPoint === 'function') {
-                    initPDFToPowerPoint();
+                if (typeof initializePdfToPptConverter === 'function') {
+                    initializePdfToPptConverter();
                     console.log('✅ INIT: PDF to PowerPoint initialized');
                 } else {
-                    console.warn('⚠️ INIT: initPDFToPowerPoint function not found');
+                    console.warn('⚠️ INIT: initializePdfToPptConverter function not found');
                 }
                 break;
                 
@@ -437,11 +437,11 @@ function initializeComponent(sectionId) {
                 break;
                 
             case 'pdf-to-powerpoint-section':
-                if (typeof initPDFToPowerPoint === 'function') {
-                    initPDFToPowerPoint();
+                if (typeof initializePdfToPptConverter === 'function') {
+                    initializePdfToPptConverter();
                     console.log('✅ INIT: PDF to PowerPoint initialized');
                 } else {
-                    console.warn('⚠️ INIT: initPDFToPowerPoint function not found');
+                    console.warn('⚠️ INIT: initializePdfToPptConverter function not found');
                 }
                 break;
                 break;
