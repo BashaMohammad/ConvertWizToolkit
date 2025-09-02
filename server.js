@@ -38,6 +38,10 @@ app.use(toolRoutes);
 const pdfToWordRouter = require('./routes/pdfToWord');
 app.use('/api/pdf-to-word', pdfToWordRouter);
 
+// PDF to PowerPoint conversion route
+const pdfToPowerpointRouter = require('./routes/pdfToPowerpoint');
+app.use('/api/pdf-to-powerpoint', pdfToPowerpointRouter);
+
 // Handle root path explicitly to serve index.html from public directory
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
