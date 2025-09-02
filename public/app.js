@@ -322,7 +322,7 @@ function initializeTool(sectionId) {
                     initializePdfToWordConverter();
                 }
                 break;
-            case 'pdf-to-ppt-section':
+            case 'pdf-to-powerpoint-section':
                 if (typeof initializePdfToPptConverter !== 'undefined') {
                     initializePdfToPptConverter();
                 }
