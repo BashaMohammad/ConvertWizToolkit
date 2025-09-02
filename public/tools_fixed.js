@@ -4393,7 +4393,7 @@ function processPdfToPowerpointFiles(files) {
     window.currentPdfFiles = files;
     
     files.forEach((file, index) => {
-        displayRealPdfConversionResult(file, 'PowerPoint', 'pdf-powerpoint-list', 'orange', index);
+        displayPdfConversionResult(file, 'PowerPoint', 'pdf-powerpoint-list', 'orange', index);
     });
 }
 
@@ -4681,7 +4681,7 @@ function simulatePdfConversion(type, filename) {
 // Enhanced PDF conversion with real backend API
 function convertPdfToRealFormat(file, conversionType, buttonElement) {
     const formData = new FormData();
-    formData.append('pdf', file);
+    formData.append('pdfFile', file);
     
     // Set button to processing state
     const originalText = buttonElement.innerHTML;

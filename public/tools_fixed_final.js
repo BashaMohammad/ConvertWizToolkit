@@ -423,7 +423,7 @@ function realPdfConversion(type, buttonElement, fileIndex) {
 // Enhanced PDF conversion with real backend API
 function convertPdfToRealFormat(file, conversionType, buttonElement) {
     const formData = new FormData();
-    formData.append('pdf', file);
+    formData.append('pdfFile', file);
     
     // Set button to processing state
     const originalText = buttonElement.innerHTML;
