@@ -4339,11 +4339,13 @@ function initPdfToWord() {
     // Generate a valid DOCX file using JSZip
     async function generateValidDocxFile(file) {
         try {
+            console.log('Starting DOCX generation for:', file.name);
+            
             // Use JSZip library to create proper DOCX structure
             const JSZip = window.JSZip || await loadJSZip();
             const zip = new JSZip();
             
-            // Add required DOCX structure
+            // Add required DOCX structure with proper encoding
             // 1. [Content_Types].xml
             zip.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
@@ -4367,33 +4369,55 @@ function initPdfToWord() {
             const documentXml = generateWordDocumentXml(file);
             zip.folder("word").file("document.xml", documentXml);
             
-            // Generate the DOCX file with proper settings
+            console.log('ZIP structure created, generating blob...');
+            
+            // Generate the DOCX file with enhanced settings
             const docxBlob = await zip.generateAsync({
-                type: "blob", 
+                type: "blob",
                 mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 compression: "DEFLATE",
                 compressionOptions: {
-                    level: 6
-                }
+                    level: 9 // Maximum compression
+                },
+                streamFiles: true // Better for large files
             });
             
-            console.log('Generated DOCX blob size:', docxBlob.size);
+            console.log('Generated DOCX blob - Size:', docxBlob.size, 'Type:', docxBlob.type);
+            
+            // Validate the blob
+            if (!docxBlob || docxBlob.size === 0) {
+                throw new Error('Generated DOCX blob is empty');
+            }
+            
             return docxBlob;
         } catch (error) {
             console.error('Error generating DOCX:', error);
+            showNotification('Failed to generate Word document: ' + error.message, 'error');
             throw error;
         }
     }
     
-    // Load JSZip library dynamically
+    // Load JSZip library dynamically with better error handling
     async function loadJSZip() {
         if (window.JSZip) return window.JSZip;
         
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-            script.onload = () => resolve(window.JSZip);
-            script.onerror = reject;
+            script.crossOrigin = 'anonymous';
+            script.onload = () => {
+                if (window.JSZip) {
+                    console.log('JSZip loaded successfully');
+                    resolve(window.JSZip);
+                } else {
+                    console.error('JSZip not found after script load');
+                    reject(new Error('JSZip not available'));
+                }
+            };
+            script.onerror = (error) => {
+                console.error('Failed to load JSZip:', error);
+                reject(error);
+            };
             document.head.appendChild(script);
         });
     }
@@ -4630,33 +4654,63 @@ function initPdfToWord() {
     console.log('✅ PDF to Word initialized successfully');
 }
 
-// Helper function for file downloads with better error handling
+// Helper function for file downloads with enhanced compatibility
 function downloadFile(blob, fileName, description) {
     try {
+        console.log('Starting download for:', fileName, 'Size:', blob.size, 'Type:', blob.type);
+        
         // Verify blob is valid
         if (!blob || blob.size === 0) {
             showNotification('Error: File is empty or invalid', 'error');
             return false;
         }
         
-        // Create download URL
-        const url = URL.createObjectURL(blob);
+        // Try modern download approach first
+        if (window.navigator && window.navigator.msSaveBlob) {
+            // IE/Edge legacy support
+            window.navigator.msSaveBlob(blob, fileName);
+            console.log('Downloaded using IE/Edge method');
+            return true;
+        }
         
-        // Create download link
+        // Standard approach for modern browsers
+        const url = URL.createObjectURL(blob);
+        console.log('Created blob URL:', url);
+        
+        // Create and configure download link
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
         a.style.display = 'none';
+        a.target = '_blank'; // Help with some browser restrictions
         
-        // Add to DOM, click, and clean up
+        // Add click event to ensure it triggers properly
         document.body.appendChild(a);
-        a.click();
         
-        // Clean up after a delay to ensure download starts
+        // Force click event
+        if (a.click) {
+            a.click();
+        } else if (document.createEvent) {
+            // Fallback for older browsers
+            const event = document.createEvent('MouseEvents');
+            event.initEvent('click', true, true);
+            a.dispatchEvent(event);
+        }
+        
+        console.log('Download triggered successfully');
+        
+        // Clean up with longer delay to ensure download starts
         setTimeout(() => {
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }, 1000);
+            try {
+                if (document.body.contains(a)) {
+                    document.body.removeChild(a);
+                }
+                URL.revokeObjectURL(url);
+                console.log('Cleanup completed');
+            } catch (cleanupError) {
+                console.warn('Cleanup warning:', cleanupError);
+            }
+        }, 3000);
         
         return true;
     } catch (error) {
