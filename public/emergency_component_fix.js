@@ -363,11 +363,11 @@ function initializeComponent(sectionId) {
                 break;
                 
             case 'png-to-jpg-section':
-                if (typeof initSaturdayPngToJpg === 'function') {
-                    initSaturdayPngToJpg();
+                if (typeof initializePngToJpgConverter === 'function') {
+                    initializePngToJpgConverter();
                     console.log('✅ INIT: PNG to JPG Converter initialized');
                 } else {
-                    console.warn('⚠️ INIT: initSaturdayPngToJpg function not found');
+                    console.warn('⚠️ INIT: initializePngToJpgConverter function not found');
                 }
                 break;
                 

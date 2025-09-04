@@ -5189,27 +5189,21 @@ function initializePngToJpgConverter() {
         return;
     }
     
-    // Get direct references (no cloning to avoid duplicate dialogs)
+    // Get direct references without cloning (prevents duplicate dialogs)
     const uploadArea = elements.uploadArea;
     const fileInput = elements.fileInput;
     const browseBtn = elements.browseBtn;
-    const qualitySlider = document.getElementById('jpg-quality');
-    const qualityValue = document.getElementById('jpg-quality-value');
+    const qualitySlider = elements.qualitySlider;
+    const qualityValue = elements.qualityValue;
     
-    // Clear any existing event listeners first
-    const newFileInput = fileInput.cloneNode(true);
-    fileInput.parentNode.replaceChild(newFileInput, fileInput);
+    // Check if already initialized to prevent duplicates
+    if (fileInput.hasAttribute('data-png-initialized')) {
+        console.log('🔧 PNG to JPG: Already initialized, skipping...');
+        return;
+    }
     
-    const newBrowseBtn = browseBtn.cloneNode(true);
-    browseBtn.parentNode.replaceChild(newBrowseBtn, browseBtn);
-    
-    const newUploadArea = uploadArea.cloneNode(true);
-    uploadArea.parentNode.replaceChild(newUploadArea, uploadArea);
-    
-    // Get fresh references after replacement
-    const freshFileInput = document.getElementById('png-input');
-    const freshBrowseBtn = document.getElementById('png-browse-btn');
-    const freshUploadArea = document.getElementById('png-upload-area');
+    // Mark as initialized
+    fileInput.setAttribute('data-png-initialized', 'true');
     
     // Quality slider functionality
     if (qualitySlider && qualityValue) {
@@ -5218,8 +5212,8 @@ function initializePngToJpgConverter() {
         });
     }
     
-    // File input change handler - MOST IMPORTANT
-    freshFileInput.addEventListener('change', (e) => {
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
         console.log('🔧 PNG to JPG: File input changed, files:', e.target.files.length);
         const files = Array.from(e.target.files).filter(file => {
             console.log('🔧 PNG to JPG: Checking file:', file.name, file.type);
@@ -5235,32 +5229,32 @@ function initializePngToJpgConverter() {
     });
     
     // Browse button functionality
-    freshBrowseBtn.addEventListener('click', (e) => {
+    browseBtn.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('🔧 PNG to JPG: Browse button clicked');
-        freshFileInput.click();
+        fileInput.click();
     });
     
     // Upload area click functionality  
-    freshUploadArea.addEventListener('click', () => {
+    uploadArea.addEventListener('click', () => {
         console.log('🔧 PNG to JPG: Upload area clicked');
-        freshFileInput.click();
+        fileInput.click();
     });
     
     // Drag and drop functionality
-    freshUploadArea.addEventListener('dragover', (e) => {
+    uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
-        freshUploadArea.classList.add('border-orange-500', 'bg-orange-50');
+        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
     });
     
-    freshUploadArea.addEventListener('dragleave', (e) => {
+    uploadArea.addEventListener('dragleave', (e) => {
         e.preventDefault();
-        freshUploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
     });
     
-    freshUploadArea.addEventListener('drop', (e) => {
+    uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
-        freshUploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
         const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'image/png');
         if (files.length > 0) {
             processPngFiles(files);
@@ -6114,17 +6108,6 @@ function initializePNGtoJPGConverter() {
     });
 }
 
-function processPngToJpgFiles(files) {
-    const resultsContainer = document.getElementById('png-jpg-results');
-    const resultsList = document.getElementById('png-jpg-list');
-    
-    resultsList.innerHTML = '';
-    resultsContainer.classList.remove('hidden');
-    
-    files.forEach((file, index) => {
-        convertPngToJpg(file, index);
-    });
-}
 
 function convertPngToJpg(file, index) {
     const resultsList = document.getElementById('png-jpg-list');
@@ -6442,10 +6425,6 @@ function initGlobalLandUnits() {
     }
 }
 
-function initPngToJpg() {
-    console.log('🚫 PNG to JPG Converter temporarily disabled for maintenance');
-    // Converter temporarily disabled - will be re-enabled after fixes
-}
 
 // BMI Calculator initialization
 function initBmiCalculator() {
