@@ -307,8 +307,9 @@ function initializePdfToPptConverter() {
     const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
     const fileInput = document.getElementById('pdf-powerpoint-input');
     const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
+    const convertBtn = document.getElementById('pdf-powerpoint-convert-btn');
     
-    if (!uploadArea || !fileInput || !browseBtn) {
+    if (!uploadArea || !fileInput || !browseBtn || !convertBtn) {
         console.warn('⚠️ PDF to PowerPoint: Required elements not found');
         return;
     }
@@ -317,6 +318,16 @@ function initializePdfToPptConverter() {
     browseBtn.addEventListener('click', (e) => {
         e.preventDefault();
         fileInput.click();
+    });
+    
+    // MISSING CONVERT BUTTON EVENT LISTENER - ADDING NOW!
+    convertBtn.addEventListener('click', () => {
+        console.log('Convert to PowerPoint button clicked!');
+        if (typeof convertPDFToPowerPoint === 'function') {
+            convertPDFToPowerPoint();
+        } else {
+            console.error('convertPDFToPowerPoint function not found!');
+        }
     });
     
     // Drag and drop functionality
