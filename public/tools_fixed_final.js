@@ -300,143 +300,6 @@ function downloadConvertedFile(url, filename) {
     document.body.removeChild(a);
 }
 
-// PDF to PowerPoint Converter
-function initializePdfToPptConverter() {
-    console.log('🔧 PDF to PowerPoint: Starting initialization...');
-    console.error('🚨 CRITICAL DEBUG: initializePdfToPptConverter CALLED!');
-    
-    // Ensure function is in global scope
-    window.initializePdfToPptConverter = initializePdfToPptConverter;
-    
-    const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
-    const fileInput = document.getElementById('pdf-powerpoint-input');
-    const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
-    const convertBtn = document.getElementById('pdf-powerpoint-convert-btn');
-    
-    // DEBUG: Log what elements were found
-    console.log('🔍 PDF to PowerPoint Element Debug:', {
-        uploadArea: !!uploadArea,
-        fileInput: !!fileInput, 
-        browseBtn: !!browseBtn,
-        convertBtn: !!convertBtn
-    });
-    
-    if (!uploadArea || !fileInput || !browseBtn || !convertBtn) {
-        console.error('❌ PDF to PowerPoint: Missing elements:', {
-            uploadArea: !!uploadArea,
-            fileInput: !!fileInput,
-            browseBtn: !!browseBtn,
-            convertBtn: !!convertBtn
-        });
-        return;
-    }
-    
-    // Browse button functionality
-    browseBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('🖱️ Browse button clicked - opening file picker...');
-        fileInput.click();
-    });
-    console.log('✅ Browse button event listener attached successfully');
-    
-    // CONVERT BUTTON EVENT LISTENER - WITH DEBUG
-    convertBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('🎯 Convert to PowerPoint button clicked!');
-        console.log('🔍 convertPDFToPowerPoint function available:', typeof convertPDFToPowerPoint);
-        
-        if (typeof convertPDFToPowerPoint === 'function') {
-            console.log('✅ Calling convertPDFToPowerPoint...');
-            convertPDFToPowerPoint();
-        } else if (typeof handlePDFPowerpointFileSelect === 'function') {
-            console.log('⚠️ Using handlePDFPowerpointFileSelect as fallback...');
-            const fileInput = document.getElementById('pdf-powerpoint-input');
-            if (fileInput && fileInput.files.length > 0) {
-                handlePDFPowerpointFileSelect({ target: fileInput });
-            }
-        } else {
-            console.error('❌ No PowerPoint conversion function found!');
-            alert('Conversion function not available. Please refresh the page.');
-        }
-    });
-    
-    console.log('✅ Convert button event listener attached successfully');
-    
-    // Drag and drop functionality
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
-    });
-    
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
-    });
-    
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
-        const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'application/pdf');
-        if (files.length > 0) {
-            processPdfToPowerpointFiles(files);
-        }
-    });
-    
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
-    
-    // File input change handler
-    fileInput.addEventListener('change', (e) => {
-        console.log('📁 File input changed - files selected:', e.target.files.length);
-        const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
-        console.log('🔍 PDF files found:', files.length);
-        if (files.length > 0) {
-            console.log('✅ Calling processPdfToPowerpointFiles...');
-            processPdfToPowerpointFiles(files);
-        } else {
-            console.log('❌ No PDF files selected or invalid file type');
-        }
-    });
-    console.log('✅ File input event listener attached successfully');
-    
-    console.log('✅ PDF to PowerPoint initialized successfully');
-    
-    // Ensure function is available globally 
-    if (typeof window !== 'undefined') {
-        window.initializePdfToPptConverter = initializePdfToPptConverter;
-    }
-}
-
-function processPdfToPowerpointFiles(files) {
-    console.log('⚙️ processPdfToPowerpointFiles called with', files.length, 'files');
-    const resultsContainer = document.getElementById('pdf-powerpoint-results');
-    let resultsList = document.getElementById('pdf-powerpoint-list');
-    
-    console.log('🔍 Results container found:', !!resultsContainer);
-    
-    // Create results list if it doesn't exist
-    if (!resultsList) {
-        resultsContainer.innerHTML = `
-            <h4 class="text-xl font-bold text-gray-800 mb-6 text-center">Ready for Conversion</h4>
-            <div id="pdf-powerpoint-list" class="space-y-4"></div>
-        `;
-        resultsList = document.getElementById('pdf-powerpoint-list');
-    }
-    
-    resultsList.innerHTML = '';
-    resultsContainer.classList.remove('hidden');
-    
-    // Store files globally for conversion function
-    window.currentPdfFiles = files;
-    
-    files.forEach((file, index) => {
-        displayRealPdfConversionResult(file, 'PowerPoint', 'pdf-powerpoint-list', 'orange', index);
-    });
-}
-
-// Enhanced display function for real conversions
-function displayRealPdfConversionResult(file, conversionType, containerId, colorTheme, index) {
     const resultsList = document.getElementById(containerId);
     
     const resultItem = document.createElement('div');
@@ -600,3 +463,248 @@ function showRealPdfConversionSuccess(type, filename) {
 }
 
 console.log('✅ Component functions loaded and ready');
+
+// ======================
+// PDF to PowerPoint Converter - FRESH IMPLEMENTATION
+// ======================
+
+function initializePdfToPptConverter() {
+    console.log('🔧 PDF to PowerPoint: Starting initialization...');
+    
+    const pdfInput = document.getElementById('pdf-powerpoint-input');
+    const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
+    const convertBtn = document.getElementById('pdf-powerpoint-convert-btn');
+    const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
+    const fileDetails = document.getElementById('pdf-powerpoint-file-info');
+    const resultsContainer = document.getElementById('pdf-powerpoint-results');
+    
+    if (!pdfInput || !browseBtn || !convertBtn) {
+        console.error('PDF to PowerPoint: Required elements missing!');
+        return;
+    }
+    
+    let selectedFile = null;
+    
+    // Clear any existing event listeners to prevent duplicates
+    const newBrowseBtn = browseBtn.cloneNode(true);
+    browseBtn.parentNode.replaceChild(newBrowseBtn, browseBtn);
+    
+    const newConvertBtn = convertBtn.cloneNode(true);
+    convertBtn.parentNode.replaceChild(newConvertBtn, convertBtn);
+    
+    const newPdfInput = pdfInput.cloneNode(true);
+    pdfInput.parentNode.replaceChild(newPdfInput, pdfInput);
+    
+    // Get references to new elements
+    const freshBrowseBtn = document.getElementById('pdf-powerpoint-browse-btn');
+    const freshConvertBtn = document.getElementById('pdf-powerpoint-convert-btn');
+    const freshPdfInput = document.getElementById('pdf-powerpoint-input');
+    
+    // Browse button functionality
+    freshBrowseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('🖱️ Browse button clicked - opening file picker...');
+        freshPdfInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-orange-500', 'bg-orange-50');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelection(files[0]);
+        }
+    });
+    
+    // File input change handler
+    freshPdfInput.addEventListener('change', (e) => {
+        console.log('📁 File input changed - files selected:', e.target.files.length);
+        const file = e.target.files[0];
+        if (file) {
+            handleFileSelection(file);
+        }
+    });
+    
+    // File selection handler
+    function handleFileSelection(file) {
+        console.log('📄 Processing selected file:', file.name);
+        
+        // Validate PDF file
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+            console.log('❌ Invalid file type');
+            showNotification('Please select a valid PDF file', 'error');
+            return;
+        }
+        
+        // Check file size (limit to 25MB)
+        if (file.size > 25 * 1024 * 1024) {
+            console.log('❌ File too large');
+            showNotification('File size must be less than 25MB', 'error');
+            return;
+        }
+        
+        selectedFile = file;
+        console.log('✅ File validated and stored');
+        
+        // Update file details
+        const fileName = document.getElementById('pdf-powerpoint-file-name');
+        const fileSize = document.getElementById('pdf-powerpoint-file-size');
+        
+        if (fileName) fileName.textContent = file.name;
+        if (fileSize) fileSize.textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+        
+        // Show file details container
+        if (fileDetails) {
+            fileDetails.classList.remove('hidden');
+            console.log('✅ File details shown');
+        }
+        
+        // Enable convert button
+        freshConvertBtn.disabled = false;
+        freshConvertBtn.classList.remove('bg-gray-300');
+        freshConvertBtn.classList.add('bg-orange-500', 'hover:bg-orange-600');
+        
+        console.log('✅ Convert button activated');
+        showNotification('PDF file loaded successfully!', 'success');
+    }
+    
+    // Convert button functionality
+    freshConvertBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        console.log('🎯 Convert to PowerPoint button clicked!');
+        
+        if (!selectedFile) {
+            console.log('❌ No file selected');
+            showNotification('Please select a PDF file first', 'error');
+            return;
+        }
+        
+        // Disable button and show loading
+        freshConvertBtn.disabled = true;
+        freshConvertBtn.textContent = 'Converting...';
+        
+        try {
+            await convertPdfToPowerpoint(selectedFile);
+        } catch (error) {
+            console.error('Conversion failed:', error);
+            showNotification('Conversion failed. Please try again.', 'error');
+        } finally {
+            // Re-enable button
+            freshConvertBtn.disabled = false;
+            freshConvertBtn.textContent = 'Convert to PowerPoint';
+        }
+    });
+    
+    // Conversion function
+    async function convertPdfToPowerpoint(file) {
+        try {
+            const formData = new FormData();
+            formData.append('pdfFile', file);
+            
+            console.log('🚀 Uploading PDF to backend for conversion:', file.name);
+            
+            const response = await fetch('/api/pdf-to-powerpoint', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            console.log('📡 Backend response:', result);
+            
+            if (result.success) {
+                console.log('✅ PDF conversion successful:', result);
+                showDownloadResult(result, file);
+                showNotification('PDF converted to PowerPoint successfully!', 'success');
+            } else {
+                console.log('❌ Conversion failed:', result.message);
+                showNotification(result.message || 'Conversion failed', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Network error:', error);
+            showNotification('Network error. Please try again.', 'error');
+            throw error;
+        }
+    }
+    
+    // Show download result
+    function showDownloadResult(result, originalFile) {
+        console.log('📋 Showing download result');
+        
+        if (!resultsContainer) {
+            console.log('❌ Results container not found');
+            return;
+        }
+        
+        resultsContainer.innerHTML = `
+            <div class="bg-white rounded-xl p-6 shadow-lg border-2 border-green-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-file-powerpoint text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Conversion Complete!</h4>
+                            <p class="text-sm text-gray-600">PDF converted to PowerPoint</p>
+                        </div>
+                    </div>
+                    <div class="text-green-600">
+                        <i class="fas fa-check-circle text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold text-gray-800">${result.fileName || 'converted.pptx'}</p>
+                            <p class="text-sm text-gray-600">PowerPoint Document</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">Ready for download</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="downloadConvertedPowerPoint('${result.downloadLink}', '${result.fileName}')" 
+                        class="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center">
+                    <i class="fas fa-download mr-2"></i>
+                    Download PowerPoint Document
+                </button>
+            </div>
+        `;
+        
+        resultsContainer.classList.remove('hidden');
+        console.log('✅ Download UI displayed');
+    }
+    
+    console.log('✅ PDF to PowerPoint initialized successfully');
+}
+
+// Download function for PowerPoint files
+function downloadConvertedPowerPoint(downloadLink, fileName) {
+    console.log('⬇️ Starting download:', fileName);
+    
+    const link = document.createElement('a');
+    link.href = downloadLink;
+    link.download = fileName || 'converted.pptx';
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification('Download started!', 'success');
+    console.log('✅ Download initiated');
+}
+
