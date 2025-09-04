@@ -334,8 +334,10 @@ function initializePdfToPptConverter() {
     // Browse button functionality
     browseBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        console.log('🖱️ Browse button clicked - opening file picker...');
         fileInput.click();
     });
+    console.log('✅ Browse button event listener attached successfully');
     
     // CONVERT BUTTON EVENT LISTENER - WITH DEBUG
     convertBtn.addEventListener('click', (e) => {
@@ -386,11 +388,17 @@ function initializePdfToPptConverter() {
     
     // File input change handler
     fileInput.addEventListener('change', (e) => {
+        console.log('📁 File input changed - files selected:', e.target.files.length);
         const files = Array.from(e.target.files).filter(file => file.type === 'application/pdf');
+        console.log('🔍 PDF files found:', files.length);
         if (files.length > 0) {
+            console.log('✅ Calling processPdfToPowerpointFiles...');
             processPdfToPowerpointFiles(files);
+        } else {
+            console.log('❌ No PDF files selected or invalid file type');
         }
     });
+    console.log('✅ File input event listener attached successfully');
     
     console.log('✅ PDF to PowerPoint initialized successfully');
     
@@ -401,8 +409,11 @@ function initializePdfToPptConverter() {
 }
 
 function processPdfToPowerpointFiles(files) {
+    console.log('⚙️ processPdfToPowerpointFiles called with', files.length, 'files');
     const resultsContainer = document.getElementById('pdf-powerpoint-results');
     let resultsList = document.getElementById('pdf-powerpoint-list');
+    
+    console.log('🔍 Results container found:', !!resultsContainer);
     
     // Create results list if it doesn't exist
     if (!resultsList) {
