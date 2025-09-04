@@ -5231,12 +5231,17 @@ function initializePngToJpgConverter() {
     // Browse button functionality
     browseBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         console.log('🔧 PNG to JPG: Browse button clicked');
         fileInput.click();
     });
     
-    // Upload area click functionality  
-    uploadArea.addEventListener('click', () => {
+    // Upload area click functionality (but not when browse button is clicked)
+    uploadArea.addEventListener('click', (e) => {
+        // Don't trigger if browse button was clicked
+        if (e.target === browseBtn || browseBtn.contains(e.target)) {
+            return;
+        }
         console.log('🔧 PNG to JPG: Upload area clicked');
         fileInput.click();
     });
