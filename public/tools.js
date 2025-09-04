@@ -4752,6 +4752,28 @@ function downloadFile(blob, fileName, description) {
 
 
 
+// PDF to PowerPoint Converter Initialization
+function initPDFToPowerPoint() {
+    console.log('🔧 PDF to PowerPoint: Starting initialization...');
+    
+    const uploadInput = document.getElementById('pdf-powerpoint-input');
+    const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
+    const convertBtn = document.getElementById('pdf-powerpoint-convert-btn');
+    const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
+    
+    if (!uploadInput || !browseBtn || !convertBtn || !uploadArea) {
+        console.error('PDF to PowerPoint: Required elements missing!');
+        return;
+    }
+    
+    browseBtn.addEventListener('click', () => uploadInput.click());
+    uploadInput.addEventListener('change', handlePDFPowerpointFileSelect);
+    convertBtn.addEventListener('click', convertPDFToPowerPoint);
+    setupDragAndDrop(uploadArea, handlePDFPowerpointFileSelect);
+    
+    console.log('✅ PDF to PowerPoint initialized successfully');
+}
+
 function handlePDFPowerpointFileSelect(event) {
     const files = event.target.files || event.dataTransfer.files;
     if (files && files.length > 0) {
