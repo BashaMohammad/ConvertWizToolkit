@@ -47,16 +47,16 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
 
     console.log(`Converting PDF: ${req.file.originalname} -> ${outputDocx}`);
 
-    // Use Python pdf2docx for PDF to Word conversion
-    const command = `python3 pdf_converter.py "${pdfPath}" "${outputPath}"`;
+    // Use Python PyMuPDF for PDF to Word conversion
+    const command = `python3 pdf_to_word_converter.py "${pdfPath}" "${outputPath}"`;
     
-    console.log('Executing Python pdf2docx command:', command);
+    console.log('Executing Python PDF to Word command:', command);
     console.log('Expected output file:', outputPath);
     console.log('Input file size:', fs.statSync(pdfPath).size, 'bytes');
     
     exec(command, { timeout: 60000 }, (err, stdout, stderr) => {
-      console.log('Python pdf2docx stdout:', stdout);
-      console.log('Python pdf2docx stderr:', stderr);
+      console.log('Python PDF to Word stdout:', stdout);
+      console.log('Python PDF to Word stderr:', stderr);
       
       // Clean up uploaded file
       fs.unlink(pdfPath, (unlinkErr) => {
@@ -64,8 +64,8 @@ router.post('/', upload.single('pdfFile'), async (req, res) => {
       });
 
       if (err) {
-        console.error('Python pdf2docx conversion error:', err);
-        console.error('Python pdf2docx stderr:', stderr);
+        console.error('Python PDF to Word conversion error:', err);
+        console.error('Python PDF to Word stderr:', stderr);
         
         let errorMessage = 'PDF conversion failed';
         if (err.killed && err.signal === 'SIGTERM') {
