@@ -7488,3 +7488,15 @@ class BMICalculator {
 
 console.log('✅ Tools.js loaded and ready');
 console.log("✅ Tools.js loaded and ready");
+
+// BACKUP: Create the missing function that the system is looking for
+function initializePdfToPptConverter() {
+    console.log('🔧 BACKUP: initializePdfToPptConverter called from tools.js');
+    
+    // Use the working initPDFToPowerPoint function
+    if (typeof initPDFToPowerPoint === 'function') {
+        initPDFToPowerPoint();
+    } else {
+        console.error('❌ BACKUP: initPDFToPowerPoint not found!');
+    }
+}

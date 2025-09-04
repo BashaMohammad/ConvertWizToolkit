@@ -305,6 +305,9 @@ function initializePdfToPptConverter() {
     console.log('🔧 PDF to PowerPoint: Starting initialization...');
     console.error('🚨 CRITICAL DEBUG: initializePdfToPptConverter CALLED!');
     
+    // Ensure function is in global scope
+    window.initializePdfToPptConverter = initializePdfToPptConverter;
+    
     const uploadArea = document.getElementById('pdf-powerpoint-upload-area');
     const fileInput = document.getElementById('pdf-powerpoint-input');
     const browseBtn = document.getElementById('pdf-powerpoint-browse-btn');
@@ -390,6 +393,11 @@ function initializePdfToPptConverter() {
     });
     
     console.log('✅ PDF to PowerPoint initialized successfully');
+    
+    // Ensure function is available globally 
+    if (typeof window !== 'undefined') {
+        window.initializePdfToPptConverter = initializePdfToPptConverter;
+    }
 }
 
 function processPdfToPowerpointFiles(files) {
