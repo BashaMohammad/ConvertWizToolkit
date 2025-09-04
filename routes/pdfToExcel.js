@@ -28,7 +28,7 @@ if (!fs.existsSync(downloadsDir)) {
     fs.mkdirSync(downloadsDir, { recursive: true });
 }
 
-router.post('/pdf-to-excel', upload.single('pdfFile'), async (req, res) => {
+router.post('/', upload.single('pdfFile'), async (req, res) => {
     console.log('PDF to Excel conversion request received');
 
     try {
