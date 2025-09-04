@@ -300,6 +300,8 @@ function downloadConvertedFile(url, filename) {
     document.body.removeChild(a);
 }
 
+// Enhanced display function for real conversions
+function displayRealPdfConversionResult(file, conversionType, containerId, colorTheme, index) {
     const resultsList = document.getElementById(containerId);
     
     const resultItem = document.createElement('div');
@@ -647,40 +649,70 @@ function initializePdfToPptConverter() {
             return;
         }
         
+        // Calculate file size
+        const fileSize = (originalFile.size / (1024 * 1024)).toFixed(2);
+        const outputFileName = result.fileName || 'converted.pptx';
+        
         resultsContainer.innerHTML = `
-            <div class="bg-white rounded-xl p-6 shadow-lg border-2 border-green-200">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <div class="bg-green-100 p-2 rounded-full mr-3">
-                            <i class="fas fa-file-powerpoint text-green-600 text-xl"></i>
-                        </div>
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
+                <!-- Success Header with Green Checkmark -->
+                <div class="text-center mb-6">
+                    <div class="mx-auto w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-green-800">Conversion Successful!</h3>
+                    <p class="text-sm text-gray-600 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        PDF to PowerPoint conversion with format preservation and editable output
+                    </p>
+                </div>
+                
+                <!-- File Details Card -->
+                <div class="bg-white rounded-lg p-4 mb-6 border">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-powerpoint text-orange-600 text-2xl mr-3"></i>
                         <div>
-                            <h4 class="font-bold text-gray-800">Conversion Complete!</h4>
-                            <p class="text-sm text-gray-600">PDF converted to PowerPoint</p>
+                            <h4 class="font-semibold text-gray-800">${outputFileName}</h4>
+                            <p class="text-sm text-gray-600">Microsoft PowerPoint Document</p>
                         </div>
                     </div>
-                    <div class="text-green-600">
-                        <i class="fas fa-check-circle text-2xl"></i>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-500">Original File:</span>
+                            <p class="font-medium">${originalFile.name}</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">File Size:</span>
+                            <p class="font-medium">${fileSize} MB</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Output Format:</span>
+                            <p class="font-medium">Microsoft PowerPoint (.pptx)</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Status:</span>
+                            <p class="font-medium text-green-600">Ready for Download</p>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="font-semibold text-gray-800">${result.fileName || 'converted.pptx'}</p>
-                            <p class="text-sm text-gray-600">PowerPoint Document</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-600">Ready for download</p>
-                        </div>
-                    </div>
+                <!-- Download Button -->
+                <div class="text-center">
+                    <button onclick="downloadConvertedPowerPoint('${result.downloadLink}', '${result.fileName}')" 
+                            class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition-all hover:shadow-lg inline-flex items-center">
+                        <i class="fas fa-download mr-2"></i>
+                        Download PowerPoint Document
+                    </button>
                 </div>
                 
-                <button onclick="downloadConvertedPowerPoint('${result.downloadLink}', '${result.fileName}')" 
-                        class="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center">
-                    <i class="fas fa-download mr-2"></i>
-                    Download PowerPoint Document
-                </button>
+                <!-- Success Message -->
+                <div class="mt-4 text-center">
+                    <p class="text-green-600 text-sm flex items-center justify-center">
+                        <i class="fas fa-check-circle mr-1"></i>
+                        Your PDF has been converted using LibreOffice. Click the download button above to save your PowerPoint document.
+                    </p>
+                </div>
             </div>
         `;
         
