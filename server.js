@@ -42,6 +42,10 @@ app.use('/api/pdf-to-word', pdfToWordRouter);
 const pdfToPowerpointRouter = require('./routes/pdfToPowerpoint');
 app.use('/api/pdf-to-powerpoint', pdfToPowerpointRouter);
 
+// PDF to Excel conversion route
+const pdfToExcelRouter = require('./routes/pdfToExcel');
+app.use('/api/pdf-to-excel', pdfToExcelRouter);
+
 // Handle root path explicitly to serve index.html from public directory
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

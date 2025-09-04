@@ -740,3 +740,279 @@ function downloadConvertedPowerPoint(downloadLink, fileName) {
     console.log('✅ Download initiated');
 }
 
+
+
+// ======================
+// PDF to Excel Converter - FRESH IMPLEMENTATION  
+// ======================
+
+function initializePdfToExcelConverter() {
+    console.log('🔧 PDF to Excel: Starting initialization...');
+    
+    const pdfInput = document.getElementById('pdf-excel-input');
+    const browseBtn = document.getElementById('pdf-excel-browse-btn');
+    const convertBtn = document.getElementById('pdf-excel-convert-btn');
+    const uploadArea = document.getElementById('pdf-excel-upload-area');
+    const fileDetails = document.getElementById('pdf-excel-file-info');
+    const resultsContainer = document.getElementById('pdf-excel-results');
+    
+    if (!pdfInput || !browseBtn || !convertBtn) {
+        console.error('PDF to Excel: Required elements missing!');
+        return;
+    }
+    
+    let selectedFile = null;
+    
+    // Clear any existing event listeners to prevent duplicates
+    const newBrowseBtn = browseBtn.cloneNode(true);
+    browseBtn.parentNode.replaceChild(newBrowseBtn, browseBtn);
+    
+    const newConvertBtn = convertBtn.cloneNode(true);
+    convertBtn.parentNode.replaceChild(newConvertBtn, convertBtn);
+    
+    const newPdfInput = pdfInput.cloneNode(true);
+    pdfInput.parentNode.replaceChild(newPdfInput, pdfInput);
+    
+    // Get references to new elements
+    const freshBrowseBtn = document.getElementById('pdf-excel-browse-btn');
+    const freshConvertBtn = document.getElementById('pdf-excel-convert-btn');
+    const freshPdfInput = document.getElementById('pdf-excel-input');
+    
+    // Browse button functionality
+    freshBrowseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('🖱️ Browse button clicked - opening file picker...');
+        freshPdfInput.click();
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-green-500', 'bg-green-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-green-500', 'bg-green-50');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-green-500', 'bg-green-50');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelection(files[0]);
+        }
+    });
+    
+    // File input change handler
+    freshPdfInput.addEventListener('change', (e) => {
+        console.log('📁 File input changed - files selected:', e.target.files.length);
+        const file = e.target.files[0];
+        if (file) {
+            handleFileSelection(file);
+        }
+    });
+    
+    // File selection handler
+    function handleFileSelection(file) {
+        console.log('📄 Processing selected file:', file.name);
+        
+        // Validate PDF file
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+            console.log('❌ Invalid file type');
+            showNotification('Please select a valid PDF file', 'error');
+            return;
+        }
+        
+        // Check file size (limit to 25MB)
+        if (file.size > 25 * 1024 * 1024) {
+            console.log('❌ File too large');
+            showNotification('File size must be less than 25MB', 'error');
+            return;
+        }
+        
+        selectedFile = file;
+        console.log('✅ File validated and stored');
+        
+        // Update file details
+        const fileName = document.getElementById('pdf-excel-file-name');
+        const fileSize = document.getElementById('pdf-excel-file-size');
+        
+        if (fileName) fileName.textContent = file.name;
+        if (fileSize) fileSize.textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+        
+        // Show file details container
+        if (fileDetails) {
+            fileDetails.classList.remove('hidden');
+            console.log('✅ File details shown');
+        }
+        
+        // Enable convert button
+        freshConvertBtn.disabled = false;
+        freshConvertBtn.classList.remove('bg-gray-300');
+        freshConvertBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+        
+        console.log('✅ Convert button activated');
+        showNotification('PDF file loaded successfully!', 'success');
+    }
+    
+    // Convert button functionality
+    freshConvertBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        console.log('🎯 Convert to Excel button clicked!');
+        
+        if (!selectedFile) {
+            console.log('❌ No file selected');
+            showNotification('Please select a PDF file first', 'error');
+            return;
+        }
+        
+        // Disable button and show loading
+        freshConvertBtn.disabled = true;
+        freshConvertBtn.textContent = 'Converting...';
+        
+        try {
+            await convertPdfToExcel(selectedFile);
+        } catch (error) {
+            console.error('Conversion failed:', error);
+            showNotification('Conversion failed. Please try again.', 'error');
+        } finally {
+            // Re-enable button
+            freshConvertBtn.disabled = false;
+            freshConvertBtn.textContent = 'Convert to Excel';
+        }
+    });
+    
+    // Conversion function
+    async function convertPdfToExcel(file) {
+        try {
+            const formData = new FormData();
+            formData.append('pdfFile', file);
+            
+            console.log('🚀 Uploading PDF to backend for conversion:', file.name);
+            
+            const response = await fetch('/api/pdf-to-excel', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            console.log('📡 Backend response:', result);
+            
+            if (result.success) {
+                console.log('✅ PDF conversion successful:', result);
+                showDownloadResultExcel(result, file);
+                showNotification('PDF converted to Excel successfully!', 'success');
+            } else {
+                console.log('❌ Conversion failed:', result.message);
+                showNotification(result.message || 'Conversion failed', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Network error:', error);
+            showNotification('Network error. Please try again.', 'error');
+            throw error;
+        }
+    }
+    
+    // Show download result
+    function showDownloadResultExcel(result, originalFile) {
+        console.log('📋 Showing download result');
+        
+        if (!resultsContainer) {
+            console.log('❌ Results container not found');
+            return;
+        }
+        
+        // Calculate file size
+        const fileSize = (originalFile.size / (1024 * 1024)).toFixed(2);
+        const outputFileName = result.fileName || 'converted.xlsx';
+        
+        resultsContainer.innerHTML = `
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
+                <!-- Success Header with Green Checkmark -->
+                <div class="text-center mb-6">
+                    <div class="mx-auto w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-green-800">Conversion Successful!</h3>
+                    <p class="text-sm text-gray-600 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        PDF to Excel conversion with format preservation and editable output
+                    </p>
+                </div>
+                
+                <!-- File Details Card -->
+                <div class="bg-white rounded-lg p-4 mb-6 border">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-excel text-green-600 text-2xl mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">${outputFileName}</h4>
+                            <p class="text-sm text-gray-600">Microsoft Excel Document</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-500">Original File:</span>
+                            <p class="font-medium">${originalFile.name}</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">File Size:</span>
+                            <p class="font-medium">${fileSize} MB</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Output Format:</span>
+                            <p class="font-medium">Microsoft Excel (.xlsx)</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Status:</span>
+                            <p class="font-medium text-green-600">Ready for Download</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Download Button -->
+                <div class="text-center">
+                    <button onclick="downloadConvertedExcel('${result.downloadLink}', '${result.fileName}')" 
+                            class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition-all hover:shadow-lg inline-flex items-center">
+                        <i class="fas fa-download mr-2"></i>
+                        Download Excel Document
+                    </button>
+                </div>
+                
+                <!-- Success Message -->
+                <div class="mt-4 text-center">
+                    <p class="text-green-600 text-sm flex items-center justify-center">
+                        <i class="fas fa-check-circle mr-1"></i>
+                        Your PDF has been converted using advanced text extraction. Click the download button above to save your Excel document.
+                    </p>
+                </div>
+            </div>
+        `;
+        
+        resultsContainer.classList.remove('hidden');
+        console.log('✅ Download UI displayed');
+    }
+    
+    console.log('✅ PDF to Excel initialized successfully');
+}
+
+// Download function for Excel files
+function downloadConvertedExcel(downloadLink, fileName) {
+    console.log('⬇️ Starting download:', fileName);
+    
+    const link = document.createElement('a');
+    link.href = downloadLink;
+    link.download = fileName || 'converted.xlsx';
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification('Download started!', 'success');
+    console.log('✅ Download initiated');
+}
+

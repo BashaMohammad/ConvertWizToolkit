@@ -408,11 +408,11 @@ function initializeComponent(sectionId) {
                 break;
                 
             case 'pdf-to-excel-section':
-                if (typeof initPDFToExcel === 'function') {
-                    initPDFToExcel();
+                if (typeof initializePdfToExcelConverter === 'function') {
+                    initializePdfToExcelConverter();
                     console.log('✅ INIT: PDF to Excel initialized');
                 } else {
-                    console.warn('⚠️ INIT: initPDFToExcel function not found');
+                    console.warn('⚠️ INIT: initializePdfToExcelConverter function not found');
                 }
                 break;
                 
