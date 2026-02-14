@@ -35,3 +35,4 @@ expertMode = true
 [deployment]
 deploymentTarget = "autoscale"
 run = ["node", "server.js"]
+publicDir = "public"
