@@ -1,0 +1,16 @@
+node_modules/
+.pythonlibs/
+__pycache__/
+*.pyc
+.cache/
+.config/
+.local/
+.upm/
+uploads/
+downloads/
+attached_assets/
+*.log
+.env
+.env.local
+.env.production
+uv.lock

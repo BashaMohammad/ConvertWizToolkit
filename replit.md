@@ -78,6 +78,17 @@ Preferred communication style: Simple, everyday language.
 - Mobile responsiveness and UI integrity preserved
 
 ## Recent Changes
+- February 14, 2026: **DEPLOYMENT CLEANUP - REMOVED ~130 ORPHAN FILES**
+  - Removed 35 orphan Python scripts (SEO, traffic, validation, content automation)
+  - Removed 38 orphan JSON report files and 17 orphan markdown documentation files
+  - Removed 20 orphan JS files from root (auth, firebase, fix scripts)
+  - Removed 9 orphan/backup HTML files (about_old, admin-backup, debug, etc.)
+  - Removed 7 backup directories (3.6MB freed)
+  - Cleaned downloads folder and public/ folder (removed index_backup.html, login.js, app.js, isolated-tool-loader.js, disabled files)
+  - Fixed critical security issue: Removed hardcoded Razorpay live API key and secret from server.js, moved to environment variables with lazy initialization
+  - Added .gitignore for node_modules, uploads, downloads, cache, env files
+  - Configured deployment target (autoscale with node server.js)
+  - Project reduced from ~180 files to ~45 clean, purposeful files
 - February 14, 2026: **RESPONSIVE DESIGN AND LIGHTWEIGHT OPTIMIZATION**
   - Rewrote style.css with CSS custom properties (variables) for consistent theming
   - Removed all broken/empty CSS rules, orphaned selectors, and duplicate media queries (48% size reduction: 18KB to 9.5KB)

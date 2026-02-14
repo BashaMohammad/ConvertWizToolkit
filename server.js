@@ -6,16 +6,16 @@ const multer = require('multer');
 const sharp = require('sharp');
 const crypto = require('crypto');
 
-// ✅ Razorpay Live Configuration
-const Razorpay = require("razorpay");
+let razorpayInstance = null;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  const Razorpay = require("razorpay");
+  razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+  });
+}
 
-const razorpayInstance = new Razorpay({
-  key_id: "rzp_live_HXdG9BXkQBfjyG",
-  key_secret: "CyQm3qiy5mMfapVKyul67pGO"
-});
-
-// ⚙️ Razorpay Webhook Secret (Same for Dev and Prod)
-const RAZORPAY_WEBHOOK_SECRET = "CWsecret2025@123";
+const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET || "";
 
 const app = express();
 
@@ -159,6 +159,9 @@ app.post('/api/create-order', async (req, res) => {
       }
     };
 
+    if (!razorpayInstance) {
+      return res.status(503).json({ error: 'Payment service not configured' });
+    }
     const order = await razorpayInstance.orders.create(options);
     console.log(`✅ Development order created: ${order.id} for user: ${user_email}`);
     
