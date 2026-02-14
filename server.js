@@ -767,11 +767,11 @@ app.get('/api/components', (req, res) => {
 
 // Success/Cancel pages for future payment integration
 app.get('/success', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/cancel', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Admin route
@@ -791,27 +791,27 @@ app.get('/blog', (req, res) => {
 // ===== New SEO Tool Routes =====
 app.get('/tools/backlink-checker', (req, res) => {
     res.setHeader('Cache-Control','no-store');
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/tools/meta-tag-generator', (req, res) => {
     res.setHeader('Cache-Control','no-store');
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/tools/dpi-checker', (req, res) => {
     res.setHeader('Cache-Control','no-store');
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/tools/url-shortener', (req, res) => {
     res.setHeader('Cache-Control','no-store');
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/tools/text-to-speech', (req, res) => {
     res.setHeader('Cache-Control','no-store');
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // User Dashboard Route
@@ -964,7 +964,7 @@ app.get('/', (req, res) => {
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
   res.setHeader('Surrogate-Control', 'no-store');
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Payment routes - serve specific payment pages
@@ -987,7 +987,7 @@ app.get('/payment-failed.html', (req, res) => {
 app.use((req, res, next) => {
   // Only handle GET requests for HTML pages
   if (req.method === 'GET' && req.accepts('html')) {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
   } else {
     next();
   }

@@ -297,11 +297,8 @@ function initializeTool(sectionId) {
                 }
                 break;
             case 'png-to-jpg-section':
-                // PNG to JPG Converter functionality using new class
-                if (typeof PNGtoJPGConverter !== 'undefined') {
-                    window.pngToJpgConverter = new PNGtoJPGConverter();
-                } else if (typeof initializePNGtoJPGConverter !== 'undefined') {
-                    initializePNGtoJPGConverter();
+                if (typeof initializePngToJpgConverter === 'function') {
+                    initializePngToJpgConverter();
                 }
                 break;
             case 'wifi-scanner-section':
