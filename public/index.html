@@ -226,7 +226,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <script>
         tailwind.config = {
@@ -245,39 +244,11 @@
     </script>
 
 <style>
-/* COMPONENT ISOLATION FIX */
-.tool-section {
-    display: none !important;
-}
-
-.tool-section.active {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-#landing-section.active {
-    display: block !important;
-    visibility: visible !important;
-}
-
-/* Ensure tool sections have proper structure when active */
-.tool-section.active main {
-    display: block !important;
-    visibility: visible !important;
-}
-
-.tool-section.active .container {
-    display: block !important;
-    visibility: visible !important;
-}
-
-/* Force show all child elements of active tool sections */
-.tool-section.active * {
-    visibility: visible !important;
-}
+.tool-section { display: none !important; }
+.tool-section.active { display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1; }
+#landing-section.active { display: block !important; visibility: visible !important; }
+.tool-section.active main, .tool-section.active .container { display: block !important; visibility: visible !important; }
+.tool-section.active * { visibility: visible !important; }
 </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-pink-300 via-purple-400 to-purple-600">
@@ -365,12 +336,6 @@
             </div>
         </div>
     </header>
-
-    <!-- Vertical Left AdSense Banner - Landing Page -->
-    </div>
-
-    <!-- Right Sidebar Ad - Landing Page -->
-    </div>
 
     <!-- LANDING SECTION -->
     <div class="tool-section" id="landing-section" style="display: block;">
@@ -3534,100 +3499,45 @@ Contact: John Doe, Company Inc."></textarea>
 
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <script src="tools.js"></script>
-    <script>
-        // Ensure tools are loaded before continuing
-        window.toolsLoaded = true;
-        console.log('✅ Tools.js loaded and ready');
-    </script>
-    <script src="emergency_component_fix.js"></script>
-    <script src="deployment_separation.js"></script>
-    <script src="component_visibility_control.js"></script>
-    <script src="clean_production_lock.js"></script>
-    <script src="performance_optimization.js"></script>
-    <!-- ConvertWiz Free Mode - No subscription needed -->
-    
-    <!-- Firebase Authentication (Enhanced) -->
-    <!-- Firebase authentication removed - All tools now freely accessible -->
+    <script>window.toolsLoaded = true; console.log('✅ Tools.js loaded and ready');</script>
+    <script src="emergency_component_fix.js" defer></script>
+    <script src="deployment_separation.js" defer></script>
+    <script src="component_visibility_control.js" defer></script>
+    <script src="clean_production_lock.js" defer></script>
+    <script src="performance_optimization.js" defer></script>
 
     <script>
-        // ConvertWiz - Free Tools Mode (No Authentication Required)
         console.log('🎉 ConvertWiz Free Mode - All tools accessible without login');
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                var target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    setTimeout(() => {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }, 100);
+                    setTimeout(function() { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
                     document.getElementById('mobile-menu').classList.add('hidden');
                 }
             });
         });
-        
-        // Initialize ConvertWiz without authentication
         document.addEventListener('DOMContentLoaded', function() {
-            // FORCE HIDE ALL TOOL SECTIONS EXCEPT LANDING
-            document.querySelectorAll('.tool-section:not(#landing-section)').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Ensure landing section is visible
-            const landingSection = document.getElementById('landing-section');
-            if (landingSection) {
-                landingSection.style.display = 'block';
-            }
-            
-            // Initialize mobile menu functionality
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    mobileMenu.classList.toggle('hidden');
-                    console.log('Mobile menu toggled');
-                });
-                
-                // Close mobile menu when clicking outside
+            document.querySelectorAll('.tool-section:not(#landing-section)').forEach(function(s) { s.style.display = 'none'; });
+            var landing = document.getElementById('landing-section');
+            if (landing) landing.style.display = 'block';
+            var menuBtn = document.getElementById('mobile-menu-btn');
+            var menu = document.getElementById('mobile-menu');
+            if (menuBtn && menu) {
+                menuBtn.addEventListener('click', function(e) { e.preventDefault(); menu.classList.toggle('hidden'); });
                 document.addEventListener('click', function(e) {
-                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-                        mobileMenu.classList.add('hidden');
-                    }
+                    if (!menuBtn.contains(e.target) && !menu.contains(e.target)) menu.classList.add('hidden');
                 });
             }
-            
-            // Initialize routing
-            if (typeof initializeRouting === 'function') {
-                initializeRouting();
-            }
-            
-            console.log('✅ ConvertWiz initialized - component isolation enforced');
-            console.log('✅ Mobile menu functionality added');
+            if (typeof initializeRouting === 'function') initializeRouting();
+            console.log('✅ ConvertWiz initialized');
         });
-        
-        // Set development mode for ad display
         document.addEventListener('DOMContentLoaded', function() {
-            // Set development mode attribute for CSS targeting
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 document.body.setAttribute('data-env', 'development');
-            }
-            
-            // Initialize ads in production only (all users see ads in free mode)
-            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                setTimeout(function() {
-                    try {
-                        // AdSense initialization removed for clean production deployment
-                        console.log('Production mode: AdSense ready');
-                    } catch (e) {
-                        console.warn('AdSense initialization:', e.message);
-                    }
-                }, 3000); // 3 second delay
+            } else {
+                setTimeout(function() { console.log('Production mode: AdSense ready'); }, 3000);
             }
         });
     </script>
