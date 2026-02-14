@@ -1,206 +1,166 @@
 #!/usr/bin/env python3
-"""
-PDF to PowerPoint Converter with Editable Text
-Standalone Python script for ConvertWiz PDF to PowerPoint conversion
-Uses PyMuPDF for text extraction and python-pptx for PowerPoint creation with editable text
-"""
-
 import sys
 import os
-import pymupdf as fitz  # PyMuPDF
-from pptx import Presentation
-from pptx.util import Inches, Pt
-from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
 import time
-import re
-
-def extract_text_blocks_from_page(page):
-    """Extract text blocks with formatting information from a PDF page"""
-    text_blocks = []
-    
-    try:
-        # Get text blocks with font information
-        blocks = page.get_text("dict")
-        
-        for block in blocks["blocks"]:
-            if "lines" in block:
-                for line in block["lines"]:
-                    line_text = ""
-                    font_size = 12
-                    is_bold = False
-                    
-                    for span in line["spans"]:
-                        text = span["text"].strip()
-                        if text:
-                            line_text += text + " "
-                            font_size = max(font_size, span["size"])
-                            if span["flags"] & 2**4:  # Bold flag
-                                is_bold = True
-                    
-                    if line_text.strip():
-                        text_blocks.append({
-                            "text": line_text.strip(),
-                            "font_size": font_size,
-                            "is_bold": is_bold,
-                            "bbox": line["bbox"]
-                        })
-    except:
-        # Fallback: simple text extraction
-        text = page.get_text()
-        if text.strip():
-            paragraphs = text.split('\n\n')
-            for para in paragraphs:
-                if para.strip():
-                    text_blocks.append({
-                        "text": para.strip(),
-                        "font_size": 14,
-                        "is_bold": False,
-                        "bbox": None
-                    })
-    
-    return text_blocks
-
-def add_text_to_slide(slide, text_blocks):
-    """Add text blocks to PowerPoint slide as editable text"""
-    if not text_blocks:
-        return
-    
-    # Determine if this looks like a title page
-    first_block = text_blocks[0]
-    is_title_page = (len(first_block["text"]) < 100 and 
-                     (first_block["font_size"] > 16 or first_block["is_bold"]))
-    
-    if is_title_page and len(text_blocks) >= 1:
-        # Title slide layout
-        if hasattr(slide.shapes, 'title') and slide.shapes.title:
-            title_shape = slide.shapes.title
-            title_shape.text = first_block["text"]
-            
-            # Format title
-            if title_shape.text_frame.paragraphs:
-                title_para = title_shape.text_frame.paragraphs[0]
-                if title_para.runs:
-                    title_run = title_para.runs[0]
-                    title_run.font.size = Pt(max(24, first_block["font_size"]))
-                    title_run.font.bold = True
-        
-        # Add remaining text as subtitle/content
-        if len(text_blocks) > 1:
-            if hasattr(slide.shapes, 'placeholders') and len(slide.shapes.placeholders) > 1:
-                content_shape = slide.shapes.placeholders[1]
-                content_text = "\n\n".join([block["text"] for block in text_blocks[1:]])
-                content_shape.text = content_text
-            else:
-                # Add as text box
-                left = Inches(1)
-                top = Inches(2.5)
-                width = Inches(8)
-                height = Inches(4)
-                text_box = slide.shapes.add_textbox(left, top, width, height)
-                text_frame = text_box.text_frame
-                
-                content_text = "\n\n".join([block["text"] for block in text_blocks[1:]])
-                text_frame.text = content_text
-    else:
-        # Content slide - add all text as paragraphs
-        left = Inches(0.5)
-        top = Inches(0.5)
-        width = Inches(9)
-        height = Inches(6.5)
-        
-        text_box = slide.shapes.add_textbox(left, top, width, height)
-        text_frame = text_box.text_frame
-        text_frame.word_wrap = True
-        
-        # Clear existing content
-        text_frame.clear()
-        
-        # Add each text block as a paragraph
-        for i, block in enumerate(text_blocks):
-            if i == 0:
-                # First paragraph
-                p = text_frame.paragraphs[0]
-            else:
-                # Add new paragraph
-                p = text_frame.add_paragraph()
-            
-            p.text = block["text"]
-            
-            # Format paragraph
-            if p.runs:
-                run = p.runs[0]
-                run.font.size = Pt(max(12, min(block["font_size"], 24)))
-                run.font.bold = block["is_bold"]
-                
-            # Add spacing between paragraphs
-            if i < len(text_blocks) - 1:
-                p.space_after = Pt(6)
 
 def convert_pdf_to_powerpoint(input_path, output_path):
-    """Convert PDF to PowerPoint presentation with editable text"""
     try:
         print(f"Starting conversion: {input_path} -> {output_path}")
         start_time = time.time()
-        
-        # Open PDF document
+
+        import pymupdf as fitz
+        from pptx import Presentation
+        from pptx.util import Inches, Pt, Emu
+        from pptx.dml.color import RGBColor
+        from pptx.enum.text import PP_ALIGN
+
         pdf_document = fitz.open(input_path)
-        
-        # Create new PowerPoint presentation
         prs = Presentation()
-        
-        # Process each page of the PDF
+
         total_pages = len(pdf_document)
+
         for page_num in range(total_pages):
             print(f"Processing page {page_num + 1}/{total_pages}")
-            
-            # Get the page
             page = pdf_document.load_page(page_num)
-            
-            # Extract text blocks from the page
-            text_blocks = extract_text_blocks_from_page(page)
-            
-            # Determine slide layout
-            if page_num == 0 and text_blocks:
-                # First page - use title slide layout if it looks like a title
-                first_text = text_blocks[0]["text"] if text_blocks else ""
-                if len(first_text) < 100:
-                    slide_layout = prs.slide_layouts[0]  # Title slide
-                else:
-                    slide_layout = prs.slide_layouts[1]  # Title and Content
-            else:
-                # Subsequent pages - use content layout
-                slide_layout = prs.slide_layouts[1]  # Title and Content
-            
+
+            page_width = page.rect.width
+            page_height = page.rect.height
+
+            slide_layout = prs.slide_layouts[6]
             slide = prs.slides.add_slide(slide_layout)
-            
-            # Add text to slide
-            if text_blocks:
-                add_text_to_slide(slide, text_blocks)
-            else:
-                # Fallback: Add placeholder text if no text extracted
-                if hasattr(slide.shapes, 'title') and slide.shapes.title:
-                    slide.shapes.title.text = f"Page {page_num + 1}"
-                
-                # Add text box with message
-                left = Inches(1)
-                top = Inches(2)
-                width = Inches(8)
-                height = Inches(2)
-                text_box = slide.shapes.add_textbox(left, top, width, height)
-                text_frame = text_box.text_frame
-                text_frame.text = "This page contained no extractable text or was image-based."
-        
-        # Close PDF document
+
+            slide_w = prs.slide_width
+            slide_h = prs.slide_height
+            scale_x = slide_w / page_width
+            scale_y = slide_h / page_height
+
+            tables = page.find_tables()
+            table_areas = set()
+
+            if tables and len(tables.tables) > 0:
+                for table in tables.tables:
+                    data = table.extract()
+                    if not data or len(data) == 0:
+                        continue
+
+                    bbox = table.bbox
+                    table_areas.add((round(bbox[1]), round(bbox[3])))
+
+                    left = Emu(int(bbox[0] * scale_x))
+                    top = Emu(int(bbox[1] * scale_y))
+                    width = Emu(int((bbox[2] - bbox[0]) * scale_x))
+                    height = Emu(int((bbox[3] - bbox[1]) * scale_y))
+
+                    num_rows = len(data)
+                    num_cols = max(len(row) for row in data) if data else 1
+
+                    try:
+                        tbl_shape = slide.shapes.add_table(num_rows, num_cols, left, top, width, height)
+                        tbl = tbl_shape.table
+
+                        for row_idx, row_data in enumerate(data):
+                            for col_idx in range(num_cols):
+                                cell = tbl.cell(row_idx, col_idx)
+                                cell_text = row_data[col_idx] if col_idx < len(row_data) and row_data[col_idx] else ""
+                                cell_text = cell_text.strip() if isinstance(cell_text, str) else str(cell_text) if cell_text else ""
+                                cell.text = cell_text
+
+                                for paragraph in cell.text_frame.paragraphs:
+                                    for run in paragraph.runs:
+                                        run.font.size = Pt(9)
+                                        if row_idx == 0:
+                                            run.font.bold = True
+                    except Exception:
+                        left = Emu(int(bbox[0] * scale_x))
+                        top = Emu(int(bbox[1] * scale_y))
+                        width = Emu(int((bbox[2] - bbox[0]) * scale_x))
+                        height = Emu(int((bbox[3] - bbox[1]) * scale_y))
+                        txBox = slide.shapes.add_textbox(left, top, width, height)
+                        tf = txBox.text_frame
+                        tf.word_wrap = True
+                        for row_data in data:
+                            row_text = " | ".join([c.strip() if c else "" for c in row_data])
+                            p = tf.add_paragraph()
+                            p.text = row_text
+                            p.font.size = Pt(9)
+
+            blocks = page.get_text("dict")
+
+            for block in blocks["blocks"]:
+                if "lines" not in block:
+                    continue
+
+                block_y_top = block["bbox"][1]
+                block_y_bottom = block["bbox"][3]
+
+                in_table = False
+                for (t_top, t_bottom) in table_areas:
+                    if block_y_top >= t_top - 5 and block_y_bottom <= t_bottom + 5:
+                        in_table = True
+                        break
+                if in_table:
+                    continue
+
+                bbox = block["bbox"]
+                left = Emu(int(bbox[0] * scale_x))
+                top = Emu(int(bbox[1] * scale_y))
+                width = Emu(int((bbox[2] - bbox[0]) * scale_x))
+                height = Emu(int((bbox[3] - bbox[1]) * scale_y))
+
+                if width <= 0 or height <= 0:
+                    continue
+
+                txBox = slide.shapes.add_textbox(left, top, width, height)
+                tf = txBox.text_frame
+                tf.word_wrap = True
+
+                first_para = True
+                for line in block["lines"]:
+                    line_text = ""
+                    line_size = 11
+                    line_bold = False
+                    line_italic = False
+                    line_color = None
+
+                    for span in line["spans"]:
+                        text = span["text"]
+                        if text.strip():
+                            line_text += text
+                            line_size = span["size"]
+                            if span["flags"] & 2**4:
+                                line_bold = True
+                            if span["flags"] & 2**1:
+                                line_italic = True
+                            color_int = span.get("color", 0)
+                            if color_int and color_int != 0:
+                                r = (color_int >> 16) & 0xFF
+                                g = (color_int >> 8) & 0xFF
+                                b = color_int & 0xFF
+                                line_color = RGBColor(r, g, b)
+
+                    if not line_text.strip():
+                        continue
+
+                    if first_para:
+                        p = tf.paragraphs[0]
+                        first_para = False
+                    else:
+                        p = tf.add_paragraph()
+
+                    run = p.add_run()
+                    run.text = line_text
+                    run.font.size = Pt(max(6, min(line_size, 36)))
+                    run.font.bold = line_bold
+                    run.font.italic = line_italic
+                    if line_color:
+                        run.font.color.rgb = line_color
+
         pdf_document.close()
-        
-        # Save PowerPoint presentation
         prs.save(output_path)
-        
+
         duration = round(time.time() - start_time, 2)
         print(f"Conversion completed in {duration} seconds")
-        
-        # Check if output file exists
+
         if os.path.exists(output_path):
             file_size = os.path.getsize(output_path)
             print(f"Output file created: {output_path} ({file_size} bytes)")
@@ -208,22 +168,24 @@ def convert_pdf_to_powerpoint(input_path, output_path):
         else:
             print("Error: Output file not created")
             return False
-            
+
     except Exception as e:
         print(f"Conversion error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return False
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: python pdf_to_powerpoint_converter.py <input_pdf> <output_pptx>")
         sys.exit(1)
-    
+
     input_file = sys.argv[1]
     output_file = sys.argv[2]
-    
+
     if not os.path.exists(input_file):
         print(f"Error: Input file not found: {input_file}")
         sys.exit(1)
-    
+
     success = convert_pdf_to_powerpoint(input_file, output_file)
     sys.exit(0 if success else 1)
