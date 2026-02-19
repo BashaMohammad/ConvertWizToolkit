@@ -4790,13 +4790,19 @@ function handlePDFPowerpointFileSelect(event) {
     }
 }
 
-function convertPDFToPowerPoint() {
+async function convertPDFToPowerPoint() {
     const fileInput = document.getElementById('pdf-powerpoint-input');
     const file = fileInput.files[0];
     
     if (!file) {
         showNotification('Please select a PDF file first', 'error');
         return;
+    }
+    
+    const convertBtn = document.getElementById('pdf-powerpoint-convert-btn');
+    if (convertBtn) {
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Converting...';
     }
     
     const resultsContainer = document.getElementById('pdf-powerpoint-results');
@@ -4808,34 +4814,62 @@ function convertPDFToPowerPoint() {
         </div>
     `;
     
-    setTimeout(() => {
-        const blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
-        const url = URL.createObjectURL(blob);
-        const filename = file.name.replace('.pdf', '.pptx');
+    try {
+        const formData = new FormData();
+        formData.append('pdfFile', file);
         
-        resultsContainer.innerHTML = `
-            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
-                <div class="text-center mb-4">
-                    <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
-                    <h3 class="text-lg font-semibold text-green-800">Conversion Complete!</h3>
-                </div>
-                <div class="flex items-center justify-between bg-white rounded-lg p-4 border">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-powerpoint text-orange-600 text-2xl mr-3"></i>
-                        <div>
-                            <p class="font-semibold text-gray-800">${filename}</p>
-                            <p class="text-sm text-gray-600">PowerPoint Presentation</p>
-                        </div>
+        const response = await fetch('/api/pdf-to-powerpoint', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            const filename = result.fileName;
+            const downloadLink = result.downloadLink;
+            
+            resultsContainer.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
+                        <h3 class="text-lg font-semibold text-green-800">Conversion Complete!</h3>
                     </div>
-                    <button onclick="downloadFile('${url}', '${filename}')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
-                        <i class="fas fa-download mr-2"></i>Download
-                    </button>
+                    <div class="flex items-center justify-between bg-white rounded-lg p-4 border">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-powerpoint text-orange-600 text-2xl mr-3"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">${filename}</p>
+                                <p class="text-sm text-gray-600">PowerPoint Presentation (${result.fileSizeMB} MB)</p>
+                            </div>
+                        </div>
+                        <a href="${downloadLink}" download="${filename}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors inline-block">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </a>
+                    </div>
                 </div>
+            `;
+            
+            showNotification('PDF converted to PowerPoint successfully!', 'success');
+        } else {
+            throw new Error(result.message || 'Conversion failed');
+        }
+    } catch (error) {
+        console.error('PDF to PowerPoint conversion error:', error);
+        resultsContainer.innerHTML = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-3xl mb-2"></i>
+                <p class="text-red-700 font-semibold">Conversion Failed</p>
+                <p class="text-red-600 text-sm mt-2">${error.message}</p>
             </div>
         `;
-        
-        showNotification('PDF converted to PowerPoint successfully!', 'success');
-    }, 2000);
+        showNotification('Conversion failed: ' + error.message, 'error');
+    } finally {
+        if (convertBtn) {
+            convertBtn.disabled = false;
+            convertBtn.innerHTML = '<i class="fas fa-file-powerpoint mr-2"></i>Convert to PowerPoint';
+        }
+    }
 }
 
 // PDF to Excel Converter
@@ -4876,13 +4910,19 @@ function handlePDFExcelFileSelect(event) {
     }
 }
 
-function convertPDFToExcel() {
+async function convertPDFToExcel() {
     const fileInput = document.getElementById('pdf-excel-input');
     const file = fileInput.files[0];
     
     if (!file) {
         showNotification('Please select a PDF file first', 'error');
         return;
+    }
+    
+    const convertBtn = document.getElementById('pdf-excel-convert-btn');
+    if (convertBtn) {
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Converting...';
     }
     
     const resultsContainer = document.getElementById('pdf-excel-results');
@@ -4894,34 +4934,62 @@ function convertPDFToExcel() {
         </div>
     `;
     
-    setTimeout(() => {
-        const blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const url = URL.createObjectURL(blob);
-        const filename = file.name.replace('.pdf', '.xlsx');
+    try {
+        const formData = new FormData();
+        formData.append('pdfFile', file);
         
-        resultsContainer.innerHTML = `
-            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
-                <div class="text-center mb-4">
-                    <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
-                    <h3 class="text-lg font-semibold text-green-800">Extraction Complete!</h3>
-                </div>
-                <div class="flex items-center justify-between bg-white rounded-lg p-4 border">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-excel text-green-600 text-2xl mr-3"></i>
-                        <div>
-                            <p class="font-semibold text-gray-800">${filename}</p>
-                            <p class="text-sm text-gray-600">Excel Spreadsheet</p>
-                        </div>
+        const response = await fetch('/api/pdf-to-excel', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            const filename = result.fileName;
+            const downloadLink = result.downloadLink;
+            
+            resultsContainer.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
+                        <h3 class="text-lg font-semibold text-green-800">Extraction Complete!</h3>
                     </div>
-                    <button onclick="downloadFile('${url}', '${filename}')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
-                        <i class="fas fa-download mr-2"></i>Download
-                    </button>
+                    <div class="flex items-center justify-between bg-white rounded-lg p-4 border">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-excel text-green-600 text-2xl mr-3"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">${filename}</p>
+                                <p class="text-sm text-gray-600">Excel Spreadsheet (${result.fileSizeMB} MB)</p>
+                            </div>
+                        </div>
+                        <a href="${downloadLink}" download="${filename}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors inline-block">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </a>
+                    </div>
                 </div>
+            `;
+            
+            showNotification('PDF tables extracted to Excel successfully!', 'success');
+        } else {
+            throw new Error(result.message || 'Conversion failed');
+        }
+    } catch (error) {
+        console.error('PDF to Excel conversion error:', error);
+        resultsContainer.innerHTML = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-3xl mb-2"></i>
+                <p class="text-red-700 font-semibold">Conversion Failed</p>
+                <p class="text-red-600 text-sm mt-2">${error.message}</p>
             </div>
         `;
-        
-        showNotification('PDF tables extracted to Excel successfully!', 'success');
-    }, 2000);
+        showNotification('Conversion failed: ' + error.message, 'error');
+    } finally {
+        if (convertBtn) {
+            convertBtn.disabled = false;
+            convertBtn.innerHTML = '<i class="fas fa-file-excel mr-2"></i>Extract to Excel';
+        }
+    }
 }
 
 // PDF Split Tool

@@ -51,42 +51,22 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Production routes - only established tools for immediate deployment
-const productionRoutes = [
+// All tool routes - available to all users
+const toolRoutes2 = [
   '/jpg-to-png', '/currency-converter', '/land-converter', '/dp-resizer',
   '/word-counter', '/distance-converter', '/weight-converter', '/height-converter',
   '/ip-extractor', '/qr-generator', '/percentage-calculator', '/temperature-converter',
   '/color-converter', '/image-compressor', '/text-to-speech', '/url-shortener',
   '/backlink-checker', '/meta-tag-generator', '/dpi-checker', '/global-land-units',
-  '/wifi-scanner', '/signal-strength'
-];
-
-// Saturday release routes - blocked until Saturday
-const saturdayRoutes = [
+  '/wifi-scanner', '/signal-strength',
   '/bmi-calculator', '/text-case-converter', '/png-to-jpg', '/pdf-to-word',
   '/pdf-to-powerpoint', '/pdf-to-excel', '/pdf-split', '/pdf-merge'
 ];
 
-// Handle production routes (always available)
-productionRoutes.forEach(route => {
+// Handle all tool routes
+toolRoutes2.forEach(route => {
   app.get(route, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
-});
-
-// Handle Saturday routes with date check
-saturdayRoutes.forEach(route => {
-  app.get(route, (req, res) => {
-    const today = new Date();
-    const isSaturday = today.getDay() === 6; // Saturday = 6
-    
-    if (isSaturday) {
-      // Saturday - allow access
-      res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    } else {
-      // Not Saturday - redirect to home
-      res.redirect('/');
-    }
   });
 });
 
