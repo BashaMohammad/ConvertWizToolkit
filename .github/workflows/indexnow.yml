@@ -1,0 +1,22 @@
+# Notify IndexNow search engines (Bing, Yandex, Seznam, Naver) once a production deployment is live.
+# build.js writes /indexnow.json with only the pages that are new or changed in that deployment.
+name: IndexNow ping
+on: deployment_status
+jobs:
+  ping:
+    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Submit changed URLs
+        run: |
+          sleep 20
+          curl -fsS "https://www.convertwiz.in/indexnow.json?cb=${GITHUB_RUN_ID}" -o payload.json
+          n=$(jq '.urlList | length' payload.json)
+          echo "Changed URLs: $n"
+          if [ "$n" -eq 0 ]; then echo "Nothing to submit"; exit 0; fi
+          key=$(jq -r .key payload.json)
+          curl -fsS "https://www.convertwiz.in/${key}.txt" | grep -qx "$key" || { echo "Key file not live yet"; exit 1; }
+          code=$(curl -s -o resp.txt -w '%{http_code}' -X POST https://api.indexnow.org/indexnow -H 'Content-Type: application/json; charset=utf-8' --data @payload.json)
+          echo "IndexNow HTTP $code"; cat resp.txt || true
+          [ "$code" = "200" ] || [ "$code" = "202" ]

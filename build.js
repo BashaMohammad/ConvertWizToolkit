@@ -213,7 +213,7 @@ if(r.mode==='navigate'){e.respondWith(fetch(r).then(res=>{const cp=res.clone();c
 if(u.origin===location.origin){e.respondWith(caches.match(r).then(m=>{const f=fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(C).then(c=>c.put(r,cp))}return res});return m||f}))}});
 `);
 // ---------- sitemap with real lastmod + IndexNow (Bing, Yandex, Seznam, Naver) ----------
-const INDEXNOW_KEY = 'f31f13b0a2de4f63a775767f3ffc5c6a';
+const INDEXNOW_KEY = 'da08b51e196569c1c4a5117adcade186';
 (async () => {
   const norm = h => h.replace(/\?v=[0-9a-f]{8}/g, '').split(TODAY).join('');
   const fileOf = u => path.join(OUT, u === '/' ? 'index.html' : u.slice(1) + '.html');
@@ -226,6 +226,10 @@ const INDEXNOW_KEY = 'f31f13b0a2de4f63a775767f3ffc5c6a';
       reachable = true; if (r.ok) prev = await r.json();
     } catch (e) { console.log('Previous page manifest not reachable:', e.message); }
   }
+  // New or rotated key (or first run): submit every URL once.
+  let liveKey = null;
+  if (PROD && reachable) { try { const r = await fetch(SITE + '/indexnow.json', { signal: AbortSignal.timeout(8000) }); if (r.ok) liveKey = (await r.json()).key; } catch (e) {} }
+  const all = liveKey !== INDEXNOW_KEY;
   const man = {}, changed = [];
   for (const [u] of urls) {
     const p = prev && prev[u];
@@ -234,12 +238,10 @@ const INDEXNOW_KEY = 'f31f13b0a2de4f63a775767f3ffc5c6a';
   write('pages.json', JSON.stringify(man));
   write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, p]) => `<url><loc>${SITE}${u}</loc><lastmod>${man[u][1]}</lastmod><priority>${p}</priority></url>`).join('\n')}\n</urlset>\n`);
   console.log(`Sitemap: ${urls.length} URLs, ${changed.length} new or changed since last deploy`);
-  if (PROD && reachable && changed.length) {
-    try {
-      const r = await fetch('https://api.indexnow.org/indexnow', { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' }, signal: AbortSignal.timeout(10000),
-        body: JSON.stringify({ host: 'www.convertwiz.in', key: INDEXNOW_KEY, keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`, urlList: changed.slice(0, 10000) }) });
-      console.log('IndexNow:', r.status, 'for', changed.length, 'URLs');
-    } catch (e) { console.log('IndexNow ping failed (build continues):', e.message); }
-  }
+  // The ping itself runs after the deployment is live (.github/workflows/indexnow.yml reads this file),
+  // so search engines always find the key file and the new content.
+  const sub = all ? urls.map(([u]) => SITE + u) : changed;
+  write('indexnow.json', JSON.stringify({ host: 'www.convertwiz.in', key: INDEXNOW_KEY, keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`, urlList: PROD && reachable ? sub.slice(0, 10000) : [] }));
+  console.log(`IndexNow queued: ${PROD && reachable ? sub.length : 0} URLs${all ? ' (full resubmit: new key)' : ''} (sent after deploy by GitHub Actions)`);
 })();
 console.log(`Built ${TOOLS.length} tools, ${Object.keys(CATS).length} categories, ${urls.length} URLs in sitemap (production=${PROD})`);
