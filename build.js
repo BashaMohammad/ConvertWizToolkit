@@ -72,7 +72,7 @@ const examTool = bySlug['exam-photo-resizer'];
 for (const e of EXAMS) {
   const url = '/' + e.s, files = e.items.filter(i => !i.live);
   const title = `${e.n} Photo & Signature Size ${e.year} – Official Specs + Free Resizer | ConvertWiz`;
-  const desc = `${e.n} ${e.year} photo and signature size from the official notification: ${e.items.map(i => i.live ? i.n.toLowerCase() + ' captured live' : `${i.n.toLowerCase()} ${i.min}–${i.max} KB`).join(', ')}. Resize yours to fit in seconds, free and private.`;
+  const desc = `${e.n} ${e.year} photo and signature size from the official notification: ${e.items.map(i => i.live ? (/live/i.test(i.n) ? 'live photo capture' : i.n.toLowerCase() + ' captured live') : `${i.n.toLowerCase()} ${i.min}–${i.max} KB`).join(', ')}. Resize yours to fit in seconds, free and private.`;
   const faq = [
     ...e.items.map(i => [`What is the ${e.n} ${i.n.toLowerCase()} size?`, `${i.spec} (Source: ${e.notice}.)`]),
     [`Is this the latest ${e.n} requirement?`, `These values were checked against the official document on ${CHECKED}: ${e.notice}. Requirements can change with each notification, so always compare with the notice you are applying under.`],
