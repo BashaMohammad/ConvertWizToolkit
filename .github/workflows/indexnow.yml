@@ -15,6 +15,11 @@ jobs:
         run: |
           sleep 20
           curl -fsS "https://www.convertwiz.in/indexnow.json?cb=${GITHUB_RUN_ID}" -o payload.json
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # Manual run: submit every URL in the live sitemap
+            curl -fsS https://www.convertwiz.in/sitemap.xml | grep -o '<loc>[^<]*' | sed 's/<loc>//' | jq -R . | jq -s . > urls.json
+            jq --slurpfile u urls.json '.urlList = $u[0]' payload.json > p2.json && mv p2.json payload.json
+          fi
           n=$(jq '.urlList | length' payload.json)
           echo "Changed URLs: $n"
           if [ "$n" -eq 0 ]; then echo "Nothing to submit"; exit 0; fi
