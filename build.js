@@ -79,7 +79,7 @@ for (const [k, c] of Object.entries(CATS)) {
   const main = `<section class="hero"><h1>All your everyday tools,<br><span>free, fast &amp; private</span></h1>
 <p class="lead">${TOOLS.length} free tools for images, PDFs, GST, EMI, income tax, unit conversion and more. Everything runs in your browser, so your files never leave your device. No sign-up needed.</p>
 <div class="bigsearch"><input id="q" type="search" placeholder="Try &quot;compress to 50 KB&quot;" aria-label="Filter tools" autocomplete="off"></div>
-<div class="chips">${['exam-photo-resizer', 'image-compressor', 'merge-pdf', 'gst-calculator', 'income-tax-calculator', 'qr-code-generator'].map(s => `<a class="chip" href="/${s}">${bySlug[s].e} ${bySlug[s].n.replace(/ \(.*|FY.*$/, '')}</a>`).join('')}</div></section>
+<div class="chips">${['exam-photo-resizer', 'image-compressor', 'merge-pdf', 'gst-calculator', 'income-tax-calculator', 'qr-code-generator'].map(s => `<a class="chip" href="/${s}">${bySlug[s].e} ${bySlug[s].n.replace(/ \(.*|FY.*$/, '').trim()}</a>`).join('')}</div></section>
 <div id="mine"></div>
 <section data-cat="pop"><h2>🔥 Most popular</h2><div class="grid">${pop.map(card).join('')}</div></section>
 ${Object.entries(CATS).map(([k, c]) => `<section data-cat="${k}"><div class="sec-h"><h2>${c.e} ${c.name}</h2><a href="/${c.slug}">View all →</a></div><div class="grid">${TOOLS.filter(t => t.c === k).map(card).join('')}</div></section>`).join('')}

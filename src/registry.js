@@ -71,7 +71,7 @@ const TOOLS = [
   // ---------- PDF ----------
   { s: 'merge-pdf', n: 'Merge PDF', c: 'pdf', e: '📑', g: 'pdf', pop: 1,
     t: 'Merge PDF – Combine PDF Files Online Free | ConvertWiz',
-    d: 'Merge multiple PDF files into one in the order you want. Free, no watermark, no signup, and your files never leave your device.',
+    d: 'Merge multiple PDF files into one in the order you want. Free, with no watermark and no sign-up, and your files never leave your device.',
     i: 'Combine several PDFs into a single document. Drag in your files, put them in order and download one merged PDF.',
     st: ['Add two or more PDF files.', 'Reorder them with the arrows.', 'Click Merge PDFs and download the result.'],
     f: [PRIV, ['Is there a watermark?', 'No. The merged PDF has no watermark and is completely free.'], ['Can I merge password-protected PDFs?', 'Not yet. Remove the password first, then merge the unlocked files.']] },
@@ -243,7 +243,7 @@ const TOOLS = [
     f: [['What is Title Case?', 'Each word starts with a capital letter, as in headlines, for example "The Best Tools For Students".']] },
   { s: 'text-to-speech', n: 'Text to Speech', c: 'text', e: '🔊', g: 'text',
     t: 'Text to Speech – Free Online Voice Reader (Hindi & English) | ConvertWiz',
-    d: 'Read any text aloud with natural voices in English, Hindi and other languages. Adjust speed and pitch. Free, no signup.',
+    d: 'Read any text aloud with natural voices in English, Hindi and other languages. Adjust the speed and pitch. Free, with no sign-up.',
     i: 'Listen to articles, notes or answers read aloud. Uses the voices built into your device, including Indian English and Hindi on most phones.',
     st: ['Paste your text.', 'Choose a voice, speed and pitch.', 'Press Speak.'],
     f: [['Why are voices different on each device?', 'Voices come from your operating system, so Android, iPhone and Windows offer different ones.'], ['Can I download the audio?', 'Not at the moment. Browsers do not allow system voices to be saved as audio files.']] },
