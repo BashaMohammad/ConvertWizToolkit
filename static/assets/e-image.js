@@ -94,10 +94,10 @@
           const diff = (1 - r.blob.size / f.size) * 100, thumb = el('img', { src: URL.createObjectURL(r.blob), alt: '' });
           let msg = size(f.size) + ' → ' + size(r.blob.size) + ' • ' + r.w + '×' + r.h;
           let cls = diff >= 0 ? 'ok' : 'muted';
-          if (slug === 'exam-photo-resizer') { const b = r.blob.size; if (b > KBMAX(o.ex[5])) { msg += ' • still above max – try a smaller size'; cls = 'bad'; } else if (b < KBMIN(o.ex[4])) { msg += ' • below min KB – use a clearer/larger original'; cls = 'bad'; } else { msg += ' • ✓ within ' + o.ex[4] + '–' + o.ex[5] + ' KB' + (r.padded ? ' (size raised to meet the minimum; image unchanged)' : ''); cls = 'ok'; } }
+          if (slug === 'exam-photo-resizer') { const b = r.blob.size; if (b > KBMAX(o.ex[5])) { msg += ' • still above the maximum – try smaller pixel dimensions'; cls = 'bad'; } else if (b < KBMIN(o.ex[4])) { msg += ' • below the minimum KB – use a clearer or larger original'; cls = 'bad'; } else { msg += ' • ✓ within ' + o.ex[4] + '–' + o.ex[5] + ' KB' + (r.padded ? ' (size raised to meet the minimum; image unchanged)' : ''); cls = 'ok'; } }
           else if (slug === 'image-compressor' || slug === 'png-to-jpg' || slug === 'webp-converter') msg += ' • ' + (diff >= 0 ? fmt(diff, 0) + '% smaller' : fmt(-diff, 0) + '% larger');
           row.replaceChildren(thumb, el('div', { class: 'nm' }, el('b', {}, name), el('small', { class: cls }, msg)), el('button', { class: 'btn sm', onclick: () => download(r.blob, name) }, '⬇ Download'));
-        } catch (e) { row.replaceChildren(el('div', { class: 'nm' }, el('b', {}, f.name), el('small', { class: 'bad' }, 'Could not read this image (HEIC is not supported by most browsers – export as JPG first).'))); }
+        } catch (e) { row.replaceChildren(el('div', { class: 'nm' }, el('b', {}, f.name), el('small', { class: 'bad' }, 'Could not read this image. Most browsers cannot open HEIC photos (the iPhone default), so please save the photo as JPG first.'))); }
       }
       if (run !== seq) return;
       if (outs.length > 1) all.append(el('button', { class: 'btn', onclick: async () => { for (const [b, n] of outs) { download(b, n); await new Promise(r => setTimeout(r, 400)); } } }, '⬇ Download all (' + outs.length + ')'));

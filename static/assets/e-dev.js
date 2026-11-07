@@ -5,7 +5,7 @@
   const inp = (ph, v, t) => el('input', { type: t || 'text', placeholder: ph || '', value: v || '' });
   const T = {
     async 'qr-code-generator'(box) {
-      const kinds = { url: 'Website / text', upi: 'UPI payment', wifi: 'WiFi', wa: 'WhatsApp' };
+      const kinds = { url: 'Website / text', upi: 'UPI payment', wifi: 'Wi-Fi', wa: 'WhatsApp' };
       const kind = el('select', {}, Object.entries(kinds).map(([v, l]) => el('option', { value: v }, l)));
       const F = { url: inp('https://example.com or any text', 'https://www.convertwiz.in'), upi: inp('yourname@okaxis'), name: inp('Shop or person name'), amt: inp('Optional amount', '', 'number'), note: inp('Optional note'), ssid: inp('Network name (SSID)'), pass: inp('Password'), enc: el('select', {}, ['WPA', 'WEP', 'nopass'].map(v => el('option', { value: v }, v === 'nopass' ? 'No password' : v))), wa: inp('Number with country code, e.g. 919876543210', '', 'tel'), msg: inp('Optional pre-filled message') };
       const groups = { url: [fld('Text or URL', F.url)], upi: [fld('UPI ID', F.upi), fld('Payee name', F.name), fld('Amount (₹)', F.amt), fld('Note', F.note)], wifi: [fld('Network name', F.ssid), fld('Password', F.pass), fld('Security', F.enc)], wa: [fld('WhatsApp number', F.wa), fld('Message', F.msg)] };
@@ -21,7 +21,7 @@
       [kind, fg, bg, sz, ...Object.values(F)].forEach(i => { i.oninput = draw; i.onchange = draw; });
       box.append(el('div', { class: 'two' }, el('div', {}, fld('QR type', kind), fields, el('div', { class: 'row', style: 'margin-top:10px' }, fld('Colour', fg), fld('Background', bg), fld('Size', sz))),
         el('div', { class: 'res' }, cv, txt, el('div', { class: 'btns', style: 'justify-content:center' }, el('button', { class: 'btn', onclick: () => { if (!val()) return CW.toast('Fill in the details first'); cv.toBlob(b => download(b, 'qr-' + kind.value + '.png')); } }, '⬇ Download PNG')),
-          el('p', { class: 'small muted', style: 'text-align:center' }, 'Tip: test-scan before printing. UPI QR works with GPay, PhonePe, Paytm and BHIM.'))));
+          el('p', { class: 'small muted', style: 'text-align:center' }, 'Tip: scan the code with your phone before printing it. UPI QR codes work with Google Pay, PhonePe, Paytm and BHIM.'))));
       draw();
       try { await CW.loadScript('/vendor/qrious-4.0.2/qrious.min.js'); qr = new QRious({ element: cv }); draw(); } catch (e) { txt.textContent = 'Could not load the QR library. Check your connection.'; }
     },

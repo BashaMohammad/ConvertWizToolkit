@@ -7,7 +7,7 @@
   const base = n => n.replace(/\.[^.]+$/, '');
   const pdfBlob = bytes => new Blob([bytes], { type: 'application/pdf' });
   const busy = (btn, on, txt) => { btn.disabled = on; if (txt) btn.textContent = txt; };
-  const err = (box, e) => box.append(el('p', { class: 'bad' }, '⚠ ' + (/encrypt/i.test(e.message) ? 'This PDF is password-protected. Unlock it first.' : 'Could not process this file: ' + e.message)));
+  const err = (box, e) => box.append(el('p', { class: 'bad' }, '⚠ ' + (e.user ? e.message : /encrypt/i.test(e.message) ? 'This PDF is password-protected. Please remove the password first.' : 'Could not process this file: ' + e.message)));
   function parseRanges(s, max) { const out = []; for (const part of s.split(',')) { const m = part.trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/); if (!m) continue; let a = +m[1], b = m[2] ? +m[2] : a; if (a > b) [a, b] = [b, a]; for (let i = Math.max(1, a); i <= Math.min(max, b); i++) out.push(i - 1); } return out; }
 
   // reorderable file list
@@ -31,10 +31,10 @@
       let file, n = 0; const info = el('div'), rng = el('input', { type: 'text', placeholder: 'e.g. 1-3, 5, 8-10' }), each = el('input', { type: 'checkbox' }), btn = el('button', { class: 'btn' }, '✂️ Split'), msg = el('div'), ctl = el('div', { hidden: true }, info, el('div', { class: 'row', style: 'margin-top:12px' }, el('div', {}, el('label', {}, 'Pages to extract'), rng), el('label', { style: 'align-self:end' }, each, 'Save every page as a separate PDF')), el('div', { class: 'btns' }, btn), msg);
       btn.onclick = async () => { msg.replaceChildren(); busy(btn, true, 'Working…'); try { const { PDFDocument } = await LIB(); const src = await PDFDocument.load(await file.arrayBuffer());
         const idx = each.checked ? (rng.value.trim() ? parseRanges(rng.value, n) : src.getPageIndices()) : parseRanges(rng.value, n);
-        if (!idx.length) throw new Error('enter valid page numbers between 1 and ' + n);
+        if (!idx.length) throw Object.assign(new Error('Please enter page numbers between 1 and ' + n + '.'), { user: true });
         if (each.checked) { for (const i of idx) { const d = await PDFDocument.create(); d.addPage((await d.copyPages(src, [i]))[0]); download(pdfBlob(await d.save()), base(file.name) + '-page-' + (i + 1) + '.pdf'); await new Promise(r => setTimeout(r, 350)); } }
         else { const d = await PDFDocument.create(); (await d.copyPages(src, idx)).forEach(p => d.addPage(p)); download(pdfBlob(await d.save()), base(file.name) + '-pages.pdf'); }
-        msg.append(el('p', { class: 'ok' }, '✓ Done – ' + idx.length + ' page(s)')); } catch (e) { err(msg, e); } busy(btn, false, '✂️ Split'); };
+        msg.append(el('p', { class: 'ok' }, '✓ Done – ' + idx.length + (idx.length === 1 ? ' page extracted' : ' pages extracted'))); } catch (e) { err(msg, e); } busy(btn, false, '✂️ Split'); };
       box.append(CW.drop({ accept: 'application/pdf', icon: '✂️', label: 'Choose a PDF to split', onFiles: async f => { file = f[0]; msg.replaceChildren(); try { const { PDFDocument } = await LIB(); n = (await PDFDocument.load(await file.arrayBuffer())).getPageCount(); info.replaceChildren(el('b', {}, file.name), ' – ' + n + ' pages, ' + size(file.size)); rng.value = '1-' + Math.min(n, 3); ctl.hidden = false; } catch (e) { err(msg, e); box.append(msg); } } }), ctl);
     },
     'jpg-to-pdf'(box) {
