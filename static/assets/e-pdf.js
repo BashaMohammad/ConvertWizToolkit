@@ -1,4 +1,4 @@
-/* PDF engine: pdf-lib + pdf.js, loaded on demand from jsDelivr */
+/* PDF engine: pdf-lib + pdf.js, self-hosted and loaded on demand */
 (function () {
   const { el, size, download, loadScript } = CW;
   const LIB = () => loadScript('/vendor/pdf-lib-1.17.1/pdf-lib.min.js').then(() => window.PDFLib);
@@ -69,6 +69,59 @@
       btn.onclick = async () => { msg.replaceChildren(); busy(btn, true); try { const { PDFDocument, degrees } = await LIB(); const d = await PDFDocument.load(await file.arrayBuffer()); d.getPages().forEach(p => p.setRotation(degrees((p.getRotation().angle + deg) % 360))); download(pdfBlob(await d.save()), base(file.name) + '-rotated.pdf'); msg.append(el('p', { class: 'ok' }, '✓ Rotated ' + d.getPageCount() + ' pages')); } catch (e) { err(msg, e); } busy(btn, false); };
       box.append(el('div', { style: 'max-width:320px;margin-bottom:14px' }, el('label', {}, 'Rotation'), s), CW.drop({ accept: 'application/pdf', icon: '🔃', label: 'Choose a PDF', onFiles: f => { file = f[0]; btn.disabled = false; msg.replaceChildren(el('p', {}, '📄 ' + file.name + ' (' + size(file.size) + ')')); } }), el('div', { class: 'btns' }, btn), msg);
     },
+  };
+  // ---- Compress PDF to a target size ----
+  T['compress-pdf'] = function (box) {
+    let file; const st = { kb: 200, gray: false };
+    const kbIn = el('input', { type: 'number', min: 20, value: st.kb, inputmode: 'numeric' });
+    const chips = el('div', { class: 'chips', style: 'justify-content:flex-start;margin:6px 0 0' }, [100, 200, 300, 500, 1000, 2000].map(k => el('button', { type: 'button', class: 'chip', onclick: () => { kbIn.value = k; } }, k >= 1000 ? k / 1000 + ' MB' : k + ' KB')));
+    const gray = el('input', { type: 'checkbox' });
+    const btn = el('button', { class: 'btn', disabled: true }, '🗜️ Compress PDF'), info = el('div'), msg = el('div');
+    const opts = el('div', { class: 'row', style: 'margin-bottom:14px' },
+      el('div', {}, el('label', {}, 'Target size (maximum)'), el('div', { class: 'inp-suf' }, kbIn, el('span', {}, 'KB')), chips),
+      el('label', { style: 'align-self:end' }, gray, ' Black & white (smallest files for text documents)'));
+    const MAXB = kb => kb * 1000; // 1 KB = 1000 bytes keeps the file under the limit on every portal
+    btn.onclick = async () => {
+      msg.replaceChildren(); st.kb = Math.max(20, +kbIn.value || 200); st.gray = gray.checked; busy(btn, true, 'Compressing…');
+      const target = MAXB(st.kb), prog = el('p', { class: 'muted' }, 'Reading PDF…'); msg.append(prog);
+      try {
+        const { PDFDocument } = await LIB(); const buf = await file.arrayBuffer();
+        if (file.size <= target && !st.gray) { msg.replaceChildren(el('p', { class: 'ok' }, '✓ This PDF is already ' + size(file.size) + ', which is under ' + st.kb + ' KB. No compression needed.')); busy(btn, false, '🗜️ Compress PDF'); return; }
+        // 1) lossless pass: rebuild with object streams (keeps text selectable)
+        if (!st.gray) { const d = await PDFDocument.load(buf, { ignoreEncryption: false }); const b = await d.save({ useObjectStreams: true }); if (b.length <= target) return done(b, false, null, null); }
+        // 2) page-image pass: render pages, re-encode as JPEG, search quality and resolution
+        const lib = await PDFJS(), doc = await lib.getDocument({ data: new Uint8Array(buf), isEvalSupported: false }).promise, n = doc.numPages;
+        const sizes = []; for (let i = 1; i <= n; i++) { const pg = await doc.getPage(i), vp = pg.getViewport({ scale: 1 }); sizes.push([vp.width, vp.height]); }
+        const render = async dpi => { const out = []; for (let i = 1; i <= n; i++) { prog.textContent = 'Rendering page ' + i + ' of ' + n + ' at ' + dpi + ' DPI…'; const pg = await doc.getPage(i), vp = pg.getViewport({ scale: dpi / 72 }), c = el('canvas'); c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); await pg.render({ canvas: c, canvasContext: x, viewport: vp }).promise; if (st.gray) toGray(c); out.push(c); pg.cleanup(); } return out; };
+        const enc = (cvs, q) => Promise.all(cvs.map(c => new Promise(r => c.toBlob(r, 'image/jpeg', q))));
+        const overhead = 1200 + n * 400; let best = null;
+        for (const dpi of [150, 120, 96, 72, 60]) {
+          const cvs = await render(dpi); let lo = .3, hi = .85, ok = null;
+          const tot = bl => bl.reduce((s, b) => s + b.size, 0) + overhead;
+          let bl = await enc(cvs, hi); if (tot(bl) <= target) ok = { bl, q: hi };
+          else for (let k = 0; k < 6; k++) { const m = (lo + hi) / 2; prog.textContent = 'Finding the best quality at ' + dpi + ' DPI…'; bl = await enc(cvs, m); if (tot(bl) <= target) { ok = { bl, q: m }; lo = m; } else hi = m; }
+          if (!ok && dpi === 60) { bl = await enc(cvs, .3); ok = { bl, q: .3, over: true }; }
+          if (ok) { best = { ...ok, dpi }; break; }
+        }
+        prog.textContent = 'Building the compressed PDF…';
+        const out = await PDFDocument.create();
+        for (let i = 0; i < n; i++) { const im = await out.embedJpg(new Uint8Array(await best.bl[i].arrayBuffer())), [w, h] = sizes[i], pg = out.addPage([w, h]); pg.drawImage(im, { x: 0, y: 0, width: w, height: h }); }
+        const b = await out.save({ useObjectStreams: true });
+        done(b, true, best.dpi, best.q);
+      } catch (e) { msg.replaceChildren(); err(msg, e); busy(btn, false, '🗜️ Compress PDF'); }
+      function done(b, raster, dpi, q) {
+        const blob = pdfBlob(b), name = base(file.name) + '-' + Math.ceil(b.length / 1000) + 'kb.pdf', ok = b.length <= target;
+        const acts = el('div', { class: 'btns' }, el('button', { class: 'btn', onclick: () => download(blob, name) }, '⬇ Download PDF'));
+        if (CW.canShareFile(blob, name)) acts.append(el('button', { class: 'btn sec', onclick: () => CW.shareFile(blob, name) }, '📤 Share'));
+        msg.replaceChildren(el('div', { class: 'res' }, el('div', { class: 'big' }, el('small', {}, ok ? 'Compressed PDF' : 'Smallest possible'), size(b.length)),
+          el('table', { class: 'kv' }, el('tbody', {}, [['Original', size(file.size)], ['Reduced by', Math.max(0, Math.round((1 - b.length / file.size) * 100)) + '%'], ['Method', raster ? 'Pages re-saved as images at ' + dpi + ' DPI, ' + Math.round(q * 100) + '% quality' + (st.gray ? ', black & white' : '') : 'Lossless clean-up (text still selectable)']].map(([a, v]) => el('tr', {}, el('td', {}, a), el('td', {}, v))))),
+          el('p', { class: ok ? 'ok small' : 'bad small' }, ok ? '✓ Under ' + st.kb + ' KB – ready to upload.' : '⚠ This is the smallest we could make it while keeping pages readable. Try black & white, split the PDF, or remove pages you do not need.'),
+          raster ? el('p', { class: 'muted small' }, 'Pages were saved as images, so text can no longer be selected or searched. This is normal for scanned documents and is accepted by upload portals.') : '', acts));
+        busy(btn, false, '🗜️ Compress PDF'); CW.track('compress_pdf', { raster, kb: st.kb });
+      }
+    };
+    function toGray(c) { const x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), a = d.data; for (let i = 0; i < a.length; i += 4) { const g = a[i] * .299 + a[i + 1] * .587 + a[i + 2] * .114; a[i] = a[i + 1] = a[i + 2] = g; } x.putImageData(d, 0, 0); }
+    box.append(opts, CW.drop({ accept: 'application/pdf', icon: '🗜️', label: 'Choose a PDF to compress', onFiles: async f => { file = f[0]; btn.disabled = false; msg.replaceChildren(); info.replaceChildren(el('p', {}, '📄 ' + file.name + ' – ' + size(file.size))); } }), info, el('div', { class: 'btns' }, btn), msg);
   };
   CW.tools.pdf = (box, slug) => T[slug](box);
 })();

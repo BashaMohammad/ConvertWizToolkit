@@ -46,6 +46,9 @@
     ['custom', 'Custom size', 300, 400, 10, 100],
   ];
 
+  // Exam pages inject their official presets as window.CW_EXAM = { items: [...] }
+  const EXAM = window.CW_EXAM && window.CW_EXAM.items ? window.CW_EXAM.items.filter(i => !i.live) : null;
+  if (EXAM) PRESETS.splice(0, PRESETS.length, ...EXAM.map(i => [i.id, i.n + ' – ' + (i.keep ? 'up to ' : '') + i.w + '×' + i.h + ' px, ' + i.min + '–' + i.max + ' KB', i.w, i.h, i.min, i.max, !!i.keep, i.dpi || 0]), ['custom', 'Custom size', 300, 400, 10, 100]);
   CW.tools.image = function (box, slug) {
     if (slug === 'instagram-dp-resizer') return dp(box);
     if (slug === 'dpi-checker') return dpi(box);
@@ -64,11 +67,11 @@
     }
     if (slug === 'exam-photo-resizer') {
       const w = el('input', { type: 'number' }), h = el('input', { type: 'number' }), mn = el('input', { type: 'number' }), mx = el('input', { type: 'number' });
-      const setP = p => { o.ex = p.slice(); [w.value, h.value, mn.value, mx.value] = p.slice(2); };
+      const setP = p => { o.ex = p.slice(); [w.value, h.value, mn.value, mx.value] = p.slice(2, 6); };
       const ps = el('select', {}, PRESETS.map(p => el('option', { value: p[0] }, p[1]))); ps.onchange = () => { setP(PRESETS.find(p => p[0] === ps.value)); go(); };
       [w, h, mn, mx].forEach((i, k) => { let t; i.onchange = () => { clearTimeout(t); if (o.ex[2 + k] === +i.value) return; o.ex[2 + k] = +i.value; ps.value = 'custom'; go(); }; i.oninput = () => { clearTimeout(t); t = setTimeout(i.onchange, 700); }; });
       setP(PRESETS[0]);
-      opts.append(el('div', { style: 'grid-column:1/-1' }, fld('Preset', ps, 'Presets are common requirements. Always match the exact values in your exam notification.')), fld('Width (px)', w), fld('Height (px)', h), fld('Min size (KB)', mn), fld('Max size (KB)', mx));
+      opts.append(el('div', { style: 'grid-column:1/-1' }, fld(EXAM ? 'Document' : 'Preset', ps, EXAM ? 'Values from the official notification shown below. Choose the document you are uploading.' : 'Presets are common requirements. Always match the exact values in your exam notification.')), fld('Width (px)', w), fld('Height (px)', h), fld('Min size (KB)', mn), fld('Max size (KB)', mx));
     }
     const list = el('div', { class: 'files' }), all = el('div', { class: 'btns' });
     let files = [], outs = [], seq = 0, lastKey = '';
@@ -83,20 +86,21 @@
         try {
           const img = await load(f); let W = img.naturalWidth, H = img.naturalHeight, type = o.type === 'same' ? (EXT[f.type] ? f.type : 'image/png') : o.type, r, crop = false, bg = type === 'image/jpeg' ? '#fff' : null;
           if (slug === 'image-resizer') { if (o.mode === 'pct') { W *= o.pct / 100; H *= o.pct / 100; } else if (o.w && o.h && !o.lock) { W = o.w; H = o.h; } else if (o.w) { H = H * o.w / W; W = o.w; } else if (o.h) { W = W * o.h / H; H = o.h; } }
-          if (slug === 'exam-photo-resizer') { W = o.ex[2]; H = o.ex[3]; crop = true; r = await fit(img, W, H, type, KBMAX(o.ex[5]), bg, crop);
+          if (slug === 'exam-photo-resizer') { W = o.ex[2]; H = o.ex[3]; crop = !o.ex[6]; if (o.ex[6]) { const s = Math.min(1, W / img.naturalWidth, H / img.naturalHeight); W = img.naturalWidth * s; H = img.naturalHeight * s; } r = await fit(img, W, H, type, KBMAX(o.ex[5]), bg, crop);
             if (r.blob.size < KBMIN(o.ex[4])) { const cv = draw(img, W, H, bg, crop), hq = await enc(cv, type, 1); if (hq.size <= KBMAX(o.ex[5])) r = { blob: hq, q: 1, w: cv.width, h: cv.height }; }
+            if (o.ex[7]) r.blob = setDPI(await r.blob.arrayBuffer(), o.ex[7]);
             if (r.blob.size < KBMIN(o.ex[4]) && KBMIN(o.ex[4]) <= KBMAX(o.ex[5])) { r.blob = await padJpeg(r.blob, KBMIN(o.ex[4]) + 512); r.padded = true; } }
           else if (slug === 'image-compressor' && o.kb) r = await fit(img, W, H, type, KBMAX(o.kb), bg);
           else { const cv = draw(img, W, H, bg); r = { blob: await enc(cv, type, o.q), w: cv.width, h: cv.height }; }
           if (run !== seq) return;
-          const name = base(f.name) + (slug === 'image-resizer' || slug === 'exam-photo-resizer' ? '-' + r.w + 'x' + r.h : '') + '.' + EXT[r.blob.type];
+          const name = (EXAM && slug === 'exam-photo-resizer' ? o.ex[0] + '-' : '') + base(f.name) + (slug === 'image-resizer' || slug === 'exam-photo-resizer' ? '-' + r.w + 'x' + r.h : '') + '.' + EXT[r.blob.type];
           outs.push([r.blob, name]);
           const diff = (1 - r.blob.size / f.size) * 100, thumb = el('img', { src: URL.createObjectURL(r.blob), alt: '' });
           let msg = size(f.size) + ' → ' + size(r.blob.size) + ' • ' + r.w + '×' + r.h;
           let cls = diff >= 0 ? 'ok' : 'muted';
           if (slug === 'exam-photo-resizer') { const b = r.blob.size; if (b > KBMAX(o.ex[5])) { msg += ' • still above the maximum – try smaller pixel dimensions'; cls = 'bad'; } else if (b < KBMIN(o.ex[4])) { msg += ' • below the minimum KB – use a clearer or larger original'; cls = 'bad'; } else { msg += ' • ✓ within ' + o.ex[4] + '–' + o.ex[5] + ' KB' + (r.padded ? ' (size raised to meet the minimum; image unchanged)' : ''); cls = 'ok'; } }
           else if (slug === 'image-compressor' || slug === 'png-to-jpg' || slug === 'webp-converter') msg += ' • ' + (diff >= 0 ? fmt(diff, 0) + '% smaller' : fmt(-diff, 0) + '% larger');
-          row.replaceChildren(thumb, el('div', { class: 'nm' }, el('b', {}, name), el('small', { class: cls }, msg)), el('button', { class: 'btn sm', onclick: () => download(r.blob, name) }, '⬇ Download'));
+          row.replaceChildren(thumb, el('div', { class: 'nm' }, el('b', {}, name), el('small', { class: cls }, msg)), el('button', { class: 'btn sm', onclick: () => download(r.blob, name) }, '⬇ Download'), CW.canShareFile(r.blob, name) ? el('button', { class: 'btn sm sec', title: 'Share', onclick: () => CW.shareFile(r.blob, name) }, '📤') : '');
         } catch (e) { row.replaceChildren(el('div', { class: 'nm' }, el('b', {}, f.name), el('small', { class: 'bad' }, 'Could not read this image. Most browsers cannot open HEIC photos (the iPhone default), so please save the photo as JPG first.'))); }
       }
       if (run !== seq) return;

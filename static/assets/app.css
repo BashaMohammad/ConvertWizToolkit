@@ -108,3 +108,12 @@ dialog#sd::backdrop{background:rgba(8,12,24,.55)}
 .ch-tip div{display:flex;align-items:center;gap:6px;white-space:nowrap}
 .ch-tip i{display:inline-block;width:9px;height:9px;border-radius:2px}
 .fld[hidden]{display:none}
+.btn.wa{background:#25d366;color:#fff;border-color:#25d366}
+.btn.wa:hover{filter:brightness(.95)}
+.spec{width:100%;table-layout:fixed}.spec td:first-child{font-weight:600;width:34%}.spec td{overflow-wrap:anywhere;text-align:left!important}
+@media (max-width:560px){.spec,.spec tbody,.spec tr,.spec td{display:block;width:auto!important}.spec tr{padding:8px 0;border-bottom:1px solid var(--line)}.spec td{border:0!important;padding:2px 0!important}}
+select{max-width:100%}
+.spec td{vertical-align:top}
+.live{display:inline-block;font-size:12px;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin-left:6px}
+.src{font-size:13px;color:var(--mut)}
+.head-btns{display:flex;gap:8px;flex-shrink:0}

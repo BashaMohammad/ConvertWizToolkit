@@ -179,17 +179,21 @@
   CW.tools.calc = function (box, slug) {
     const cfg = C[slug]; const vals = {}; const inputs = {}, ranges = {}, wraps = {};
     const form = el('div', { class: 'stack' }), out = el('div', { class: 'res', 'aria-live': 'polite' }), tbl = el('div'), extra = el('div', { class: 'calc-extra' });
+    // Shareable links: ?p=3000000&rate=8.5 … pre-fill the form; the address bar updates once the user edits
+    let touched = false; const q = new URLSearchParams(location.search);
+    const shareUrl = () => { const u = new URL(location.href.split('?')[0]); cfg.f.forEach(([id]) => u.searchParams.set(id, inputs[id].value)); return u.toString(); };
     cfg.f.forEach(([id, label, def, o]) => {
+      if (q.has(id)) { const v = q.get(id); if (o.sel ? o.sel.some(([x]) => String(x) === v) : o.type === 'date' ? /^\d{4}-\d{2}-\d{2}$/.test(v) : v !== '' && isFinite(+v)) def = o.sel ? (isNaN(+v) ? v : +v) : v; }
       let inp;
       if (o.sel) { inp = el('select', { id: 'f_' + id }, o.sel.map(([v, l]) => el('option', { value: v, selected: v === def }, l))); }
       else inp = el('input', { id: 'f_' + id, type: o.type || 'number', value: def, min: o.min ?? (o.r && o.r[0]), max: o.max, step: o.step || (o.r && o.r[2]) || 'any', inputmode: o.type ? null : 'decimal' });
       inputs[id] = inp;
       const wrap = el('div', { class: 'fld' }, el('label', { for: 'f_' + id }, label), o.suf ? el('div', { class: 'inp-suf' }, inp, el('span', {}, o.suf)) : inp);
-      if (o.r) { const rg = el('input', { type: 'range', min: o.r[0], max: o.r[1], step: o.r[2], value: def, 'aria-label': label }); rg.oninput = () => { inp.value = rg.value; run(); }; inp.addEventListener('input', () => rg.value = inp.value); wrap.append(rg); ranges[id] = rg; }
+      if (o.r) { const rg = el('input', { type: 'range', min: o.r[0], max: o.r[1], step: o.r[2], value: def, 'aria-label': label }); rg.oninput = () => { touched = true; inp.value = rg.value; run(); }; inp.addEventListener('input', () => rg.value = inp.value); wrap.append(rg); ranges[id] = rg; }
       if (o.preset) inp.addEventListener('change', () => { const pr = o.preset(inp.value); for (const k in pr) { const x = pr[k], val = Array.isArray(x) ? x[0] : x; if (!inputs[k]) continue; inputs[k].value = val; if (Array.isArray(x) && ranges[k]) { ranges[k].min = x[1]; ranges[k].max = x[2]; ranges[k].step = x[3]; inputs[k].min = x[1]; inputs[k].step = x[3]; } if (ranges[k]) ranges[k].value = val; } run(); });
       wraps[id] = wrap;
       if (o.hint) wrap.append(el('div', { class: 'hint' }, o.hint));
-      form.append(wrap); inp.addEventListener('input', run); inp.addEventListener('change', run);
+      form.append(wrap); const mark = () => { touched = true; }; inp.addEventListener('input', mark); inp.addEventListener('change', mark); inp.addEventListener('input', run); inp.addEventListener('change', run);
     });
     function run() {
       cfg.f.forEach(([id, , def, o]) => { const raw = inputs[id].value; vals[id] = o.sel ? (isNaN(+raw) ? raw : +raw) : o.type ? raw : (raw === '' ? 0 : +raw); });
@@ -198,9 +202,13 @@
       const kids = [el('div', { class: 'big' }, el('small', {}, r.main[0]), r.main[1])];
       if (r.bar) { const tot = r.bar.reduce((s, b) => s + Math.max(b[1], 0), 0) || 1; kids.push(el('div', { class: 'bar' }, r.bar.map(b => el('i', { style: `width:${Math.max(b[1], 0) / tot * 100}%;background:${b[2]}` }))), el('div', { class: 'legend' }, r.bar.map(b => el('span', {}, el('i', { style: 'background:' + b[2] }), b[0] + ' ' + fmt(Math.max(b[1], 0) / tot * 100, 1) + '%')))); }
       if (r.rows) kids.push(el('table', { class: 'kv' }, el('tbody', {}, r.rows.map(([a, b]) => el('tr', {}, el('td', {}, a), el('td', {}, b))))));
-      kids.push(el('div', { class: 'btns' }, el('button', { class: 'btn sec sm', onclick: () => CW.copy([r.main.join(': '), ...(r.rows || []).map(x => x.join(': '))].join('\n') + '\n— ConvertWiz ' + location.href) }, '📋 Copy result')));
+      const shareMsg = () => r.main.join(': ') + ' – ' + (document.querySelector('h1') || {}).textContent + ' on ConvertWiz';
+      kids.push(el('div', { class: 'btns' }, el('button', { class: 'btn sec sm', onclick: () => CW.copy([r.main.join(': '), ...(r.rows || []).map(x => x.join(': '))].join('\n') + '\n— ConvertWiz ' + shareUrl()) }, '📋 Copy result'),
+        el('button', { class: 'btn sm wa', onclick: () => CW.wa(shareMsg() + '\n' + shareUrl()) }, '💬 WhatsApp'),
+        navigator.share ? el('button', { class: 'btn sec sm', onclick: () => CW.shareText(shareMsg(), shareUrl()) }, '📤 Share') : ''));
       if (r.note) kids.push(el('div', { class: 'note' }, r.note));
       out.replaceChildren(...kids);
+      if (touched) try { history.replaceState(null, '', shareUrl()); } catch (e) {}
       const ex = [];
       if (r.ins && r.ins.length) ex.push(el('div', { class: 'insights' }, el('h3', {}, '💡 What this means for you'), el('ul', {}, r.ins.map(t => el('li', {}, t)))));
       if (r.charts) r.charts.forEach(c => { try { if (c.x.length > 1) ex.push(chart(c)); } catch (e) {} });

@@ -1,6 +1,7 @@
 // ConvertWiz static site generator (no dependencies). Run: node build.js  -> ./dist
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const { CATS, TOOLS } = require('./src/registry');
+const { EXAMS, CHECKED } = require('./src/exams');
 const SITE = 'https://www.convertwiz.in', OUT = path.join(__dirname, 'dist');
 const PROD = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === 'production' : false;
 const YEAR = new Date().getFullYear(), TODAY = new Date().toISOString().slice(0, 10);
@@ -57,7 +58,7 @@ for (const t of TOOLS) {
   const ld = [{ '@type': 'WebApplication', name: t.n, url: SITE + url, description: t.d, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any (web browser)', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' }, publisher: { '@type': 'Organization', name: 'ConvertWiz', url: SITE } },
     crumb([['Home', '/'], [cat.name, '/' + cat.slug], [t.n, url]]), faqLd(t.f)];
   const main = `<div class="crumb"><a href="/">Home</a> › <a href="/${cat.slug}">${cat.name}</a></div>
-<div class="tool-head"><div><h1>${esc(t.n)}</h1><p class="lead">${esc(t.i)}</p></div><button class="ibtn star" id="favBtn" aria-label="Favourite">☆</button></div>
+<div class="tool-head"><div><h1>${esc(t.n)}</h1><p class="lead">${esc(t.i)}</p></div><div class="head-btns"><a class="ibtn" href="https://wa.me/?text=${encodeURIComponent(t.n + ' – free on ConvertWiz: ' + SITE + url)}" target="_blank" rel="noopener" aria-label="Share on WhatsApp" title="Share on WhatsApp">💬</a><button class="ibtn star" id="favBtn" aria-label="Favourite">☆</button></div></div>${t.s === 'exam-photo-resizer' ? examLinks() : ''}
 <section class="card toolbox" id="tool" data-tool="${t.s}" data-engine="${t.g}"><noscript>Please enable JavaScript to use this tool.</noscript><p class="muted">Loading tool…</p></section>
 <h2>How to use the ${esc(t.n)}</h2><ol class="steps">${t.st.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
 <h2>Frequently asked questions</h2>${t.f.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}
@@ -65,11 +66,49 @@ for (const t of TOOLS) {
   write(t.s + '.html', head({ title: t.t, desc: t.d, url, ld }) + shell(` data-tool="${t.s}"`, main) + `<script src="${A('e-' + t.g + '.js')}" defer></script></body></html>`);
 }
 
+// ---------- exam pages ----------
+function examLinks() { return `<div class="note" style="margin:0 0 16px"><b>Exact sizes for your exam:</b> ${EXAMS.map(e => `<a href="/${e.s}">${esc(e.n)}</a>`).join(' · ')} · <a href="/exam-photo-size">all exams</a></div>`; }
+const examTool = bySlug['exam-photo-resizer'];
+for (const e of EXAMS) {
+  const url = '/' + e.s, files = e.items.filter(i => !i.live);
+  const title = `${e.n} Photo & Signature Size ${e.year} – Official Specs + Free Resizer | ConvertWiz`;
+  const desc = `${e.n} ${e.year} photo and signature size from the official notification: ${e.items.map(i => i.live ? i.n.toLowerCase() + ' captured live' : `${i.n.toLowerCase()} ${i.min}–${i.max} KB`).join(', ')}. Resize yours to fit in seconds, free and private.`;
+  const faq = [
+    ...e.items.map(i => [`What is the ${e.n} ${i.n.toLowerCase()} size?`, `${i.spec} (Source: ${e.notice}.)`]),
+    [`Is this the latest ${e.n} requirement?`, `These values were checked against the official document on ${CHECKED}: ${e.notice}. Requirements can change with each notification, so always compare with the notice you are applying under.`],
+    [`Are my photos uploaded to ConvertWiz?`, `No. Resizing happens inside your browser, so your photo and signature never leave your phone or computer.`]];
+  const ld = [crumb([['Home', '/'], ['Exam photo sizes', '/exam-photo-size'], [e.n, url]]), faqLd(faq),
+    { '@type': 'WebApplication', name: `${e.n} Photo & Signature Resizer`, url: SITE + url, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any (web browser)', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' } }];
+  const table = `<table class="kv spec"><tbody>${e.items.map(i => `<tr><td>${esc(i.n)}${i.live ? '<span class="live">live capture</span>' : ''}</td><td>${esc(i.spec)}</td></tr>`).join('')}</tbody></table>`;
+  const main = `<div class="crumb"><a href="/">Home</a> › <a href="/exam-photo-size">Exam photo sizes</a></div>
+<div class="tool-head"><div><h1>${esc(e.n)} Photo & Signature Size ${esc(e.year)}</h1><p class="lead">Official upload requirements for ${esc(e.full)}, set by the ${esc(e.body)}. ${files.length ? 'Choose a document below and get a file that meets the limits.' : ''}</p></div><div class="head-btns"><a class="ibtn" href="https://wa.me/?text=${encodeURIComponent(e.n + ' photo & signature size ' + e.year + ' + free resizer: ' + SITE + url)}" target="_blank" rel="noopener" aria-label="Share on WhatsApp" title="Share on WhatsApp">💬</a></div></div>
+<section class="card"><h2 style="margin-top:0">Official requirements</h2>${table}
+<p class="src">Source: <a href="${esc(e.src)}" rel="nofollow noopener" target="_blank">${esc(e.notice)}</a> · Last checked: ${CHECKED}</p></section>
+${files.length ? `<section class="card toolbox" id="tool" data-tool="exam-photo-resizer" data-engine="image" style="margin-top:16px"><noscript>Please enable JavaScript to use this tool.</noscript><p class="muted">Loading tool…</p></section>` : ''}
+${e.decl ? `<h2>Text for the hand-written declaration</h2><p class="note" style="font-size:15px">“${esc(e.decl)}”</p><p class="muted small">Write it in English, in your own handwriting, in black ink on white paper – not in capital letters.</p>` : ''}
+<h2>Important rules</h2><ul>${e.rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul>
+<h2>Frequently asked questions</h2>${faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}
+<h2>Other exams</h2><div class="chips" style="justify-content:flex-start">${EXAMS.filter(x => x !== e).map(x => `<a class="chip" href="/${x.s}">${esc(x.n)}</a>`).join('')}</div>
+<h2>Related tools</h2><div class="grid">${['image-compressor', 'compress-pdf', 'jpg-to-pdf', 'dpi-checker', 'age-calculator', 'percentage-calculator'].map(x => card(bySlug[x])).join('')}</div>`;
+  const pre = files.length ? `<script>window.CW_EXAM=${JSON.stringify({ items: e.items })}</script><script src="${A('e-image.js')}" defer></script>` : '';
+  write(e.s + '.html', head({ title, desc, url, ld }) + shell(' data-tool="' + e.s + '"', main) + pre + '</body></html>');
+}
+{ // hub
+  const url = '/exam-photo-size';
+  const rows = EXAMS.map(e => `<tr><td><a href="/${e.s}"><b>${esc(e.n)}</b></a><br><small class="muted">${esc(e.year)}</small></td><td>${e.items.map(i => `${esc(i.n)}: ${i.live ? 'live capture' : i.min + '–' + i.max + ' KB'}`).join('<br>')}</td></tr>`).join('');
+  const main = `<div class="crumb"><a href="/">Home</a> › <a href="/image-tools">Image Tools</a></div><h1>🎓 Exam Photo & Signature Sizes (${CHECKED.split(' ').pop()})</h1>
+<p class="lead">Photo, signature, thumb impression and declaration sizes for India's major exams, taken from each exam's latest official notification. Open your exam to resize your files to fit.</p>
+<div class="scroll"><table class="sched"><thead><tr><th>Exam</th><th>Uploads (file size)</th></tr></thead><tbody>${rows}</tbody></table></div>
+<p class="src">All values checked against the official documents on ${CHECKED}. Each exam page links to its source.</p>
+<h2>Exam not listed?</h2><p>Use the <a href="/exam-photo-resizer">Exam Photo & Signature Resizer</a> and type the width, height and KB limits from your notification.</p>`;
+  write('exam-photo-size.html', head({ title: `Exam Photo & Signature Size ${CHECKED.split(' ').pop()} – SSC, UPSC, NEET, JEE, IBPS, SBI, RRB | ConvertWiz`, desc: 'Official photo and signature sizes for SSC, UPSC, JEE Main, NEET, CUET, UGC NET, CTET, IBPS, SBI and RRB, from the latest notifications, with a free resizer for each.', url, ld: [crumb([['Home', '/'], ['Exam photo sizes', url]])] }) + shell('', main) + '</body></html>');
+}
+
 // ---------- category pages ----------
 for (const [k, c] of Object.entries(CATS)) {
   const list = TOOLS.filter(t => t.c === k), url = '/' + c.slug;
   const ld = [crumb([['Home', '/'], [c.name, url]]), { '@type': 'CollectionPage', name: c.name, url: SITE + url, hasPart: list.map(t => ({ '@type': 'WebApplication', name: t.n, url: SITE + '/' + t.s })) }];
-  write(c.slug + '.html', head({ title: `${c.name} – ${list.length} Free Online Tools | ConvertWiz`, desc: c.d, url, ld }) + shell('', `<div class="crumb"><a href="/">Home</a></div><h1>${c.e} ${c.name}</h1><p class="lead">${esc(c.d)}</p><div class="grid">${list.map(card).join('')}</div>
+  write(c.slug + '.html', head({ title: `${c.name} – ${list.length} Free Online Tools | ConvertWiz`, desc: c.d, url, ld }) + shell('', `<div class="crumb"><a href="/">Home</a></div><h1>${c.e} ${c.name}</h1><p class="lead">${esc(c.d)}</p>${k === 'image' ? examLinks() : ''}<div class="grid">${list.map(card).join('')}</div>
 <h2>Other categories</h2><div class="chips" style="justify-content:flex-start">${Object.values(CATS).filter(x => x !== c).map(x => `<a class="chip" href="/${x.slug}">${x.e} ${x.name}</a>`).join('')}</div>`) + '</body></html>');
 }
 
@@ -79,7 +118,7 @@ for (const [k, c] of Object.entries(CATS)) {
   const main = `<section class="hero"><h1>All your everyday tools,<br><span>free, fast &amp; private</span></h1>
 <p class="lead">${TOOLS.length} free tools for images, PDFs, GST, EMI, income tax, unit conversion and more. Everything runs in your browser, so your files never leave your device. No sign-up needed.</p>
 <div class="bigsearch"><input id="q" type="search" placeholder="Try &quot;compress to 50 KB&quot;" aria-label="Filter tools" autocomplete="off"></div>
-<div class="chips">${['exam-photo-resizer', 'image-compressor', 'merge-pdf', 'gst-calculator', 'income-tax-calculator', 'qr-code-generator'].map(s => `<a class="chip" href="/${s}">${bySlug[s].e} ${bySlug[s].n.replace(/ \(.*|FY.*$/, '').trim()}</a>`).join('')}</div></section>
+<div class="chips"><a class="chip" href="/exam-photo-size">🎓 Exam photo sizes</a>${['image-compressor', 'compress-pdf', 'merge-pdf', 'gst-calculator', 'emi-calculator', 'qr-code-generator'].map(s => `<a class="chip" href="/${s}">${bySlug[s].e} ${bySlug[s].n.replace(/ \(.*|FY.*$/, '').trim()}</a>`).join('')}</div></section>
 <div id="mine"></div>
 <section data-cat="pop"><h2>🔥 Most popular</h2><div class="grid">${pop.map(card).join('')}</div></section>
 ${Object.entries(CATS).map(([k, c]) => `<section data-cat="${k}"><div class="sec-h"><h2>${c.e} ${c.name}</h2><a href="/${c.slug}">View all →</a></div><div class="grid">${TOOLS.filter(t => t.c === k).map(card).join('')}</div></section>`).join('')}
@@ -119,11 +158,11 @@ page('terms', 'Terms of Use & Disclaimer', 'Terms of use and disclaimer for Conv
 write('404.html', head({ title: 'Page not found | ConvertWiz', desc: 'Page not found', url: '/404', noindex: true }) + shell('', `<section class="hero"><h1>404 – Page not found</h1><p class="lead">The page you're looking for doesn't exist or has moved. Try searching for the tool you need:</p><div class="bigsearch"><input id="q" type="search" placeholder="Search tools…" aria-label="Filter tools"></div></section><div class="grid">${TOOLS.map(card).join('')}</div>`) + '</body></html>');
 
 // ---------- machine files ----------
-const urls = [['/', '1.0'], ...Object.values(CATS).map(c => ['/' + c.slug, '0.8']), ...TOOLS.map(t => ['/' + t.s, t.pop ? '0.9' : '0.7']), ['/about', '0.3'], ['/pro', '0.4'], ['/contact', '0.3'], ['/privacy', '0.2'], ['/terms', '0.2']];
+const urls = [['/', '1.0'], ...Object.values(CATS).map(c => ['/' + c.slug, '0.8']), ...TOOLS.map(t => ['/' + t.s, t.pop ? '0.9' : '0.7']), ['/exam-photo-size', '0.9'], ...EXAMS.map(e => ['/' + e.s, '0.8']), ['/about', '0.3'], ['/pro', '0.4'], ['/contact', '0.3'], ['/privacy', '0.2'], ['/terms', '0.2']];
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, p]) => `<url><loc>${SITE}${u}</loc><lastmod>${TODAY}</lastmod><priority>${p}</priority></url>`).join('\n')}\n</urlset>\n`);
 write('robots.txt', PROD ? `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n` : `User-agent: *\nDisallow: /\n`);
 write('ads.txt', 'google.com, pub-2287734666559045, DIRECT, f08c47fec0942fa0\n');
-write('assets/index.json', JSON.stringify(TOOLS.map(t => ({ s: t.s, n: t.n, e: t.e, c: CATS[t.c].name, k: t.t + ' ' + t.d, p: t.pop ? 1 : 0 }))));
+write('assets/index.json', JSON.stringify([...TOOLS.map(t => ({ s: t.s, n: t.n, e: t.e, c: CATS[t.c].name, k: t.t + ' ' + t.d, p: t.pop ? 1 : 0 })), ...EXAMS.map(e => ({ s: e.s, n: e.n + ' photo & signature size', e: '🎓', c: 'Exam photo sizes', k: e.full + ' ' + e.n + ' photo signature size exam form', p: 0 }))]));
 write('manifest.webmanifest', JSON.stringify({ name: 'ConvertWiz – Free Online Tools', short_name: 'ConvertWiz', start_url: '/?source=pwa', display: 'standalone', background_color: '#f7f8fb', theme_color: '#4f46e5', description: 'Free image, PDF, finance and unit tools that work on your device.', icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }, ...(fs.existsSync(path.join(OUT, 'icon-512.png')) ? [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }] : [])],
   shortcuts: ['image-compressor', 'merge-pdf', 'gst-calculator'].map(s => ({ name: bySlug[s].n, url: '/' + s })) }));
 const ver = crypto.createHash('md5').update(Object.values(V).join('')).digest('hex').slice(0, 8);

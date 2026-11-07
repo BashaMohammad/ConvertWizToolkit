@@ -49,7 +49,17 @@
     z.ondrop = e => { e.preventDefault(); z.classList.remove('on'); go(e.dataTransfer.files); };
     return z;
   }
-  W.CW = { el, $, fmt, rs, size, download, loadScript, toast, copy, store, drop, track, markUsed, tools: {} };
+  // Sharing: native share sheet where available (Android/iOS), otherwise WhatsApp
+  const wa = text => { W.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener'); track('share', { tool: tool(), method: 'whatsapp' }); };
+  async function shareText(text, url) {
+    if (navigator.share) { try { await navigator.share({ text, url }); track('share', { tool: tool(), method: 'native' }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    wa(text + (url ? '\n' + url : ''));
+  }
+  const canShareFile = (blob, name) => { try { return !!(navigator.canShare && navigator.canShare({ files: [new File([blob], name, { type: blob.type })] })); } catch (e) { return false; } };
+  async function shareFile(blob, name) {
+    try { await navigator.share({ files: [new File([blob], name, { type: blob.type })], title: name }); track('share', { tool: tool(), method: 'file' }); } catch (e) { if (!e || e.name !== 'AbortError') download(blob, name); }
+  }
+  W.CW = { el, $, fmt, rs, size, download, loadScript, toast, copy, store, drop, track, markUsed, wa, shareText, canShareFile, shareFile, tools: {} };
 
   // theme
   const root = D.documentElement;
