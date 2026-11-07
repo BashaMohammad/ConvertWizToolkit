@@ -33,11 +33,13 @@ ${embed ? '' : `<script>(function(){var d=0;function L(){if(d)return;d=1;var s=d
 </head>`;
 }
 const SHORT = { image: 'Image', pdf: 'PDF', finance: 'Finance', calc: 'Calculators', units: 'Converters', text: 'Text', dev: 'Dev tools' };
+const navM = Object.entries(CATS).map(([k, c]) => `<a href="/${c.slug}" data-c="${k}">${c.e} ${SHORT[k]}</a>`).join('');
 const nav = Object.entries(CATS).map(([k, c]) => `<a href="/${c.slug}">${SHORT[k]}</a>`).join('') + '<a href="/pro">✨ Pro</a>';
 function shell(bodyAttr, main) {
   return `<body${bodyAttr}><a href="#main" style="position:absolute;left:-999px">Skip to content</a>
-<header class="top"><div class="wrap"><a class="logo" href="/" aria-label="ConvertWiz home">Convert<b>Wiz</b></a><nav class="cats" aria-label="Categories">${nav}</nav><span class="sp"></span>
+<header class="top"><div class="wrap"><a class="logo" href="/" aria-label="ConvertWiz home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#lg)"/><path d="M9 12h12l-3-3M23 20H11l3 3" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Convert<b>Wiz</b></span></a><nav class="cats" aria-label="Categories">${nav}</nav><span class="sp"></span>
 <button class="ibtn" id="searchBtn" aria-label="Search tools">🔎 <span class="lbl">Search</span> <kbd>Ctrl K</kbd></button><button class="ibtn" id="themeBtn" aria-label="Toggle dark mode">🌙</button></div></header>
+<nav class="cats-m" aria-label="Categories">${navM}</nav>
 <main id="main"><div class="wrap">${main}</div></main>
 <footer><div class="wrap"><div class="cols">
 <div><b>ConvertWiz</b>Free, fast and private online tools. Files are processed on your device.<br><br>© ${YEAR} ConvertWiz</div>
@@ -47,7 +49,7 @@ ${Object.values(CATS).slice(0, 3).map(c => `<div><b>${c.name}</b>${TOOLS.filter(
 <dialog id="sd" aria-label="Search tools"><input type="search" placeholder="Search ${TOOLS.length} tools… e.g. compress, GST, PDF" aria-label="Search"><ul></ul></dialog>
 <script src="${A('app.js')}" defer></script>`;
 }
-const card = t => `<a class="tc" href="/${t.s}" data-k="${esc((t.n + ' ' + t.d).toLowerCase())}"><span class="em">${t.e}</span><span><b>${esc(t.n)}${t.india ? '<span class="badge">India</span>' : ''}</b><small>${esc(t.sd || t.i.split('. ')[0].replace(/\.$/, '') + '.')}</small></span></a>`;
+const card = t => `<a class="tc" data-c="${t.c}" href="/${t.s}" data-k="${esc((t.n + ' ' + t.d).toLowerCase())}"><span class="em">${t.e}</span><span><b>${esc(t.n)}${t.india ? '<span class="badge">India</span>' : ''}</b><small>${esc(t.sd || t.i.split('. ')[0].replace(/\.$/, '') + '.')}</small></span></a>`;
 const crumb = items => ({ '@type': 'BreadcrumbList', itemListElement: items.map(([n, u], i) => ({ '@type': 'ListItem', position: i + 1, name: n, item: SITE + u })) });
 const faqLd = f => ({ '@type': 'FAQPage', mainEntity: f.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
 
@@ -58,7 +60,7 @@ for (const t of TOOLS) {
   const ld = [{ '@type': 'WebApplication', name: t.n, url: SITE + url, description: t.d, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any (web browser)', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' }, publisher: { '@type': 'Organization', name: 'ConvertWiz', url: SITE } },
     crumb([['Home', '/'], [cat.name, '/' + cat.slug], [t.n, url]]), faqLd(t.f)];
   const main = `<div class="crumb"><a href="/">Home</a> › <a href="/${cat.slug}">${cat.name}</a></div>
-<div class="tool-head"><div><h1>${esc(t.n)}</h1><p class="lead">${esc(t.i)}</p></div><div class="head-btns"><a class="ibtn" href="https://wa.me/?text=${encodeURIComponent(t.n + ' – free on ConvertWiz: ' + SITE + url)}" target="_blank" rel="noopener" aria-label="Share on WhatsApp" title="Share on WhatsApp">💬</a><button class="ibtn star" id="favBtn" aria-label="Favourite">☆</button></div></div>${t.s === 'exam-photo-resizer' ? examLinks() : ''}
+<div class="tool-head"><span class="tool-ico" data-c="${t.c}">${t.e}</span><div class="th-txt"><h1>${esc(t.n)}</h1><p class="lead">${esc(t.i)}</p></div><div class="head-btns"><a class="ibtn" href="https://wa.me/?text=${encodeURIComponent(t.n + ' – free on ConvertWiz: ' + SITE + url)}" target="_blank" rel="noopener" aria-label="Share on WhatsApp" title="Share on WhatsApp">💬</a><button class="ibtn star" id="favBtn" aria-label="Favourite">☆</button></div></div>${t.s === 'exam-photo-resizer' ? examLinks() : ''}
 <section class="card toolbox" id="tool" data-tool="${t.s}" data-engine="${t.g}"><noscript>Please enable JavaScript to use this tool.</noscript><p class="muted">Loading tool…</p></section>
 <h2>How to use the ${esc(t.n)}</h2><ol class="steps">${t.st.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
 <h2>Frequently asked questions</h2>${t.f.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}
@@ -131,10 +133,12 @@ for (const [k, c] of Object.entries(CATS)) {
 // ---------- home ----------
 {
   const pop = TOOLS.filter(t => t.pop);
-  const main = `<section class="hero"><h1>All your everyday tools,<br><span>free, fast &amp; private</span></h1>
-<p class="lead">${TOOLS.length} free tools for images, PDFs, GST, EMI, income tax, unit conversion and more. Everything runs in your browser, so your files never leave your device. No sign-up needed.</p>
+  const main = `<section class="hero"><p class="pill"><b>${TOOLS.length}</b> free tools · Made for India 🇮🇳</p><h1>All your everyday tools,<br><span>free, fast &amp; private</span></h1>
+<p class="lead">Images, PDFs, GST, EMI, income tax, exam photos and more. Everything runs in your browser, so your files never leave your device.</p>
 <div class="bigsearch"><input id="q" type="search" placeholder="Try &quot;compress to 50 KB&quot;" aria-label="Filter tools" autocomplete="off"></div>
-<div class="chips"><a class="chip" href="/exam-photo-size">🎓 Exam photo sizes</a>${['image-compressor', 'compress-pdf', 'merge-pdf', 'gst-calculator', 'emi-calculator', 'qr-code-generator'].map(s => `<a class="chip" href="/${s}">${bySlug[s].e} ${bySlug[s].n.replace(/ \(.*|FY.*$/, '').trim()}</a>`).join('')}</div></section>
+<div class="chips"><a class="chip" href="/exam-photo-size">🎓 Exam photo sizes</a>${['image-compressor', 'compress-pdf', 'merge-pdf', 'gst-calculator', 'emi-calculator', 'qr-code-generator'].map(s => `<a class="chip" href="/${s}">${bySlug[s].e} ${bySlug[s].n.replace(/ \(.*|FY.*$/, '').trim()}</a>`).join('')}</div>
+<ul class="trust"><li>🔒 No uploads</li><li>⚡ Works offline</li><li>🚫 No sign-up</li><li>💯 Free forever</li></ul></section>
+<section class="cat-tiles" aria-label="Browse by category">${Object.entries(CATS).map(([k, c]) => `<a class="ct" data-c="${k}" href="/${c.slug}"><span class="em">${c.e}</span><b>${SHORT[k] === 'Calculators' ? 'Everyday' : SHORT[k]}</b><small>${TOOLS.filter(t => t.c === k).length} tools</small></a>`).join('')}</section>
 <div id="mine"></div>
 <section data-cat="pop"><h2>🔥 Most popular</h2><div class="grid">${pop.map(card).join('')}</div></section>
 ${Object.entries(CATS).map(([k, c]) => `<section data-cat="${k}"><div class="sec-h"><h2>${c.e} ${c.name}</h2><a href="/${c.slug}">View all →</a></div><div class="grid">${TOOLS.filter(t => t.c === k).map(card).join('')}</div></section>`).join('')}
