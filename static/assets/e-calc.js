@@ -229,11 +229,13 @@
         return { main: ['Exact age', y + ' years, ' + mo + ' months, ' + d + ' days'], rows: [['Total months', fmt(y * 12 + mo)], ['Total weeks', fmt(Math.floor(days / 7))], ['Total days', fmt(days)], ['Next birthday in', Math.round((nb - b) / 864e5) + ' days'], ['Born on a', a.toLocaleDateString('en-IN', { weekday: 'long' })]] }; } },
   };
 
+  CW.calcDefs = C; CW.loans = LOANS;
   CW.tools.calc = function (box, slug) {
     const cfg = C[slug]; const vals = {}; const inputs = {}, ranges = {}, wraps = {};
     const form = el('div', { class: 'stack' }), out = el('div', { class: 'res', 'aria-live': 'polite' }), tbl = el('div', { class: 'calc-table' }), extra = el('div', { class: 'calc-extra' });
     // Shareable links: ?p=3000000&rate=8.5 … pre-fill the form; the address bar updates once the user edits
-    let touched = false; const q = new URLSearchParams(location.search);
+    let touched = false; const q = new URLSearchParams(location.search); const pre = window.CW_PRE || {};
+    for (const k in pre) if (!q.has(k)) q.set(k, pre[k]);
     const shareUrl = () => { const u = new URL(location.href.split('?')[0].replace('/embed/', '/')); cfg.f.forEach(([id]) => u.searchParams.set(id, inputs[id].value)); return u.toString(); };
     cfg.f.forEach(([id, label, def, o]) => {
       if (q.has(id)) { const v = q.get(id); if (o.sel ? o.sel.some(([x]) => String(x) === v) : o.type === 'date' ? /^\d{4}-\d{2}-\d{2}$/.test(v) : v !== '' && isFinite(+v)) def = o.sel ? (isNaN(+v) ? v : +v) : v; }

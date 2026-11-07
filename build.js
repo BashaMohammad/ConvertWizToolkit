@@ -2,6 +2,7 @@
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const { CATS, TOOLS } = require('./src/registry');
 const { EXAMS, CHECKED } = require('./src/exams');
+const LANDINGS = require('./src/landings')(EXAMS);
 const SITE = 'https://www.convertwiz.in', OUT = path.join(__dirname, 'dist');
 const PROD = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === 'production' : false;
 const YEAR = new Date().getFullYear(), TODAY = new Date().toISOString().slice(0, 10);
@@ -53,6 +54,8 @@ const card = t => `<a class="tc" data-c="${t.c}" href="/${t.s}" data-k="${esc((t
 const crumb = items => ({ '@type': 'BreadcrumbList', itemListElement: items.map(([n, u], i) => ({ '@type': 'ListItem', position: i + 1, name: n, item: SITE + u })) });
 const faqLd = f => ({ '@type': 'FAQPage', mainEntity: f.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
 
+const FAM = { kb: 'Compress to a size', px: 'Resize to a size', ctc: 'In-hand salary by CTC', 'emi-home': 'Home loan EMI by amount', 'emi-car': 'Car loan EMI by amount', 'emi-personal': 'Personal loan EMI by amount', cgpa: 'CGPA to percentage', cm: 'Height in cm', ftin: 'Height in feet and inches' };
+const popular = slug => { const byF = {}; LANDINGS.filter(l => l.tool === slug).forEach(l => (byF[l.fam] = byF[l.fam] || []).push(l)); const fams = Object.entries(byF); return fams.length ? fams.map(([f, ls]) => `<h2>${FAM[f]}</h2><div class="chips" style="justify-content:flex-start">${ls.map(l => `<a class="chip" href="/${l.s}">${esc(l.nav)}</a>`).join('')}</div>`).join('') : ''; };
 // ---------- tool pages ----------
 for (const t of TOOLS) {
   const cat = CATS[t.c], url = '/' + t.s;
@@ -64,8 +67,24 @@ for (const t of TOOLS) {
 <section class="card toolbox" id="tool" data-tool="${t.s}" data-engine="${t.g}"><noscript>Please enable JavaScript to use this tool.</noscript><p class="muted">Loading tool…</p></section>
 <h2>How to use the ${esc(t.n)}</h2><ol class="steps">${t.st.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
 <h2>Frequently asked questions</h2>${t.f.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}
-<h2>Related tools</h2><div class="grid">${rel.map(card).join('')}</div>${t.g === 'calc' ? embedBox(t) : ''}`;
+${popular(t.s)}<h2>Related tools</h2><div class="grid">${rel.map(card).join('')}</div>${t.g === 'calc' ? embedBox(t) : ''}`;
   write(t.s + '.html', head({ title: t.t, desc: t.d, url, ld }) + shell(` data-tool="${t.s}"`, main) + `<script src="${A('e-' + t.g + '.js')}" defer></script></body></html>`);
+}
+
+// ---------- ready-answer landing pages (src/landings.js) ----------
+for (const l of LANDINGS) {
+  const t = bySlug[l.tool], cat = CATS[t.c], url = '/' + l.s;
+  const ld = [{ '@type': 'WebApplication', name: l.h1, url: SITE + url, description: l.desc, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any (web browser)', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' } },
+    crumb([['Home', '/'], [cat.name, '/' + cat.slug], [t.n, '/' + t.s], [l.h1, url]]), faqLd(l.faq)];
+  const main = `<div class="crumb"><a href="/">Home</a> › <a href="/${cat.slug}">${cat.name}</a> › <a href="/${t.s}">${esc(t.n)}</a></div>
+<div class="tool-head"><span class="tool-ico" data-c="${t.c}">${t.e}</span><div class="th-txt"><h1>${esc(l.h1)}</h1><p class="lead">${esc(l.lead)}</p></div><div class="head-btns"><a class="ibtn" href="https://wa.me/?text=${encodeURIComponent(l.h1 + ' – free on ConvertWiz: ' + SITE + url)}" target="_blank" rel="noopener" aria-label="Share on WhatsApp" title="Share on WhatsApp">💬</a></div></div>
+<div class="answer">${l.answer}</div>
+<section class="card toolbox" id="tool" data-tool="${t.s}" data-engine="${t.g}"><noscript>Please enable JavaScript to use this tool.</noscript><p class="muted">Loading tool…</p></section>
+${l.body}
+<h2>Frequently asked questions</h2>${l.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}
+<h2>More ${esc(FAM[l.fam].toLowerCase())}</h2><div class="chips" style="justify-content:flex-start">${l.rel.map(([h, n]) => `<a class="chip" href="${h}">${esc(n)}</a>`).join('')}</div>
+<p style="margin-top:22px"><a class="btn sec" href="/${t.s}">Open the full ${esc(t.n)} →</a></p>`;
+  write(l.s + '.html', head({ title: l.title, desc: l.desc, url, ld }) + shell(` data-tool="${t.s}"`, main) + `<script>window.CW_PRE=${JSON.stringify(l.pre)}</script><script src="${A('e-' + t.g + '.js')}" defer></script></body></html>`);
 }
 
 // ---------- embeddable calculators ----------
@@ -178,7 +197,7 @@ page('terms', 'Terms of Use & Disclaimer', 'Terms of use and disclaimer for Conv
 write('404.html', head({ title: 'Page not found | ConvertWiz', desc: 'Page not found', url: '/404', noindex: true }) + shell('', `<section class="hero"><h1>404 – Page not found</h1><p class="lead">The page you're looking for doesn't exist or has moved. Try searching for the tool you need:</p><div class="bigsearch"><input id="q" type="search" placeholder="Search tools…" aria-label="Filter tools"></div></section><div class="grid">${TOOLS.map(card).join('')}</div>`) + '</body></html>');
 
 // ---------- machine files ----------
-const urls = [['/', '1.0'], ...Object.values(CATS).map(c => ['/' + c.slug, '0.8']), ...TOOLS.map(t => ['/' + t.s, t.pop ? '0.9' : '0.7']), ['/exam-photo-size', '0.9'], ...EXAMS.map(e => ['/' + e.s, '0.8']), ['/about', '0.3'], ['/pro', '0.4'], ['/contact', '0.3'], ['/privacy', '0.2'], ['/terms', '0.2']];
+const urls = [['/', '1.0'], ...Object.values(CATS).map(c => ['/' + c.slug, '0.8']), ...TOOLS.map(t => ['/' + t.s, t.pop ? '0.9' : '0.7']), ['/exam-photo-size', '0.9'], ...EXAMS.map(e => ['/' + e.s, '0.8']), ...LANDINGS.map(l => ['/' + l.s, '0.6']), ['/about', '0.3'], ['/pro', '0.4'], ['/contact', '0.3'], ['/privacy', '0.2'], ['/terms', '0.2']];
 write('robots.txt', PROD ? `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n` : `User-agent: *\nDisallow: /\n`);
 write('ads.txt', 'google.com, pub-2287734666559045, DIRECT, f08c47fec0942fa0\n');
 write('search-index.json', JSON.stringify([...TOOLS.map(t => ({ s: t.s, n: t.n, e: t.e, c: CATS[t.c].name, k: t.t + ' ' + t.d, p: t.pop ? 1 : 0 })), ...EXAMS.map(e => ({ s: e.s, n: e.n + ' photo & signature size', e: '🎓', c: 'Exam photo sizes', k: e.full + ' ' + e.n + ' photo signature size exam form', p: 0 }))]));

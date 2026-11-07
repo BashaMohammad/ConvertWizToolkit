@@ -40,13 +40,14 @@
     if (cfg.ftin) {
       after = (x, u) => { const inch = x * cfg.u[u][0] / .0254; const ft = Math.floor(inch / 12); return el('div', { class: 'muted', style: 'margin-top:6px' }, '= ' + ft + ' ft ' + fmt(inch - ft * 12, 1) + ' in'); };
       const fi = el('div', { class: 'card', style: 'margin-bottom:16px;padding:14px' }, el('b', {}, 'Feet + inches → cm'));
-      const f = el('input', { type: 'number', value: 5, 'aria-label': 'Feet' }), i = el('input', { type: 'number', value: 7, 'aria-label': 'Inches' }), o = el('div', { class: 'big', style: 'font-size:24px' });
+      const P0 = window.CW_PRE || {}, f = el('input', { type: 'number', value: P0.ft != null ? P0.ft : 5, 'aria-label': 'Feet' }), i = el('input', { type: 'number', value: P0.inch != null ? P0.inch : 7, 'aria-label': 'Inches' }), o = el('div', { class: 'big', style: 'font-size:24px' });
       const go = () => o.textContent = '= ' + fmt(((+f.value || 0) * 12 + (+i.value || 0)) * 2.54, 2) + ' cm';
       f.oninput = i.oninput = go; go();
       fi.append(el('div', { class: 'row', style: 'margin-top:8px;align-items:center' }, el('div', { class: 'inp-suf' }, f, el('span', {}, 'ft')), el('div', { class: 'inp-suf' }, i, el('span', {}, 'in')), o));
       box.append(fi);
     }
-    ui(box, defs, null, conv, { def: cfg.def, after, val: slug === 'height-converter' ? 170 : slug === 'temperature-converter' ? 37 : 1 });
+    const P = window.CW_PRE || {};
+    ui(box, defs, null, conv, { def: P.def || cfg.def, after, val: P.val != null ? P.val : slug === 'height-converter' ? 170 : slug === 'temperature-converter' ? 37 : 1 });
     if (slug === 'land-area-converter') box.append(el('div', { class: 'note' }, 'Bigha, katha and biswa differ between states and even districts, so they are not included. Check with your local land records office.'));
   };
 

@@ -201,3 +201,5 @@ footer{background:var(--card);margin-top:30px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 main{overflow-x:clip}
 .tool-head:has(.tool-ico) .tool-ico{grid-area:1/1}.tool-head:has(.tool-ico) h1{grid-area:1/2;text-align:left;justify-self:start}.tool-head:has(.tool-ico) .head-btns{grid-area:1/3}.tool-head:has(.tool-ico) .lead{grid-area:2/1/3/4}
+.answer{margin:0 0 16px;padding:14px 16px;border-radius:14px;background:color-mix(in srgb,var(--ok) 8%,var(--card));border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);font-size:16px;line-height:1.55}
+.answer b{color:var(--ink);font-weight:750}

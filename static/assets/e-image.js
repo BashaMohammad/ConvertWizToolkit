@@ -16,7 +16,7 @@
   // smallest blob that fits under maxBytes (quality search, then downscale)
   async function fit(img, w, h, type, maxB, bg, crop) {
     let scale = 1, best = null;
-    for (let round = 0; round < 12; round++) {
+    for (let round = 0; round < 30; round++) {
       const cv = draw(img, w * scale, h * scale, bg, crop); let lo = .3, hi = .95, ok = null;
       const top = await enc(cv, type, hi); if (top.size <= maxB) return { blob: top, q: hi, w: cv.width, h: cv.height };
       for (let i = 0; i < 7; i++) { const m = (lo + hi) / 2, b = await enc(cv, type, m); if (b.size <= maxB) { ok = { blob: b, q: m, w: cv.width, h: cv.height }; lo = m; } else hi = m; }
@@ -54,7 +54,7 @@
     if (slug === 'dpi-checker') return dpi(box);
     if (slug === 'passport-photo-maker') return passport(box);
     if (slug === 'aadhaar-pan-print') return idprint(box);
-    const o = { type: { 'jpg-to-png': 'image/png', 'png-to-jpg': 'image/jpeg', 'webp-converter': 'image/webp', 'image-compressor': 'image/jpeg', 'exam-photo-resizer': 'image/jpeg' }[slug] || 'same', q: .9, kb: 0, w: 1200, h: 0, pct: 50, mode: 'px', lock: true, ex: PRESETS[0] };
+    const o = { type: { 'jpg-to-png': 'image/png', 'png-to-jpg': 'image/jpeg', 'webp-converter': 'image/webp', 'image-compressor': 'image/jpeg', 'exam-photo-resizer': 'image/jpeg' }[slug] || 'same', q: .9, kb: 0, w: 1200, h: 0, pct: 50, mode: 'px', lock: true, ex: PRESETS[0], ...(window.CW_PRE || {}) };
     const opts = el('div', { class: 'row', style: 'margin-bottom:14px' });
     const fmtSel = (list) => fld('Output format', seg(list, o.type, v => { o.type = v; go(); }));
     const qual = () => { const r = el('input', { type: 'range', min: 10, max: 100, value: o.q * 100 }), l = el('b', {}, Math.round(o.q * 100) + '%'); r.oninput = () => { l.textContent = r.value + '%'; o.q = r.value / 100; }; r.onchange = go; return fld('Quality: ', el('div', {}, l, r)); };
@@ -64,7 +64,7 @@
     if (slug === 'image-compressor') opts.append(fmtSel([['image/jpeg', 'JPG'], ['image/webp', 'WebP']]), qual(), num('kb', 'Target max size', 'KB'));
     if (slug === 'image-resizer') {
       const pxBox = el('div', { class: 'row' }, num('w', 'Width', 'px'), num('h', 'Height', 'px')), pcBox = el('div', { hidden: true }, num('pct', 'Scale', '%'));
-      const lock = el('input', { type: 'checkbox', checked: true }); lock.onchange = () => { o.lock = lock.checked; go(); };
+      const lock = el('input', { type: 'checkbox', checked: o.lock }); lock.onchange = () => { o.lock = lock.checked; go(); };
       opts.append(fld('Resize by', seg([['px', 'Pixels'], ['pct', 'Percent']], 'px', v => { o.mode = v; pxBox.hidden = v !== 'px'; pcBox.hidden = v === 'px'; go(); })), pxBox, pcBox, el('label', { style: 'align-self:end' }, lock, 'Lock aspect ratio'), fmtSel([['same', 'Same'], ['image/jpeg', 'JPG'], ['image/png', 'PNG'], ['image/webp', 'WebP']]));
     }
     if (slug === 'exam-photo-resizer') {
