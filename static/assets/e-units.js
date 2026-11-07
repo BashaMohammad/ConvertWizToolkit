@@ -50,10 +50,14 @@
     if (slug === 'land-area-converter') box.append(el('div', { class: 'note' }, 'Bigha, katha and biswa differ between states and even districts, so they are not included. Check with your local land records office.'));
   };
 
+  const getJSON = async u => { const c = new AbortController(), t = setTimeout(() => c.abort(), 6000); try { const r = await fetch(u, { signal: c.signal }); if (!r.ok) throw 0; return await r.json(); } finally { clearTimeout(t); } };
   async function rates() {
     const c = CW.store.get('fx'); if (c && Date.now() - c.t < 6 * 36e5) return c;
-    try { const r = await (await fetch('https://open.er-api.com/v6/latest/USD')).json(); if (r.result !== 'success') throw 0; const d = { t: Date.now(), rates: r.rates, upd: r.time_last_update_utc }; CW.store.set('fx', d); return d; }
-    catch (e) { const r = await (await fetch('https://api.frankfurter.app/latest?from=USD')).json(); r.rates.USD = 1; const d = { t: Date.now(), rates: r.rates, upd: r.date }; CW.store.set('fx', d); return d; }
+    try { const r = await getJSON('https://open.er-api.com/v6/latest/USD'); if (r.result !== 'success') throw 0; const d = { t: Date.now(), rates: r.rates, upd: r.time_last_update_utc }; CW.store.set('fx', d); return d; }
+    catch (e) {
+      try { const r = await getJSON('https://api.frankfurter.app/latest?from=USD'); r.rates.USD = 1; const d = { t: Date.now(), rates: r.rates, upd: r.date }; CW.store.set('fx', d); return d; }
+      catch (e2) { if (c) return Object.assign({}, c, { stale: true }); throw e2; }
+    }
   }
   const NAMES = { INR: 'Indian Rupee', USD: 'US Dollar', EUR: 'Euro', GBP: 'British Pound', AED: 'UAE Dirham', SAR: 'Saudi Riyal', QAR: 'Qatari Riyal', KWD: 'Kuwaiti Dinar', OMR: 'Omani Rial', BHD: 'Bahraini Dinar', SGD: 'Singapore Dollar', AUD: 'Australian Dollar', CAD: 'Canadian Dollar', JPY: 'Japanese Yen', CNY: 'Chinese Yuan', NZD: 'NZ Dollar', CHF: 'Swiss Franc', MYR: 'Malaysian Ringgit', THB: 'Thai Baht', NPR: 'Nepalese Rupee', LKR: 'Sri Lankan Rupee', BDT: 'Bangladeshi Taka', PKR: 'Pakistani Rupee', HKD: 'Hong Kong Dollar', ZAR: 'South African Rand', RUB: 'Russian Ruble', KRW: 'South Korean Won' };
   async function currency(box) {
@@ -64,6 +68,7 @@
     [...top, ...keys.filter(k => !NAMES[k]).sort()].forEach(k => defs[k] = NAMES[k] || k);
     const conv = (x, a, b) => x / d.rates[a] * d.rates[b];
     const u = ui(box, defs, null, conv, { def: ['USD', 'INR'], after: (x, a) => el('div', { class: 'muted small', style: 'margin-top:6px' }, '1 ' + a + ' = ' + nice(conv(1, a, 'INR')) + ' INR') });
+    if (d.stale) box.prepend(el('div', { class: 'bad small', style: 'margin-bottom:8px' }, '⚠ Live rates are unavailable right now – showing the last saved rates (' + (d.upd || 'earlier') + ').'));
     box.append(el('div', { class: 'note' }, 'Reference rates updated ' + (d.upd || 'daily') + '. Banks and exchange services add a margin, so the amount you receive may differ. Rates by open.er-api.com.'));
   }
 })();

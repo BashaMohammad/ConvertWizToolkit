@@ -1,8 +1,9 @@
 /* PDF engine: pdf-lib + pdf.js, loaded on demand from jsDelivr */
 (function () {
   const { el, size, download, loadScript } = CW;
-  const LIB = () => loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js').then(() => window.PDFLib);
-  const PDFJS = async () => { await loadScript('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js'); pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js'; return pdfjsLib; };
+  const LIB = () => loadScript('/vendor/pdf-lib-1.17.1/pdf-lib.min.js').then(() => window.PDFLib);
+  // pdf.js 6 (self-hosted, legacy build for older phones). isEvalSupported:false is set per document as defence in depth.
+  let pdfjsP; const PDFJS = () => pdfjsP || (pdfjsP = import('/vendor/pdfjs-6.2.108/pdf.min.mjs').then(m => { m.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs-6.2.108/pdf.worker.min.mjs'; return m; }).catch(e => { pdfjsP = null; throw e; }));
   const base = n => n.replace(/\.[^.]+$/, '');
   const pdfBlob = bytes => new Blob([bytes], { type: 'application/pdf' });
   const busy = (btn, on, txt) => { btn.disabled = on; if (txt) btn.textContent = txt; };
@@ -55,9 +56,9 @@
       const q = el('select', {}, [[2, 'Standard (≈150 DPI)'], [3, 'High (≈220 DPI)'], [1.4, 'Small file (≈100 DPI)']].map(([v, l]) => el('option', { value: v }, l))), list = el('div', { class: 'files' }), all = el('div', { class: 'btns' });
       box.append(el('div', { style: 'max-width:320px;margin-bottom:14px' }, el('label', {}, 'Image quality'), q), CW.drop({ accept: 'application/pdf', icon: '📄', label: 'Choose a PDF', onFiles: async f => {
         list.replaceChildren(el('p', { class: 'muted' }, 'Rendering pages…')); all.replaceChildren(); const outs = [];
-        try { const lib = await PDFJS(); const doc = await lib.getDocument({ data: await f[0].arrayBuffer() }).promise; list.replaceChildren();
+        try { const lib = await PDFJS(); const doc = await lib.getDocument({ data: new Uint8Array(await f[0].arrayBuffer()), isEvalSupported: false }).promise; list.replaceChildren();
           for (let i = 1; i <= doc.numPages; i++) { const pg = await doc.getPage(i), vp = pg.getViewport({ scale: +q.value }), c = el('canvas'); c.width = vp.width; c.height = vp.height; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
-            await pg.render({ canvasContext: x, viewport: vp }).promise; const b = await new Promise(r => c.toBlob(r, 'image/jpeg', .9)), nm = base(f[0].name) + '-page-' + i + '.jpg'; outs.push([b, nm]);
+            await pg.render({ canvas: c, canvasContext: x, viewport: vp }).promise; const b = await new Promise(r => c.toBlob(r, 'image/jpeg', .9)), nm = base(f[0].name) + '-page-' + i + '.jpg'; outs.push([b, nm]);
             list.append(el('div', { class: 'fi' }, el('img', { src: URL.createObjectURL(b), alt: 'Page ' + i }), el('div', { class: 'nm' }, el('b', {}, 'Page ' + i), el('small', {}, Math.round(vp.width) + '×' + Math.round(vp.height) + ' • ' + size(b.size))), el('button', { class: 'btn sm', onclick: () => download(b, nm) }, '⬇'))); }
           if (outs.length > 1) all.append(el('button', { class: 'btn', onclick: async () => { for (const [b, n] of outs) { download(b, n); await new Promise(r => setTimeout(r, 400)); } } }, '⬇ Download all ' + outs.length + ' pages'));
         } catch (e) { list.replaceChildren(); err(list, e); } } }), list, all);

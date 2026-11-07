@@ -13,17 +13,17 @@
       const fields = el('div', { class: 'row' }), cv = el('canvas', { style: 'width:240px;height:240px;border-radius:12px;background:#fff;display:block;margin:auto' }), txt = el('p', { class: 'small muted mono', style: 'word-break:break-all;text-align:center' });
       const esc = s => s.replace(/([\\;,:"])/g, '\\$1');
       const val = () => { const k = kind.value; if (k === 'url') return F.url.value;
-        if (k === 'upi') { if (!F.upi.value.includes('@')) return ''; let s = 'upi://pay?pa=' + encodeURIComponent(F.upi.value.trim()) + '&pn=' + encodeURIComponent(F.name.value || F.upi.value) + '&cu=INR'; if (+F.amt.value > 0) s += '&am=' + (+F.amt.value).toFixed(2); if (F.note.value) s += '&tn=' + encodeURIComponent(F.note.value); return s; }
+        if (k === 'upi') { if (!F.upi.value.includes('@')) return ''; let s = 'upi://pay?pa=' + encodeURIComponent(F.upi.value.trim()).replace(/%40/g, '@') + '&pn=' + encodeURIComponent(F.name.value || F.upi.value) + '&cu=INR'; if (+F.amt.value > 0) s += '&am=' + (+F.amt.value).toFixed(2); if (F.note.value) s += '&tn=' + encodeURIComponent(F.note.value); return s; }
         if (k === 'wifi') return F.ssid.value ? 'WIFI:T:' + F.enc.value + ';S:' + esc(F.ssid.value) + ';' + (F.enc.value !== 'nopass' ? 'P:' + esc(F.pass.value) + ';' : '') + ';' : '';
         return F.wa.value ? 'https://wa.me/' + F.wa.value.replace(/\D/g, '') + (F.msg.value ? '?text=' + encodeURIComponent(F.msg.value) : '') : ''; };
       let qr;
-      const draw = () => { fields.replaceChildren(...groups[kind.value]); const v = val(); txt.textContent = v || 'Fill in the details to create your QR code'; if (!qr) return; qr.set({ value: v || ' ', size: +sz.value, foreground: fg.value, background: bg.value, level: 'H', padding: Math.round(+sz.value / 25) }); };
+      let shown; const draw = () => { if (shown !== kind.value) { shown = kind.value; fields.replaceChildren(...groups[kind.value]); } const v = val(); txt.textContent = v || 'Fill in the details to create your QR code'; if (!qr) return; qr.set({ value: v || ' ', size: +sz.value, foreground: fg.value, background: bg.value, level: 'H', padding: Math.round(+sz.value / 25) }); };
       [kind, fg, bg, sz, ...Object.values(F)].forEach(i => { i.oninput = draw; i.onchange = draw; });
       box.append(el('div', { class: 'two' }, el('div', {}, fld('QR type', kind), fields, el('div', { class: 'row', style: 'margin-top:10px' }, fld('Colour', fg), fld('Background', bg), fld('Size', sz))),
         el('div', { class: 'res' }, cv, txt, el('div', { class: 'btns', style: 'justify-content:center' }, el('button', { class: 'btn', onclick: () => { if (!val()) return CW.toast('Fill in the details first'); cv.toBlob(b => download(b, 'qr-' + kind.value + '.png')); } }, '⬇ Download PNG')),
           el('p', { class: 'small muted', style: 'text-align:center' }, 'Tip: test-scan before printing. UPI QR works with GPay, PhonePe, Paytm and BHIM.'))));
       draw();
-      try { await CW.loadScript('https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js'); qr = new QRious({ element: cv }); draw(); } catch (e) { txt.textContent = 'Could not load the QR library. Check your connection.'; }
+      try { await CW.loadScript('/vendor/qrious-4.0.2/qrious.min.js'); qr = new QRious({ element: cv }); draw(); } catch (e) { txt.textContent = 'Could not load the QR library. Check your connection.'; }
     },
     'password-generator'(box) {
       const len = el('input', { type: 'range', min: 8, max: 64, value: 16 }), ll = el('b', {}, '16');

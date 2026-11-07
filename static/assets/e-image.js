@@ -25,6 +25,15 @@
     }
     return best;
   }
+  // Pad a JPEG up to minB bytes with COM (comment) segments: image pixels are untouched and the file stays valid.
+  async function padJpeg(blob, minB) {
+    if (blob.type !== 'image/jpeg' || blob.size >= minB) return blob;
+    const u = new Uint8Array(await blob.arrayBuffer()), parts = [u.slice(0, 2)]; let need = minB - u.length;
+    while (need > 0) { const n = Math.min(65533, Math.max(1, need - 4)), c = new Uint8Array(n + 4); c[0] = 0xFF; c[1] = 0xFE; c[2] = (n + 2) >> 8; c[3] = (n + 2) & 255; c.fill(0x20, 4); parts.push(c); need -= n + 4; }
+    parts.push(u.slice(2)); return new Blob(parts, { type: 'image/jpeg' });
+  }
+  // KB limits: max uses 1 KB = 1000 bytes and min uses 1 KB = 1024 bytes, so the file passes portals that count either way.
+  const KBMAX = kb => kb * 1000, KBMIN = kb => kb * 1024;
   const seg = (items, val, on) => { const s = el('div', { class: 'seg' }); const b = items.map(([v, l]) => el('button', { type: 'button', class: v === val ? 'on' : '', onclick: () => { b.forEach(x => x.classList.toggle('on', x === bb[v])); on(v); } }, l)); const bb = Object.fromEntries(items.map(([v], i) => [v, b[i]])); s.append(...b); return s; };
   const fld = (label, inp, hint) => el('div', { class: 'fld' }, el('label', {}, label), inp, hint ? el('div', { class: 'hint' }, hint) : '');
 
@@ -44,7 +53,7 @@
     const opts = el('div', { class: 'row', style: 'margin-bottom:14px' });
     const fmtSel = (list) => fld('Output format', seg(list, o.type, v => { o.type = v; go(); }));
     const qual = () => { const r = el('input', { type: 'range', min: 10, max: 100, value: o.q * 100 }), l = el('b', {}, Math.round(o.q * 100) + '%'); r.oninput = () => { l.textContent = r.value + '%'; o.q = r.value / 100; }; r.onchange = go; return fld('Quality: ', el('div', {}, l, r)); };
-    const num = (k, label, suf) => { const i = el('input', { type: 'number', value: o[k] || '', min: 0, placeholder: k === 'kb' ? 'optional' : 'auto' }); i.onchange = () => { o[k] = +i.value || 0; if (k === 'w' && o.lock) o.h = 0; if (k === 'h' && o.lock) o.w = 0; go(); }; return fld(label, el('div', { class: 'inp-suf' }, i, el('span', {}, suf))); };
+    const num = (k, label, suf) => { const i = el('input', { type: 'number', value: o[k] || '', min: 0, placeholder: k === 'kb' ? 'optional' : 'auto' }); let t; i.onchange = () => { clearTimeout(t); o[k] = +i.value || 0; if (k === 'w' && o.lock) o.h = 0; if (k === 'h' && o.lock) o.w = 0; go(); }; i.oninput = () => { clearTimeout(t); t = setTimeout(i.onchange, 700); }; return fld(label, el('div', { class: 'inp-suf' }, i, el('span', {}, suf))); };
     if (slug === 'png-to-jpg') opts.append(qual());
     if (slug === 'webp-converter') opts.append(fmtSel([['image/webp', 'WebP'], ['image/jpeg', 'JPG'], ['image/png', 'PNG']]), qual());
     if (slug === 'image-compressor') opts.append(fmtSel([['image/jpeg', 'JPG'], ['image/webp', 'WebP']]), qual(), num('kb', 'Target max size', 'KB'));
@@ -57,35 +66,42 @@
       const w = el('input', { type: 'number' }), h = el('input', { type: 'number' }), mn = el('input', { type: 'number' }), mx = el('input', { type: 'number' });
       const setP = p => { o.ex = p.slice(); [w.value, h.value, mn.value, mx.value] = p.slice(2); };
       const ps = el('select', {}, PRESETS.map(p => el('option', { value: p[0] }, p[1]))); ps.onchange = () => { setP(PRESETS.find(p => p[0] === ps.value)); go(); };
-      [w, h, mn, mx].forEach((i, k) => i.onchange = () => { o.ex[2 + k] = +i.value; ps.value = 'custom'; go(); });
+      [w, h, mn, mx].forEach((i, k) => { let t; i.onchange = () => { clearTimeout(t); if (o.ex[2 + k] === +i.value) return; o.ex[2 + k] = +i.value; ps.value = 'custom'; go(); }; i.oninput = () => { clearTimeout(t); t = setTimeout(i.onchange, 700); }; });
       setP(PRESETS[0]);
       opts.append(el('div', { style: 'grid-column:1/-1' }, fld('Preset', ps, 'Presets are common requirements. Always match the exact values in your exam notification.')), fld('Width (px)', w), fld('Height (px)', h), fld('Min size (KB)', mn), fld('Max size (KB)', mx));
     }
     const list = el('div', { class: 'files' }), all = el('div', { class: 'btns' });
-    let files = [], outs = [];
+    let files = [], outs = [], seq = 0, lastKey = '';
     box.append(opts, CW.drop({ accept: 'image/*', multiple: true, icon: '🖼️', label: 'Drop images here or tap to choose', hint: 'JPG, PNG, WebP • batch supported • files never leave your device', onFiles: f => { files = files.concat(f); go(); } }), list, all);
     async function go() {
-      if (!files.length) return; outs = []; list.replaceChildren(); all.replaceChildren();
+      if (!files.length) return;
+      const key = JSON.stringify(o) + '|' + files.map(f => f.name + f.size).join(','); if (key === lastKey) return; lastKey = key;
+      const run = ++seq; outs = []; list.replaceChildren(); all.replaceChildren();
       for (const f of files) {
+        if (run !== seq) return;
         const row = el('div', { class: 'fi' }, el('div', { class: 'nm' }, el('b', {}, f.name), el('small', {}, 'Processing…'))); list.append(row);
         try {
           const img = await load(f); let W = img.naturalWidth, H = img.naturalHeight, type = o.type === 'same' ? (EXT[f.type] ? f.type : 'image/png') : o.type, r, crop = false, bg = type === 'image/jpeg' ? '#fff' : null;
           if (slug === 'image-resizer') { if (o.mode === 'pct') { W *= o.pct / 100; H *= o.pct / 100; } else if (o.w && o.h && !o.lock) { W = o.w; H = o.h; } else if (o.w) { H = H * o.w / W; W = o.w; } else if (o.h) { W = W * o.h / H; H = o.h; } }
-          if (slug === 'exam-photo-resizer') { W = o.ex[2]; H = o.ex[3]; crop = true; r = await fit(img, W, H, type, o.ex[5] * 1024, bg, crop); }
-          else if (slug === 'image-compressor' && o.kb) r = await fit(img, W, H, type, o.kb * 1024, bg);
+          if (slug === 'exam-photo-resizer') { W = o.ex[2]; H = o.ex[3]; crop = true; r = await fit(img, W, H, type, KBMAX(o.ex[5]), bg, crop);
+            if (r.blob.size < KBMIN(o.ex[4])) { const cv = draw(img, W, H, bg, crop), hq = await enc(cv, type, 1); if (hq.size <= KBMAX(o.ex[5])) r = { blob: hq, q: 1, w: cv.width, h: cv.height }; }
+            if (r.blob.size < KBMIN(o.ex[4]) && KBMIN(o.ex[4]) <= KBMAX(o.ex[5])) { r.blob = await padJpeg(r.blob, KBMIN(o.ex[4]) + 512); r.padded = true; } }
+          else if (slug === 'image-compressor' && o.kb) r = await fit(img, W, H, type, KBMAX(o.kb), bg);
           else { const cv = draw(img, W, H, bg); r = { blob: await enc(cv, type, o.q), w: cv.width, h: cv.height }; }
+          if (run !== seq) return;
           const name = base(f.name) + (slug === 'image-resizer' || slug === 'exam-photo-resizer' ? '-' + r.w + 'x' + r.h : '') + '.' + EXT[r.blob.type];
           outs.push([r.blob, name]);
           const diff = (1 - r.blob.size / f.size) * 100, thumb = el('img', { src: URL.createObjectURL(r.blob), alt: '' });
           let msg = size(f.size) + ' → ' + size(r.blob.size) + ' • ' + r.w + '×' + r.h;
           let cls = diff >= 0 ? 'ok' : 'muted';
-          if (slug === 'exam-photo-resizer') { const kb = r.blob.size / 1024; if (kb > o.ex[5]) { msg += ' • still above max – try a smaller size'; cls = 'bad'; } else if (kb < o.ex[4]) { msg += ' • below min KB – use a clearer/larger original'; cls = 'bad'; } else { msg += ' • ✓ within ' + o.ex[4] + '–' + o.ex[5] + ' KB'; cls = 'ok'; } }
+          if (slug === 'exam-photo-resizer') { const b = r.blob.size; if (b > KBMAX(o.ex[5])) { msg += ' • still above max – try a smaller size'; cls = 'bad'; } else if (b < KBMIN(o.ex[4])) { msg += ' • below min KB – use a clearer/larger original'; cls = 'bad'; } else { msg += ' • ✓ within ' + o.ex[4] + '–' + o.ex[5] + ' KB' + (r.padded ? ' (size raised to meet the minimum; image unchanged)' : ''); cls = 'ok'; } }
           else if (slug === 'image-compressor' || slug === 'png-to-jpg' || slug === 'webp-converter') msg += ' • ' + (diff >= 0 ? fmt(diff, 0) + '% smaller' : fmt(-diff, 0) + '% larger');
           row.replaceChildren(thumb, el('div', { class: 'nm' }, el('b', {}, name), el('small', { class: cls }, msg)), el('button', { class: 'btn sm', onclick: () => download(r.blob, name) }, '⬇ Download'));
         } catch (e) { row.replaceChildren(el('div', { class: 'nm' }, el('b', {}, f.name), el('small', { class: 'bad' }, 'Could not read this image (HEIC is not supported by most browsers – export as JPG first).'))); }
       }
+      if (run !== seq) return;
       if (outs.length > 1) all.append(el('button', { class: 'btn', onclick: async () => { for (const [b, n] of outs) { download(b, n); await new Promise(r => setTimeout(r, 400)); } } }, '⬇ Download all (' + outs.length + ')'));
-      all.append(el('button', { class: 'btn sec', onclick: () => { files = []; outs = []; list.replaceChildren(); all.replaceChildren(); } }, 'Clear'));
+      all.append(el('button', { class: 'btn sec', onclick: () => { files = []; outs = []; lastKey = ''; seq++; list.replaceChildren(); all.replaceChildren(); } }, 'Clear'));
     }
   };
 

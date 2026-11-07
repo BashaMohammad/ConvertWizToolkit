@@ -6,27 +6,125 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/subscribe", "destination": "/pro", "permanent": true },
-    { "source": "/faq", "destination": "/about", "permanent": true },
-    { "source": "/credits", "destination": "/about", "permanent": true },
-    { "source": "/disclaimer", "destination": "/terms", "permanent": true },
-    { "source": "/admin", "destination": "/", "permanent": false },
-    { "source": "/blog/:path*", "destination": "/", "permanent": false },
-    { "source": "/distance-converter", "destination": "/length-converter", "permanent": true },
-    { "source": "/pdf-merge", "destination": "/merge-pdf", "permanent": true },
-    { "source": "/pdf-split", "destination": "/split-pdf", "permanent": true },
-    { "source": "/qr-generator", "destination": "/qr-code-generator", "permanent": true },
-    { "source": "/text-case-converter", "destination": "/case-converter", "permanent": true },
-    { "source": "/land-converter", "destination": "/land-area-converter", "permanent": true },
-    { "source": "/dp-resizer", "destination": "/instagram-dp-resizer", "permanent": true }
+    {
+      "source": "/subscribe",
+      "destination": "/pro",
+      "permanent": true
+    },
+    {
+      "source": "/faq",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/credits",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/disclaimer",
+      "destination": "/terms",
+      "permanent": true
+    },
+    {
+      "source": "/admin",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/distance-converter",
+      "destination": "/length-converter",
+      "permanent": true
+    },
+    {
+      "source": "/pdf-merge",
+      "destination": "/merge-pdf",
+      "permanent": true
+    },
+    {
+      "source": "/pdf-split",
+      "destination": "/split-pdf",
+      "permanent": true
+    },
+    {
+      "source": "/qr-generator",
+      "destination": "/qr-code-generator",
+      "permanent": true
+    },
+    {
+      "source": "/text-case-converter",
+      "destination": "/case-converter",
+      "permanent": true
+    },
+    {
+      "source": "/land-converter",
+      "destination": "/land-area-converter",
+      "permanent": true
+    },
+    {
+      "source": "/dp-resizer",
+      "destination": "/instagram-dp-resizer",
+      "permanent": true
+    }
   ],
   "headers": [
-    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
-    { "source": "/(.*)", "headers": [
-      { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
-    ] }
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/vendor/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/vendor/(.*)\\.mjs",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/javascript; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
   ]
 }
