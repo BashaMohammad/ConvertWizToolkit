@@ -71,7 +71,7 @@
 
   // search index
   let IDX = null;
-  async function index() { if (!IDX) { const r = await fetch('/assets/index.json'); IDX = await r.json(); } return IDX; }
+  async function index() { if (!IDX) { const r = await fetch('/search-index.json'); IDX = await r.json(); } return IDX; }
   function match(q, list) {
     q = q.trim().toLowerCase(); if (!q) return list.filter(t => t.p).slice(0, 12);
     const w = q.split(/\s+/);

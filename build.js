@@ -179,14 +179,13 @@ write('404.html', head({ title: 'Page not found | ConvertWiz', desc: 'Page not f
 
 // ---------- machine files ----------
 const urls = [['/', '1.0'], ...Object.values(CATS).map(c => ['/' + c.slug, '0.8']), ...TOOLS.map(t => ['/' + t.s, t.pop ? '0.9' : '0.7']), ['/exam-photo-size', '0.9'], ...EXAMS.map(e => ['/' + e.s, '0.8']), ['/about', '0.3'], ['/pro', '0.4'], ['/contact', '0.3'], ['/privacy', '0.2'], ['/terms', '0.2']];
-write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, p]) => `<url><loc>${SITE}${u}</loc><lastmod>${TODAY}</lastmod><priority>${p}</priority></url>`).join('\n')}\n</urlset>\n`);
 write('robots.txt', PROD ? `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n` : `User-agent: *\nDisallow: /\n`);
 write('ads.txt', 'google.com, pub-2287734666559045, DIRECT, f08c47fec0942fa0\n');
-write('assets/index.json', JSON.stringify([...TOOLS.map(t => ({ s: t.s, n: t.n, e: t.e, c: CATS[t.c].name, k: t.t + ' ' + t.d, p: t.pop ? 1 : 0 })), ...EXAMS.map(e => ({ s: e.s, n: e.n + ' photo & signature size', e: '🎓', c: 'Exam photo sizes', k: e.full + ' ' + e.n + ' photo signature size exam form', p: 0 }))]));
+write('search-index.json', JSON.stringify([...TOOLS.map(t => ({ s: t.s, n: t.n, e: t.e, c: CATS[t.c].name, k: t.t + ' ' + t.d, p: t.pop ? 1 : 0 })), ...EXAMS.map(e => ({ s: e.s, n: e.n + ' photo & signature size', e: '🎓', c: 'Exam photo sizes', k: e.full + ' ' + e.n + ' photo signature size exam form', p: 0 }))]));
 write('manifest.webmanifest', JSON.stringify({ name: 'ConvertWiz – Free Online Tools', short_name: 'ConvertWiz', start_url: '/?source=pwa', display: 'standalone', background_color: '#f7f8fb', theme_color: '#4f46e5', description: 'Free image, PDF, finance and unit tools that work on your device.', share_target: { action: '/share-target', method: 'POST', enctype: 'multipart/form-data', params: { title: 'title', text: 'text', files: [{ name: 'file', accept: ['image/*', 'application/pdf'] }] } }, icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }, ...(fs.existsSync(path.join(OUT, 'icon-512.png')) ? [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }] : [])],
   shortcuts: ['image-compressor', 'merge-pdf', 'gst-calculator'].map(s => ({ name: bySlug[s].n, url: '/' + s })) }));
 const ver = crypto.createHash('md5').update(Object.values(V).join('')).digest('hex').slice(0, 8);
-write('sw.js', `const C='cw-${ver}',PRE=['/','${A('app.css')}','${A('app.js')}','/assets/index.json'];
+write('sw.js', `const C='cw-${ver}',PRE=['/','${A('app.css')}','${A('app.js')}','/search-index.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(PRE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C&&x!=='cw-share').map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const r=e.request,u=new URL(r.url);if(r.method==='POST'&&u.pathname==='/share-target'){e.respondWith((async()=>{const fd=await r.formData(),fs=fd.getAll('file').filter(f=>f&&f.size),c=await caches.open('cw-share');for(const k of await c.keys())await c.delete(k);for(let i=0;i<fs.length;i++)await c.put('/shared-file/'+i,new Response(fs[i],{headers:{'content-type':fs[i].type||'application/octet-stream','x-name':encodeURIComponent(fs[i].name||('file-'+i))}}));return Response.redirect('/shared',303)})());return}if(r.method!=='GET')return;
@@ -194,4 +193,34 @@ if(u.origin===location.origin&&u.pathname.startsWith('/_vercel'))return;
 if(r.mode==='navigate'){e.respondWith(fetch(r).then(res=>{const cp=res.clone();caches.open(C).then(c=>c.put(r,cp));return res}).catch(()=>caches.match(r).then(m=>m||caches.match('/'))));return}
 if(u.origin===location.origin){e.respondWith(caches.match(r).then(m=>{const f=fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(C).then(c=>c.put(r,cp))}return res});return m||f}))}});
 `);
+// ---------- sitemap with real lastmod + IndexNow (Bing, Yandex, Seznam, Naver) ----------
+const INDEXNOW_KEY = 'f31f13b0a2de4f63a775767f3ffc5c6a';
+(async () => {
+  const norm = h => h.replace(/\?v=[0-9a-f]{8}/g, '').split(TODAY).join('');
+  const fileOf = u => path.join(OUT, u === '/' ? 'index.html' : u.slice(1) + '.html');
+  const now = {};
+  for (const [u] of urls) now[u] = crypto.createHash('md5').update(norm(fs.readFileSync(fileOf(u), 'utf8'))).digest('hex').slice(0, 12);
+  let prev = null, reachable = false;
+  if (PROD) {
+    try {
+      const r = await fetch(SITE + '/pages.json', { signal: AbortSignal.timeout(8000) });
+      reachable = true; if (r.ok) prev = await r.json();
+    } catch (e) { console.log('Previous page manifest not reachable:', e.message); }
+  }
+  const man = {}, changed = [];
+  for (const [u] of urls) {
+    const p = prev && prev[u];
+    if (p && p[0] === now[u]) man[u] = p; else { man[u] = [now[u], TODAY]; changed.push(SITE + u); }
+  }
+  write('pages.json', JSON.stringify(man));
+  write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, p]) => `<url><loc>${SITE}${u}</loc><lastmod>${man[u][1]}</lastmod><priority>${p}</priority></url>`).join('\n')}\n</urlset>\n`);
+  console.log(`Sitemap: ${urls.length} URLs, ${changed.length} new or changed since last deploy`);
+  if (PROD && reachable && changed.length) {
+    try {
+      const r = await fetch('https://api.indexnow.org/indexnow', { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' }, signal: AbortSignal.timeout(10000),
+        body: JSON.stringify({ host: 'www.convertwiz.in', key: INDEXNOW_KEY, keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`, urlList: changed.slice(0, 10000) }) });
+      console.log('IndexNow:', r.status, 'for', changed.length, 'URLs');
+    } catch (e) { console.log('IndexNow ping failed (build continues):', e.message); }
+  }
+})();
 console.log(`Built ${TOOLS.length} tools, ${Object.keys(CATS).length} categories, ${urls.length} URLs in sitemap (production=${PROD})`);
