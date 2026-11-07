@@ -41,7 +41,7 @@
     ['photo', 'Exam photo – 200×230 px, 20–50 KB', 200, 230, 20, 50],
     ['sign', 'Signature – 140×60 px, 10–20 KB', 140, 60, 10, 20],
     ['upsc', 'Photo – 350×350 px, 20–300 KB', 350, 350, 20, 300],
-    ['passport', 'Passport photo – 35×45 mm (413×531 px), up to 250 KB', 413, 531, 10, 250],
+    ['passport', 'Indian passport (Passport Seva) – 630×810 px, up to 250 KB', 630, 810, 10, 250],
     ['visa', 'US visa photo – 600×600 px, up to 240 KB', 600, 600, 10, 240],
     ['custom', 'Custom size', 300, 400, 10, 100],
   ];
@@ -52,6 +52,8 @@
   CW.tools.image = function (box, slug) {
     if (slug === 'instagram-dp-resizer') return dp(box);
     if (slug === 'dpi-checker') return dpi(box);
+    if (slug === 'passport-photo-maker') return passport(box);
+    if (slug === 'aadhaar-pan-print') return idprint(box);
     const o = { type: { 'jpg-to-png': 'image/png', 'png-to-jpg': 'image/jpeg', 'webp-converter': 'image/webp', 'image-compressor': 'image/jpeg', 'exam-photo-resizer': 'image/jpeg' }[slug] || 'same', q: .9, kb: 0, w: 1200, h: 0, pct: 50, mode: 'px', lock: true, ex: PRESETS[0] };
     const opts = el('div', { class: 'row', style: 'margin-bottom:14px' });
     const fmtSel = (list) => fld('Output format', seg(list, o.type, v => { o.type = v; go(); }));
@@ -93,12 +95,14 @@
           else if (slug === 'image-compressor' && o.kb) r = await fit(img, W, H, type, KBMAX(o.kb), bg);
           else { const cv = draw(img, W, H, bg); r = { blob: await enc(cv, type, o.q), w: cv.width, h: cv.height }; }
           if (run !== seq) return;
+          if (slug === 'image-compressor' && r.blob.size >= f.size && EXT[f.type]) { r = { blob: f, w: img.naturalWidth, h: img.naturalHeight, kept: true }; }
           const name = (EXAM && slug === 'exam-photo-resizer' ? o.ex[0] + '-' : '') + base(f.name) + (slug === 'image-resizer' || slug === 'exam-photo-resizer' ? '-' + r.w + 'x' + r.h : '') + '.' + EXT[r.blob.type];
           outs.push([r.blob, name]);
           const diff = (1 - r.blob.size / f.size) * 100, thumb = el('img', { src: URL.createObjectURL(r.blob), alt: '' });
           let msg = size(f.size) + ' → ' + size(r.blob.size) + ' • ' + r.w + '×' + r.h;
           let cls = diff >= 0 ? 'ok' : 'muted';
           if (slug === 'exam-photo-resizer') { const b = r.blob.size; if (b > KBMAX(o.ex[5])) { msg += ' • still above the maximum – try smaller pixel dimensions'; cls = 'bad'; } else if (b < KBMIN(o.ex[4])) { msg += ' • below the minimum KB – use a clearer or larger original'; cls = 'bad'; } else { msg += ' • ✓ within ' + o.ex[4] + '–' + o.ex[5] + ' KB' + (r.padded ? ' (size raised to meet the minimum; image unchanged)' : ''); cls = 'ok'; } }
+          else if (r.kept) { msg += ' • already well compressed – original kept'; cls = 'ok'; }
           else if (slug === 'image-compressor' || slug === 'png-to-jpg' || slug === 'webp-converter') msg += ' • ' + (diff >= 0 ? fmt(diff, 0) + '% smaller' : fmt(-diff, 0) + '% larger');
           row.replaceChildren(thumb, el('div', { class: 'nm' }, el('b', {}, name), el('small', { class: cls }, msg)), el('button', { class: 'btn sm', onclick: () => download(r.blob, name) }, '⬇ Download'), CW.canShareFile(r.blob, name) ? el('button', { class: 'btn sm sec', title: 'Share', onclick: () => CW.shareFile(r.blob, name) }, '📤') : '');
         } catch (e) { row.replaceChildren(el('div', { class: 'nm' }, el('b', {}, f.name), el('small', { class: 'bad' }, 'Could not read this image. Most browsers cannot open HEIC photos (the iPhone default), so please save the photo as JPG first.'))); }
@@ -119,6 +123,72 @@
     ctl.append(el('div', { class: 'row' }, fld('Mode', seg([['crop', 'Crop to fill'], ['fit', 'Fit (no cropping)']], 'crop', v => { o.mode = v; render(); })), fld('Zoom', zoom), fld('Background', bg), fld('Format', seg([['image/jpeg', 'JPG'], ['image/png', 'PNG']], o.fmt, v => o.fmt = v))),
       el('div', { class: 'btns' }, el('button', { class: 'btn', onclick: async () => download(await enc(cv, o.fmt, .95), 'profile-1080.' + EXT[o.fmt]) }, '⬇ Download 1080×1080')));
     box.append(CW.drop({ accept: 'image/*', icon: '📸', label: 'Choose your photo', onFiles: async f => { img = await load(f[0]); ctl.hidden = false; render(); } }), el('div', { class: 'two', style: 'margin-top:16px;align-items:center' }, el('div', {}, el('p', { class: 'muted small', style: 'text-align:center' }, 'Circle preview'), prev), ctl));
+  }
+
+  // ---- shared helpers for print layouts (300 DPI) ----
+  const MM = 300 / 25.4, PDFLIB = () => CW.loadScript('/vendor/pdf-lib-1.17.1/pdf-lib.min.js').then(() => window.PDFLib);
+  const rng = (min, max, val, on) => { const r = el('input', { type: 'range', min, max, value: val }); r.oninput = () => on(+r.value); return r; };
+  // draw img into (x,y,w,h) of ctx, cover-fit with zoom (1..3) and offsets (-1..1), optional rotation (deg)
+  function coverDraw(x, img, X, Y, W, H, zoom, ox, oy, rot) {
+    const rw = rot % 180 ? img.naturalHeight : img.naturalWidth, rh = rot % 180 ? img.naturalWidth : img.naturalHeight, s = Math.max(W / rw, H / rh) * zoom;
+    const dw = rw * s, dh = rh * s, cx = X + W / 2 - (dw - W) / 2 * ox, cy = Y + H / 2 - (dh - H) / 2 * oy;
+    x.save(); x.beginPath(); x.rect(X, Y, W, H); x.clip(); x.translate(cx, cy); x.rotate(rot * Math.PI / 180); x.imageSmoothingQuality = 'high';
+    const iw = img.naturalWidth * s, ih = img.naturalHeight * s; x.drawImage(img, -iw / 2, -ih / 2, iw, ih); x.restore();
+  }
+  async function pdfFromCanvas(cv, wmm, hmm, name) {
+    const { PDFDocument } = await PDFLIB(), d = await PDFDocument.create(), pg = d.addPage([wmm / 25.4 * 72, hmm / 25.4 * 72]);
+    const jpg = await enc(cv, 'image/jpeg', .95), im = await d.embedJpg(new Uint8Array(await jpg.arrayBuffer()));
+    pg.drawImage(im, { x: 0, y: 0, width: pg.getWidth(), height: pg.getHeight() }); download(new Blob([await d.save()], { type: 'application/pdf' }), name);
+  }
+  const dl300 = async (cv, name) => download(setDPI(await (await enc(cv, 'image/jpeg', .95)).arrayBuffer(), 300), name);
+
+  // ---- Passport photo sheet ----
+  function passport(box) {
+    const SIZES = { in: ['Indian passport / visa – 35 × 45 mm', 35, 45, [630, 810, 250]], us: ['US visa – 2 × 2 in (51 × 51 mm)', 51, 51, [600, 600, 240]], c: ['Custom size', 35, 45, null] };
+    const SHEETS = { r4: ['4 × 6 in photo print (4R)', 101.6, 152.4], a4: ['A4 sheet', 210, 297] };
+    const o = { sz: 'in', sh: 'r4', zoom: 1, ox: 0, oy: 0, w: 35, h: 45, border: true }; let img;
+    const prev = el('canvas', { style: 'width:150px;border:1px solid var(--line);border-radius:6px;background:#fff' }), info = el('p', { class: 'small muted' }), acts = el('div', { class: 'btns' }), ctl = el('div', { hidden: true });
+    const sel = (obj, val, on) => { const s = el('select', {}, Object.entries(obj).map(([k, v]) => el('option', { value: k, selected: k === val }, v[0]))); s.onchange = () => on(s.value); return s; };
+    const cw = el('input', { type: 'number', value: 35, min: 15, max: 100 }), ch = el('input', { type: 'number', value: 45, min: 15, max: 100 }), cbox = el('div', { class: 'row', hidden: true }, fld('Width (mm)', cw), fld('Height (mm)', ch));
+    cw.oninput = ch.oninput = () => { o.w = +cw.value || 35; o.h = +ch.value || 45; draw(); };
+    const bd = el('input', { type: 'checkbox', checked: true }); bd.onchange = () => { o.border = bd.checked; draw(); };
+    const dims = () => o.sz === 'c' ? [o.w, o.h] : SIZES[o.sz].slice(1, 3);
+    function single(W, H) { const c = el('canvas'); c.width = W; c.height = H; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); coverDraw(x, img, 0, 0, W, H, o.zoom, o.ox, o.oy, 0); return c; }
+    function layout() { const [pw, ph] = dims(), [, sw, sh] = SHEETS[o.sh], m = 3, g = 2, fit = (W, H) => [Math.floor((W - 2 * m + g) / (pw + g)), Math.floor((H - 2 * m + g) / (ph + g))];
+      const a = fit(sw, sh), b = fit(sh, sw); return a[0] * a[1] >= b[0] * b[1] ? { W: sw, H: sh, c: a[0], r: a[1], pw, ph, m, g } : { W: sh, H: sw, c: b[0], r: b[1], pw, ph, m, g }; }
+    function sheet() { const L = layout(), cv = el('canvas'); cv.width = Math.round(L.W * MM); cv.height = Math.round(L.H * MM); const x = cv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, cv.width, cv.height);
+      const one = single(Math.round(L.pw * MM), Math.round(L.ph * MM)), gw = L.c * L.pw + (L.c - 1) * L.g, gh = L.r * L.ph + (L.r - 1) * L.g, x0 = (L.W - gw) / 2, y0 = (L.H - gh) / 2;
+      for (let i = 0; i < L.c; i++) for (let j = 0; j < L.r; j++) { const X = (x0 + i * (L.pw + L.g)) * MM, Y = (y0 + j * (L.ph + L.g)) * MM; x.drawImage(one, X, Y, L.pw * MM, L.ph * MM); if (o.border) { x.strokeStyle = '#bbb'; x.lineWidth = 2; x.strokeRect(X, Y, L.pw * MM, L.ph * MM); } }
+      return { cv, L, n: L.c * L.r }; }
+    function draw() { if (!img) return; const [pw, ph] = dims(); prev.width = 300; prev.height = Math.round(300 * ph / pw); prev.getContext('2d').drawImage(single(prev.width, prev.height), 0, 0); const L = layout(); info.textContent = (L.c * L.r) + ' photos of ' + pw + ' × ' + ph + ' mm on a ' + SHEETS[o.sh][0] + '. Print at 100% (actual size).';
+      acts.replaceChildren(el('button', { class: 'btn', onclick: async () => { const S = sheet(); await dl300(S.cv, 'passport-photos-' + o.sh + '.jpg'); } }, '⬇ Sheet (JPG)'), el('button', { class: 'btn sec', onclick: async () => { const S = sheet(); await pdfFromCanvas(S.cv, S.L.W, S.L.H, 'passport-photos-' + o.sh + '.pdf'); } }, '⬇ Sheet (PDF)'),
+        SIZES[o.sz][3] ? el('button', { class: 'btn sec', onclick: async () => { const [W, H, kb] = SIZES[o.sz][3], b = await encUnder(single(W, H), kb * 1000); download(b, 'passport-photo-' + W + 'x' + H + '.jpg'); } }, '⬇ Digital copy ' + SIZES[o.sz][3][0] + '×' + SIZES[o.sz][3][1]) : ''); }
+    // highest JPEG quality that stays under maxB (pixel size is fixed – portals check exact pixels)
+    async function encUnder(cv, maxB) { let lo = .3, hi = .95, best = await enc(cv, 'image/jpeg', lo); const top = await enc(cv, 'image/jpeg', hi); if (top.size <= maxB) return top; for (let i = 0; i < 8; i++) { const m = (lo + hi) / 2, b = await enc(cv, 'image/jpeg', m); if (b.size <= maxB) { best = b; lo = m; } else hi = m; } return best; }
+    ctl.append(el('div', { class: 'row' }, fld('Photo size', sel(SIZES, o.sz, v => { o.sz = v; cbox.hidden = v !== 'c'; draw(); })), fld('Print on', sel(SHEETS, o.sh, v => { o.sh = v; draw(); }))), cbox,
+      el('div', { class: 'two', style: 'margin-top:12px;align-items:start' }, el('div', { style: 'text-align:center' }, prev), el('div', {}, fld('Zoom', rng(100, 300, 100, v => { o.zoom = v / 100; draw(); })), fld('Move left / right', rng(-100, 100, 0, v => { o.ox = v / 100; draw(); })), fld('Move up / down', rng(-100, 100, 0, v => { o.oy = v / 100; draw(); })), el('label', {}, bd, ' Draw cutting lines'))),
+      info, acts, el('p', { class: 'note' }, 'Use a recent photo with a plain white background, both ears visible, no glasses, and your face filling about 80–85% of the frame.'));
+    box.append(CW.drop({ accept: 'image/*', icon: '🛂', label: 'Choose your photo', onFiles: async f => { try { img = await load(f[0]); ctl.hidden = false; draw(); } catch (e) { CW.toast('Could not read this image'); } } }), ctl);
+  }
+
+  // ---- Aadhaar / PAN print layout ----
+  function idprint(box) {
+    const side = { f: { img: null, rot: 0, zoom: 1 }, b: { img: null, rot: 0, zoom: 1 } }, o = { lay: 'stack' }, CW_ = 85.6, CH = 54;
+    const prev = el('canvas', { style: 'width:100%;max-width:420px;border:1px solid var(--line);border-radius:6px;background:#fff;display:block;margin:auto' }), acts = el('div', { class: 'btns' });
+    function card(sd) { const c = el('canvas'); c.width = Math.round(CW_ * MM); c.height = Math.round(CH * MM); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); if (sd.img) coverDraw(x, sd.img, 0, 0, c.width, c.height, sd.zoom, 0, 0, sd.rot); return c; }
+    function page() { const cv = el('canvas'); cv.width = Math.round(210 * MM); cv.height = Math.round(297 * MM); const x = cv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, cv.width, cv.height);
+      const list = [side.f, side.b].filter(s => s.img), gap = 10, tot = o.lay === 'side' ? list.length * CW_ + (list.length - 1) * gap : CW_, y0 = 25;
+      list.forEach((sd, i) => { const X = (o.lay === 'side' ? (210 - tot) / 2 + i * (CW_ + gap) : (210 - CW_) / 2) * MM, Y = (o.lay === 'side' ? y0 : y0 + i * (CH + gap)) * MM; x.drawImage(card(sd), X, Y); x.setLineDash([12, 8]); x.strokeStyle = '#999'; x.lineWidth = 2; x.strokeRect(X, Y, CW_ * MM, CH * MM); x.setLineDash([]); });
+      return cv; }
+    function draw() { if (!side.f.img && !side.b.img) { acts.replaceChildren(); return; } const P = page(); prev.width = 420; prev.height = 594; prev.getContext('2d').drawImage(P, 0, 0, 420, 594);
+      acts.replaceChildren(el('button', { class: 'btn', onclick: () => pdfFromCanvas(page(), 210, 297, 'id-card-print-a4.pdf') }, '⬇ A4 PDF'), el('button', { class: 'btn sec', onclick: () => dl300(page(), 'id-card-print-a4.jpg') }, '⬇ A4 JPG')); }
+    const sideCtl = (k, label) => { const sd = side[k], st = el('small', { class: 'muted' }, 'No image yet');
+      return el('div', { class: 'card', style: 'padding:12px' }, el('b', {}, label), CW.drop({ accept: 'image/*', icon: k === 'f' ? '🪪' : '🔄', label: 'Choose ' + label.toLowerCase(), onFiles: async f => { try { sd.img = await load(f[0]); st.textContent = f[0].name; draw(); } catch (e) { CW.toast('Could not read this image'); } } }), st,
+        el('div', { class: 'btns' }, el('button', { class: 'btn sm sec', type: 'button', onclick: () => { sd.rot = (sd.rot + 90) % 360; draw(); } }, '↻ Rotate'), el('button', { class: 'btn sm sec', type: 'button', onclick: () => { sd.img = null; st.textContent = 'No image yet'; draw(); } }, 'Remove')), fld('Zoom', rng(100, 200, 100, v => { sd.zoom = v / 100; draw(); }))); };
+    const lay = el('select', {}, [['stack', 'Front above back (A4 portrait)'], ['side', 'Front and back side by side']].map(([v, l]) => el('option', { value: v }, l))); lay.onchange = () => { o.lay = lay.value; draw(); };
+    box.append(el('div', { class: 'two' }, sideCtl('f', 'Front side'), sideCtl('b', 'Back side')), el('div', { style: 'max-width:340px;margin:12px 0' }, fld('Layout', lay)), prev, acts,
+      el('p', { class: 'note' }, 'Cards are placed at real size (85.6 × 54 mm). Print at 100% / “Actual size”. Images stay on your device. Where the full number is not needed, use UIDAI’s masked Aadhaar.'));
+    draw();
   }
 
   // ---- DPI ----

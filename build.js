@@ -17,7 +17,7 @@ const write = (p, html) => { const f = path.join(OUT, p); fs.mkdirSync(path.dirn
 const OG = fs.existsSync(path.join(OUT, 'og.png'));
 const bySlug = Object.fromEntries(TOOLS.map(t => [t.s, t]));
 
-function head({ title, desc, url, ld = [], noindex }) {
+function head({ title, desc, url, ld = [], noindex, embed }) {
   return `<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${SITE}${url}">
 ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" content="index,follow,max-image-preview:large">'}
@@ -28,7 +28,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" cont
 <link rel="stylesheet" href="${A('app.css')}">
 ${ld.map(o => `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...o })}</script>`).join('')}
 ${PROD ? `<script async src="https://www.googletagmanager.com/gtag/js?id=G-7QJXHFPZVE"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7QJXHFPZVE');</script>
-<script>(function(){var d=0;function L(){if(d)return;d=1;var s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045';document.head.appendChild(s)}['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,L,{once:true,passive:true})});addEventListener('load',function(){setTimeout(L,2500)})})();</script>` : ''}
+${embed ? '' : `<script>(function(){var d=0;function L(){if(d)return;d=1;var s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045';document.head.appendChild(s)}['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,L,{once:true,passive:true})});addEventListener('load',function(){setTimeout(L,2500)})})();</script>`}` : ''}
 <script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script>
 </head>`;
 }
@@ -62,9 +62,25 @@ for (const t of TOOLS) {
 <section class="card toolbox" id="tool" data-tool="${t.s}" data-engine="${t.g}"><noscript>Please enable JavaScript to use this tool.</noscript><p class="muted">Loading tool…</p></section>
 <h2>How to use the ${esc(t.n)}</h2><ol class="steps">${t.st.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
 <h2>Frequently asked questions</h2>${t.f.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}
-<h2>Related tools</h2><div class="grid">${rel.map(card).join('')}</div>`;
+<h2>Related tools</h2><div class="grid">${rel.map(card).join('')}</div>${t.g === 'calc' ? embedBox(t) : ''}`;
   write(t.s + '.html', head({ title: t.t, desc: t.d, url, ld }) + shell(` data-tool="${t.s}"`, main) + `<script src="${A('e-' + t.g + '.js')}" defer></script></body></html>`);
 }
+
+// ---------- embeddable calculators ----------
+function embedSnippet(t) { const id = 'cw-' + t.s; return `<iframe id="${id}" src="${SITE}/embed/${t.s}" title="${esc(t.n)} by ConvertWiz" loading="lazy" style="width:100%;height:760px;border:0"></iframe><p style="font-size:12px;margin:4px 0">${esc(t.n)} by <a href="${SITE}/${t.s}">ConvertWiz</a></p><script>addEventListener('message',function(e){if(e.origin==='${SITE}'&&e.data&&e.data.cwH&&e.data.id==='${t.s}'){var f=document.getElementById('${id}');if(f)f.style.height=e.data.cwH+'px'}})</script>`; }
+function embedBox(t) { return `<details class="embed-box"><summary>📎 Add this calculator to your website (free)</summary><p class="muted small">Paste this code into your blog or website. It is free to use and resizes itself automatically.</p><textarea class="mono" readonly rows="5" style="width:100%">${esc(embedSnippet(t))}</textarea><button class="btn sm" type="button" data-copy-prev>📋 Copy code</button></details>`; }
+for (const t of TOOLS.filter(x => x.g === 'calc')) {
+  const url = '/' + t.s;
+  write('embed/' + t.s + '.html', head({ title: t.n + ' | ConvertWiz', desc: t.d, url, noindex: true, embed: true }) + `<body class="embed" data-tool="${t.s}"><main><section class="card toolbox" id="tool" data-tool="${t.s}" data-engine="calc"><p class="muted">Loading…</p></section>
+<p class="embed-foot"><a href="${SITE}${url}" target="_blank" rel="noopener">See charts and full details on <b>ConvertWiz</b> →</a></p></main>
+<script src="${A('app.js')}" defer></script><script src="${A('e-calc.js')}" defer></script><script>(function(){function s(){parent.postMessage({cwH:document.documentElement.scrollHeight,id:'${t.s}'},'*')}addEventListener('load',s);if(window.ResizeObserver)new ResizeObserver(s).observe(document.body)})()</script></body></html>`);
+}
+
+// ---------- share target landing ----------
+write('shared.html', head({ title: 'Shared files | ConvertWiz', desc: 'Choose what to do with the files you shared to ConvertWiz.', url: '/shared', noindex: true }) + shell('', `<h1>What would you like to do?</h1><p class="lead" id="sh-info">Loading your shared files…</p>
+<div class="grid" id="sh-img" hidden>${['image-compressor', 'exam-photo-resizer', 'image-resizer', 'passport-photo-maker', 'jpg-to-pdf', 'png-to-jpg'].map(x => card(bySlug[x]).replace('href="/' + x + '"', 'href="/' + x + '?shared=1"')).join('')}</div>
+<div class="grid" id="sh-pdf" hidden>${['compress-pdf', 'merge-pdf', 'split-pdf', 'pdf-to-jpg', 'rotate-pdf'].map(x => card(bySlug[x]).replace('href="/' + x + '"', 'href="/' + x + '?shared=1"')).join('')}</div>
+<script>(async function(){try{var c=await caches.open('cw-share'),k=await c.keys(),t=[];for(var i=0;i<k.length;i++){var r=await c.match(k[i]);t.push(r.headers.get('content-type')||'')}var info=document.getElementById('sh-info');if(!t.length){info.textContent='No shared files found. Open a tool and choose your file.';return}var pdf=t.every(function(x){return x==='application/pdf'});info.textContent=t.length+(t.length>1?' files':' file')+' ready. Choose a tool – your files stay on this device.';document.getElementById(pdf?'sh-pdf':'sh-img').hidden=false}catch(e){document.getElementById('sh-info').textContent='Open a tool and choose your file.'}})()</script>`) + '</body></html>');
 
 // ---------- exam pages ----------
 function examLinks() { return `<div class="note" style="margin:0 0 16px"><b>Exact sizes for your exam:</b> ${EXAMS.map(e => `<a href="/${e.s}">${esc(e.n)}</a>`).join(' · ')} · <a href="/exam-photo-size">all exams</a></div>`; }
@@ -163,13 +179,13 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 write('robots.txt', PROD ? `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n` : `User-agent: *\nDisallow: /\n`);
 write('ads.txt', 'google.com, pub-2287734666559045, DIRECT, f08c47fec0942fa0\n');
 write('assets/index.json', JSON.stringify([...TOOLS.map(t => ({ s: t.s, n: t.n, e: t.e, c: CATS[t.c].name, k: t.t + ' ' + t.d, p: t.pop ? 1 : 0 })), ...EXAMS.map(e => ({ s: e.s, n: e.n + ' photo & signature size', e: '🎓', c: 'Exam photo sizes', k: e.full + ' ' + e.n + ' photo signature size exam form', p: 0 }))]));
-write('manifest.webmanifest', JSON.stringify({ name: 'ConvertWiz – Free Online Tools', short_name: 'ConvertWiz', start_url: '/?source=pwa', display: 'standalone', background_color: '#f7f8fb', theme_color: '#4f46e5', description: 'Free image, PDF, finance and unit tools that work on your device.', icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }, ...(fs.existsSync(path.join(OUT, 'icon-512.png')) ? [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }] : [])],
+write('manifest.webmanifest', JSON.stringify({ name: 'ConvertWiz – Free Online Tools', short_name: 'ConvertWiz', start_url: '/?source=pwa', display: 'standalone', background_color: '#f7f8fb', theme_color: '#4f46e5', description: 'Free image, PDF, finance and unit tools that work on your device.', share_target: { action: '/share-target', method: 'POST', enctype: 'multipart/form-data', params: { title: 'title', text: 'text', files: [{ name: 'file', accept: ['image/*', 'application/pdf'] }] } }, icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }, ...(fs.existsSync(path.join(OUT, 'icon-512.png')) ? [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }] : [])],
   shortcuts: ['image-compressor', 'merge-pdf', 'gst-calculator'].map(s => ({ name: bySlug[s].n, url: '/' + s })) }));
 const ver = crypto.createHash('md5').update(Object.values(V).join('')).digest('hex').slice(0, 8);
 write('sw.js', `const C='cw-${ver}',PRE=['/','${A('app.css')}','${A('app.js')}','/assets/index.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(PRE)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
-self.addEventListener('fetch',e=>{const r=e.request,u=new URL(r.url);if(r.method!=='GET')return;
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C&&x!=='cw-share').map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
+self.addEventListener('fetch',e=>{const r=e.request,u=new URL(r.url);if(r.method==='POST'&&u.pathname==='/share-target'){e.respondWith((async()=>{const fd=await r.formData(),fs=fd.getAll('file').filter(f=>f&&f.size),c=await caches.open('cw-share');for(const k of await c.keys())await c.delete(k);for(let i=0;i<fs.length;i++)await c.put('/shared-file/'+i,new Response(fs[i],{headers:{'content-type':fs[i].type||'application/octet-stream','x-name':encodeURIComponent(fs[i].name||('file-'+i))}}));return Response.redirect('/shared',303)})());return}if(r.method!=='GET')return;
 if(u.origin===location.origin&&u.pathname.startsWith('/_vercel'))return;
 if(r.mode==='navigate'){e.respondWith(fetch(r).then(res=>{const cp=res.clone();caches.open(C).then(c=>c.put(r,cp));return res}).catch(()=>caches.match(r).then(m=>m||caches.match('/'))));return}
 if(u.origin===location.origin){e.respondWith(caches.match(r).then(m=>{const f=fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(C).then(c=>c.put(r,cp))}return res});return m||f}))}});

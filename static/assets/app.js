@@ -47,6 +47,7 @@
     z.ondragover = e => { e.preventDefault(); z.classList.add('on'); };
     z.ondragleave = () => z.classList.remove('on');
     z.ondrop = e => { e.preventDefault(); z.classList.remove('on'); go(e.dataTransfer.files); };
+    z._take = files => go(files); // used for files shared from other apps
     return z;
   }
   // Sharing: native share sheet where available (Android/iOS), otherwise WhatsApp
@@ -124,7 +125,14 @@
     const box = $('#tool'); if (!box) return;
     const fn = CW.tools[box.dataset.engine];
     if (fn) { box.replaceChildren(); try { fn(box, box.dataset.tool); } catch (e) { box.textContent = 'Sorry, this tool failed to load. Please refresh.'; console.error(e); } }
+    // files shared from the Android share sheet (stored by the service worker)
+    if (/[?&]shared=1/.test(location.search) && W.caches) (async () => { try { const c = await caches.open('cw-share'), ks = await c.keys(), files = [];
+      for (const k of ks) { const r = await c.match(k), b = await r.blob(); files.push(new File([b], decodeURIComponent(r.headers.get('x-name') || 'shared'), { type: b.type })); }
+      const z = box.querySelector('.drop'); if (files.length && z && z._take) { z._take(files); toast('Shared file loaded ✓'); }
+      for (const k of ks) await c.delete(k); history.replaceState(null, '', location.pathname); } catch (e) {} })();
   });
+  // "Copy code" buttons for embed snippets
+  D.addEventListener('click', e => { const b = e.target.closest('[data-copy-prev]'); if (b) { const t = b.previousElementSibling; copy(t.value || t.textContent); } });
   // PWA
   if ('serviceWorker' in navigator && location.protocol === 'https:') W.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 })();

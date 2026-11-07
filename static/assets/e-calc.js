@@ -42,6 +42,11 @@
     return { months: m, interest: ti, yearly: yr, cross }; }
   const emiOf = (P, r, n) => r ? P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1) : P / n;
   const yrsTxt = m => { const y = Math.floor(m / 12), mo = m % 12; return (y ? y + (y === 1 ? ' year' : ' years') : '') + (y && mo ? ' ' : '') + (mo ? mo + (mo === 1 ? ' month' : ' months') : ''); };
+  // FY 2026-27 tax for resident individuals below 60 (same rules as the income-tax calculator)
+  const slabT = (x, sl) => { let t = 0, prev = 0; for (const [lim, r] of sl) { if (x > prev) t += (Math.min(x, lim) - prev) * r; prev = lim; } return t; };
+  const surT = (t, x, newR) => t * (x > 5e7 ? (newR ? .25 : .37) : x > 2e7 ? .25 : x > 1e7 ? .15 : x > 5e6 ? .10 : 0);
+  const taxNew = ti => { ti = Math.max(ti, 0); let t = slabT(ti, [[4e5, 0], [8e5, .05], [12e5, .10], [16e5, .15], [20e5, .20], [24e5, .25], [Infinity, .30]]); t = ti <= 12e5 ? 0 : Math.min(t, ti - 12e5); return (t + surT(t, ti, 1)) * 1.04; };
+  const taxOld = ti => { ti = Math.max(ti, 0); let t = slabT(ti, [[2.5e5, 0], [5e5, .05], [1e6, .20], [Infinity, .30]]); if (ti <= 5e5) t = 0; return (t + surT(t, ti, 0)) * 1.04; };
   const LOANS = {
     home: ['Home loan', { p: [3000000, 100000, 50000000, 50000], rate: 8.5, yrs: [20, 1, 30, 1], fee: 0.5 }],
     car: ['Car loan', { p: [800000, 50000, 10000000, 10000], rate: 9, yrs: [5, 1, 7, 1], fee: 0.5 }],
@@ -65,7 +70,10 @@
         ['mor', 'Course + moratorium period', 4, { suf: 'years', r: [0, 7, 0.5], show: v => v.type === 'edu', hint: 'Course length plus 6–12 months. Interest builds up during this time.' }],
         ['morpay', 'Interest during study', 'n', { sel: [['n', 'Not paid – added to the loan'], ['y', 'Paid monthly while studying']], show: v => v.type === 'edu' }],
         ['rep', 'Repayment type', 'emi', { sel: [['emi', 'Monthly EMI'], ['int', 'Bullet – interest monthly, principal at end'], ['end', 'Bullet – principal + interest at end']], show: v => v.type === 'gold' }],
-        ['fee', 'Processing fee', 0.5, { suf: '%', step: 0.05, hint: 'One-time lender fee; 18% GST is added on it' }]],
+        ['fee', 'Processing fee', 0.5, { suf: '%', step: 0.05, hint: 'One-time lender fee; 18% GST is added on it' }],
+        ['lump', 'Part-prepayment (one-time)', 0, { suf: '₹', hint: 'Optional lump sum paid towards principal', show: v => !(v.type === 'gold' && v.rep !== 'emi') }],
+        ['lumpy', 'Pay it in year', 3, { suf: 'year', min: 1, step: 1, show: v => v.lump > 0 && !(v.type === 'gold' && v.rep !== 'emi') }],
+        ['xtra', 'Extra every month', 0, { suf: '₹', hint: 'Optional amount paid on top of the EMI each month', show: v => !(v.type === 'gold' && v.rep !== 'emi') }]],
       c(v) {
         const r = v.rate / 1200, n = Math.max(1, Math.round(v.yrs * 12)), fee = v.p * v.fee / 100 * 1.18, ins = [], charts = [];
         let P = v.p, morInt = 0;
@@ -89,19 +97,46 @@
         const y1 = yrs[0]; ins.push('In year 1, ' + rs(y1.i) + ' of the ' + rs(y1.i + y1.p) + ' you pay (' + fmt(y1.i / (y1.i + y1.p) * 100, 0) + '%) goes to interest.');
         if (A.cross && A.cross > 1) ins.push('From EMI no. ' + A.cross + ' (' + yrsTxt(A.cross) + ' in), more of each EMI repays principal than interest – the lines cross in the first chart.'); else ins.push('From the very first EMI, more goes to principal than to interest.');
         const half = yrs[Math.max(0, Math.ceil(yrs.length / 2) - 1)]; if (yrs.length > 1) ins.push('Halfway through the tenure you will still owe ' + rs(half.bal) + ' (' + fmt(half.bal / P * 100, 0) + '% of the loan).');
-        if (n >= 24) { const X1 = amort(P, r, n, emi, m => m % 12 === 0 ? emi : 0); ins.push('Paying one extra EMI every year would close the loan in ' + yrsTxt(X1.months) + ' instead of ' + yrsTxt(n) + ' and save ' + rs(A.interest - X1.interest) + ' interest.'); }
+        let PP = null;
+        if (v.lump > 0 || v.xtra > 0) { const lm = Math.max(1, Math.round(v.lumpy)) * 12 - 11; PP = amort(P, r, n, emi, m => (m === lm ? v.lump : 0) + (v.xtra || 0));
+          ins.unshift('With your prepayments the loan closes in ' + yrsTxt(PP.months) + ' instead of ' + yrsTxt(n) + ', saving ' + rs(A.interest - PP.interest) + ' in interest (your EMI stays the same).'); }
+        if (n >= 24 && !PP) { const X1 = amort(P, r, n, emi, m => m % 12 === 0 ? emi : 0); ins.push('Paying one extra EMI every year would close the loan in ' + yrsTxt(X1.months) + ' instead of ' + yrsTxt(n) + ' and save ' + rs(A.interest - X1.interest) + ' interest.'); }
         if (['home', 'lap'].includes(v.type)) { const up = emiOf(P, (v.rate + .5) / 1200, n); ins.push('On a floating rate, a 0.5% rise would increase the EMI by ' + rs(up - emi) + ' a month (some banks extend the tenure instead).'); }
         if (v.type === 'home') ins.push('Tax (old regime, self-occupied home): interest up to ₹2,00,000 a year is deductible under Sec 24(b) and principal up to ₹1,50,000 under Sec 80C. Your year-1 interest is ' + rs(y1.i) + ', principal ' + rs(y1.p) + '.');
         if (v.type === 'edu') { if (morInt) ins.push(v.morpay === 'n' ? rs(morInt) + ' simple interest builds up during the ' + v.mor + '-year study period and is added to the loan, so EMIs start on ' + rs(P) + '.' : 'While studying you pay ' + rs(v.p * r) + ' a month as interest (' + rs(morInt) + ' in total); EMIs then start on the original ' + rs(v.p) + '.'); ins.push('Interest on an education loan is fully deductible under Sec 80E for up to 8 years (old regime).'); }
         if (v.type === 'car' || v.type === 'bike') { if (n > 36) { const s3 = amort(P, r, 36, emiOf(P, r, 36)); ins.push('Vehicles lose value quickly. A 3-year tenure would raise the EMI to ' + rs(emiOf(P, r, 36)) + ' but save ' + rs(A.interest - s3.interest) + ' interest.'); } else ins.push('A short tenure is a good choice for a vehicle, because vehicles lose value quickly.'); }
         if (['personal', 'biz'].includes(v.type)) ins.push('Unsecured loans often charge 2–5% for prepayment or foreclosure; check this before choosing a long tenure.');
         charts.push({ title: 'Interest vs principal paid each year', x, xl: 'Year ', s: [{ n: 'Interest', c: '#f59e0b', d: yrs.map(y => y.i) }, { n: 'Principal', c: 'var(--pri)', d: yrs.map(y => y.p) }], mark: A.cross ? Math.floor((A.cross - 1) / 12) : null },
-          { title: 'Loan balance remaining', x: ['Start', ...x], xl: '', s: [{ n: 'Balance', c: '#ef4444', d: [P, ...yrs.map(y => y.bal)], area: 1 }, { n: 'Total interest paid', c: '#f59e0b', d: [0, ...yrs.map((_, i) => yrs.slice(0, i + 1).reduce((a, b) => a + b.i, 0))], dash: 1 }] });
+          { title: 'Loan balance remaining', x: ['Start', ...x], xl: '', s: [{ n: 'Balance', c: '#ef4444', d: [P, ...yrs.map(y => y.bal)], area: 1 }, ...(PP ? [{ n: 'With prepayments', c: '#10b981', d: [P, ...yrs.map((_, i) => PP.yearly[i] ? PP.yearly[i].bal : 0)] }] : []), { n: 'Total interest paid', c: '#f59e0b', d: [0, ...yrs.map((_, i) => yrs.slice(0, i + 1).reduce((a, b) => a + b.i, 0))], dash: 1 }] });
         const rows = [['Loan amount', rs(v.p)]];
         if (v.type === 'edu' && morInt) rows.push([v.morpay === 'n' ? 'Interest added during study' : 'Interest paid during study', rs(morInt)]);
+        if (PP) rows.push(['Interest with prepayments', rs(PP.interest)], ['Interest saved', rs(A.interest - PP.interest)], ['New tenure', yrsTxt(PP.months)]);
         rows.push(['Total interest (EMIs)', rs(tot - P)], ['Processing fee (incl. GST)', rs(fee)], ['Total payable', rs(tot + fee + (v.type === 'edu' && v.morpay === 'y' ? morInt : 0))], ['Effective rate incl. fee (APR)', isFinite(apr) ? fmt(apr, 2) + '%' : '—']);
         return { main: ['Monthly EMI', rs(emi)], rows, bar: [['Principal', v.p, 'var(--pri)'], ['Interest', tot - v.p + (v.type === 'edu' && v.morpay === 'y' ? morInt : 0), '#f59e0b']], ins, charts,
           table: { title: 'Year-by-year repayment schedule', head: ['Year', 'Principal paid', 'Interest paid', 'Balance'], rows: yrs.map((y, i) => [i + 1, rs(y.p), rs(y.i), rs(y.bal)]) }, note: 'Rates shown are typical; your bank\'s offer depends on your credit score and income.' }; } },
+    'salary-calculator': {
+      f: [['ctc', 'Annual CTC', 1200000, { suf: '₹', r: [200000, 10000000, 10000] }],
+        ['bp', 'Basic salary', 50, { suf: '% of CTC', r: [20, 70, 1], hint: 'Labour codes (from 21 Nov 2025): basic + DA should be at least 50% of pay' }],
+        ['hra', 'HRA', 50, { sel: [[50, '50% of basic (metro city)'], [40, '40% of basic (other cities)'], [0, 'No HRA']] }],
+        ['pf', 'Provident Fund (PF)', 'cap', { sel: [['cap', '12% of basic, capped at ₹25,000 wage (max ₹3,000/month)'], ['full', '12% of full basic'], ['none', 'No PF']] }],
+        ['gr', 'Gratuity', 'in', { sel: [['in', 'Included in CTC (4.81% of basic)'], ['out', 'Not part of CTC']] }],
+        ['vp', 'Variable pay / bonus', 0, { suf: '% of CTC', step: 1, hint: 'Paid separately, so not part of the monthly salary' }],
+        ['pt', 'Professional tax', 200, { suf: '₹/month', hint: 'Set by your state (₹0 in states without it). The law caps it at ₹2,500 a year.' }],
+        ['reg', 'Tax regime', 'new', { sel: [['new', 'New regime (default)'], ['old', 'Old regime']] }],
+        ['ded', 'Old-regime deductions', 150000, { suf: '₹', hint: '80C (including your PF), 80D, HRA exemption, home-loan interest…', show: v => v.reg === 'old' }]],
+      c(v) {
+        const basic = v.ctc * v.bp / 100, pfW = v.pf === 'cap' ? Math.min(basic / 12, 25000) : v.pf === 'full' ? basic / 12 : 0, pfM = .12 * pfW, erPF = pfM * 12;
+        const grat = v.gr === 'in' ? .0481 * basic : 0, varA = v.ctc * v.vp / 100, gross = v.ctc - erPF - grat - varA, hra = basic * v.hra / 100, special = gross - basic - hra, ptA = Math.min(v.pt * 12, 2500);
+        const inc = gross + varA, tNew = taxNew(inc - 75000), tOld = taxOld(inc - 50000 - v.ded - ptA), tax = v.reg === 'old' ? tOld : tNew;
+        const inHand = (gross - pfM * 12 - ptA - tax) / 12, ins = [];
+        ins.push('You take home ' + fmt(inHand * 12 / v.ctc * 100, 1) + '% of your CTC every month' + (varA ? ', plus variable pay of ' + rs(varA) + ' a year (taxed when paid).' : '.'));
+        if (pfM) ins.push('PF builds ' + rs(pfM * 24) + ' a year for your retirement (your ' + rs(pfM * 12) + ' plus the employer’s ' + rs(erPF) + '), earning tax-free interest.');
+        if (v.bp < 50) ins.push('⚠ Under the labour codes, basic + DA should be at least 50% of your pay. If your employer restructures to 50%, PF and gratuity will rise and in-hand pay may fall slightly.');
+        if (special < 0) ins.push('⚠ Basic and HRA are larger than the fixed salary left after PF, gratuity and variable pay. Check the percentages in your offer letter.');
+        const other = v.reg === 'old' ? tNew : tOld; if (Math.abs(other - tax) > 1) ins.push((other < tax ? 'Switching to the ' + (v.reg === 'old' ? 'new' : 'old') + ' regime would save ' : 'The ' + (v.reg === 'old' ? 'old' : 'new') + ' regime saves you ') + rs(Math.abs(other - tax)) + ' a year compared with the other regime' + (v.reg === 'new' ? ' (old regime with ' + rs(v.ded) + ' deductions).' : '.'));
+        return { main: ['Monthly in-hand salary', rs(inHand)], rows: [['Monthly gross salary', rs(gross / 12)], ['Basic', rs(basic / 12)], ['HRA', rs(hra / 12)], ['Special allowance', rs(Math.max(special, 0) / 12)], ['Your PF (12%)', '− ' + rs(pfM)], ['Professional tax', '− ' + rs(ptA / 12)], ['Income tax (TDS)', '− ' + rs(tax / 12)], ['Employer PF (in CTC, yearly)', rs(erPF)], ['Gratuity (in CTC, yearly)', rs(grat)], ['Variable pay (yearly)', rs(varA)], ['Yearly income tax', rs(tax)], ['Yearly take-home (excluding variable)', rs(inHand * 12)]],
+          bar: [['In-hand', inHand * 12, '#10b981'], ['Income tax', tax, '#ef4444'], ['PF (both)', pfM * 12 + erPF, 'var(--pri)'], ['Gratuity, PT & variable', grat + ptA + varA, '#f59e0b']], ins,
+          note: 'Estimate for FY 2026-27 (resident below 60). Tax is spread evenly over 12 months and includes tax on variable pay. Employers may also deduct insurance, meal cards or NPS, which are not included.' }; } },
     'sip-calculator': {
       f: [['amt', 'Monthly SIP', 5000, { suf: '₹', r: [500, 200000, 500] }], ['rate', 'Expected return (p.a.)', 12, { suf: '%', r: [1, 30, 0.5] }], ['yrs', 'Time period', 10, { suf: 'years', r: [1, 40, 1] }], ['step', 'Annual step-up', 0, { suf: '%', r: [0, 50, 1], hint: 'Increase your SIP by this % every year' }]],
       c(v) { const i = v.rate / 1200; let bal = 0, inv = 0, s = v.amt; const rows = [];
@@ -152,6 +187,24 @@
         return { main: ['Tax payable (new regime)', rs(nTax.tot)], rows: [['Taxable income – new', rs(nTax.ti)], ['Tax + surcharge – new', rs(nTax.t + nTax.s)], ['Health & education cess (4%)', rs((nTax.t + nTax.s) * .04)], ['Taxable income – old', rs(oTax.ti)], ['Tax payable – old regime', rs(oTax.tot)], ['Better option', best + (save ? ' (saves ' + rs(save) + ')' : '')], ['Monthly tax (new)', rs(nTax.tot / 12)]], ins,
           charts: [{ title: 'Tax at different incomes (with your deductions)', x: pts.map(p => L(p).replace('₹', '')), xl: 'Income ₹', s: [{ n: 'New regime', c: 'var(--pri)', d: pts.map(p => newT(p).tot) }, { n: 'Old regime', c: '#f59e0b', d: pts.map(p => oldT(p, v.ded).tot), dash: 1 }], mark: Math.round(Math.min(v.inc, top) / top * 30) }],
           note: 'FY 2026-27 (AY 2027-28) slabs for resident individuals. New regime: 87A rebate up to ₹12 lakh taxable income with marginal relief. Old regime: rebate up to ₹5 lakh. Surcharge marginal relief and special-rate income (capital gains) are not included. This is an estimate, not tax advice.' }; } },
+    'cgpa-to-percentage': {
+      f: [['cg', 'Your CGPA', 8.2, { step: 0.01, min: 0, max: 10 }],
+        ['sys', 'Board / university', 'cbse', { sel: [['cbse', 'CBSE (Class 10): 9.5 × CGPA'], ['vtu15', 'VTU 2015, 2017, 2018 schemes: (CGPA − 0.75) × 10'], ['vtu22', 'VTU 2022 scheme: CGPA × 10'], ['anna', 'Anna University: CGPA × 10'], ['cus', 'Custom formula from my grade sheet']] }],
+        ['a', 'Multiply CGPA by', 10, { step: 0.01, show: v => v.sys === 'cus' }], ['b', 'Then add', 0, { step: 0.01, show: v => v.sys === 'cus', hint: 'Use a negative number to subtract, e.g. (CGPA − 0.5) × 10 = 10 × CGPA + (−5)' }]],
+      c(v) {
+        const F = { cbse: [9.5, 0, 'CBSE: overall indicative percentage = 9.5 × CGPA'], vtu15: [10, -7.5, 'VTU regulations (2015/2017/2018 schemes): Percentage = (CGPA − 0.75) × 10'], vtu22: [10, 0, 'VTU 2022 scheme regulations: Percentage = CGPA × 10'], anna: [10, 0, 'Anna University regulations: Percentage of marks = CGPA × 10'], cus: [v.a, v.b, 'Your formula: ' + v.a + ' × CGPA ' + (v.b < 0 ? '− ' + Math.abs(v.b) : '+ ' + v.b)] }[v.sys];
+        if (v.cg < 0 || v.cg > 10) return { main: ['Percentage', '—'], note: 'Enter a CGPA between 0 and 10.' };
+        const p = F[0] * v.cg + F[1], need = t => (t - F[1]) / F[0];
+        return { main: ['Percentage', fmt(Math.max(p, 0), 2) + '%'], rows: [['Formula', F[2]], ...[60, 65, 75].map(t => ['CGPA needed for ' + t + '%', need(t) > 10 ? 'Not reachable' : fmt(Math.max(need(t), 0), 2)])],
+          note: 'Formulas are taken from each board’s or university’s own published rules. If your grade sheet prints a different formula, use “Custom”.' }; } },
+    'attendance-calculator': {
+      f: [['held', 'Classes held so far', 60, { min: 0, step: 1 }], ['att', 'Classes attended', 42, { min: 0, step: 1 }], ['req', 'Required attendance', 75, { suf: '%', min: 1, max: 100, step: 1 }]],
+      c(v) {
+        const r = v.req / 100; if (v.held <= 0 || v.att > v.held) return { main: ['Attendance', '—'], note: 'Classes attended cannot be more than classes held.' };
+        const cur = v.att / v.held * 100;
+        if (cur >= v.req) { const miss = Math.floor(v.att / r - v.held + 1e-9); return { main: ['Your attendance', fmt(cur, 2) + '%'], rows: [['Status', '✓ Above ' + v.req + '%'], ['You can miss', miss + (miss === 1 ? ' class' : ' classes') + ' and stay at or above ' + v.req + '%']], bar: [['Attended', v.att, '#10b981'], ['Missed', v.held - v.att, '#ef4444']] }; }
+        const need = r >= 1 ? Infinity : Math.ceil((r * v.held - v.att) / (1 - r) - 1e-9);
+        return { main: ['Your attendance', fmt(cur, 2) + '%'], rows: [['Status', '⚠ Below ' + v.req + '%'], ['Attend next', isFinite(need) ? need + ' classes in a row to reach ' + v.req + '%' : 'Not possible (100% required)']], bar: [['Attended', v.att, '#10b981'], ['Missed', v.held - v.att, '#ef4444']] }; } },
     'percentage-calculator': {
       f: [['m', 'What do you want to find?', 'of', { sel: [['of', 'What is X% of Y?'], ['is', 'X is what % of Y? (marks %)'], ['ch', '% change from X to Y'], ['add', 'Y increased / decreased by X%']] }], ['x', 'X', 25, {}], ['y', 'Y', 400, {}]],
       c(v) { const { x, y } = v; if (v.m === 'of') return { main: [x + '% of ' + y, fmt(x / 100 * y, 4)] };
@@ -178,10 +231,10 @@
 
   CW.tools.calc = function (box, slug) {
     const cfg = C[slug]; const vals = {}; const inputs = {}, ranges = {}, wraps = {};
-    const form = el('div', { class: 'stack' }), out = el('div', { class: 'res', 'aria-live': 'polite' }), tbl = el('div'), extra = el('div', { class: 'calc-extra' });
+    const form = el('div', { class: 'stack' }), out = el('div', { class: 'res', 'aria-live': 'polite' }), tbl = el('div', { class: 'calc-table' }), extra = el('div', { class: 'calc-extra' });
     // Shareable links: ?p=3000000&rate=8.5 … pre-fill the form; the address bar updates once the user edits
     let touched = false; const q = new URLSearchParams(location.search);
-    const shareUrl = () => { const u = new URL(location.href.split('?')[0]); cfg.f.forEach(([id]) => u.searchParams.set(id, inputs[id].value)); return u.toString(); };
+    const shareUrl = () => { const u = new URL(location.href.split('?')[0].replace('/embed/', '/')); cfg.f.forEach(([id]) => u.searchParams.set(id, inputs[id].value)); return u.toString(); };
     cfg.f.forEach(([id, label, def, o]) => {
       if (q.has(id)) { const v = q.get(id); if (o.sel ? o.sel.some(([x]) => String(x) === v) : o.type === 'date' ? /^\d{4}-\d{2}-\d{2}$/.test(v) : v !== '' && isFinite(+v)) def = o.sel ? (isNaN(+v) ? v : +v) : v; }
       let inp;
