@@ -1,12 +1,15 @@
 # Notify IndexNow search engines (Bing, Yandex, Seznam, Naver) once a production deployment is live.
 # build.js writes /indexnow.json with only the pages that are new or changed in that deployment.
+# Retries while IndexNow is still verifying the site key (403 SiteVerificationNotCompleted).
 name: IndexNow ping
-on: deployment_status
+on:
+  deployment_status:
+  workflow_dispatch:
 jobs:
   ping:
-    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production'
+    if: github.event_name == 'workflow_dispatch' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 20
     steps:
       - name: Submit changed URLs
         run: |
@@ -16,7 +19,12 @@ jobs:
           echo "Changed URLs: $n"
           if [ "$n" -eq 0 ]; then echo "Nothing to submit"; exit 0; fi
           key=$(jq -r .key payload.json)
-          curl -fsS "https://www.convertwiz.in/${key}.txt" | grep -qx "$key" || { echo "Key file not live yet"; exit 1; }
-          code=$(curl -s -o resp.txt -w '%{http_code}' -X POST https://api.indexnow.org/indexnow -H 'Content-Type: application/json; charset=utf-8' --data @payload.json)
-          echo "IndexNow HTTP $code"; cat resp.txt || true
-          [ "$code" = "200" ] || [ "$code" = "202" ]
+          curl -fsS "https://www.convertwiz.in/${key}.txt" | grep -qx "$key" || { echo "Key file not live"; exit 1; }
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -s -o resp.txt -w '%{http_code}' -X POST https://api.indexnow.org/indexnow -H 'Content-Type: application/json; charset=utf-8' --data @payload.json)
+            echo "Attempt $i: IndexNow HTTP $code $(cat resp.txt)"
+            if [ "$code" = "200" ] || [ "$code" = "202" ]; then exit 0; fi
+            grep -q SiteVerificationNotCompleted resp.txt || exit 1
+            sleep 150
+          done
+          exit 1
