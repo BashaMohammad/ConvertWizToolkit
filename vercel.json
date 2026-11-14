@@ -34,7 +34,7 @@
     {
       "source": "/blog/:path*",
       "destination": "/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/distance-converter",

@@ -159,7 +159,7 @@ nav.cats a{font-weight:500}nav.cats a:hover{background:var(--soft);color:var(--p
 .bigsearch input:focus{outline:0;border-color:var(--pri);box-shadow:0 0 0 4px color-mix(in srgb,var(--pri) 16%,transparent),var(--sh2)}
 .chip{font-weight:500;transition:border-color .15s,color .15s}.chip:hover{color:var(--pri)}
 .trust{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;padding:0;margin:18px 0 0;font-size:13.5px;color:var(--mut);font-weight:500}
-@media(max-width:600px){.hero{padding-top:26px}.chips .chip:nth-child(n+5){display:none}}
+@media(max-width:600px){.hero{padding-top:26px}.hero .chips .chip:nth-child(n+5){display:none}}
 /* category tiles */
 .cat-tiles{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:26px 0 6px}
 .ct{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);color:var(--ink);text-align:center;transition:transform .15s,box-shadow .15s,border-color .15s}
@@ -203,3 +203,4 @@ main{overflow-x:clip}
 .tool-head:has(.tool-ico) .tool-ico{grid-area:1/1}.tool-head:has(.tool-ico) h1{grid-area:1/2;text-align:left;justify-self:start}.tool-head:has(.tool-ico) .head-btns{grid-area:1/3}.tool-head:has(.tool-ico) .lead{grid-area:2/1/3/4}
 .answer{margin:0 0 16px;padding:14px 16px;border-radius:14px;background:color-mix(in srgb,var(--ok) 8%,var(--card));border:1px solid color-mix(in srgb,var(--ok) 25%,transparent);font-size:16px;line-height:1.55}
 .answer b{color:var(--ink);font-weight:750}
+.quick{margin-top:28px}.quick h3{font-size:15px;margin:16px 0 0}.quick .chips{margin-top:8px}

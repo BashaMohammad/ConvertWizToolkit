@@ -3,6 +3,7 @@ const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const { CATS, TOOLS } = require('./src/registry');
 const { EXAMS, CHECKED } = require('./src/exams');
 const LANDINGS = require('./src/landings')(EXAMS);
+const SLUGS = new Set([...LANDINGS.map(l => l.s), ...EXAMS.map(e => e.s)]);
 const SITE = 'https://www.convertwiz.in', OUT = path.join(__dirname, 'dist');
 const PROD = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === 'production' : false;
 const YEAR = new Date().getFullYear(), TODAY = new Date().toISOString().slice(0, 10);
@@ -108,7 +109,7 @@ function examLinks() { return `<div class="note" style="margin:0 0 16px"><b>Exac
 const examTool = bySlug['exam-photo-resizer'];
 for (const e of EXAMS) {
   const url = '/' + e.s, files = e.items.filter(i => !i.live);
-  const title = `${e.n} Photo & Signature Size ${e.year} – Official Specs + Free Resizer | ConvertWiz`;
+  const title = `${e.n} Photo & Signature Size ${e.year} (Official) + Free Resizer`;
   const desc = `${e.n} ${e.year} photo and signature size from the official notification: ${e.items.map(i => i.live ? (/live/i.test(i.n) ? 'live photo capture' : i.n.toLowerCase() + ' captured live') : `${i.n.toLowerCase()} ${i.min}–${i.max} KB`).join(', ')}. Resize yours to fit in seconds, free and private.`;
   const faq = [
     ...e.items.map(i => [`What is the ${e.n} ${i.n.toLowerCase()} size?`, `${i.spec} (Source: ${e.notice}.)`]),
@@ -159,6 +160,13 @@ for (const [k, c] of Object.entries(CATS)) {
 <ul class="trust"><li>🔒 No uploads</li><li>⚡ Works offline</li><li>🚫 No sign-up</li><li>💯 Free forever</li></ul></section>
 <section class="cat-tiles" aria-label="Browse by category">${Object.entries(CATS).map(([k, c]) => `<a class="ct" data-c="${k}" href="/${c.slug}"><span class="em">${c.e}</span><b>${SHORT[k] === 'Calculators' ? 'Everyday' : SHORT[k]}</b><small>${TOOLS.filter(t => t.c === k).length} tools</small></a>`).join('')}</section>
 <div id="mine"></div>
+<section class="quick" aria-label="Quick answers"><h2>⚡ Quick answers</h2>${[
+  ['💼 CTC to in-hand salary', [5, 8, 10, 12, 15, 20, 25, 30].map(L => [`/${L}-lakh-ctc-in-hand-salary`, `₹${L} LPA`])],
+  ['🎓 CGPA to percentage', ['6.5', '7.0', '7.5', '8.0', '8.5', '9.0', '9.5'].map(g => [`/${g.replace('.', '-')}-cgpa-to-percentage`, `${g} CGPA`])],
+  ['🧍 Height cm ↔ feet', [[150, 'cm'], [155, 'cm'], [160, 'cm'], [165, 'cm'], [170, 'cm'], [175, 'cm'], [180, 'cm']].map(([c]) => [`/${c}-cm-in-feet`, `${c} cm`]).concat([[5, 2], [5, 4], [5, 6], [5, 8]].map(([f, i]) => [`/${f}-feet-${i}-inches-in-cm`, `${f}′${i}″`]))],
+  ['🗜️ Compress photo to KB', [10, 20, 30, 50, 100, 200].map(k => [`/compress-image-to-${k}kb`, `${k} KB`])],
+  ['📝 Exam photo & signature size', EXAMS.map(e => [`/${e.s}`, e.n])],
+].map(([h, ls]) => `<h3>${h}</h3><div class="chips" style="justify-content:flex-start">${ls.filter(([u]) => SLUGS.has(u.slice(1))).map(([u, n]) => `<a class="chip" href="${u}">${esc(n)}</a>`).join('')}</div>`).join('')}</section>
 <section data-cat="pop"><h2>🔥 Most popular</h2><div class="grid">${pop.map(card).join('')}</div></section>
 ${Object.entries(CATS).map(([k, c]) => `<section data-cat="${k}"><div class="sec-h"><h2>${c.e} ${c.name}</h2><a href="/${c.slug}">View all →</a></div><div class="grid">${TOOLS.filter(t => t.c === k).map(card).join('')}</div></section>`).join('')}
 <section style="margin-top:40px" class="two"><div class="card"><h2 style="margin-top:0">🔒 Private by design</h2><p class="muted">Images, PDFs and text are processed with your browser's own engine. Nothing is uploaded to our servers, which also makes ConvertWiz fast even on mobile data.</p></div>
