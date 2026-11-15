@@ -4,6 +4,8 @@ const { CATS, TOOLS } = require('./src/registry');
 const { EXAMS, CHECKED } = require('./src/exams');
 const LANDINGS = require('./src/landings')(EXAMS);
 const SLUGS = new Set([...LANDINGS.map(l => l.s), ...EXAMS.map(e => e.s)]);
+// Official ConvertWiz social profiles (shown in the footer and in Organization sameAs). Add new ones here.
+const SOCIAL = [['YouTube', 'https://www.youtube.com/channel/UCIafUVZJxpRnLB7EGJeXl7w']];
 const SITE = 'https://www.convertwiz.in', OUT = path.join(__dirname, 'dist');
 const PROD = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === 'production' : false;
 const YEAR = new Date().getFullYear(), TODAY = new Date().toISOString().slice(0, 10);
@@ -46,7 +48,7 @@ function shell(bodyAttr, main) {
 <footer><div class="wrap"><div class="cols">
 <div><b>ConvertWiz</b>Free, fast and private online tools. Files are processed on your device.<br><br>© ${YEAR} ConvertWiz</div>
 ${Object.values(CATS).slice(0, 3).map(c => `<div><b>${c.name}</b>${TOOLS.filter(t => CATS[t.c] === c).slice(0, 6).map(t => `<a href="/${t.s}">${t.n}</a>`).join('')}</div>`).join('')}
-<div><b>Company</b><a href="/about">About</a><a href="/pro">ConvertWiz Pro</a><a href="/contact">Contact</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Disclaimer</a></div>
+<div><b>Company</b><a href="/about">About</a><a href="/pro">ConvertWiz Pro</a><a href="/contact">Contact</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Disclaimer</a>${SOCIAL.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener me">${n}</a>`).join('')}</div>
 </div></div></footer>
 <dialog id="sd" aria-label="Search tools"><input type="search" placeholder="Search ${TOOLS.length} tools… e.g. compress, GST, PDF" aria-label="Search"><ul></ul></dialog>
 <script src="${A('app.js')}" defer></script>`;
@@ -171,7 +173,7 @@ for (const [k, c] of Object.entries(CATS)) {
 ${Object.entries(CATS).map(([k, c]) => `<section data-cat="${k}"><div class="sec-h"><h2>${c.e} ${c.name}</h2><a href="/${c.slug}">View all →</a></div><div class="grid">${TOOLS.filter(t => t.c === k).map(card).join('')}</div></section>`).join('')}
 <section style="margin-top:40px" class="two"><div class="card"><h2 style="margin-top:0">🔒 Private by design</h2><p class="muted">Images, PDFs and text are processed with your browser's own engine. Nothing is uploaded to our servers, which also makes ConvertWiz fast even on mobile data.</p></div>
 <div class="card"><h2 style="margin-top:0">📱 Install as an app</h2><p class="muted">Add ConvertWiz to your home screen from your browser menu for one-tap access. Many tools also work offline after your first visit.</p></div></section>`;
-  const ld = [{ '@type': 'WebSite', name: 'ConvertWiz', url: SITE + '/', description: 'Free online converters and calculators for India' }, { '@type': 'Organization', name: 'ConvertWiz', url: SITE, logo: SITE + '/icon-192.png', email: 'support@convertwiz.in' }];
+  const ld = [{ '@type': 'WebSite', name: 'ConvertWiz', url: SITE + '/', description: 'Free online converters and calculators for India' }, { '@type': 'Organization', name: 'ConvertWiz', url: SITE, logo: SITE + '/icon-192.png', email: 'support@convertwiz.in', sameAs: SOCIAL.map(x => x[1]) }];
   write('index.html', head({ title: 'ConvertWiz – Free Online Tools: Image, PDF, GST, EMI & Unit Converters', desc: `${TOOLS.length} free online tools: compress images to a target KB, resize exam photos, merge PDFs, GST, EMI and income tax calculators, and unit and currency converters. Fast, private and no sign-up.`, url: '/', ld }) + shell('', main) + '</body></html>');
 }
 
