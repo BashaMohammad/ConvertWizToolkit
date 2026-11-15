@@ -5,7 +5,7 @@ const { EXAMS, CHECKED } = require('./src/exams');
 const LANDINGS = require('./src/landings')(EXAMS);
 const SLUGS = new Set([...LANDINGS.map(l => l.s), ...EXAMS.map(e => e.s)]);
 // Official ConvertWiz social profiles (shown in the footer and in Organization sameAs). Add new ones here.
-const SOCIAL = [['YouTube', 'https://www.youtube.com/@Convertwiz']];
+const SOCIAL = [['YouTube', 'https://www.youtube.com/@Convertwiz'], ['X (Twitter)', 'https://x.com/ConvertwizApp']];
 const SAME_AS = [...SOCIAL.map(x => x[1]), 'https://www.youtube.com/channel/UCIafUVZJxpRnLB7EGJeXl7w'];
 const SITE = 'https://www.convertwiz.in', OUT = path.join(__dirname, 'dist');
 const PROD = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === 'production' : false;
