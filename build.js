@@ -29,7 +29,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" cont
 <script>try{var t=localStorage.getItem('cw_theme');document.documentElement.dataset.theme=t?JSON.parse(t):(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
 <link rel="stylesheet" href="${A('app.css')}">
 ${ld.map(o => `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', ...o })}</script>`).join('')}
-${PROD ? `<script async src="https://www.googletagmanager.com/gtag/js?id=G-7QJXHFPZVE"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7QJXHFPZVE');</script>
+${PROD ? `<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q4L9FZPVPZ"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-Q4L9FZPVPZ');</script>
 ${embed ? '' : `<script>(function(){var d=0;function L(){if(d)return;d=1;var s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2287734666559045';document.head.appendChild(s)}['pointerdown','keydown','scroll','touchstart'].forEach(function(e){addEventListener(e,L,{once:true,passive:true})});addEventListener('load',function(){setTimeout(L,2500)})})();</script>`}` : ''}
 <script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script>
 </head>`;
