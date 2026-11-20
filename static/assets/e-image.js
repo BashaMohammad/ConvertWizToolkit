@@ -3,7 +3,11 @@
   const { el, fmt, size, download } = CW;
   const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
   const base = n => n.replace(/\.[^.]+$/, '');
-  const load = f => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => no(new Error('Unsupported image')); i.src = URL.createObjectURL(f); });
+  const loadImg = f => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => no(new Error('Unsupported image')); i.src = URL.createObjectURL(f); });
+  // iPhone HEIC/HEIF: Safari opens it natively; other browsers get libheif (heic-to, loaded only when needed).
+  const isHeic = f => /image\/hei[cf]/i.test(f.type || '') || /\.(heic|heif)$/i.test(f.name || '');
+  const load = async f => { try { return await loadImg(f); } catch (e) { if (!isHeic(f)) throw e; await CW.loadScript('/vendor/heic-to-1.6.7/heic-to.js'); return loadImg(await window.HeicTo({ blob: f, type: 'image/png' })); } };
+  const ACC = 'image/*,.heic,.heif,.avif';
   const enc = (cv, type, q) => new Promise(ok => cv.toBlob(ok, type, q));
   function draw(img, w, h, bg, crop) {
     const cv = el('canvas'); cv.width = Math.max(1, Math.round(w)); cv.height = Math.max(1, Math.round(h)); const x = cv.getContext('2d');
@@ -54,12 +58,12 @@
     if (slug === 'dpi-checker') return dpi(box);
     if (slug === 'passport-photo-maker') return passport(box);
     if (slug === 'aadhaar-pan-print') return idprint(box);
-    const o = { type: { 'jpg-to-png': 'image/png', 'png-to-jpg': 'image/jpeg', 'webp-converter': 'image/webp', 'image-compressor': 'image/jpeg', 'exam-photo-resizer': 'image/jpeg' }[slug] || 'same', q: .9, kb: 0, w: 1200, h: 0, pct: 50, mode: 'px', lock: true, ex: PRESETS[0], ...(window.CW_PRE || {}) };
+    const o = { type: { 'jpg-to-png': 'image/png', 'png-to-jpg': 'image/jpeg', 'webp-converter': 'image/webp', 'heic-to-jpg': 'image/jpeg', 'avif-to-jpg': 'image/jpeg', 'image-compressor': 'image/jpeg', 'exam-photo-resizer': 'image/jpeg' }[slug] || 'same', q: .9, kb: 0, w: 1200, h: 0, pct: 50, mode: 'px', lock: true, ex: PRESETS[0], ...(window.CW_PRE || {}) };
     const opts = el('div', { class: 'row', style: 'margin-bottom:14px' });
     const fmtSel = (list) => fld('Output format', seg(list, o.type, v => { o.type = v; go(); }));
     const qual = () => { const r = el('input', { type: 'range', min: 10, max: 100, value: o.q * 100 }), l = el('b', {}, Math.round(o.q * 100) + '%'); r.oninput = () => { l.textContent = r.value + '%'; o.q = r.value / 100; }; r.onchange = go; return fld('Quality: ', el('div', {}, l, r)); };
     const num = (k, label, suf) => { const i = el('input', { type: 'number', value: o[k] || '', min: 0, placeholder: k === 'kb' ? 'optional' : 'auto' }); let t; i.onchange = () => { clearTimeout(t); o[k] = +i.value || 0; if (k === 'w' && o.lock) o.h = 0; if (k === 'h' && o.lock) o.w = 0; go(); }; i.oninput = () => { clearTimeout(t); t = setTimeout(i.onchange, 700); }; return fld(label, el('div', { class: 'inp-suf' }, i, el('span', {}, suf))); };
-    if (slug === 'png-to-jpg') opts.append(qual());
+    if (slug === 'png-to-jpg' || slug === 'heic-to-jpg' || slug === 'avif-to-jpg') opts.append(qual());
     if (slug === 'webp-converter') opts.append(fmtSel([['image/webp', 'WebP'], ['image/jpeg', 'JPG'], ['image/png', 'PNG']]), qual());
     if (slug === 'image-compressor') opts.append(fmtSel([['image/jpeg', 'JPG'], ['image/webp', 'WebP']]), qual(), num('kb', 'Target max size', 'KB'));
     if (slug === 'image-resizer') {
@@ -77,7 +81,7 @@
     }
     const list = el('div', { class: 'files' }), all = el('div', { class: 'btns' });
     let files = [], outs = [], seq = 0, lastKey = '';
-    box.append(opts, CW.drop({ accept: 'image/*', multiple: true, icon: '🖼️', label: 'Drop images here or tap to choose', hint: 'JPG, PNG, WebP • batch supported • files never leave your device', onFiles: f => { files = files.concat(f); go(); } }), list, all);
+    box.append(opts, CW.drop({ accept: ACC, multiple: true, icon: '🖼️', label: 'Drop images here or tap to choose', hint: (slug === 'heic-to-jpg' ? 'HEIC/HEIF photos from iPhone' : slug === 'avif-to-jpg' ? 'AVIF images' : 'JPG, PNG, WebP, HEIC, AVIF') + ' • batch supported • files never leave your device', onFiles: f => { files = files.concat(f); go(); } }), list, all);
     async function go() {
       if (!files.length) return;
       const key = JSON.stringify(o) + '|' + files.map(f => f.name + f.size).join(','); if (key === lastKey) return; lastKey = key;
@@ -103,9 +107,9 @@
           let cls = diff >= 0 ? 'ok' : 'muted';
           if (slug === 'exam-photo-resizer') { const b = r.blob.size; if (b > KBMAX(o.ex[5])) { msg += ' • still above the maximum – try smaller pixel dimensions'; cls = 'bad'; } else if (b < KBMIN(o.ex[4])) { msg += ' • below the minimum KB – use a clearer or larger original'; cls = 'bad'; } else { msg += ' • ✓ within ' + o.ex[4] + '–' + o.ex[5] + ' KB' + (r.padded ? ' (size raised to meet the minimum; image unchanged)' : ''); cls = 'ok'; } }
           else if (r.kept) { msg += ' • already well compressed – original kept'; cls = 'ok'; }
-          else if (slug === 'image-compressor' || slug === 'png-to-jpg' || slug === 'webp-converter') msg += ' • ' + (diff >= 0 ? fmt(diff, 0) + '% smaller' : fmt(-diff, 0) + '% larger');
+          else if (slug === 'image-compressor' || slug === 'png-to-jpg' || slug === 'webp-converter' || slug === 'heic-to-jpg' || slug === 'avif-to-jpg') msg += ' • ' + (!EXT[f.type] ? 'converted to ' + EXT[r.blob.type].toUpperCase() : diff >= 0 ? fmt(diff, 0) + '% smaller' : fmt(-diff, 0) + '% larger');
           row.replaceChildren(thumb, el('div', { class: 'nm' }, el('b', {}, name), el('small', { class: cls }, msg)), el('button', { class: 'btn sm', onclick: () => download(r.blob, name) }, '⬇ Download'), CW.canShareFile(r.blob, name) ? el('button', { class: 'btn sm sec', title: 'Share', onclick: () => CW.shareFile(r.blob, name) }, '📤') : '');
-        } catch (e) { row.replaceChildren(el('div', { class: 'nm' }, el('b', {}, f.name), el('small', { class: 'bad' }, 'Could not read this image. Most browsers cannot open HEIC photos (the iPhone default), so please save the photo as JPG first.'))); }
+        } catch (e) { row.replaceChildren(el('div', { class: 'nm' }, el('b', {}, f.name), el('small', { class: 'bad' }, 'Could not read this image. The file may be damaged or in an unsupported format; try saving it as JPG or PNG first.'))); }
       }
       if (run !== seq) return;
       if (outs.length > 1) all.append(el('button', { class: 'btn', onclick: async () => { for (const [b, n] of outs) { download(b, n); await new Promise(r => setTimeout(r, 400)); } } }, '⬇ Download all (' + outs.length + ')'));
@@ -122,7 +126,7 @@
       const s = (o.mode === 'crop' ? Math.max(S / iw, S / ih) : Math.min(S / iw, S / ih)) * o.zoom; x.imageSmoothingQuality = 'high'; x.drawImage(img, (S - iw * s) / 2, (S - ih * s) / 2, iw * s, ih * s); }
     ctl.append(el('div', { class: 'row' }, fld('Mode', seg([['crop', 'Crop to fill'], ['fit', 'Fit (no cropping)']], 'crop', v => { o.mode = v; render(); })), fld('Zoom', zoom), fld('Background', bg), fld('Format', seg([['image/jpeg', 'JPG'], ['image/png', 'PNG']], o.fmt, v => o.fmt = v))),
       el('div', { class: 'btns' }, el('button', { class: 'btn', onclick: async () => download(await enc(cv, o.fmt, .95), 'profile-1080.' + EXT[o.fmt]) }, '⬇ Download 1080×1080')));
-    box.append(CW.drop({ accept: 'image/*', icon: '📸', label: 'Choose your photo', onFiles: async f => { img = await load(f[0]); ctl.hidden = false; render(); } }), el('div', { class: 'two', style: 'margin-top:16px;align-items:center' }, el('div', {}, el('p', { class: 'muted small', style: 'text-align:center' }, 'Circle preview'), prev), ctl));
+    box.append(CW.drop({ accept: ACC, icon: '📸', label: 'Choose your photo', onFiles: async f => { img = await load(f[0]); ctl.hidden = false; render(); } }), el('div', { class: 'two', style: 'margin-top:16px;align-items:center' }, el('div', {}, el('p', { class: 'muted small', style: 'text-align:center' }, 'Circle preview'), prev), ctl));
   }
 
   // ---- shared helpers for print layouts (300 DPI) ----
@@ -168,7 +172,7 @@
     ctl.append(el('div', { class: 'row' }, fld('Photo size', sel(SIZES, o.sz, v => { o.sz = v; cbox.hidden = v !== 'c'; draw(); })), fld('Print on', sel(SHEETS, o.sh, v => { o.sh = v; draw(); }))), cbox,
       el('div', { class: 'two', style: 'margin-top:12px;align-items:start' }, el('div', { style: 'text-align:center' }, prev), el('div', {}, fld('Zoom', rng(100, 300, 100, v => { o.zoom = v / 100; draw(); })), fld('Move left / right', rng(-100, 100, 0, v => { o.ox = v / 100; draw(); })), fld('Move up / down', rng(-100, 100, 0, v => { o.oy = v / 100; draw(); })), el('label', {}, bd, ' Draw cutting lines'))),
       info, acts, el('p', { class: 'note' }, 'Use a recent photo with a plain white background, both ears visible, no glasses, and your face filling about 80–85% of the frame.'));
-    box.append(CW.drop({ accept: 'image/*', icon: '🛂', label: 'Choose your photo', onFiles: async f => { try { img = await load(f[0]); ctl.hidden = false; draw(); } catch (e) { CW.toast('Could not read this image'); } } }), ctl);
+    box.append(CW.drop({ accept: ACC, icon: '🛂', label: 'Choose your photo', onFiles: async f => { try { img = await load(f[0]); ctl.hidden = false; draw(); } catch (e) { CW.toast('Could not read this image'); } } }), ctl);
   }
 
   // ---- Aadhaar / PAN print layout ----
@@ -183,7 +187,7 @@
     function draw() { if (!side.f.img && !side.b.img) { acts.replaceChildren(); return; } const P = page(); prev.width = 420; prev.height = 594; prev.getContext('2d').drawImage(P, 0, 0, 420, 594);
       acts.replaceChildren(el('button', { class: 'btn', onclick: () => pdfFromCanvas(page(), 210, 297, 'id-card-print-a4.pdf') }, '⬇ A4 PDF'), el('button', { class: 'btn sec', onclick: () => dl300(page(), 'id-card-print-a4.jpg') }, '⬇ A4 JPG')); }
     const sideCtl = (k, label) => { const sd = side[k], st = el('small', { class: 'muted' }, 'No image yet');
-      return el('div', { class: 'card', style: 'padding:12px' }, el('b', {}, label), CW.drop({ accept: 'image/*', icon: k === 'f' ? '🪪' : '🔄', label: 'Choose ' + label.toLowerCase(), onFiles: async f => { try { sd.img = await load(f[0]); st.textContent = f[0].name; draw(); } catch (e) { CW.toast('Could not read this image'); } } }), st,
+      return el('div', { class: 'card', style: 'padding:12px' }, el('b', {}, label), CW.drop({ accept: ACC, icon: k === 'f' ? '🪪' : '🔄', label: 'Choose ' + label.toLowerCase(), onFiles: async f => { try { sd.img = await load(f[0]); st.textContent = f[0].name; draw(); } catch (e) { CW.toast('Could not read this image'); } } }), st,
         el('div', { class: 'btns' }, el('button', { class: 'btn sm sec', type: 'button', onclick: () => { sd.rot = (sd.rot + 90) % 360; draw(); } }, '↻ Rotate'), el('button', { class: 'btn sm sec', type: 'button', onclick: () => { sd.img = null; st.textContent = 'No image yet'; draw(); } }, 'Remove')), fld('Zoom', rng(100, 200, 100, v => { sd.zoom = v / 100; draw(); }))); };
     const lay = el('select', {}, [['stack', 'Front above back (A4 portrait)'], ['side', 'Front and back side by side']].map(([v, l]) => el('option', { value: v }, l))); lay.onchange = () => { o.lay = lay.value; draw(); };
     box.append(el('div', { class: 'two' }, sideCtl('f', 'Front side'), sideCtl('b', 'Back side')), el('div', { style: 'max-width:340px;margin:12px 0' }, fld('Layout', lay)), prev, acts,
